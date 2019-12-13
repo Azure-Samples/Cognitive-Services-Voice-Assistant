@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace DLSpeechClient
+namespace VoiceAssistantClient
 {
     using System;
     using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace DLSpeechClient
     using AdaptiveCards;
     using AdaptiveCards.Rendering;
     using AdaptiveCards.Rendering.Wpf;
-    using DLSpeechClient.Settings;
+    using VoiceAssistantClient.Settings;
     using Microsoft.Bot.Schema;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
@@ -68,9 +68,9 @@ namespace DLSpeechClient
 
         /// <summary>
         /// Gets the window title string, which includes the assembly version number.
-        /// To update the assembly version number, edit this line in DLSpeechClient\Properties\AssemblyInfo.cs:
+        /// To update the assembly version number, edit this line in VoiceAssistantClient\Properties\AssemblyInfo.cs:
         ///     [assembly: AssemblyVersion("#.#.#.#")]
-        /// Or in VS, right click on the DLSpeechClient project -> properties -> Assembly Information.
+        /// Or in VS, right click on the VoiceAssistantClient project -> properties -> Assembly Information.
         /// Microsoft Version number is: [Major Version, Minor Version, Build Number, Revision]
         /// (see https://docs.microsoft.com/en-us/dotnet/api/system.version).
         /// Per GitHub guidance, we use Semantic Versioning with [Major, Minor, Patch], so we ignore

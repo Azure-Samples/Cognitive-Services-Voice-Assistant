@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace DLSpeechClient
+namespace VoiceAssistantClient
 {
     using System;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows;
-    using DLSpeechClient.Settings;
+    using VoiceAssistantClient.Settings;
     using Newtonsoft.Json.Linq;
 
     /// <summary>
