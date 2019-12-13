@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace DLSpeechClient
+namespace VoiceAssistantClient
 {
     using System.Windows.Controls;
-    
+
     /// <summary>
     /// Interaction logic for ConversationView.xaml.
     /// </summary>

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-namespace DLSpeechClient
+namespace VoiceAssistantClient
 {
     using System;
     using System.Diagnostics;
@@ -9,8 +9,8 @@ namespace DLSpeechClient
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
-    using DLSpeechClient.Settings;
     using Microsoft.Win32;
+    using VoiceAssistantClient.Settings;
 
     /// <summary>
     /// Interaction logic for SettingsDialog.xaml.
