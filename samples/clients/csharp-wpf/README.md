@@ -4,15 +4,15 @@ languages:
 - csharp
 products:
 - azure
-description: "The Direct Line Speech Client is a Windows Presentation Foundation (WPF) application in C# that makes it easy to test interactions with your bot before creating a custom client application."
-urlFragment: Cognitive-Services-Direct-Line-Speech-Client
+description: "The Windows Voice Assistant Client is a Windows Presentation Foundation (WPF) application in C# that makes it easy to test interactions with your bot before creating a custom client application."
+urlFragment: Cognitive-Services-Voice-Assistant-Clients
 ---
 
 [![Build Status](https://msasg.visualstudio.com/Skyman/_apis/build/status/Azure-Samples.Cognitive-Services-Direct-Line-Speech-Client?branchName=master)](https://msasg.visualstudio.com/Skyman/_build/latest?definitionId=10284&branchName=master)
 
-# Direct Line Speech Client
+# Windows Voice Assistant Client
 
-The Direct Line Speech Client is a Windows Presentation Foundation (WPF) application in C# that makes it easy to test interactions with your bot before creating a custom client application. It demonstrates how to use the [Azure Speech Services Speech SDK](https://docs.microsoft.com/azure/cognitive-services/speech-service/speech-sdk) to manage communication with your Azure Bot-Framework bot. To use this client, you need to register your bot with the [Direct Line Speech](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-channel-connect-directlinespeech?view=azure-bot-service-4.0) channel. Direct Line Speech Client is used in the tutorial [Voice-enable your bot using the Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk).
+The Windows Voice Assistant Client is a Windows Presentation Foundation (WPF) application in C# that makes it easy to test interactions with your bot before creating a custom client application. It demonstrates how to use the [Azure Speech Services Speech SDK](https://docs.microsoft.com/azure/cognitive-services/speech-service/speech-sdk) to manage communication with your Azure Bot-Framework bot. To use this client, you need to register your bot with the [Direct Line Speech](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-channel-connect-directlinespeech?view=azure-bot-service-4.0) channel. Windows Voice Assistant Client is used in the tutorial [Voice-enable your bot using the Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk).
 
 Following the introduction of [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) (in preview) in Speech SDK 1.8, this tool was updated to accept a custom command application ID. This allows you to test your task completion or command-and-control scenario hosted on the Custom Command service.
 
@@ -42,14 +42,14 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
 
 1. The first step is to clone the repository:
    ```bash
-   git clone https://github.com/Azure-Samples/Cognitive-Services-Direct-Line-Speech-Client.git
+   git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistants.git
    ```
 2. Then change directories:
    ```bash
-   cd Cognitive-Services-Direct-Line-Speech-Client
+   cd Cognitive-Services-Voice-Assistants\samples\clients\csharp-wpf
    ```
-3. Launch Visual Studio 201 or newer, then open the solution for the Direct Line Speech Client: `VoiceAssistantClient.sln`. The solution is in the root of the cloned repository.
-4. Run the executable. For example, for Release x64 build: `VoiceAssistantClient\bin\x64\Release\VoiceAssistantClient.exe`.
+3. Launch Visual Studio 2017 or newer by opening the solution `VoiceAssistantClient.sln`. Build the solution (the default build flavor is Debug x64)
+4. Run the executable. For example, for Debug x64 build, this will be the executable: `VoiceAssistantClient\bin\x64\Debug\VoiceAssistantClient.exe`.
 5. When you first run the application, the **Setting** page will open. The first two fields are required (all others are optional):
     - Enter _Subscription key_. This is your Azure [Speech Services Key](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started)
     - Enter _Subscription key region_. This is the Azure region of your key in the format specified by the "Speech SDK Parameter" column [in this table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#speech-to-text-text-to-speech-and-translation) (for example "westus")
@@ -82,7 +82,7 @@ See also _Debugging_ section in [Voice-first virtual assistants Preview: Frequen
 
 ## Sending custom activities to your bot
 
-Direct Line Speech Client allows you to author and send a custom JSON activity to your bot. This is done using the "Custom Activity" bar at the bottom of the main window and the "New", "Edit" and "Send" buttons. Enter a valid JSON format that conforms to the Bot-Framework Activity schema. An example is given in the file [example.json](docs/json/example.json).
+Windows Voice Assistant Client allows you to author and send a custom JSON activity to your bot. This is done using the "Custom Activity" bar at the bottom of the main window and the "New", "Edit" and "Send" buttons. Enter a valid JSON format that conforms to the Bot-Framework Activity schema. An example is given in the file [example.json](docs/json/example.json).
 
 ## Add custom keyword activation
 
