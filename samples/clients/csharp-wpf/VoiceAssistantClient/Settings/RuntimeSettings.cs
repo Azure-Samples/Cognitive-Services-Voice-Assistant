@@ -266,8 +266,8 @@ namespace VoiceAssistantClient.Settings
                 proxyHostName,
                 proxyPortNumber,
                 fromId,
-                CognitiveServiceKeyHistory,
-                CognitiveServiceRegionHistory);
+                this.CognitiveServiceKeyHistory,
+                this.CognitiveServiceRegionHistory);
         }
 
         protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

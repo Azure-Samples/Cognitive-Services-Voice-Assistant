@@ -19,7 +19,6 @@ namespace VoiceAssistantClient
     using AdaptiveCards;
     using AdaptiveCards.Rendering;
     using AdaptiveCards.Rendering.Wpf;
-    using VoiceAssistantClient.Settings;
     using Microsoft.Bot.Schema;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
@@ -27,6 +26,7 @@ namespace VoiceAssistantClient
     using Microsoft.Win32;
     using NAudio.Wave;
     using Newtonsoft.Json;
+    using VoiceAssistantClient.Settings;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml.
@@ -190,9 +190,7 @@ namespace VoiceAssistantClient
             {
                 if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.CustomCommandsAppId))
                 {
-                    //
-                    // NOTE: Custom commands is a preview Azure Service
-                    //
+                    // NOTE: Custom commands is a preview Azure Service.
                     // Set the custom commands configuration object based on three items:
                     // - The Custom commands application ID
                     // - Cognitive services speech subscription key.

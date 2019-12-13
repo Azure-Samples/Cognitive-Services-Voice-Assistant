@@ -9,8 +9,8 @@ namespace VoiceAssistantClient
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
-    using VoiceAssistantClient.Settings;
     using Microsoft.Win32;
+    using VoiceAssistantClient.Settings;
 
     /// <summary>
     /// Interaction logic for SettingsDialog.xaml.

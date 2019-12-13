@@ -7,8 +7,8 @@ namespace VoiceAssistantClient
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows;
-    using VoiceAssistantClient.Settings;
     using Newtonsoft.Json.Linq;
+    using VoiceAssistantClient.Settings;
 
     /// <summary>
     /// Interaction logic for CustomActivity.xaml.

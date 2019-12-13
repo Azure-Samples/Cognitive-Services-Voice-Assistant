@@ -5,7 +5,7 @@ namespace VoiceAssistantClient
 {
     using System;
     using System.IO;
-    
+
     public class ProducerConsumerStream : Stream
     {
         private readonly MemoryStream innerStream = new MemoryStream();

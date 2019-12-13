@@ -4,7 +4,7 @@
 namespace VoiceAssistantClient
 {
     using System.Windows.Controls;
-    
+
     /// <summary>
     /// Interaction logic for ConversationView.xaml.
     /// </summary>
