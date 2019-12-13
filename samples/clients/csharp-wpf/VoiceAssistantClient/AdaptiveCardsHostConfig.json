@@ -1,0 +1,9 @@
+{
+  "supportsInteractivity": true,
+  "fontFamily": "Segoe UI",
+  "imageSizes": {
+    "small": 80,
+    "medium": 160,
+    "large": 320
+  }
+}
