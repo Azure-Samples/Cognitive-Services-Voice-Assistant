@@ -3,6 +3,9 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
+# "Customize your pipeline" on MS docs:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/customize-pipeline
+
 # Specific branch build with batching
 trigger:
   batch: true
