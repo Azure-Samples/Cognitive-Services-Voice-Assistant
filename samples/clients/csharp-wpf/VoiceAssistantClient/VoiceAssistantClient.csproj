@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <Import Project="..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.props" Condition="Exists('..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.props')" />
-  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.2\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.2\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
-  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.2.9.2\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.2\build\Microsoft.NetFramework.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.9.2\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.2\build\Microsoft.NetCore.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.2.9.2\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.2\build\Microsoft.CodeQuality.Analyzers.props')" />
-  <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.2\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.2\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -95,19 +95,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdaptiveCards, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\AdaptiveCards.1.2.0\lib\net452\AdaptiveCards.dll</HintPath>
+      <HintPath>..\packages\AdaptiveCards.1.2.4\lib\net452\AdaptiveCards.dll</HintPath>
     </Reference>
     <Reference Include="AdaptiveCards.Rendering.Wpf, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\AdaptiveCards.Rendering.Wpf.1.2.0\lib\net452\AdaptiveCards.Rendering.Wpf.dll</HintPath>
+      <HintPath>..\packages\AdaptiveCards.Rendering.Wpf.1.2.4\lib\net452\AdaptiveCards.Rendering.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="AdaptiveCards.Rendering.Wpf.Xceed, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\AdaptiveCards.Rendering.Wpf.Xceed.1.2.0\lib\net452\AdaptiveCards.Rendering.Wpf.Xceed.dll</HintPath>
+      <HintPath>..\packages\AdaptiveCards.Rendering.Wpf.Xceed.1.2.4\lib\net452\AdaptiveCards.Rendering.Wpf.Xceed.dll</HintPath>
     </Reference>
     <Reference Include="Jot, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jot.1.4.1\lib\net45\Jot.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bot.Schema, Version=4.4.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bot.Schema.4.4.5\lib\netstandard2.0\Microsoft.Bot.Schema.dll</HintPath>
+    <Reference Include="Microsoft.Bot.Schema, Version=4.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bot.Schema.4.7.0\lib\netstandard2.0\Microsoft.Bot.Schema.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CognitiveServices.Speech.csharp, Version=1.8.0.28, Culture=neutral, PublicKeyToken=d2e6dcccb609e663, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CognitiveServices.Speech.1.8.0\lib\net461\Microsoft.CognitiveServices.Speech.csharp.dll</HintPath>
@@ -119,7 +119,7 @@
       <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -137,20 +137,20 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.7.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.7.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.7.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.7.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.7.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -276,30 +276,31 @@
     <Resource Include="Resources\DLSpeechIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.2\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.2\analyzers\dotnet\cs\Humanizer.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.2\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.2\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.2\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.2\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.2\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.2\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.Unstable.1.2.0.113\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.Unstable.1.2.0.113\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.2\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.2\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.2\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.9.2\build\Microsoft.CodeQuality.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.2\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.2\build\Microsoft.NetCore.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.2\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.9.2\build\Microsoft.NetFramework.Analyzers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.2\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.2\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
     <Error Condition="!Exists('..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.props'))" />
     <Error Condition="!Exists('..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CognitiveServices.Speech.1.8.0\build\net461\Microsoft.CognitiveServices.Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CognitiveServices.Speech.1.8.0\build\net461\Microsoft.CognitiveServices.Speech.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <Import Project="..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.targets" Condition="Exists('..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.targets')" />
   <Import Project="..\packages\Microsoft.CognitiveServices.Speech.1.8.0\build\net461\Microsoft.CognitiveServices.Speech.targets" Condition="Exists('..\packages\Microsoft.CognitiveServices.Speech.1.8.0\build\net461\Microsoft.CognitiveServices.Speech.targets')" />
