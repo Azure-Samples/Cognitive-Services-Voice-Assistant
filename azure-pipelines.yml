@@ -34,7 +34,7 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    sample1Solution: '$(sample1Solution)'
+    solution: '$(sample1Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
