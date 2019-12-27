@@ -18,6 +18,7 @@ products:
 - Cognitive Services
 description: "Sample code for Microsoft Cognitive Services Voice Assistant"
 ---
+[![Build Status](https://msasg.visualstudio.com/Skyman/_apis/build/status/Azure-Samples.Cognitive-Services-Voice-Assistant?branchName=master)](https://msasg.visualstudio.com/Skyman/_build/latest?definitionId=12256&branchName=master)
 
 <!-- For above fields, see: https://review.docs.microsoft.com/en-us/help/contribute/samples/process/onboarding?branch=master#yaml-front-matter-structure  -->
 
