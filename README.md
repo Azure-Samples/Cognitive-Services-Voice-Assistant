@@ -2,11 +2,24 @@
 page_type: sample
 languages:
 - csharp
+- cpp
 products:
-- dotnet
-description: "Add 150 character max description"
-urlFragment: "update-this-to-unique-url-stub"
+- dotnet-core
+- azure-bot-service
+- azure-cognitive-services
+- azure-iot-edge
+- azure-language-understanding
+- azure-speech-text	
+- azure-text-speech
+- windows
+- windows-iot
+- windows-wpf
+- windows-uwp
+- Cognitive Services
+description: "Sample code for Microsoft Cognitive Services Voice Assistant"
 ---
+
+<!-- For above fields, see: https://review.docs.microsoft.com/en-us/help/contribute/samples/process/onboarding?branch=master#yaml-front-matter-structure  -->
 
 # Microsoft Cognitive Services - Voice Assistant Sample Code
 
@@ -20,27 +33,33 @@ Taxonomies for products and languages: https://review.docs.microsoft.com/new-hop
 
 ## Overview 
 
-This repository includes samples of [voice assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes code for regression testing and intent scoring for quality control.
+This repository includes samples of [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes client sample code for regression testing and language understanding intent scoring. Voice Assistant clients use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Alternatively, Voice Assistant clients can use Speech SDK to connect to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application.
+
+<!--
+Sample code for building Voice Assistant clients, using Microsoft's Speech SDK and Direct Line Speech channel, including Custom Command
+0-->
 
 ## Samples List
 
-To use the samples, clone this GitHub repository using Git:
+To build any of the samples below, clone this GitHub repository using Git:
 
 ```bash
     git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
     cd samples
 ```
-The following table describes the root files and sample folders in this reporsitory
+The following table describes the root files and sample folders in this repository
 
-| File/folder | Description |
-|-------------|-------------|
-| `samples\clients\csharp-wpf` | Windows voice assistant client sample (C#, using Windows Presentation Foundation (WPF)) |
-| `samples\clients\csharp-dotnet-core\voice-assistant-test` | Regression test and intent scoring tool (C#, .net core) |
+| File/folder | Description | Language/Platform |
+|-------------|-------------|-------------------|
+| `samples\clients\csharp-wpf` | [Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf) | C#, Windows Presentation Foundation (WPF) |
+| `samples\clients\csharp-dotnet-core\voice-assistant-test` | Automated, multi-turn regression test and intent scoring tool. Supports WAV file input, text or Bot-Framework activities | C#, .NET Core |
 | `.gitignore`      | Define what to ignore at commit time.      |
-| `CHANGELOG.md`    | List of changes to the sample.             |
+| `NOTICE.txt`
+| `CODE_OF_CONDUCT.md`
 | `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
 | `README.md`       | This README file.                          |
-| `LICENSE`         | The license for the sample.                |
+| `LICENSE.md`         | The license for the sample.                |
+| `SECURITY.md`
 
 <!--
 ## Prerequisites
