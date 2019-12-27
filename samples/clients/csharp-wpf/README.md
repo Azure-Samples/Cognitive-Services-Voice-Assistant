@@ -3,9 +3,8 @@
 The Windows Voice Assistant Client is a Windows Presentation Foundation (WPF) application in C# that makes it easy to test interactions with your bot before creating a custom client application. It demonstrates how to use the [Azure Speech Services Speech SDK](https://docs.microsoft.com/azure/cognitive-services/speech-service/speech-sdk) to manage communication with your Azure Bot-Framework bot. To use this client, you need to register your bot with the [Direct Line Speech](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-channel-connect-directlinespeech?view=azure-bot-service-4.0) channel. Windows Voice Assistant Client is used in the tutorial [Voice-enable your bot using the Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk).
 
 Following the introduction of [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) (in preview) in Speech SDK 1.8, this tool was updated to accept a custom command application ID. This allows you to test your task completion or command-and-control scenario hosted on the Custom Command service.
-
-> [!NOTE]
-> This sample replaces the "Direct Line Speech Client" that used to be hosted in the deprecated GitHub repo [Azure-Samples/Cognitive-Services-Direct-Line-Speech-Client](https://github.com/Azure-Samples/Cognitive-Services-Direct-Line-Speech-Client). The name was changed to Voice Assistant Client (or "Windows Voice Assistant Client"), to reflect the support for both Custom Commands applications as well as bots registered with Direct Line Speech channel. It has moved to this new repo to be in proximity to other voice assistant client sample code.
+<br></br>
+> *Note: This sample replaces the "Direct Line Speech Client" that used to be hosted in the deprecated GitHub repo [Azure-Samples/Cognitive-Services-Direct-Line-Speech-Client](https://github.com/Azure-Samples/Cognitive-Services-Direct-Line-Speech-Client). Functionality is the same. The name was changed to Voice Assistant Client (or "Windows Voice Assistant Client"), to reflect the support for both Custom Commands applications as well as bots registered with Direct Line Speech channel. It has moved to this new repo to be in proximity to other voice assistant client sample code.*
 
 ## Features
 
