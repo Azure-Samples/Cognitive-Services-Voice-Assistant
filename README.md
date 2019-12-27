@@ -7,6 +7,7 @@ products:
 description: "Add 150 character max description"
 urlFragment: "update-this-to-unique-url-stub"
 ---
+[![Build Status](https://msasg.visualstudio.com/Skyman/_apis/build/status/Azure-Samples.Cognitive-Services-Voice-Assistant?branchName=master)](https://msasg.visualstudio.com/Skyman/_build/latest?definitionId=12256&branchName=master)
 
 # Microsoft Cognitive Services - Voice Assistant Sample Code
 
