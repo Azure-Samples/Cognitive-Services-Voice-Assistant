@@ -5,6 +5,7 @@
 namespace VoiceAssistantTest
 {
     using System.Collections.Generic;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Class representation for each Dialog defined in the JSON input file.
@@ -14,6 +15,7 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the DialogID. A unique value identifying the dialog.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string DialogID { get; set; }
 
         /// <summary>
@@ -24,6 +26,7 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the List of Turns for this dialog.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public List<Turn> Turns { get; set; }
 
         /// <summary>

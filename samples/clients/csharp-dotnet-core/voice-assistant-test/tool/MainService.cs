@@ -197,13 +197,12 @@ namespace VoiceAssistantTest
                             System.Threading.Thread.Sleep(turn.Sleep);
                         }
 
-                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, turn.ExpectedResponse.Count, inputFiles.IgnoreActivities, turn.ExpectedResponseLatency);
+                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, turn.ExpectedResponses.Count, inputFiles.IgnoreActivities, turn.ExpectedResponseLatency);
 
                         // Send up WAV File if present
                         if (!string.IsNullOrEmpty(turn.WAVFile))
                         {
-                            //botConnector.SendAudio(turn.WAVFile);
-                            botConnector = await botConnector.SendAudio(turn.WAVFile).ConfigureAwait(false);
+                            botConnector.SendAudio(turn.WAVFile);
                         }
 
                         // Send up Utterance if present
@@ -252,9 +251,6 @@ namespace VoiceAssistantTest
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} failed");
                     }
-
-                  //  Trace.TraceInformation($"Sleeping");
-                  //  System.Threading.Thread.Sleep(15000);
                 } // End of dialog loop
 
                 TestReport fileTestReport = new TestReport
@@ -267,7 +263,6 @@ namespace VoiceAssistantTest
                 allInputFilesTestReport.Add(fileTestReport);
 
                 File.WriteAllText(outputFileName, JsonConvert.SerializeObject(testFileResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
-
                 await botConnector.Disconnect().ConfigureAwait(false);
                 botConnector.Dispose();
             } // End of inputFiles loop
@@ -396,7 +391,7 @@ namespace VoiceAssistantTest
 
             if (expectedLatencyPresentValid)
             {
-                var expectedLatencyObjectValid = CheckValidExpectedLatency(turn.ExpectedResponseLatency, turn.ExpectedResponse.Count);
+                var expectedLatencyObjectValid = CheckValidExpectedLatency(turn.ExpectedResponseLatency, turn.ExpectedResponses.Count);
                 if (!expectedLatencyObjectValid)
                 {
                     exceptionMessage.Add(ErrorStrings.LATENCY_STRING_MALFORMED);

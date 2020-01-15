@@ -106,6 +106,24 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Azure Region is invalid. Needed to make bot connections..
+        /// </summary>
+        public static string AZURE_REGION_INVALID {
+            get {
+                return ResourceManager.GetString("AZURE_REGION_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure Region is missing. Needed to make bot connections..
+        /// </summary>
+        public static string AZURE_REGION_MISSING {
+            get {
+                return ResourceManager.GetString("AZURE_REGION_MISSING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This turn should not have any input, as it is supposed to check bot greeting..
         /// </summary>
         public static string BOT_GREETING_MISSING {
@@ -120,6 +138,33 @@ namespace VoiceAssistantTest.Resources {
         public static string CONFIG_FILE_MISSING {
             get {
                 return ResourceManager.GetString("CONFIG_FILE_MISSING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Command App Id is invalid..
+        /// </summary>
+        public static string CUSTOM_COMMANDS_APP_ID_INVALID {
+            get {
+                return ResourceManager.GetString("CUSTOM_COMMANDS_APP_ID_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Speech Recognition Endpoint Id is invalid..
+        /// </summary>
+        public static string CUSTOM_SR_ENDPOINT_ID_INVALID {
+            get {
+                return ResourceManager.GetString("CUSTOM_SR_ENDPOINT_ID_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Voice Deployment Id is invalid..
+        /// </summary>
+        public static string CUSTOM_VOICE_DEPLOYMENT_ID_INVALID {
+            get {
+                return ResourceManager.GetString("CUSTOM_VOICE_DEPLOYMENT_ID_INVALID", resourceCulture);
             }
         }
         
@@ -160,7 +205,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sleep duration cannot be a negative number.
+        ///   Looks up a localized string similar to Sleep duration cannot be a negative number..
         /// </summary>
         public static string NEGATIVE_SLEEP_DURATION {
             get {
@@ -187,11 +232,11 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Region is missing. Needed to make bot connections..
+        ///   Looks up a localized string similar to Speech Recognition Language is invalid..
         /// </summary>
-        public static string REGION_MISSING {
+        public static string SR_LANGUAGE_INVALID {
             get {
-                return ResourceManager.GetString("REGION_MISSING", resourceCulture);
+                return ResourceManager.GetString("SR_LANGUAGE_INVALID", resourceCulture);
             }
         }
         

@@ -32,37 +32,37 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the actual intents obtained from LUIS traces.
         /// </summary>
-        [JsonProperty(Order = 0)]
+        [JsonProperty(Order = 0, NullValueHandling = NullValueHandling.Ignore)]
         public List<Tuple<string, int>> ActualIntents { get; set; }
 
         /// <summary>
         /// Gets or sets the actual slots obtained from LUIS traces.
         /// </summary>
-        [JsonProperty(Order = 2)]
+        [JsonProperty(Order = 2, NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, string> ActualSlots { get; set; }
 
         /// <summary>
         /// Gets or sets the list of actual responses received from the bot.
         /// </summary>
         [JsonProperty(Order = 4)]
-        public List<Activity> ActualResponse { get; set; }
+        public List<Activity> ActualResponses { get; set; }
 
         /// <summary>
         /// Gets or sets the text recognized from input speech.
         /// </summary>
-        [JsonProperty(Order = 5)]
+        [JsonProperty(Order = 5, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ActualRecognizedText { get; set; }
 
         /// <summary>
         /// Gets or sets the Actual TTS Audio Reponse Duratio (in milliseconds).
         /// </summary>
-        [JsonProperty(Order = 7)]
+        [JsonProperty(Order = 7, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ActualTTSAudioReponseDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.
         /// </summary>
-        [JsonProperty(Order = 9)]
+        [JsonProperty(Order = 9, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ActualResponseLatency { get; set; }
 
         /// <summary>

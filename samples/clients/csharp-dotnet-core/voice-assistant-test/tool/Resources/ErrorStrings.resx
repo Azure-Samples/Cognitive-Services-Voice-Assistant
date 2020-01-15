@@ -132,11 +132,26 @@
   <data name="AUTHENTICATION_ERROR" xml:space="preserve">
     <value>Unable to establish bot connection.</value>
   </data>
+  <data name="AZURE_REGION_INVALID" xml:space="preserve">
+    <value>Azure Region is invalid. Needed to make bot connections.</value>
+  </data>
+  <data name="AZURE_REGION_MISSING" xml:space="preserve">
+    <value>Azure Region is missing. Needed to make bot connections.</value>
+  </data>
   <data name="BOT_GREETING_MISSING" xml:space="preserve">
     <value>This turn should not have any input, as it is supposed to check bot greeting.</value>
   </data>
   <data name="CONFIG_FILE_MISSING" xml:space="preserve">
     <value>Configuration file is not specified. Please pass a valid configuration file as an argument.</value>
+  </data>
+  <data name="CUSTOM_COMMANDS_APP_ID_INVALID" xml:space="preserve">
+    <value>Custom Command App Id is invalid.</value>
+  </data>
+  <data name="CUSTOM_SR_ENDPOINT_ID_INVALID" xml:space="preserve">
+    <value>Custom Speech Recognition Endpoint Id is invalid.</value>
+  </data>
+  <data name="CUSTOM_VOICE_DEPLOYMENT_ID_INVALID" xml:space="preserve">
+    <value>Custom Voice Deployment Id is invalid.</value>
   </data>
   <data name="FILE_DOES_NOT_EXIST" xml:space="preserve">
     <value>File with this name and path does not exist.</value>
@@ -151,7 +166,7 @@
     <value>Expected Latency string is malformed - not a valid expected latency</value>
   </data>
   <data name="NEGATIVE_SLEEP_DURATION" xml:space="preserve">
-    <value>Sleep duration cannot be a negative number</value>
+    <value>Sleep duration cannot be a negative number.</value>
   </data>
   <data name="NONE_PRESENT" xml:space="preserve">
     <value>All input fields are empty.</value>
@@ -159,8 +174,8 @@
   <data name="NO_WRITE_ACCESS_FOLDER" xml:space="preserve">
     <value>The folder does not have write permissions for the user running the code.</value>
   </data>
-  <data name="REGION_MISSING" xml:space="preserve">
-    <value>Region is missing. Needed to make bot connections.</value>
+  <data name="SR_LANGUAGE_INVALID" xml:space="preserve">
+    <value>Speech Recognition Language is invalid.</value>
   </data>
   <data name="SUBSCRIPTION_KEY_INVALID" xml:space="preserve">
     <value>Subscription Key is invalid (expecting a GUID).</value>

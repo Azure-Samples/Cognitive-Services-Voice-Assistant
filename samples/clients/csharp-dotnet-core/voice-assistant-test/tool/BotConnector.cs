@@ -131,6 +131,13 @@ namespace VoiceAssistantTest
 
             this.pushAudioInputStream = AudioInputStream.CreatePushStream();
             this.connector = new DialogServiceConnector(config, AudioConfig.FromStreamInput(this.pushAudioInputStream));
+
+            if (this.appsettings.BotGreeting)
+            {
+                // Starting the timer to calculate latency for Bot Greeting.
+                this.stopWatch.Start();
+            }
+
             this.AttachHandlers();
         }
 
@@ -176,8 +183,8 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Send an audio WAV file to the Bot using ListenOnceAsync.
         /// </summary>
-        /// <returns>Activity.</returns>
-        public async Task<BotConnector> SendAudio(string wavFile)
+        /// <param name="wavFile">WAV file in each turn.</param>
+        public void SendAudio(string wavFile)
         {
             int readBytes;
 
@@ -200,14 +207,11 @@ namespace VoiceAssistantTest
 
             waveFileReader.Dispose();
 
-            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Call ListenOnceAsync() and wait");
+            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Start listening");
 
             // Don't wait for this task to finish. It may take a while, even after the "Recognized" event is received. This is a known
             // issue in Speech SDK and should be fixed in a future versions.
-            // this.connector.ListenOnceAsync();
-            await this.connector.ListenOnceAsync().ConfigureAwait(false);
-            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] ListenOnceAsync() task completed");
-            return this;
+            this.connector.ListenOnceAsync();
         }
 
         /// <summary>

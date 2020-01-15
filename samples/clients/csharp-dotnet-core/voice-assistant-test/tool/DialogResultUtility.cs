@@ -175,14 +175,14 @@ namespace VoiceAssistantTest
             TurnResult turnsOutput = new TurnResult(turns)
             {
                 ExpectedSlots = new Dictionary<string, string>(),
-                ActualResponse = new List<Activity>(),
+                ActualResponses = new List<Activity>(),
             };
 
             int activityIndex = 0;
 
-            if (turns.ExpectedResponse != null)
+            if (turns.ExpectedResponses != null)
             {
-                turnsOutput.ExpectedResponse = turns.ExpectedResponse;
+                turnsOutput.ExpectedResponses = turns.ExpectedResponses;
             }
 
             // Actual values
@@ -191,7 +191,7 @@ namespace VoiceAssistantTest
 
             foreach (BotReply botReply in response)
             {
-                turnsOutput.ActualResponse.Add(botReply.Activity);
+                turnsOutput.ActualResponses.Add(botReply.Activity);
             }
 
             turnsOutput.ActualTTSAudioReponseDuration = responseDuration;
@@ -204,9 +204,12 @@ namespace VoiceAssistantTest
                     activityIndex = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
                 }
 
-                if (ActivitiesMatch(turns.ExpectedResponse[activityIndex], turnsOutput.ActualResponse[activityIndex]))
+                if (turns.ExpectedResponses != null)
                 {
-                    turnsOutput.ActualResponseLatency = response[activityIndex].Latency;
+                    if (ActivitiesMatch(turns.ExpectedResponses[activityIndex], turnsOutput.ActualResponses[activityIndex]))
+                    {
+                        turnsOutput.ActualResponseLatency = response[activityIndex].Latency;
+                    }
                 }
             }
 
@@ -237,7 +240,7 @@ namespace VoiceAssistantTest
             }
 
             turnResult.SlotMatch = (turnResult.ActualSlots.Count == turnResult.ExpectedSlots.Count) && (!turnResult.ActualSlots.Except(turnResult.ExpectedSlots).Any());
-            turnResult.ResponseMatch = DialogResultUtility.ActivityListsMatch(turnResult.ExpectedResponse, turnResult.ActualResponse);
+            turnResult.ResponseMatch = DialogResultUtility.ActivityListsMatch(turnResult.ExpectedResponses, turnResult.ActualResponses);
 
             if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
             {

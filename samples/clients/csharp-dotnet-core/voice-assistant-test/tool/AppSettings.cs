@@ -5,6 +5,7 @@
 namespace VoiceAssistantTest
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using Microsoft.Extensions.Configuration;
@@ -149,6 +150,61 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
+        /// Validates CustomSREndpointId/ CustomVoiceDeploymentIds if it is a GUID and case insensitive.
+        /// </summary>
+        /// <param name="id">Input id.</param>
+        /// <returns>Boolean - true for a valid CustomCommandsAppId /CustomSREndpointId/ CustomVoiceDeploymentIds, false otherwise.</returns>
+        public static bool ValidateCustomID(string id)
+        {
+            if (Guid.TryParse(id, out Guid parsedGuid))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Validates CustomCommandsAppId if it isa GUID with dashes and case sensitive.
+        /// </summary>
+        /// <param name="id">Input id.</param>
+        /// <returns>Boolean - true for a valid CustomCommandsAppId, false otherwise.</returns>
+        public static bool ValidateCustomCommandAppID(string id)
+        {
+            if (Guid.TryParse(id, out Guid parsedGuid) &&
+                parsedGuid.ToString("D", null).Equals(id, StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///  Looking up for region from the list.
+        /// </summary>
+        /// <param name="region">Speech region.</param>
+        /// <returns>Boolean - true for a valid Direct Line Speech Azure Region false otherwise.</returns>
+        public static bool ValidateRegion(string region)
+        {
+            List<string> speechRegions = new List<string>() { "westus", "westus2", "eastus", "eastus2", "westeurope", "northeurope", "southeastasia" };
+
+            return speechRegions.Contains(region.ToLower());
+        }
+
+        /// <summary>
+        ///  Looking up for Speech Recognition Language from the list.
+        /// </summary>
+        /// <param name="srLanguage">Speech Recognition Language.</param>
+        /// <returns>Boolean - true for a valid Speech Recognition Language, false otherwise.</returns>
+        public static bool ValidateSRLanguage(string srLanguage)
+        {
+            List<string> srLanguages = new List<string>() { "ar-eg", "ar-sa", "ar-ae", "ar-kw", "ar-qa", "ca-es", "da-dk", "de-de", "en-au", "en-ca", "en-gb", "en-in", "en-nz", "en-us", "es-es", "es-mx", "fi-fi", "fr-ca", "fr-fr", "gu-in", "hi-in", "it-it", "ja-jp", "ko-kr", "mr-in", "nb-no", "nl-nl", "pl-pl", "pt-br", "pt-pt", "ru-ru", "sv-se", "ta-in", "te-in", "zh-cn", "zh-hk", "zh-tw" };
+
+            return srLanguages.Contains(srLanguage.ToLower());
+        }
+
+        /// <summary>
         /// Validate an AppSettings instance.
         /// </summary>
         /// <param name="instance">An instance of AppSettings.</param>
@@ -161,7 +217,11 @@ namespace VoiceAssistantTest
 
             if (string.IsNullOrWhiteSpace(instance.Region))
             {
-                throw new MissingFieldException(ErrorStrings.REGION_MISSING);
+                throw new MissingFieldException(ErrorStrings.AZURE_REGION_MISSING);
+            }
+            else if (ValidateRegion(instance.Region) == false)
+            {
+                throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
             }
 
             if (instance.InputFiles == null || instance.InputFiles.Length == 0)
@@ -185,6 +245,38 @@ namespace VoiceAssistantTest
             {
                 // If output folder is set, check if it has write permissions
                 throw new UnauthorizedAccessException($"{ErrorStrings.NO_WRITE_ACCESS_FOLDER} - {outputDirectory}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(instance.CustomCommandsAppId))
+            {
+                if (ValidateCustomCommandAppID(instance.CustomCommandsAppId) == false)
+                {
+                    throw new ArgumentException(ErrorStrings.CUSTOM_COMMANDS_APP_ID_INVALID);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(instance.CustomSREndpointId))
+            {
+                if (ValidateCustomID(instance.CustomSREndpointId) == false)
+                {
+                    throw new ArgumentException(ErrorStrings.CUSTOM_SR_ENDPOINT_ID_INVALID);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(instance.CustomVoiceDeploymentIds))
+            {
+                if (ValidateCustomID(instance.CustomVoiceDeploymentIds) == false)
+                {
+                    throw new ArgumentException(ErrorStrings.CUSTOM_VOICE_DEPLOYMENT_ID_INVALID);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(instance.SRLanguage))
+            {
+                if (ValidateSRLanguage(instance.SRLanguage) == false)
+                {
+                    throw new ArgumentException(ErrorStrings.SR_LANGUAGE_INVALID);
+                }
             }
         }
 
