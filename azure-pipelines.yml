@@ -66,7 +66,7 @@ steps:
     platform: '$(buildPlatformManaged)'
     configuration: '$(buildConfiguration)'
 
-- script: dir /s $(sample2PublishedArtifactPath)    
+- script: dir /s $(sample2Folder) 
 
 - task: PublishPipelineArtifact@1
   inputs:
