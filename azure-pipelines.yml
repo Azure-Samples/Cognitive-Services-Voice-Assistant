@@ -62,7 +62,8 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(sample2Solution)'
-    msbuildArgs: '/t:Restore /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    #msbuildArgs: '/t:Restore /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    msbuildArgs: '/t:Restore'
     platform: '$(buildPlatformManaged)'
     configuration: '$(buildConfiguration)'
 
