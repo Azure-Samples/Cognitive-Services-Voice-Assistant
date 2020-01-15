@@ -52,17 +52,17 @@ steps:
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(sample2Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatformManaged)'
-    configuration: '$(buildConfiguration)'
-
 - task: PublishPipelineArtifact@1
   inputs:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(sample2Solution)'
+    msbuildArgs: '/t:Restore /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatformManaged)'
+    configuration: '$(buildConfiguration)'
     
 - task: VSTest@2
   inputs:
