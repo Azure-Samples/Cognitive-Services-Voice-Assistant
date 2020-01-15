@@ -19,9 +19,9 @@ pool:
 variables:
 
   # Common Build configurations
-  buildPlatformNative: 'x64'
+  buildPlatformNative: x64
   buildPlatformManaged: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildConfiguration: Release
   dotNetCoreVersion: 'netcoreapp3.1'
 
   # Sample 1: Windows Voice Assistant Client (\samples\clients\csharp-wpf)
@@ -37,6 +37,8 @@ variables:
   sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
 
 steps:
+- bash: echo $(sample2PublishedArtifactPath)
+
 - task: NuGetToolInstaller@0
 
 - task: NuGetCommand@2
