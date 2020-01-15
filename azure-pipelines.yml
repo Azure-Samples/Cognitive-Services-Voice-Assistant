@@ -39,11 +39,15 @@ variables:
 steps:
 - task: NuGetToolInstaller@0
 
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(sample1Solution)'
+
 # Sample 1: Windows Voice Assistant Client (\samples\clients\csharp-wpf)
 - task: VSBuild@1
   inputs:
     solution: '$(sample1Solution)'
-    msbuildArgs: '/t:Restore /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
 
