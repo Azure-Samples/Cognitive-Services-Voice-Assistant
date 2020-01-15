@@ -37,7 +37,7 @@ variables:
   sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
 
 steps:
-- bash: echo $(sample2PublishedArtifactPath)
+- script: echo $(sample2PublishedArtifactPath)
 
 - task: NuGetToolInstaller@0
 
@@ -66,7 +66,7 @@ steps:
     platform: '$(buildPlatformManaged)'
     configuration: '$(buildConfiguration)'
 
-- bash: dir /s $(sample2PublishedArtifactPath)    
+- script: dir /s $(sample2PublishedArtifactPath)    
 
 - task: PublishPipelineArtifact@1
   inputs:
