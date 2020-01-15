@@ -19,14 +19,24 @@ pool:
 variables:
 
   # Common Build configurations
-  buildPlatform: 'x64'
+  buildPlatformNative: 'x64'
+  buildPlatformManaged: 'Any CPU'
   buildConfiguration: 'Release'
+  dotNetCoreVersion: '3.1'
 
-  # Sample 1 (\samples\clients\csharp-wpf)
+  # Sample 1: Windows Voice Assistant Client (\samples\clients\csharp-wpf)
   sample1Folder: 'samples\clients\csharp-wpf'
   sample1Solution: '$(sample1Folder)\VoiceAssistantClient.sln'
-  sample1PublishedArtifactPath: '$(sample1Folder)\VoiceAssistantClient\bin\$(buildPlatform)\$(buildConfiguration)'
-  sample1PublishedArtifactName: 'VoiceAssistantClientBuild'
+  sample1PublishedArtifactPath: '$(sample1Folder)\VoiceAssistantClient\bin\$(buildPlatformNative)\$(buildConfiguration)'
+  sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
+
+  # Sample 2: Voice Assistant Test (\samples\clients\csharp-dotnet-core\voice-assistant-test)
+  sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
+  sample2Solution: '$(sample2Folder)\VoiceAssistantTest.sln'
+  sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)'
+  sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
+
+  
 
 steps:
 - task: NuGetToolInstaller@0
@@ -39,7 +49,14 @@ steps:
   inputs:
     solution: '$(sample1Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
+    platform: '$(buildPlatformNative)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(sample2Solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatformManaged)'
     configuration: '$(buildConfiguration)'
 
 - task: PublishPipelineArtifact@1
@@ -49,7 +66,7 @@ steps:
     
 - task: VSTest@2
   inputs:
-    platform: '$(buildPlatform)'
+    platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
 
 - task: ComponentGovernanceComponentDetection@0
