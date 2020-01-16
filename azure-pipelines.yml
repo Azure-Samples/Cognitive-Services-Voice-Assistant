@@ -19,32 +19,32 @@ pool:
 variables:
 
   # Common Build configurations
-  buildPlatformNative: 'x64'
+  buildPlatformNative: x64
   buildPlatformManaged: 'Any CPU'
-  buildConfiguration: 'Release'
+  buildConfiguration: Release
   dotNetCoreVersion: '3.1'
 
-  # Sample 1: Windows Voice Assistant Client (\samples\clients\csharp-wpf)
+  # Sample 1: Windows Voice Assistant Client, C# WPF (\samples\clients\csharp-wpf)
   sample1Folder: 'samples\clients\csharp-wpf'
   sample1Solution: '$(sample1Folder)\VoiceAssistantClient.sln'
   sample1PublishedArtifactPath: '$(sample1Folder)\VoiceAssistantClient\bin\$(buildPlatformNative)\$(buildConfiguration)'
   sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
 
-  # Sample 2: Voice Assistant Test (\samples\clients\csharp-dotnet-core\voice-assistant-test)
+  # Sample 2: Voice Assistant Test, .NET core (\samples\clients\csharp-dotnet-core\voice-assistant-test)
   sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\VoiceAssistantTest.sln'
   sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)'
   sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
 
-  
-
 steps:
+
 - task: NuGetToolInstaller@0
 
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(sample1Solution)'
 
+# Build .Net Standard applications
 - task: VSBuild@1
   inputs:
     solution: '$(sample1Solution)'
@@ -57,17 +57,22 @@ steps:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
 
-- task: VSBuild@1
+# Build .Net Core applications
+- task: DotNetCoreCLI@2
   inputs:
-    solution: '$(sample2Solution)'
-    msbuildArgs: '/t:Restore /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatformManaged)'
-    configuration: '$(buildConfiguration)'
-    
-- task: VSTest@2
+    Command: 'build'
+    Projects: $(sample2Solution)
+    Arguments: '-c $(buildConfiguration)'
+
+- task: PublishPipelineArtifact@1
   inputs:
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
+    path: $(sample2PublishedArtifactPath)
+    artifact: $(sample2PublishedArtifactName)
+
+#- task: VSTest@2
+#  inputs:
+#    platform: '$(buildPlatformNative)'
+#    configuration: '$(buildConfiguration)'
 
 - task: ComponentGovernanceComponentDetection@0
   inputs:
