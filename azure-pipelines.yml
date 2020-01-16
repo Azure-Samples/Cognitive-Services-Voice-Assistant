@@ -60,7 +60,7 @@ steps:
 
 # Build .Net Core applications
 - task: DotNetCoreCLI@2
-  input:
+  inputs:
     Command: 'build'
     Projects: $(sample2Solution)
     Arguments: '-c $(buildConfiguration)'
