@@ -7,6 +7,7 @@ namespace VoiceAssistantTest
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.IO;
     using Microsoft.Extensions.Configuration;
     using VoiceAssistantTest.Resources;
@@ -189,7 +190,7 @@ namespace VoiceAssistantTest
         {
             List<string> speechRegions = new List<string>() { "westus", "westus2", "eastus", "eastus2", "westeurope", "northeurope", "southeastasia" };
 
-            return speechRegions.Contains(region.ToLower());
+            return speechRegions.Contains(region.ToLower(CultureInfo.CurrentCulture));
         }
 
         /// <summary>
@@ -201,7 +202,7 @@ namespace VoiceAssistantTest
         {
             List<string> srLanguages = new List<string>() { "ar-eg", "ar-sa", "ar-ae", "ar-kw", "ar-qa", "ca-es", "da-dk", "de-de", "en-au", "en-ca", "en-gb", "en-in", "en-nz", "en-us", "es-es", "es-mx", "fi-fi", "fr-ca", "fr-fr", "gu-in", "hi-in", "it-it", "ja-jp", "ko-kr", "mr-in", "nb-no", "nl-nl", "pl-pl", "pt-br", "pt-pt", "ru-ru", "sv-se", "ta-in", "te-in", "zh-cn", "zh-hk", "zh-tw" };
 
-            return srLanguages.Contains(srLanguage.ToLower());
+            return srLanguages.Contains(srLanguage.ToLower(CultureInfo.CurrentCulture));
         }
 
         /// <summary>
