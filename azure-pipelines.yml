@@ -22,7 +22,7 @@ variables:
   buildPlatformNative: x64
   buildPlatformManaged: 'Any CPU'
   buildConfiguration: Release
-  dotNetCoreVersion: 'netcoreapp3.1'
+  dotNetCoreVersion: '3.1'
 
   # Sample 1: Windows Voice Assistant Client, C# WPF (\samples\clients\csharp-wpf)
   sample1Folder: 'samples\clients\csharp-wpf'
@@ -33,7 +33,7 @@ variables:
   # Sample 2: Voice Assistant Test, .NET core (\samples\clients\csharp-dotnet-core\voice-assistant-test)
   sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\VoiceAssistantTest.sln'
-  sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\$(dotNetCoreVersion)'
+  sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)'
   sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
 
 steps:
