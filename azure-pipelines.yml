@@ -45,7 +45,7 @@ steps:
 #  inputs:
 #    restoreSolution: '$(sample1Solution)'
 
-# Sample 1: Windows Voice Assistant Client (\samples\clients\csharp-wpf)
+# Build .Net Standard applications
 #- task: VSBuild@1
 #  inputs:
 #    solution: '$(sample1Solution)'
@@ -58,14 +58,20 @@ steps:
 #    path: $(sample1PublishedArtifactPath)
 #    artifact: $(sample1PublishedArtifactName)
 
-# Sample 2: Voice Assistant Test (\samples\clients\csharp-dotnet-core\voice-assistant-test)
-- task: VSBuild@1
-  inputs:
-    solution: '$(sample2Solution)'
-    #msbuildArgs: '/t:Restore /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    msbuildArgs: '/t:Restore'
-    platform: '$(buildPlatformManaged)'
-    configuration: '$(buildConfiguration)'
+# Build .Net Core applications
+- task: DotNetCoreCLI@2
+  input:
+    Command: 'build'
+    Projects: $(sample2Solution)
+    Arguments: '-c $(buildConfiguration)'
+
+#    - task: VSBuild@1
+#  inputs:
+#    solution: '$(sample2Solution)'
+#    msbuildArgs: '/t:Restore /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+#    msbuildArgs: '/t:Restore'
+#    platform: '$(buildPlatformManaged)'
+#    configuration: '$(buildConfiguration)'
 
 - script: dir /s $(sample2Folder) 
 
