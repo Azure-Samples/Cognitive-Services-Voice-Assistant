@@ -24,39 +24,38 @@ variables:
   buildConfiguration: Release
   dotNetCoreVersion: 'netcoreapp3.1'
 
-  # Sample 1: Windows Voice Assistant Client (\samples\clients\csharp-wpf)
+  # Sample 1: Windows Voice Assistant Client, C# WPF (\samples\clients\csharp-wpf)
   sample1Folder: 'samples\clients\csharp-wpf'
   sample1Solution: '$(sample1Folder)\VoiceAssistantClient.sln'
   sample1PublishedArtifactPath: '$(sample1Folder)\VoiceAssistantClient\bin\$(buildPlatformNative)\$(buildConfiguration)'
   sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
 
-  # Sample 2: Voice Assistant Test (\samples\clients\csharp-dotnet-core\voice-assistant-test)
+  # Sample 2: Voice Assistant Test, .NET core (\samples\clients\csharp-dotnet-core\voice-assistant-test)
   sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\VoiceAssistantTest.sln'
   sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\$(dotNetCoreVersion)'
   sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
 
 steps:
-- script: echo $(sample2PublishedArtifactPath)
 
 - task: NuGetToolInstaller@0
 
-#- task: NuGetCommand@2
-#  inputs:
-#    restoreSolution: '$(sample1Solution)'
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(sample1Solution)'
 
 # Build .Net Standard applications
-#- task: VSBuild@1
-#  inputs:
-#    solution: '$(sample1Solution)'
-#    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-#    platform: '$(buildPlatformNative)'
-#    configuration: '$(buildConfiguration)'
+- task: VSBuild@1
+  inputs:
+    solution: '$(sample1Solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatformNative)'
+    configuration: '$(buildConfiguration)'
 
-#- task: PublishPipelineArtifact@1
-#  inputs:
-#    path: $(sample1PublishedArtifactPath)
-#    artifact: $(sample1PublishedArtifactName)
+- task: PublishPipelineArtifact@1
+  inputs:
+    path: $(sample1PublishedArtifactPath)
+    artifact: $(sample1PublishedArtifactName)
 
 # Build .Net Core applications
 - task: DotNetCoreCLI@2
@@ -65,27 +64,15 @@ steps:
     Projects: $(sample2Solution)
     Arguments: '-c $(buildConfiguration)'
 
-#    - task: VSBuild@1
-#  inputs:
-#    solution: '$(sample2Solution)'
-#    msbuildArgs: '/t:Restore /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-#    msbuildArgs: '/t:Restore'
-#    platform: '$(buildPlatformManaged)'
-#    configuration: '$(buildConfiguration)'
-
-- script: dir /s $(sample2Folder) 
-
-- script: dir /s d:\a\1
-
 - task: PublishPipelineArtifact@1
   inputs:
     path: $(sample2PublishedArtifactPath)
     artifact: $(sample2PublishedArtifactName)
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
+#- task: VSTest@2
+#  inputs:
+#    platform: '$(buildPlatformNative)'
+#    configuration: '$(buildConfiguration)'
 
 - task: ComponentGovernanceComponentDetection@0
   inputs:
