@@ -1,0 +1,29 @@
+{
+  "InputFolder": "c:\\tests\\input\\",
+  "OutputFolder": "c:\\tests\\output\\",
+  "SubscriptionKey": "5de0c608246b4591bb4ad087b8f5b008",
+  "Region": "westus",
+  "SRLanguage": "",
+  "CustomCommandsAppId": "",
+  "CustomSREndpointId": "",
+  "CustomVoiceDeploymentIds": "",
+  "AudioDurationMargin": "200",
+  "AppLogEnabled": true,
+  "SpeechSDKLogEnabled": true,
+  "BotGreeting": false,
+  "Timeout": 3000,
+  "InputFiles": [
+    {
+      "FileName": "folder1\\test1.json",
+      "IgnoreActivities": [{"type": "typing"}, {"type": "trace"}],
+      "SingleConnection": false,
+      "Skip": false
+    },
+	{
+      "FileName": "folder2\\test2.json",
+      "IgnoreActivities": [{"type": "typing"}, {"type": "trace"}],
+      "SingleConnection": true,
+      "Skip": false
+    }
+  ]
+}
