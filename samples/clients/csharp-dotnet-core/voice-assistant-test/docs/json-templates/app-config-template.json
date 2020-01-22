@@ -1,29 +1,31 @@
 {
-  "InputFolder": "c:\\tests\\input\\",
-  "OutputFolder": "c:\\tests\\output\\",
-  "SubscriptionKey": "5de0c608246b4591bb4ad087b8f5b008",
-  "Region": "westus",
-  "SRLanguage": "",
+  "InputFiles": [
+    {
+      "FileName": "test-config-template.json",
+      "SingleConnection": true,
+      "Skip": false,
+      "IgnoreActivities": [
+        {
+          "type": "typing",
+          "name": "trace"
+        },
+        {
+          "name": "QnAMaker"
+        }
+      ]
+    }
+  ],
+  "InputFolder": "\\testing\\input\\",
+  "OutputFolder": "\\testing\\output\\",
+  "SubscriptionKey": "6719034187t67067878k72dg926e9897",
+  "Region": "westus2",
+  "SRLanguage": "en-US",
   "CustomCommandsAppId": "",
   "CustomSREndpointId": "",
   "CustomVoiceDeploymentIds": "",
-  "AudioDurationMargin": "200",
+  "TTSAudioDurationMargin": "200",
   "AppLogEnabled": true,
-  "SpeechSDKLogEnabled": true,
-  "BotGreeting": false,
-  "Timeout": 3000,
-  "InputFiles": [
-    {
-      "FileName": "folder1\\test1.json",
-      "IgnoreActivities": [{"type": "typing"}, {"type": "trace"}],
-      "SingleConnection": false,
-      "Skip": false
-    },
-	{
-      "FileName": "folder2\\test2.json",
-      "IgnoreActivities": [{"type": "typing"}, {"type": "trace"}],
-      "SingleConnection": true,
-      "Skip": false
-    }
-  ]
+  "BotGreeting": true,
+  "SpeechSDKLogEnabled": false,
+  "Timeout":  1000
 }
