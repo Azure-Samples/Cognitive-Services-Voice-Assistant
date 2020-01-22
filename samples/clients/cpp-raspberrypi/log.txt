@@ -1,0 +1,63 @@
+(263): 40ms SPX_DBG_TRACE_FUNCTION:  audio_stream_session.cpp:554 AddRecognizer
+(263): 41ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:85 TrackHandle ptr=0x0xecccbc
+(263): 41ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:90 TrackHandle type=Microsoft::CognitiveServices::Speech::Impl::ISpxDialogServiceConnector handle=0x0xecccbc, ptr=0x0xecccbc, total=1
+(263): 41ms SPX_DBG_TRACE_SCOPE_EXIT:  speechapi_c_factory.cpp:166 dialog_service_connector_create_dialog_service_connector_from_config
+(263): 41ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:85 TrackHandle ptr=0x0xeccc1c
+(263): 41ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:90 TrackHandle type=Microsoft::CognitiveServices::Speech::Impl::ISpxNamedProperties handle=0x0xeccc1c, ptr=0x0xeccc1c, total=2
+(263): 4722ms SPX_DBG_TRACE_VERBOSE:  factory_helpers.h:56 Creating object via SpxFactoryEntryCreateObject: Microsoft::CognitiveServices::Speech::Impl::CSpxKwsModel as Microsoft::CognitiveServices::Speech::Impl::ISpxKwsModel
+(263): 4722ms SPX_DBG_TRACE_SCOPE_ENTER:  keyword_spotter_model.h:24 CSpxKwsModel
+(263): 4722ms SPX_DBG_TRACE_SCOPE_EXIT:  keyword_spotter_model.h:24 CSpxKwsModel
+(263): 4722ms SPX_DBG_TRACE_SCOPE_ENTER:  keyword_spotter_model.h:33 QueryInterface
+(263): 4722ms SPX_DBG_TRACE_SCOPE_EXIT:  keyword_spotter_model.h:33 QueryInterface
+(263): 4722ms SPX_DBG_TRACE_VERBOSE:  create_object_helpers.h:51 SpxCreateObjectWithSite: Attempted SetSite(CSpxKwsModel), objectWithSite==nullptr
+(263): 4722ms SPX_DBG_TRACE_SCOPE_ENTER:  keyword_spotter_model.cpp:16 InitFromFile
+(263): 4722ms SPX_DBG_TRACE_SCOPE_EXIT:  keyword_spotter_model.cpp:16 InitFromFile
+(263): 4722ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:85 TrackHandle ptr=0x0xeea1e8
+(263): 4723ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:90 TrackHandle type=Microsoft::CognitiveServices::Speech::Impl::ISpxKwsModel handle=0x0xeea1e8, ptr=0x0xeea1e8, total=1
+(865): 4723ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xe965b4; name='SPEECH-RecoMode'; value=''
+(865): 4723ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xea141c; name='SPEECH-RecoMode'; value='INTERACTIVE'
+(865): 4723ms SPX_DBG_TRACE_FUNCTION:  audio_stream_session.cpp:772 StartRecognitionAsync
+(865): 4723ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:85 TrackHandle ptr=0x0xb4900e04
+(865): 4723ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:90 TrackHandle type=Microsoft::CognitiveServices::Speech::Impl::CSpxAsyncOp<void> handle=0x0xb4900e04, ptr=0x0xb4900e04, total=1
+(804): 4723ms SPX_DBG_TRACE_SCOPE_ENTER:  audio_stream_session.cpp:775 *** CSpxAudioStreamSession::StartRecognitionAsync kicked-off THREAD started ***
+(110): 4723ms SPX_DBG_TRACE_SCOPE_ENTER:  audio_stream_session.cpp:824 StartRecognizing
+(110): 4723ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:825 [0xea13d8]CSpxAudioStreamSession::StartRecognizing
+(110): 4723ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:2201 [0xea13d8]CSpxAudioStreamSession::Ensure16kHzSampleRate:  Pump: 0xe9f5e0
+(110): 4723ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:2528 [0xea13d8]CSpxAudioStreamSession::ChangeState: recoKind/sessionState: 0/0 => 1/1
+(110): 4723ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:841 [0xea13d8]CSpxAudioStreamSession::StartRecognizing:  Now WaitForPumpSetFormatStart ...
+(110): 4723ms SPX_DBG_TRACE_SCOPE_ENTER:  audio_stream_session.cpp:2220 StartAudioPump
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:2221 [0xea13d8]CSpxAudioStreamSession::StartAudioPump:  RecognitionKind 1 | m_audioPump [0xe9f5e0]
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xe965b4; name='SPEECH-TransmitLengthBeforThrottleMs'; value=''
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xea0df8; name='SPEECH-TransmitLengthBeforThrottleMs'; value='0'
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xe965b4; name='SPEECH-MaxBufferSizeSeconds'; value=''
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xea0df8; name='SPEECH-TransmitLengthBeforThrottleMs'; value='0'
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xe965b4; name='SPEECH-AudioThrottleAsPercentageOfRealTime'; value=''
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:2396 SetThrottleVariables: FastLane size 0 Throttle Max Speed: 200
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xe965b4; name='CARBON-INTERNAL-UseRecoEngine-Unidec'; value=''
+(110): 4724ms SPX_DBG_TRACE_FUNCTION:  audio_stream_session.cpp:1987 EnsureInitKwsEngineAdapter
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:2099 [0xea13d8]CSpxAudioStreamSession::InitKwsEngineAdapter ...
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xe965b4; name='CARBON-INTERNAL-UseKwsEngine-Mock'; value=''
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xe965b4; name='CARBON-INTERNAL-UseKwsEngine-Ddk'; value=''
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  property_bag_impl.h:119 LogPropertyAndValue: this=0x0xe965b4; name='CARBON-INTERNAL-UseKwsEngine-Sdk'; value=''
+(110): 4724ms SPX_DBG_TRACE_VERBOSE:  create_object_helpers.h:51 SpxCreateObjectWithSite: Attempted SetSite(CSpxSpeechDdkKwsEngineAdapter), objectWithSite==nullptr
+(110): 4778ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:2279 [0xea13d8]CSpxAudioStreamSession::StartAudioPump: Starting pump[0xe9f5e0]...
+(110): 4778ms SPX_DBG_TRACE_SCOPE_ENTER:  microphone_pump_base.cpp:111 MicrophonePumpBase::StartPump() ...
+(110): 4778ms SPX_DBG_TRACE_VERBOSE:  microphone_pump_base.cpp:123 StartPump starting audio input
+(110): 4778ms SPX_DBG_TRACE_SCOPE_ENTER:  microphone_pump_base.cpp:174 MicrophonePumpBase::UpdateState() ...
+(110): 4778ms SPX_DBG_TRACE_VERBOSE:  microphone_pump_base.cpp:178 UpdateState: UpdateState with state as 0.
+(110): 4778ms SPX_DBG_TRACE_SCOPE_EXIT:  microphone_pump_base.cpp:174 MicrophonePumpBase::UpdateState ... Done!
+(110): 4779ms SPX_DBG_TRACE_VERBOSE:  microphone_pump_base.cpp:126 StartPump audio input started!
+(110): 4779ms SPX_DBG_TRACE_SCOPE_EXIT:  microphone_pump_base.cpp:111 MicrophonePumpBase::StartPump ... Done!
+(214): 4778ms SPX_DBG_TRACE_SCOPE_ENTER:  microphone_pump_base.cpp:174 MicrophonePumpBase::UpdateState() ...
+(110): 4779ms SPX_DBG_TRACE_SCOPE_EXIT:  audio_stream_session.cpp:2220 StartAudioPump
+(214): 4779ms SPX_DBG_TRACE_VERBOSE:  microphone_pump_base.cpp:178 UpdateState: UpdateState with state as 1.
+(110): 4779ms SPX_DBG_TRACE_SCOPE_EXIT:  audio_stream_session.cpp:824 StartRecognizing
+(214): 4779ms SPX_DBG_TRACE_SCOPE_EXIT:  microphone_pump_base.cpp:174 MicrophonePumpBase::UpdateState ... Done!
+(804): 4779ms SPX_DBG_TRACE_SCOPE_EXIT:  audio_stream_session.cpp:775 *** CSpxAudioStreamSession::StartRecognitionAsync kicked-off THREAD stopped ***
+(110): 4779ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:343 [0xea13d8]CSpxAudioStreamSession::SetFormat: format != nullptr
+(110): 4779ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:2528 [0xea13d8]CSpxAudioStreamSession::ChangeState: recoKind/sessionState: 1/1 => 1/2
+(865): 4779ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:130 StopTracking handle=0x0xb4900e04
+(110): 4779ms SPX_DBG_TRACE_VERBOSE:  audio_stream_session.cpp:348 [0xea13d8]CSpxAudioStreamSession::SetFormat: Now ProcessingAudio ...
+(865): 4779ms SPX_DBG_TRACE_VERBOSE:  handle_table.h:140 StopTracking type=Microsoft::CognitiveServices::Speech::Impl::CSpxAsyncOp<void> handle=0x0xb4900e04, ptr=0x0xb4900e04, total=0
+(110): 4779ms SPX_DBG_TRACE_SCOPE_ENTER:  audio_stream_session.cpp:2361 InformAdapterSetFormatStarting
+(110): 4779ms SPX_DBG_TRACE_SCOPE_EXIT:  audio_stream_session.cpp:2361 InformAdapterSetFormatStarting
