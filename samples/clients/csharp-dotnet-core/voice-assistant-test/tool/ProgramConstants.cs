@@ -30,5 +30,16 @@ namespace VoiceAssistantTest
         /// The test output folder is the OutputFolder/{testfile-name}Output/.
         /// </summary>
         public const string WAVFileFolderName = "WAVFiles";
+
+        /// <summary>
+        /// Configuration File Environment Variable for Test Method.
+        /// </summary>
+        public const string ConfigFileEnvVariable = "VOICE_ASSISTANT_TEST_CONFIG";
+
+        /// <summary>
+        /// Name for Default Configuration File.
+        /// If ConfigFileEnvVariable is not defined, DefaultConfigFile will be used.
+        /// </summary>
+        public const string DefaultConfigFile = "VoiceAssistantTestConfig.json";
     }
 }

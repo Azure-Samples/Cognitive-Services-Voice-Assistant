@@ -169,6 +169,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not create Output Folder.
+        /// </summary>
+        public static string FAILED_CREATING_OUPUT_FOLDER {
+            get {
+                return ResourceManager.GetString("FAILED_CREATING_OUPUT_FOLDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File with this name and path does not exist..
         /// </summary>
         public static string FILE_DOES_NOT_EXIST {
