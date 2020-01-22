@@ -9,6 +9,7 @@ namespace VoiceAssistantTest
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
+    using Microsoft.Bot.Schema;
     using Activity = Microsoft.Bot.Schema.Activity;
 
     /// <summary>
