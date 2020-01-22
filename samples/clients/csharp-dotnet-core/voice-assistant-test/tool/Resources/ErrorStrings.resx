@@ -153,6 +153,9 @@
   <data name="CUSTOM_VOICE_DEPLOYMENT_ID_INVALID" xml:space="preserve">
     <value>Custom Voice Deployment Id is invalid.</value>
   </data>
+  <data name="FAILED_CREATING_OUPUT_FOLDER" xml:space="preserve">
+    <value>Could not create Output Folder</value>
+  </data>
   <data name="FILE_DOES_NOT_EXIST" xml:space="preserve">
     <value>File with this name and path does not exist.</value>
   </data>

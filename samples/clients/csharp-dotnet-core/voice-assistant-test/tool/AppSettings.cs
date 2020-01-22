@@ -234,7 +234,18 @@ namespace VoiceAssistantTest
 
             if (!string.IsNullOrWhiteSpace(instance.OutputFolder))
             {
-                outputDirectory = instance.OutputFolder;
+                outputDirectory = Path.GetFullPath(instance.OutputFolder);
+                if (!Directory.Exists(outputDirectory))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(outputDirectory);
+                    }
+                    catch (Exception)
+                    {
+                        throw new Exception($"{ErrorStrings.FAILED_CREATING_OUPUT_FOLDER} - {outputDirectory}");
+                    }
+                }
             }
 
             if (!Directory.Exists(outputDirectory))
