@@ -197,7 +197,16 @@ namespace VoiceAssistantTest
                             System.Threading.Thread.Sleep(turn.Sleep);
                         }
 
-                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, turn.ExpectedResponses.Count, inputFiles.IgnoreActivities, turn.ExpectedResponseLatency);
+                        int responseCount = 0;
+                        bool bootstrapMode = true;
+
+                        if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0)
+                        {
+                            responseCount = turn.ExpectedResponses.Count;
+                            bootstrapMode = false;
+                        }
+
+                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, responseCount, inputFiles.IgnoreActivities, turn.ExpectedResponseLatency);
 
                         // Send up WAV File if present
                         if (!string.IsNullOrEmpty(turn.WAVFile))
@@ -218,7 +227,7 @@ namespace VoiceAssistantTest
                         }
 
                         // All bot reply activities are captured in this variable.
-                        List<BotReply> responseActivities = botConnector.WaitAndProcessBotReplies();
+                        List<BotReply> responseActivities = botConnector.WaitAndProcessBotReplies(bootstrapMode);
 
                         // Separate LUIS traces and other response activities.
                         ActivityUtility activityUtility = new ActivityUtility();
@@ -226,7 +235,7 @@ namespace VoiceAssistantTest
 
                         // Capture the result of this turn in this variable and validate the turn.
                         TurnResult turnResult = dialogOutput.BuildOutput(turn, activityUtility.IntentHierarchy, activityUtility.Entities, activityUtility.FinalResponses, botConnector.DurationInMs, botConnector.RecognizedText);
-                        dialogOutput.ValidateTurn(turnResult);
+                        dialogOutput.ValidateTurn(turnResult, bootstrapMode);
 
                         // Add the turn result to the list of turn results.
                         turnResults.Add(turnResult);
