@@ -34,12 +34,16 @@
 
             int result = MainService.StartUp(configFile).Result;
 
+            // If StartUp() returns 0, App has ran to completion and Test has passed
+            // else Test failed.
             if (result == 0)
             {
+                // Test Passed.
                 Assert.IsTrue(true);
             }
             else
             {
+                // Test Failed.
                 Assert.IsTrue(false);
             }
         }
