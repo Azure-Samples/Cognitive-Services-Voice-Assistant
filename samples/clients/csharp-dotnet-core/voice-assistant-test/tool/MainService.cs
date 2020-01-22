@@ -235,7 +235,7 @@ namespace VoiceAssistantTest
 
                         // Capture the result of this turn in this variable and validate the turn.
                         TurnResult turnResult = dialogOutput.BuildOutput(turn, activityUtility.IntentHierarchy, activityUtility.Entities, activityUtility.FinalResponses, botConnector.DurationInMs, botConnector.RecognizedText);
-                        dialogOutput.ValidateTurn(turnResult,bootstrapMode);
+                        dialogOutput.ValidateTurn(turnResult, bootstrapMode);
 
                         // Add the turn result to the list of turn results.
                         turnResults.Add(turnResult);
