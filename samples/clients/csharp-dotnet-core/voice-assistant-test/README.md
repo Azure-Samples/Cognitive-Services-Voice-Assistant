@@ -69,20 +69,23 @@ The following are the fields  in Configuration file:
 
 |Field Name     | Type 	     | Required/Optional| Default   | Example	     | Description|
 |:--------------|:-----------| :---------------:|:----------|:---------------|:----------|
-|FileName       | string	 | required		    |           | Start.json	 | Name of the input file|
 |InputFolder    | string     | required         |           |"C:\\\LUAccuracytool\\\SydneyAssistant\\\" | Path that contains all the input files and input WAV files |
 |OutputFolder   | string     | required         |           |"C:\\\LUAccuracytool\\\SydneyAssistant\\\" |  Path where the output test files will be generated |
 |SubscriptionKey| string     | required         |           |“9814793187f7486787898p35f26e9247”|  Cognitive Services Speech API Key. Should be a GUID without dashes |
 |Region         | string     | required         |           |"westus" |  Azure region of your key in the format specified by the "Speech SDK Parameter" |
-|IgnoringActivities | Array of JObject	 | Optional	|	          |[{"type": "typing","name": "trace"}, {"name": "setDynamicGrammar"}]| List of activities that are ignored by tool|
-|SRLanguage   | string     | Optional             |             |"en-US" |  Speech Recognition Language. It is the source language of your audio.  [Checkout the list of languages supported]:https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support |
+|SRLanguage   | string     | Optional             |             |"en-US" |  Speech Recognition Language. It is the source language of your audio.  [Checkout the list of languages supported](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support) |
 |CustomCommandsAppId  | string     | Optional         |             |"80c787bf-806b-402c-9493-79154c08a67d" |  Custom Commands App ID. Should be a GUID. |
 |CustomSREndpointId   | string     | Optional         |             | |  Custom SR Endpoint ID. Sets the endpoint ID of a customized speech model that is used for speech recognition |
 |CustomVoiceDeploymentIds   | string     | Optional         |             |"07a189pb4-U734-47b2-q89l-56e12g0a71h0" | Custom Voice Deployment ID.|
 |AudioDurationMargin   | string     | Optional         |   200          | 100 |  Margin to verify the duration of Bot response TTS audio.|
 |AppLogEnabled   | boolean     | Optional         |   false          | true |   A boolean that enables Application Logging.|
 |SpeechSDKLogEnabled   | string     | Optional         |   false          | true |   A boolean that enables generating a Speech SDK Logging.|
+|BotGreeting   | boolean     | Optional         |   false          | true |  A boolean which defines if a Bot that being tested has a greeting activity response upon conection.|
 |Timeout   | int     | Optional         |   5000          | 2000 |  A global timeout that waits for each bot response.|
+|FileName       | string	 | required		    |           | Start.json	 | Name of the input file|
+|Ignore Activities | Array of JObject	 | Optional	|	          |[{"type": "typing","name": "trace"}, {"name": "setDynamicGrammar"}]| List of activities that are ignored by tool|
+|SingleConnection  | boolean	 | Optional		    | false          | true	 | Boolean which defines whether each Dialog in the input file is processed with the same connection with the Bot or a new connection for each Dialog|
+|Skip       | boolean	 | Optional		    |    false       |true	 | Boolean which defines whether a input file is to be skipped or not|
 
 #### Test configuration file
 
@@ -91,6 +94,9 @@ The following are the fields  in Input File:
 |Field Name      | Type 	       | Required/Optional| Default   | Example	         | Description|
 |:---------------|:----------------| :---------------:|:----------|:-----------------|:----------|
 |DialogId        | string	       | required		  |           |   "0"	         | A unique value that identifies each dialog|
+|Description     | string          | Optional         |           | "Testing a Dialog" | Describes the what the test does
+|Skip            | boolean	       | Optional		  |    false  | true	         | Boolean which defines whether a Dialog is to be skipped or not|
+|Sleep           | int	           | Optional		  |    0      | 10	             | |
 |TurnId          | int             | required         |           |    1             | A unique value that identifies each turn in a specific Dialog. |
 |Utterance       | string          | required         |           |“Open Start Menu” | Text that is send up to communicate with the Bot.  |
 |Activity        | string          | required         |           |"{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}"|  Input Activity. Activity that is send up to Bot.|
@@ -98,8 +104,8 @@ The following are the fields  in Input File:
 |ExpectedResponses| Array of JObject| required        |           |                   |List of Expected responses from Bot. |
 |ExpectedIntents | Array of JObject   | Optional	      |	          |[{"Item1": "NONE","Item2": 1},{"Item1":"L_DEVICECONTROL","Item2": 2}]|List of expected Intents|
 |ExpectedSlots| Array of JObject| Optional         |           |                   | List of expected Slots.|
-|ExpectedResponseDuration  | int    | Optional        |   2000    | 1500              |  Expected duration of Bot response TTS audio.|
-|ExpectedLatency  | string         | Optional         |  Expectedresponse index to check for is defaulted to Zero |"500,1" |This is a combination of expected latency and Index of the expected response from the list of expected responses that we care for calculating latency.|
+|ExpectedTTSAudioResponseDuration  | int    | Optional        |   2000    | 1500              |  Expected duration of Bot response TTS audio.|
+|ExpectedResponseLatency  | string         | Optional         |  Expectedresponse index to check for is defaulted to Zero |"500,1" |This is a combination of expected latency and Index of the expected response from the list of expected responses that we care for calculating latency.|
 
 ## Topics
 
