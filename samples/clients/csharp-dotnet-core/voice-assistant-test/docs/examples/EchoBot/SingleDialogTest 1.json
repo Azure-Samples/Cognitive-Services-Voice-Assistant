@@ -1,0 +1,40 @@
+[
+  {
+    "DialogID": 0,
+    "Description": "Dialog with a Greeting turn and a text input Turn",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "ExpectedResponses": [
+          {
+            "channelId": "directlinespeech",
+            "inputHint": "acceptingInput",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "speak": "Hello and welcome!",
+            "text": "Hello and welcome!",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "Hello Echo Bot",
+        "Activity": "",
+        "ExpectedResponses": [
+          {
+            "channelId": "directlinespeech",
+            "inputHint": "acceptingInput",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "speak": "Echo: Hello Echo Bot",
+            "text": "Echo: Hello Echo Bot",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+    ]
+  }
+]
