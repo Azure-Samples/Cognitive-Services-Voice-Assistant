@@ -80,7 +80,7 @@ The following are the fields  in Configuration file:
 |AudioDurationMargin   | string     | Optional         |   200          | 100 |  Margin to verify the duration of Bot response TTS audio.|
 |AppLogEnabled   | boolean     | Optional         |   false          | true |   A boolean that enables Application Logging.|
 |SpeechSDKLogEnabled   | string     | Optional         |   false          | true |   A boolean that enables generating a Speech SDK Logging.|
-|BotGreeting   | boolean     | Optional         |   false          | true |  A boolean which defines if a Bot that being tested has a greeting activity response upon conection.|
+|BotGreeting   | boolean     | Optional         |   false          | true |  A boolean which defines if a Bot has a automatic greeting activity response upon conection.|
 |Timeout   | int     | Optional         |   5000          | 2000 |  A global timeout that waits for each bot response.|
 |FileName       | string	 | required		    |           | Start.json	 | Name of the input file|
 |Ignore Activities | Array of JObject	 | Optional	|	          |[{"type": "typing","name": "trace"}, {"name": "setDynamicGrammar"}]| List of activities that are ignored by tool|
@@ -109,22 +109,70 @@ The following are the fields  in Input File:
 
 ## Topics
 
-### Ignoring certain bot-reply activities
-
 ### Writing tests with keyword spotting
 
 ### Ignoring certain bot-reply activities
 
-### Testing bot response duration
+Program captures the Bot-reply activities received for each turn and performs validations on certain parameters to ensure if the turn is passed or failed.
+In order to ignore any one of the Bot-reply activities received for each turn by the tool, "Ignore Activities" field is to be set in the Application Configuration file.
+"Ignore Activities" is an Array that holds the list of activities that are ignored by the tool.
+
+Example : [{"type": "typing","name": "trace"}, {"name": "setDynamicGrammar"}]
+
+In the above example tool ignores all activities which are of type : "typing"and name : "trace" and all activities which have "name" : "setDynamicGrammar"
+
+### Testing bot response TTS Audio duration
+
+A Bot-reply activity with speak field enabled, will have a TTS audio.
+Tool stores this TTS audio in a WAV file. The duration of TTS audio is calculated and is verified if it falls within the range of ExpectedTTSAudioResponseDuration +/- AudioDurationMargin.
+if the test is passed TTSAudioResponseDurationMatch is set to true otherwise false.
 
 ### Testing bot-greetings
 
-### Single connection and multipel connection tests
+Bot-Greeting - It is an automatic Bot response that happens when client connect to the Bot with no input from the client.
+Application Configuration file holds a field called "Bot Greeting" that should be set to true when a Bot has a greeting.
+
+For testing the Bot Greeting when,
+  -Single Connection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied 
+  -Single Connection = "false",test configuration  file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) speciied 
+
+### Single connection and Multiple connection tests
+
+Single Connection tests:
+When the Single Connection is set to true, a new connection is established with Bot for each Test Configuration file.
+Multiple Connection tests:
+When Single Connection is set to false,a new connection is established with Bot for each Dialog in a Test Configuration file.
 
 ### Skipping tests
+
+Tests can be skipped either at the Test Configuration file level or at the Dialog level.
+
+In order to skip a file from the test suite, set the skip field for that file to true in the Application Configuration file.
+
+Example:
+
+![ScreenShot](docs/TestFileLevelSkip.jpg)
+
+In the above example  test configuration file "test-config-template1.json" will be skipped from testing.
+
+
+In order to skip a Dialog from testing, set the skip field to true for that Dialog in the test configuration file
+
+Example: 
+
+![ScreenShot](docs/DialogLevelSkip.jpg)
+
+In the above example Dialog 0 will be skipped from testing.
 
 ### Pausing between dailogs or turns
 
 ### Creating new tests ("bootstrapping")
+
+While creating your own Test configuration file,bootstrapping mode is useful in order to capture all the bot responses
+
+In order to set a turn to bootstrapping mode,in Test Configuration file set the ExpectedResponses field to either null or empty or dont specify it in the 
+
+In this mode,tool captures all the bot responses ,doesnt perform any validations and sets the test to pass
+
 
 ## Running tests in an Azure DevOps pipeline

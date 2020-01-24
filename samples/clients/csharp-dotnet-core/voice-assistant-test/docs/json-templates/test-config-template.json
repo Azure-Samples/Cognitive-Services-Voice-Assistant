@@ -58,7 +58,7 @@
         "ExpectedTTSAudioResponseDuration": 1793,
         "ExpectedResponseLatency": "200,0"
       }
-    ],
+    ]
   },
   {
     "DialogID": 1,
@@ -86,6 +86,6 @@
         "ExpectedTTSAudioResponseDuration": 1200,
         "ExpectedResponseLatency": "500"
       }
-    ],
+    ]
   }
 ]

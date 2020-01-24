@@ -1,0 +1,22 @@
+{
+  "InputFiles": [
+    {
+      "FileName": "SingleDialogTest2.json",
+      "SingleConnection": true,
+      "Skip": false,
+      "IgnoreActivities": []
+    }
+  ],
+  "InputFolder": "C:\\Users\\v-nagana\\Documents\\GitHub_SydneyAssistant\\Cognitive-Services-Voice-Assistant\\samples\\clients\\csharp-dotnet-core\\voice-assistant-test\\docs\\examples\\corebot\\",
+  "OutputFolder": "C:\\Users\\v-nagana\\Documents\\GitHub_SydneyAssistant\\Cognitive-Services-Voice-Assistant\\samples\\clients\\csharp-dotnet-core\\voice-assistant-test\\docs\\examples\\corebot\\",
+  "SubscriptionKey": "75e2ed6fed8b4b868c973d93989565c3",
+  "Region": "westus2",
+  "SRLanguage": "",
+  "CustomCommandsAppId": "",
+  "CustomSREndpointId": "",
+  "CustomVoiceDeploymentIds": "",
+  "AudioDurationMargin": "200",
+  "AppLogEnabled": true,
+  "BotGreeting":  true,
+  "SpeechSDKLogEnabled": false
+}

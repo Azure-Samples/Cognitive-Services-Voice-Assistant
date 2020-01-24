@@ -204,7 +204,7 @@ namespace VoiceAssistantTest
                     activityIndex = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
                 }
 
-                if (turns.ExpectedResponses != null)
+                if (turns.ExpectedResponses != null && turns.ExpectedResponses.Count != 0)
                 {
                     if (ActivitiesMatch(turns.ExpectedResponses[activityIndex], turnsOutput.ActualResponses[activityIndex]))
                     {

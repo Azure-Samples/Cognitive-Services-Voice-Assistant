@@ -1,0 +1,31 @@
+[
+  {
+    "DialogID": 0,
+    "Description": "Test the automatic bot response that happens when the client connects to the bot (no input from the client is needed)",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "ExpectedResponses": [
+            {
+              "type": "message",
+             
+              "serviceUrl": "urn:botframework:websocket:directlinespeech",
+              "channelId": "directlinespeech",
+              "speak": "Welcome to Bot Framework!",
+              "inputHint": "acceptingInput"
+            },
+            {
+              "type": "message",
+              "serviceUrl": "urn:botframework:websocket:directlinespeech",
+              "channelId": "directlinespeech",
+              "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+              "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+              "inputHint": "expectingInput"
+            }
+        ],
+        "ExpectedTTSAudioResponseDuration": 8197,
+        "ExpectedResponseLatency": "200"
+      }
+    ]
+  }
+]
