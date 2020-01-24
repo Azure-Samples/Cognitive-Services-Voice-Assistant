@@ -1,8 +1,12 @@
 #include <alsa/asoundlib.h>
+#include <list>
+#include <thread>
 #include "AudioPlayer.h"
+#include "AudioPlayerEntry.h"
 
 namespace AudioPlayer
 {
+    
     /// <summary>
     /// This object implemented the IAudioPlayer interface and handles the audio Playback for 
     /// Linux using the ALSA library.
@@ -11,6 +15,12 @@ namespace AudioPlayer
     /// </remarks>
     class LinuxAudioPlayer :public IAudioPlayer{
         public:
+        
+            bool                    m_isPlaying = false;
+            bool                    m_canceled = false;
+            bool                    m_paused = false;
+            
+            std::list<AudioPlayerEntry> m_audioQueue;
         
             /// <summary>
             /// Default constructor for the LinuxAudioPlayer.
@@ -92,8 +102,10 @@ namespace AudioPlayer
             /// <remarks>
             /// The method returns the number of frames written to ALSA.
             /// We assume Open has already been called.
-            /// </remarks>
+            /// </remarks>
             int Play(uint8_t* buffer, size_t bufferSize);
+            
+            int WriteToPCM(uint8_t* buffer);
             
             /// <summary>
             /// This method is used to actually play the audio. The buffer passed in 
@@ -141,10 +153,14 @@ namespace AudioPlayer
             int Close();
         
         private:
-            snd_pcm_t           *playback_handle;
-            snd_pcm_uframes_t   frames;
-            unsigned int        numChannels;
-            unsigned int        bytesPerSample;
-            unsigned int        bitsPerSecond;
+            
+            snd_pcm_t*              m_playback_handle;
+            snd_pcm_uframes_t       m_frames;
+            snd_pcm_hw_params_t*    m_params;
+            unsigned int            m_numChannels;
+            unsigned int            m_bytesPerSample;
+            unsigned int            m_bitsPerSecond;
+
+            std::thread m_playerThread;
     };
 }

@@ -99,7 +99,7 @@ class IAudioPlayer{
     /// <remarks>
     /// Here we use the LinuxAudioPlayer as an example. It returns the number of frames written to ALSA.
     /// In our implementation we assume Open is called before playing.
-    /// </remarks>
+    /// </remarks>
     virtual int Play(uint8_t* buffer, size_t bufferSize) = 0;
     
     /// <summary>
