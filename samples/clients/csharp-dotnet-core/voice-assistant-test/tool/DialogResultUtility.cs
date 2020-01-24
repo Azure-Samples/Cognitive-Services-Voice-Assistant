@@ -169,8 +169,9 @@ namespace VoiceAssistantTest
         /// <param name="response">Actual Bot Responses.</param>
         /// <param name="responseDuration">Actual duration of the TTS audio.</param>
         /// <param name="recognizedText">Recognized text from Speech Recongition.</param>
+        /// <param name="recognizedKeyword">Recogized Keyword from Keyword Recognition.</param>
         /// <returns>TurnsOutput.</returns>
-        public TurnResult BuildOutput(Turn turns, List<Tuple<string, int>> intents, Dictionary<string, string> slots, List<BotReply> response, int responseDuration, string recognizedText)
+        public TurnResult BuildOutput(Turn turns, List<Tuple<string, int>> intents, Dictionary<string, string> slots, List<BotReply> response, int responseDuration, string recognizedText, string recognizedKeyword)
         {
             TurnResult turnsOutput = new TurnResult(turns)
             {
@@ -188,6 +189,11 @@ namespace VoiceAssistantTest
             // Actual values
             turnsOutput.ActualIntents = intents;
             turnsOutput.ActualSlots = slots;
+
+            if (recognizedKeyword != null)
+            {
+                turnsOutput.KeywordVerified = recognizedKeyword;
+            }
 
             foreach (BotReply botReply in response)
             {
@@ -244,10 +250,13 @@ namespace VoiceAssistantTest
 
             if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
             {
-                if (!GetStringUsingRegex(turnResult.ActualRecognizedText).Equals(GetStringUsingRegex(turnResult.Utterance), StringComparison.OrdinalIgnoreCase))
+                if (turnResult.ActualRecognizedText != null)
                 {
-                    Trace.TraceInformation($"Recognized text \"{turnResult.ActualRecognizedText}\" doest not match \"{turnResult.Utterance}\"");
-                    turnResult.UtteranceMatch = false;
+                    if (!GetStringUsingRegex(turnResult.ActualRecognizedText).Equals(GetStringUsingRegex(turnResult.Utterance), StringComparison.OrdinalIgnoreCase))
+                    {
+                        Trace.TraceInformation($"Recognized text \"{turnResult.ActualRecognizedText}\" doest not match \"{turnResult.Utterance}\"");
+                        turnResult.UtteranceMatch = false;
+                    }
                 }
             }
 

@@ -187,6 +187,11 @@ namespace VoiceAssistantTest
 
                     foreach (Turn turn in dialog.Turns)
                     {
+                        if (turn.Keyword)
+                        {
+                            await botConnector.StartKeywordRecognition().ConfigureAwait(false);
+                        }
+
                         Trace.IndentLevel = 2;
                         Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Running Turn {turn.TurnID}");
                         Trace.IndentLevel = 3;
@@ -197,7 +202,7 @@ namespace VoiceAssistantTest
                             System.Threading.Thread.Sleep(turn.Sleep);
                         }
 
-                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, turn.ExpectedResponses.Count, inputFiles.IgnoreActivities, turn.ExpectedResponseLatency);
+                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, turn.ExpectedResponses.Count, inputFiles.IgnoreActivities, turn.ExpectedResponseLatency, turn.Keyword);
 
                         // Send up WAV File if present
                         if (!string.IsNullOrEmpty(turn.WAVFile))
@@ -225,7 +230,7 @@ namespace VoiceAssistantTest
                         activityUtility = activityUtility.OrganizeActivities(responseActivities);
 
                         // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogOutput.BuildOutput(turn, activityUtility.IntentHierarchy, activityUtility.Entities, activityUtility.FinalResponses, botConnector.DurationInMs, botConnector.RecognizedText);
+                        TurnResult turnResult = dialogOutput.BuildOutput(turn, activityUtility.IntentHierarchy, activityUtility.Entities, activityUtility.FinalResponses, botConnector.DurationInMs, botConnector.RecognizedText, botConnector.RecognizedKeyword);
                         dialogOutput.ValidateTurn(turnResult);
 
                         // Add the turn result to the list of turn results.
@@ -233,6 +238,17 @@ namespace VoiceAssistantTest
 
                         // Add the turn completion status to the list of turn completions.
                         turnCompletionStatuses.Add(turnResult.TaskCompleted);
+
+                        // Application crashes in a multi-turn dialog when calling StopKeywordRecognitionAsync.
+                        // This is being investigated.
+
+                        // if (turn.Keyword)
+                        // {
+                        //    Task.Run(() =>
+                        //    {
+                        //        botConnector.StopKeywordRecognition();
+                        //    }).Wait();
+                        // }
                     } // End of turns loop
 
                     dialogOutput.Turns = turnResults;

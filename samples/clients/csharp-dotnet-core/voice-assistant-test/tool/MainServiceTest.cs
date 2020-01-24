@@ -1,4 +1,8 @@
-﻿namespace VoiceAssistantTest
+﻿// <copyright file="MainServiceTest.cs" company="Microsoft Corporation">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace VoiceAssistantTest
 {
     using System;
     using System.IO;

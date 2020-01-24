@@ -44,6 +44,8 @@ namespace VoiceAssistantTest
         private Stopwatch stopWatch;
         private string expectedRecognition;
         private string expectedLatency;
+        private bool keyword;
+        private KeywordRecognitionModel kwsTable;
 
         /// <summary>
         /// Gets or sets TTS audio duration.
@@ -54,6 +56,11 @@ namespace VoiceAssistantTest
         /// Gets or sets recognized text of the speech input.
         /// </summary>
         public string RecognizedText { get; set; }
+
+        /// <summary>
+        /// Gets or sets recognized keyword.
+        /// </summary>
+        public string RecognizedKeyword { get; set; }
 
         private Queue<BotReply> ActivityQueue { get; set; }
 
@@ -122,6 +129,11 @@ namespace VoiceAssistantTest
                 this.timeout = int.Parse(this.appsettings.Timeout, CultureInfo.CurrentCulture);
             }
 
+            if (!string.IsNullOrWhiteSpace(this.appsettings.KeywordRecognitionModel))
+            {
+                this.kwsTable = KeywordRecognitionModel.FromFile(this.appsettings.KeywordRecognitionModel);
+            }
+
             if (this.connector != null)
             {
                 // Then dispose the object
@@ -167,6 +179,24 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
+        /// Calls StartKeywordRecognitionAsync.
+        /// </summary>
+        /// <returns>Opens audio stream with Keyword Recognition Model.</returns>
+        public Task StartKeywordRecognition()
+        {
+            return this.connector.StartKeywordRecognitionAsync(this.kwsTable);
+        }
+
+        /// <summary>
+        /// Calls StopKeywordRecognitionAsync.
+        /// </summary>
+        /// <returns>Closes audio stream started by StartKeywordRecognitionAsync.</returns>
+        public Task StopKeywordRecognition()
+        {
+            return this.connector.StopKeywordRecognitionAsync();
+        }
+
+        /// <summary>
         /// Sends a message activity to the bot after wrapping a message in an Activity object.
         /// </summary>
         /// <param name="message">Utterance text in each turn.</param>
@@ -181,10 +211,10 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
-        /// Send an audio WAV file to the Bot using ListenOnceAsync.
+        /// Read audio wavFile.
         /// </summary>
-        /// <param name="wavFile">WAV file in each turn.</param>
-        public void SendAudio(string wavFile)
+        /// <param name="wavFile">WAV File in each turn.</param>
+        public void ReadAudio(string wavFile)
         {
             int readBytes;
 
@@ -206,12 +236,24 @@ namespace VoiceAssistantTest
             }
 
             waveFileReader.Dispose();
+        }
 
-            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Start listening");
+        /// <summary>
+        /// Send an audio WAV file to the Bot using StartKeywordRecognitionAsync or ListenOnceAsync.
+        /// </summary>
+        /// <param name="wavFile">WAV file in each turn.</param>
+        public void SendAudio(string wavFile)
+        {
+            this.ReadAudio(wavFile);
 
-            // Don't wait for this task to finish. It may take a while, even after the "Recognized" event is received. This is a known
-            // issue in Speech SDK and should be fixed in a future versions.
-            this.connector.ListenOnceAsync();
+            if (!this.keyword)
+            {
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Start listening");
+
+                // Don't wait for this task to finish. It may take a while, even after the "Recognized" event is received. This is a known
+                // issue in Speech SDK and should be fixed in a future versions.
+                this.connector.ListenOnceAsync();
+            }
         }
 
         /// <summary>
@@ -304,6 +346,8 @@ namespace VoiceAssistantTest
         /// </summary>
         public void Dispose()
         {
+            this.StopKeywordRecognition();
+            this.kwsTable?.Dispose();
             this.connector.Dispose();
             this.pushAudioInputStream.Dispose();
         }
@@ -344,7 +388,8 @@ namespace VoiceAssistantTest
         /// <param name="responseCount">Number of bot activity responses expected for this turn (after filtering out activities marked for ignoring).</param>
         /// <param name="ignoringActivities">List of Activities to Ignore for the bot as defined in the Config File.</param>
         /// <param name="expectedLatency">Expected Latency for the bot as defined in the Config File.</param>
-        public void SetInputValues(string utterance, string fileName, string dialogID, int turnID, int responseCount, List<Activity> ignoringActivities, string expectedLatency)
+        /// <param name="keyword">Bool value of keyword for each turn.</param>
+        public void SetInputValues(string utterance, string fileName, string dialogID, int turnID, int responseCount, List<Activity> ignoringActivities, string expectedLatency, bool keyword)
         {
             this.expectedRecognition = utterance;
             this.baseFileName = Path.GetFileNameWithoutExtension(fileName);
@@ -353,6 +398,7 @@ namespace VoiceAssistantTest
             this.responseCount = responseCount;
             this.ignoreActivitiesList = ignoringActivities;
             this.expectedLatency = expectedLatency;
+            this.keyword = keyword;
         }
 
         /// <summary>
@@ -416,9 +462,18 @@ namespace VoiceAssistantTest
             {
                 this.connector.ActivityReceived += this.SpeechBotConnector_ActivityReceived;
                 this.connector.Recognized += this.SpeechBotConnector_Recognized;
+                this.connector.Recognizing += this.SpeechBotConnector_Recognizing;
                 this.connector.Canceled += this.SpeechBotConnector_Canceled;
                 this.connector.SessionStarted += this.SpeechBotConnector_SessionStarted;
                 this.connector.SessionStopped += this.SpeechBotConnector_SessionStopped;
+            }
+        }
+
+        private void SpeechBotConnector_Recognizing(object sender, SpeechRecognitionEventArgs e)
+        {
+            if (e.Result.Reason == ResultReason.RecognizingKeyword)
+            {
+                Trace.TraceInformation($"Keyword Recognition: Verifying: {e.Result.Text}");
             }
         }
 
@@ -433,11 +488,27 @@ namespace VoiceAssistantTest
 
         private void SpeechBotConnector_Recognized(object sender, SpeechRecognitionEventArgs e)
         {
-            this.RecognizedText = e.Result.Text;
+            if (e.Result.Reason == ResultReason.RecognizedSpeech)
+            {
+                this.RecognizedText = e.Result.Text;
 
-            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
 
-            this.stopWatch.Restart();
+                this.stopWatch.Restart();
+            }
+
+            if (e.Result.Reason == ResultReason.RecognizedKeyword)
+            {
+                this.RecognizedKeyword = e.Result.Text;
+
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
+                Trace.TraceInformation($"Keyword Recognition Verified : {e.Result.Text}");
+            }
+
+            if (e.Result.Reason == ResultReason.NoMatch)
+            {
+                Trace.TraceInformation($"Connector Error: {e.Result.Text}");
+            }
         }
 
         private void SpeechBotConnector_ActivityReceived(object sender, ActivityReceivedEventArgs e)

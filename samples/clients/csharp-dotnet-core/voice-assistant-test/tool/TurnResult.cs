@@ -24,6 +24,7 @@ namespace VoiceAssistantTest
             this.Utterance = turns.Utterance;
             this.Activity = turns.Activity;
             this.WAVFile = turns.WAVFile;
+            this.Keyword = turns.Keyword;
             this.ExpectedIntents = turns.ExpectedIntents;
             this.ExpectedTTSAudioResponseDuration = turns.ExpectedTTSAudioResponseDuration;
             this.ExpectedResponseLatency = turns.ExpectedResponseLatency;
@@ -100,6 +101,12 @@ namespace VoiceAssistantTest
         /// </summary>
         [JsonProperty(Order = 11)]
         public bool ResponseLatencyMatch { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Keyword was verfied by Speech Service.
+        /// </summary>
+        [JsonProperty(Order = 11)]
+        public string KeywordVerified { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether turn Passes or fails. True if IntentMatch, SlotMatch, and ResponseMatch are true.
