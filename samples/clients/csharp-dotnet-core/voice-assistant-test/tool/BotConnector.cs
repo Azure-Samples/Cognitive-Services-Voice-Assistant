@@ -281,8 +281,9 @@ namespace VoiceAssistantTest
         /// Filters the received activities and removes activities that are specified in the ignoreActivitiesList.
         /// The expected number of responses is set in the responseCount variable.
         /// </summary>
+        /// <param name="bootstrapMode">Boolean which defines if turn is in bootstrapping mode or not.</param>
         /// <returns>List of time-sorted and filtered bot-reply Activities.</returns>
-        public List<BotReply> WaitAndProcessBotReplies()
+        public List<BotReply> WaitAndProcessBotReplies(bool bootstrapMode)
         {
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
@@ -292,7 +293,7 @@ namespace VoiceAssistantTest
                 () =>
                 {
                     // Make this configurable per interaction as an input row
-                    while (activities.Count < this.responseCount)
+                    while (bootstrapMode || activities.Count < this.responseCount)
                     {
                         Thread.Sleep((int)ResponseCheckInterval);
 
@@ -320,10 +321,14 @@ namespace VoiceAssistantTest
             {
                 Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {activities.Count} activities, as expected (configured to wait for {this.responseCount}):");
             }
+            else if (!bootstrapMode)
+            {
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {activities.Count} activities (configured to wait for {this.responseCount}):");
+                source.Cancel();
+            }
             else
             {
-                Trace.TraceInformation(
-                        $"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {activities.Count} activities (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Received {activities.Count} activities.");
                 source.Cancel();
             }
 

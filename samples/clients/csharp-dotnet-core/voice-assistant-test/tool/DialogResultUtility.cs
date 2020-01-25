@@ -227,30 +227,36 @@ namespace VoiceAssistantTest
         /// Parameters include Intents, slots, responses, TTS duration, and latency.
         /// </summary>
         /// <param name="turnResult">TurnResult object capturing the responses from the bot for this turn.</param>
-        public void ValidateTurn(TurnResult turnResult)
+        /// <param name="bootstrapMode"> Boolean which defines if turn is in bootstrapping mode or not.</param>
+        public void ValidateTurn(TurnResult turnResult, bool bootstrapMode)
         {
-            turnResult.TTSAudioResponseDurationMatch = true;
+            turnResult.IntentMatch = true;
+            turnResult.SlotMatch = true;
+            turnResult.ResponseMatch = true;
             turnResult.UtteranceMatch = true;
+            turnResult.TTSAudioResponseDurationMatch = true;
             turnResult.ResponseLatencyMatch = true;
+            turnResult.Pass = true;
+            turnResult.TaskCompleted = true;
 
             int margin = int.Parse(this.appSettings.TTSAudioDurationMargin, CultureInfo.CurrentCulture);
 
-            if (turnResult.ExpectedIntents == null)
+            if (!bootstrapMode)
             {
-                // Expected intents were not specified for this dialog in the JSON file. Ignore intents validation by marking them as matched, regardless of actual intents
-                turnResult.IntentMatch = true;
-            }
-            else
-            {
-                turnResult.IntentMatch = !turnResult.ExpectedIntents.Except(turnResult.ActualIntents).Any();
-            }
+                if (turnResult.ExpectedIntents == null)
+                {
+                    // Expected intents were not specified for this dialog in the JSON file. Ignore intents validation by marking them as matched, regardless of actual intents
+                    turnResult.IntentMatch = true;
+                }
+                else
+                {
+                    turnResult.IntentMatch = !turnResult.ExpectedIntents.Except(turnResult.ActualIntents).Any();
+                }
 
-            turnResult.SlotMatch = (turnResult.ActualSlots.Count == turnResult.ExpectedSlots.Count) && (!turnResult.ActualSlots.Except(turnResult.ExpectedSlots).Any());
-            turnResult.ResponseMatch = DialogResultUtility.ActivityListsMatch(turnResult.ExpectedResponses, turnResult.ActualResponses);
+                turnResult.SlotMatch = (turnResult.ActualSlots.Count == turnResult.ExpectedSlots.Count) && (!turnResult.ActualSlots.Except(turnResult.ExpectedSlots).Any());
+                turnResult.ResponseMatch = DialogResultUtility.ActivityListsMatch(turnResult.ExpectedResponses, turnResult.ActualResponses);
 
-            if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
-            {
-                if (turnResult.ActualRecognizedText != null)
+                if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
                 {
                     if (!GetStringUsingRegex(turnResult.ActualRecognizedText).Equals(GetStringUsingRegex(turnResult.Utterance), StringComparison.OrdinalIgnoreCase))
                     {
@@ -258,27 +264,27 @@ namespace VoiceAssistantTest
                         turnResult.UtteranceMatch = false;
                     }
                 }
-            }
 
-            if (turnResult.ExpectedTTSAudioResponseDuration > 0)
-            {
-                int expectedResponseDuration = turnResult.ExpectedTTSAudioResponseDuration;
-                if (turnResult.ActualTTSAudioReponseDuration >= (expectedResponseDuration - margin) && turnResult.ActualTTSAudioReponseDuration <= (expectedResponseDuration + margin))
+                if (turnResult.ExpectedTTSAudioResponseDuration > 0)
                 {
-                    turnResult.TTSAudioResponseDurationMatch = true;
+                    int expectedResponseDuration = turnResult.ExpectedTTSAudioResponseDuration;
+                    if (turnResult.ActualTTSAudioReponseDuration >= (expectedResponseDuration - margin) && turnResult.ActualTTSAudioReponseDuration <= (expectedResponseDuration + margin))
+                    {
+                        turnResult.TTSAudioResponseDurationMatch = true;
+                    }
+                    else
+                    {
+                        Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioReponseDuration} is outside the expected range {expectedResponseDuration}+/-{margin}");
+                        turnResult.TTSAudioResponseDurationMatch = false;
+                    }
                 }
-                else
-                {
-                    Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioReponseDuration} is outside the expected range {expectedResponseDuration}+/-{margin}");
-                    turnResult.TTSAudioResponseDurationMatch = false;
-                }
-            }
 
-            if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency))
-            {
-                if (turnResult.ActualResponseLatency > int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture))
+                if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency))
                 {
-                    turnResult.ResponseLatencyMatch = false;
+                    if (turnResult.ActualResponseLatency > int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture))
+                    {
+                        turnResult.ResponseLatencyMatch = false;
+                    }
                 }
             }
 
