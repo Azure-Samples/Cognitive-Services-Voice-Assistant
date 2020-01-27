@@ -260,7 +260,7 @@ namespace VoiceAssistantTest
                 {
                     if (!GetStringUsingRegex(turnResult.ActualRecognizedText).Equals(GetStringUsingRegex(turnResult.Utterance), StringComparison.OrdinalIgnoreCase))
                     {
-                        Trace.TraceInformation($"Recognized text \"{turnResult.ActualRecognizedText}\" doest not match \"{turnResult.Utterance}\"");
+                        Trace.TraceInformation($"Recognized text \"{turnResult.ActualRecognizedText}\" does not match \"{turnResult.Utterance}\"");
                         turnResult.UtteranceMatch = false;
                     }
                 }
