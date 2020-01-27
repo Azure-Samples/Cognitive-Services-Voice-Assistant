@@ -113,8 +113,8 @@
     <Reference Include="Microsoft.Bot.Schema, Version=4.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bot.Schema.4.7.0\lib\netstandard2.0\Microsoft.Bot.Schema.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CognitiveServices.Speech.csharp, Version=1.8.0.28, Culture=neutral, PublicKeyToken=d2e6dcccb609e663, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CognitiveServices.Speech.1.8.0\lib\net461\Microsoft.CognitiveServices.Speech.csharp.dll</HintPath>
+    <Reference Include="Microsoft.CognitiveServices.Speech.csharp, Version=1.9.0.28, Culture=neutral, PublicKeyToken=d2e6dcccb609e663, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CognitiveServices.Speech.1.9.0\lib\net461\Microsoft.CognitiveServices.Speech.csharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.MarkedNet, Version=1.0.13.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.MarkedNet.1.0.13\lib\net452\Microsoft.MarkedNet.dll</HintPath>
@@ -298,13 +298,13 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.props'))" />
     <Error Condition="!Exists('..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CognitiveServices.Speech.1.8.0\build\net461\Microsoft.CognitiveServices.Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CognitiveServices.Speech.1.8.0\build\net461\Microsoft.CognitiveServices.Speech.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CognitiveServices.Speech.1.9.0\build\net461\Microsoft.CognitiveServices.Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CognitiveServices.Speech.1.9.0\build\net461\Microsoft.CognitiveServices.Speech.targets'))" />
   </Target>
   <Import Project="..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.targets" Condition="Exists('..\packages\SourceLink.Create.CommandLine.2.8.3\build\SourceLink.Create.CommandLine.targets')" />
-  <Import Project="..\packages\Microsoft.CognitiveServices.Speech.1.8.0\build\net461\Microsoft.CognitiveServices.Speech.targets" Condition="Exists('..\packages\Microsoft.CognitiveServices.Speech.1.8.0\build\net461\Microsoft.CognitiveServices.Speech.targets')" />
+  <Import Project="..\packages\Microsoft.CognitiveServices.Speech.1.9.0\build\net461\Microsoft.CognitiveServices.Speech.targets" Condition="Exists('..\packages\Microsoft.CognitiveServices.Speech.1.9.0\build\net461\Microsoft.CognitiveServices.Speech.targets')" />
 </Project>
