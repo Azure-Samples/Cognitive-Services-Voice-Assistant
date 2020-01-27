@@ -1,54 +1,54 @@
 #include <cstring>
+#include <chrono>
+#include <condition_variable>
 #include <string>
 #include <thread>
+#include <mutex>
 #include <alsa/asoundlib.h>
 #include "LinuxAudioPlayer.h"
 
 using namespace AudioPlayer;
 
-void PlayerThreadMain(LinuxAudioPlayer * pAudioPlayer){
-    fprintf(stdout, "in thread\n");
-    if(pAudioPlayer){
-        pAudioPlayer->m_isPlaying = true;
+void LinuxAudioPlayer::PlayerThreadMain(){
+    while(m_canceled == false){
+        std::unique_lock<std::mutex> lk{ m_threadMutex };
+        m_conditionVariable.wait(lk);
         
-        pAudioPlayer->m_canceled = false;
-        int playBufferSize = pAudioPlayer->GetBufferSize();
-        fprintf(stdout, "checking for audio\n");
-        while(pAudioPlayer->m_audioQueue.size() > 0){
-        
-            while(pAudioPlayer->m_canceled == false){
-                while(pAudioPlayer->m_paused == false){
-                    while(pAudioPlayer->m_audioQueue.size() > 0){
-                        
-                        AudioPlayerEntry entry = pAudioPlayer->m_audioQueue.front();
-                        int bufferLeft = entry.m_size;
-                        std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
-                        while(bufferLeft > 0){
-                            if(bufferLeft >= playBufferSize){
-                                memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], playBufferSize);
-                                bufferLeft -= playBufferSize;
-                            }else { //there is a smaller amount to play so we will pad with silence
-                                memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], bufferLeft);
-                                memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
-                                bufferLeft = 0;
-                            }
-                            pAudioPlayer->WriteToPCM(playBuffer.get());
-                        }
-                        pAudioPlayer->m_audioQueue.pop_front();
-                        
-                    }
+        //fprintf(stdout, "checking for audio\n");
+        unsigned int playBufferSize = GetBufferSize();
+        while(m_audioQueue.size() > 0){
+            m_isPlaying = true;
+            AudioPlayerEntry entry = m_audioQueue.front();
+            int bufferLeft = entry.m_size;
+            std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+            while(bufferLeft > 0){
+                if(bufferLeft >= playBufferSize){
+                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], playBufferSize);
+                    bufferLeft -= playBufferSize;
+                }else { //there is a smaller amount to play so we will pad with silence
+                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], bufferLeft);
+                    memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
+                    bufferLeft = 0;
                 }
+                WriteToPCM(playBuffer.get());
             }
+            
+            m_queueMutex.lock();
+            m_audioQueue.pop_front();
+            m_queueMutex.unlock();
         }
-    } else{
-        fprintf(stdout, "audioPlayer not valid\n");
+        m_isPlaying = false;
+        m_canceled = false;
+        
     }
+    
 }
 
 LinuxAudioPlayer::LinuxAudioPlayer(){
     
     fprintf(stdout, "creating thread\n");
-    m_playerThread = std::thread(PlayerThreadMain, this);
+    Open();
+    m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
     
 }
 
@@ -119,6 +119,7 @@ int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
     }
     
     //end PCM setup
+    m_opened = true;
     return rc;
 }
 
@@ -134,10 +135,15 @@ int LinuxAudioPlayer::GetBufferSize(){
 
 int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
     int rc = 0;
-
     AudioPlayerEntry entry(buffer, bufferSize);
-    m_audioQueue.push_back(entry);
     
+    m_queueMutex.lock();
+    m_audioQueue.push_back(entry);
+    m_queueMutex.unlock();
+    
+    if(!m_isPlaying){
+        m_conditionVariable.notify_one();
+    }
     // rc = snd_pcm_writei(m_playback_handle, buffer, m_frames);
     // if (rc == -EPIPE) {
     //     /* EPIPE means underrun */

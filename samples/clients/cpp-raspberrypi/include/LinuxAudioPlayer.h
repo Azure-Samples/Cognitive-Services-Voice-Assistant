@@ -1,6 +1,8 @@
 #include <alsa/asoundlib.h>
+#include <condition_variable>
 #include <list>
 #include <thread>
+#include <mutex>
 #include "AudioPlayer.h"
 #include "AudioPlayerEntry.h"
 
@@ -15,12 +17,6 @@ namespace AudioPlayer
     /// </remarks>
     class LinuxAudioPlayer :public IAudioPlayer{
         public:
-        
-            bool                    m_isPlaying = false;
-            bool                    m_canceled = false;
-            bool                    m_paused = false;
-            
-            std::list<AudioPlayerEntry> m_audioQueue;
         
             /// <summary>
             /// Default constructor for the LinuxAudioPlayer.
@@ -160,7 +156,16 @@ namespace AudioPlayer
             unsigned int            m_numChannels;
             unsigned int            m_bytesPerSample;
             unsigned int            m_bitsPerSecond;
+            bool                    m_isPlaying = false;
+            bool                    m_canceled = false;
+            bool                    m_opened = false;
+            std::mutex              m_queueMutex;
+            std::mutex              m_threadMutex;
+            std::condition_variable m_conditionVariable;
+            
+            std::list<AudioPlayerEntry> m_audioQueue;
 
             std::thread m_playerThread;
+            void PlayerThreadMain();
     };
 }

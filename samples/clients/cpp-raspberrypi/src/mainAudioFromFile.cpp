@@ -119,7 +119,6 @@ int main ()
     std::shared_ptr<DialogServiceConnector> dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioInput);
     
     IAudioPlayer* player = new LinuxAudioPlayer();
-    player->Open(device, IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
     int bufferSize = player->GetBufferSize();
     unsigned char * buffer = (unsigned char *)malloc(bufferSize);
     
