@@ -9,47 +9,18 @@
 
 using namespace AudioPlayer;
 
-void LinuxAudioPlayer::PlayerThreadMain(){
-    while(m_canceled == false){
-        std::unique_lock<std::mutex> lk{ m_threadMutex };
-        m_conditionVariable.wait(lk);
-        
-        //fprintf(stdout, "checking for audio\n");
-        unsigned int playBufferSize = GetBufferSize();
-        while(m_audioQueue.size() > 0){
-            m_isPlaying = true;
-            AudioPlayerEntry entry = m_audioQueue.front();
-            int bufferLeft = entry.m_size;
-            std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
-            while(bufferLeft > 0){
-                if(bufferLeft >= playBufferSize){
-                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], playBufferSize);
-                    bufferLeft -= playBufferSize;
-                }else { //there is a smaller amount to play so we will pad with silence
-                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], bufferLeft);
-                    memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
-                    bufferLeft = 0;
-                }
-                WriteToPCM(playBuffer.get());
-            }
-            
-            m_queueMutex.lock();
-            m_audioQueue.pop_front();
-            m_queueMutex.unlock();
-        }
-        m_isPlaying = false;
-        m_canceled = false;
-        
-    }
-    
-}
-
 LinuxAudioPlayer::LinuxAudioPlayer(){
     
     fprintf(stdout, "creating thread\n");
     Open();
     m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
     
+}
+
+LinuxAudioPlayer::~LinuxAudioPlayer(){
+    Close();
+    m_canceled = true;
+    m_playerThread.join();
 }
 
 int LinuxAudioPlayer::Open(){
@@ -131,6 +102,41 @@ int LinuxAudioPlayer::GetBufferSize(){
                                     &dir);
     int size = m_frames * m_bytesPerSample * m_numChannels; 
     return size;
+}
+
+void LinuxAudioPlayer::PlayerThreadMain(){
+    while(m_canceled == false){
+        std::unique_lock<std::mutex> lk{ m_threadMutex };
+        m_conditionVariable.wait(lk);
+        
+        //fprintf(stdout, "checking for audio\n");
+        unsigned int playBufferSize = GetBufferSize();
+        while(m_audioQueue.size() > 0){
+            m_isPlaying = true;
+            AudioPlayerEntry entry = m_audioQueue.front();
+            int bufferLeft = entry.m_size;
+            std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+            while(bufferLeft > 0){
+                if(bufferLeft >= playBufferSize){
+                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], playBufferSize);
+                    bufferLeft -= playBufferSize;
+                }else { //there is a smaller amount to play so we will pad with silence
+                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], bufferLeft);
+                    memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
+                    bufferLeft = 0;
+                }
+                WriteToPCM(playBuffer.get());
+            }
+            
+            m_queueMutex.lock();
+            m_audioQueue.pop_front();
+            m_queueMutex.unlock();
+        }
+        m_isPlaying = false;
+        m_canceled = false;
+        
+    }
+    
 }
 
 int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){

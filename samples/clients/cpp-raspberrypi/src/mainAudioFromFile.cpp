@@ -119,7 +119,7 @@ int main ()
     std::shared_ptr<DialogServiceConnector> dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioInput);
     
     IAudioPlayer* player = new LinuxAudioPlayer();
-    int bufferSize = player->GetBufferSize();
+    int bufferSize = 1024;
     unsigned char * buffer = (unsigned char *)malloc(bufferSize);
     
     dialogServiceConnector->SessionStarted += [&](const SessionEventArgs& e) {

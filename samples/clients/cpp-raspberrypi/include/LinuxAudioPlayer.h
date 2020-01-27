@@ -19,7 +19,8 @@ namespace AudioPlayer
         public:
         
             /// <summary>
-            /// Default constructor for the LinuxAudioPlayer.
+            /// Default constructor for the LinuxAudioPlayer. Here we will start a thread
+            /// to play audio and open the default audio device in Mono16khz16bit
             /// </summary>
             /// <returns>a LinuxAudioPlayer object</returns>
             /// <example>
@@ -30,6 +31,18 @@ namespace AudioPlayer
             /// <remarks>
             /// </remarks>
             LinuxAudioPlayer();
+            
+            /// <summary>
+            /// Default destructor for the LinuxAudioPlayer. Closes the audio player and cleans up the thread
+            /// </summary>
+            /// <returns>a LinuxAudioPlayer object</returns>
+            /// <example>
+            /// <code>
+            /// </code>
+            /// </example>
+            /// <remarks>
+            /// </remarks>
+            ~LinuxAudioPlayer();
             
             /// <summary>
             /// Open the default audio device for ALSA and uses the Mono16khz16bit format.
@@ -101,8 +114,6 @@ namespace AudioPlayer
             /// </remarks>
             int Play(uint8_t* buffer, size_t bufferSize);
             
-            int WriteToPCM(uint8_t* buffer);
-            
             /// <summary>
             /// This method is used to actually play the audio. The buffer passed in 
             /// should contain the raw audio bytes. The AudioPlayerFormat is used to determine how to play it.
@@ -167,5 +178,6 @@ namespace AudioPlayer
 
             std::thread m_playerThread;
             void PlayerThreadMain();
+            int WriteToPCM(uint8_t* buffer);
     };
 }
