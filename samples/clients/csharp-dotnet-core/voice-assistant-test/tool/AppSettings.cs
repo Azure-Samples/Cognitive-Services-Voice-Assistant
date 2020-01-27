@@ -296,14 +296,14 @@ namespace VoiceAssistantTest
                 }
             }
 
-            string keywordDirectory = string.Empty;
+            string keywordFile = string.Empty;
 
             if (!string.IsNullOrWhiteSpace(instance.KeywordRecognitionModel))
             {
-                keywordDirectory = Path.GetFullPath(instance.KeywordRecognitionModel);
-                if (!File.Exists(keywordDirectory))
+                keywordFile = Path.GetFullPath(instance.KeywordRecognitionModel);
+                if (!File.Exists(keywordFile))
                 {
-                    throw new MissingFieldException($"{ErrorStrings.KEYWORD_RECOGNITION_MODEL_NOT_FOUND} - {keywordDirectory}");
+                    throw new MissingFieldException($"{ErrorStrings.KEYWORD_RECOGNITION_MODEL_NOT_FOUND} - {keywordFile}");
                 }
             }
         }
