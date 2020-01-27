@@ -44,6 +44,12 @@ namespace VoiceAssistantTest
         public string WAVFile { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether WAVFile contains Keyword.
+        /// </summary>
+        [JsonProperty(Order = -2)]
+        public bool Keyword { get; set; }
+
+        /// <summary>
         /// Gets or sets the Intents.
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

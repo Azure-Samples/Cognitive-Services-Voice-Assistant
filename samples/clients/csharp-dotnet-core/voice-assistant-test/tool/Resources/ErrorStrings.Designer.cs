@@ -205,6 +205,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keyword Recognition Model File not found. .
+        /// </summary>
+        public static string KEYWORD_RECOGNITION_MODEL_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("KEYWORD_RECOGNITION_MODEL_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expected Latency string is malformed - not a valid expected latency.
         /// </summary>
         public static string LATENCY_STRING_MALFORMED {

@@ -107,6 +107,11 @@ namespace VoiceAssistantTest
         public string Timeout { get; set; } = ProgramConstants.DefaultTimeout;
 
         /// <summary>
+        /// Gets or sets the Keyword Recognition Model File.
+        /// </summary>
+        public string KeywordRecognitionModel { get; set; }
+
+        /// <summary>
         /// Obtain values from AppSettings.json and populate an instance with associated values.
         /// </summary>
         /// <param name="configFile">Input JSON configuration file.</param>
@@ -288,6 +293,17 @@ namespace VoiceAssistantTest
                 if (ValidateSRLanguage(instance.SRLanguage) == false)
                 {
                     throw new ArgumentException(ErrorStrings.SR_LANGUAGE_INVALID);
+                }
+            }
+
+            string keywordFile = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(instance.KeywordRecognitionModel))
+            {
+                keywordFile = Path.GetFullPath(instance.KeywordRecognitionModel);
+                if (!File.Exists(keywordFile))
+                {
+                    throw new MissingFieldException($"{ErrorStrings.KEYWORD_RECOGNITION_MODEL_NOT_FOUND} - {keywordFile}");
                 }
             }
         }

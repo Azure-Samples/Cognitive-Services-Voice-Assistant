@@ -165,6 +165,9 @@
   <data name="INPUT_FILE_MISSING" xml:space="preserve">
     <value>No Input file specified.</value>
   </data>
+  <data name="KEYWORD_RECOGNITION_MODEL_NOT_FOUND" xml:space="preserve">
+    <value>Keyword Recognition Model File not found. </value>
+  </data>
   <data name="LATENCY_STRING_MALFORMED" xml:space="preserve">
     <value>Expected Latency string is malformed - not a valid expected latency</value>
   </data>
