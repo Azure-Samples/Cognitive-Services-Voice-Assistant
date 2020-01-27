@@ -1,0 +1,288 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Dialog with a Greeting turn and a text input Turn",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Sleep": 0,
+        "ActualIntents": [],
+        "ExpectedSlots": {},
+        "ActualSlots": {},
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "speak": "Welcome to Bot Framework!",
+            "inputHint": "acceptingInput"
+          },
+          {
+            "type": "message",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ActualResponses": [
+          {
+            "type": "message",
+            "id": "d64ae30e-fbd1-4928-9799-459dd20b514b",
+            "timestamp": "2020-01-24T19:20:19.7755879+00:00",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "from": {
+              "id": "dcohen-core-bot-registration",
+              "name": "dcohen-core-bot-registration"
+            },
+            "conversation": {
+              "isGroup": false,
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2"
+            },
+            "recipient": {
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2|0000"
+            },
+            "attachmentLayout": "list",
+            "speak": "Welcome to Bot Framework!",
+            "inputHint": "acceptingInput",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  "actions": [
+                    {
+                      "title": "Get an overview",
+                      "type": "Action.OpenUrl",
+                      "url": "https://docs.microsoft.com/en-us/azure/bot-service/?view=azure-bot-service-4.0"
+                    },
+                    {
+                      "title": "Ask a question",
+                      "type": "Action.OpenUrl",
+                      "url": "https://stackoverflow.com/questions/tagged/botframework"
+                    },
+                    {
+                      "title": "Learn how to deploy",
+                      "type": "Action.OpenUrl",
+                      "url": "https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-howto-deploy-azure?view=azure-bot-service-4.0"
+                    }
+                  ],
+                  "body": [
+                    {
+                      "size": "stretch",
+                      "type": "Image",
+                      "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtB3AwMUeNoq4gUBGe6Ocj8kyh3bXa9ZbV7u1fVKQoyKFHdkqU"
+                    },
+                    {
+                      "maxLines": 0,
+                      "size": "default",
+                      "spacing": "medium",
+                      "text": "Welcome to Bot Framework!",
+                      "type": "TextBlock",
+                      "weight": "bolder",
+                      "wrap": true
+                    },
+                    {
+                      "isSubtle": true,
+                      "maxLines": 0,
+                      "size": "default",
+                      "text": "Now that you have successfully run your bot, follow the links in this Adaptive Card to expand your knowledge of Bot Framework.",
+                      "type": "TextBlock",
+                      "wrap": true
+                    }
+                  ],
+                  "type": "AdaptiveCard",
+                  "version": "1.0"
+                }
+              }
+            ],
+            "entities": [],
+            "replyToId": "5846292e-c823-485b-8305-ba8afa337f7f"
+          },
+          {
+            "type": "message",
+            "id": "8afa9da5-4d53-4164-ac50-3b49aec4e501",
+            "timestamp": "2020-01-24T19:20:19.7972558+00:00",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "from": {
+              "id": "dcohen-core-bot-registration",
+              "name": "dcohen-core-bot-registration"
+            },
+            "conversation": {
+              "isGroup": false,
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2"
+            },
+            "recipient": {
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2|0000"
+            },
+            "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "inputHint": "expectingInput",
+            "attachments": [],
+            "entities": [],
+            "replyToId": "5846292e-c823-485b-8305-ba8afa337f7f"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 8197,
+        "ActualTTSAudioReponseDuration": 8197,
+        "ExpectedResponseLatency": "200",
+        "ActualResponseLatency": 628,
+        "IntentMatch": true,
+        "SlotMatch": true,
+        "ResponseMatch": true,
+        "UtteranceMatch": true,
+        "TTSAudioResponseDurationMatch": true,
+        "ResponseLatencyMatch": false,
+        "Pass": true,
+        "TaskCompleted": true
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "Book a flight from Seattle to New York on March 1st ,2020",
+        "Activity": "",
+        "WAVFile": "BookFlight.WAV",
+        "Sleep": 0,
+        "ActualIntents": [],
+        "ExpectedSlots": {},
+        "ActualSlots": {},
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "text": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-03-01. Is this correct? (1) Yes or (2) No",
+            "speak": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-03-01. Is this correct?",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ActualResponses": [
+          {
+            "type": "message",
+            "id": "ef51ca09-9cd1-4e70-8ce9-f98605c907d0",
+            "timestamp": "2020-01-24T19:20:24.6029216+00:00",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "from": {
+              "id": "dcohen-core-bot-registration",
+              "name": "dcohen-core-bot-registration"
+            },
+            "conversation": {
+              "isGroup": false,
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2"
+            },
+            "recipient": {
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2|0000"
+            },
+            "text": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-03-01. Is this correct? (1) Yes or (2) No",
+            "speak": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-03-01. Is this correct?",
+            "inputHint": "expectingInput",
+            "attachments": [],
+            "entities": [],
+            "replyToId": "e29ab087-696c-4ff5-b257-2f42711f486d"
+          }
+        ],
+        "ActualRecognizedText": "Book a flight from Seattle to New York on March 1st, 2020.",
+        "ExpectedTTSAudioResponseDuration": 9221,
+        "ActualTTSAudioReponseDuration": 9092,
+        "IntentMatch": true,
+        "SlotMatch": true,
+        "ResponseMatch": true,
+        "UtteranceMatch": true,
+        "TTSAudioResponseDurationMatch": true,
+        "ResponseLatencyMatch": true,
+        "Pass": true,
+        "TaskCompleted": true
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "Yes",
+        "Activity": "",
+        "WAVFile": "Yes.WAV",
+        "Sleep": 0,
+        "ActualIntents": [],
+        "ExpectedSlots": {},
+        "ActualSlots": {},
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "channelId": "directlinespeech",
+            "text": "I have you booked to New York from Seattle on 1st March 2020",
+            "speak": "I have you booked to New York from Seattle on 1st March 2020",
+            "inputHint": "ignoringInput"
+          },
+          {
+            "type": "message",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "text": "What else can I do for you?",
+            "speak": "What else can I do for you?",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ActualResponses": [
+          {
+            "type": "message",
+            "id": "b645ee93-7af4-469d-be48-03e691779a29",
+            "timestamp": "2020-01-24T19:20:26.0545756+00:00",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "from": {
+              "id": "dcohen-core-bot-registration",
+              "name": "dcohen-core-bot-registration"
+            },
+            "conversation": {
+              "isGroup": false,
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2"
+            },
+            "recipient": {
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2|0000"
+            },
+            "text": "I have you booked to New York from Seattle on 1st March 2020",
+            "speak": "I have you booked to New York from Seattle on 1st March 2020",
+            "inputHint": "ignoringInput",
+            "attachments": [],
+            "entities": [],
+            "replyToId": "d9e8b7ef-503e-4ad0-86ea-af552c724a4d"
+          },
+          {
+            "type": "message",
+            "id": "f74c3010-2f44-48a8-a81b-0ee884ff2b31",
+            "timestamp": "2020-01-24T19:20:26.0614413+00:00",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "from": {
+              "id": "dcohen-core-bot-registration",
+              "name": "dcohen-core-bot-registration"
+            },
+            "conversation": {
+              "isGroup": false,
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2"
+            },
+            "recipient": {
+              "id": "d23e0ca8-380e-439e-97f1-b18aed028af2|0000"
+            },
+            "text": "What else can I do for you?",
+            "speak": "What else can I do for you?",
+            "inputHint": "expectingInput",
+            "attachments": [],
+            "entities": [],
+            "replyToId": "d9e8b7ef-503e-4ad0-86ea-af552c724a4d"
+          }
+        ],
+        "ActualRecognizedText": "Yes.",
+        "ActualTTSAudioReponseDuration": 2177,
+        "IntentMatch": true,
+        "SlotMatch": true,
+        "ResponseMatch": true,
+        "UtteranceMatch": true,
+        "TTSAudioResponseDurationMatch": true,
+        "ResponseLatencyMatch": true,
+        "Pass": true,
+        "TaskCompleted": true
+      }
+    ]
+  }
+]

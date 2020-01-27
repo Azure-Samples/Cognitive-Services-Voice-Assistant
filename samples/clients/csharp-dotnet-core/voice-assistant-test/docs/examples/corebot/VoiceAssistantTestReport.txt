@@ -1,0 +1,20 @@
+[
+  {
+    "DialogCompletionRate": 1.0,
+    "FileName": "C:\\Users\\v-nagana\\Documents\\GitHub_SydneyAssistant\\Cognitive-Services-Voice-Assistant\\samples\\clients\\csharp-dotnet-core\\voice-assistant-test\\docs\\examples\\corebot\\SingleDialogTest2.json",
+    "NumDialogCompleted": 1,
+    "TotalNumDialog": 1,
+    "DialogResults": [
+      {
+        "DialogID": "0",
+        "NumOfTurns": 3,
+        "TurnCompletionResult": [
+          true,
+          true,
+          true
+        ],
+        "DialogCompletionStatus": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "InputFiles": [
+    {
+      "FileName": "GreetingTest.json",
+      "SingleConnection": true,
+      "Skip": false,
+      "IgnoreActivities": []
+    },
+    {
+      "FileName": "SingleDialogTest1.json",
+      "SingleConnection": true,
+      "Skip": false,
+      "IgnoreActivities": []
+    },
+    {
+      "FileName": "SingleDialogTest2.json",
+      "SingleConnection": true,
+      "Skip": false,
+      "IgnoreActivities": []
+    },
+    {
+      "FileName": "MultipleDialogTest1.json",
+      "SingleConnection": true,
+      "Skip": false,
+      "IgnoreActivities": []
+    },
+    {
+      "FileName": "MultipleDialogTest2.json",
+      "SingleConnection": false,
+      "Skip": false,
+      "IgnoreActivities": [
+    },
+    {
+      "FileName": "MultipleDialogTest3.json",
+      "SingleConnection": false,
+      "Skip": false,
+      "IgnoreActivities": []
+    }
+  ],
+  "InputFolder": "C:\\Users\\v-nagana\\Documents\\SydneyAssistant\\SydneyAssistantTest\\TestFiles\\nagana\\EchoBot\\",
+  "OutputFolder": "C:\\Users\\v-nagana\\Documents\\SydneyAssistant\\SydneyAssistantTest\\TestFiles\\nagana\\EchoBot\\",
+  "SubscriptionKey": "4810558187f748678789bfd5f26e9247",
+  "Region": "westus2",
+  "SRLanguage": "",
+  "CustomCommandsAppId": "",
+  "CustomSREndpointId": "",
+  "CustomVoiceDeploymentIds": "",
+  "AudioDurationMargin": "200",
+  "AppLogEnabled": true,
+  "BotGreeting":  true,
+  "SpeechSDKLogEnabled": false
+}
