@@ -8,16 +8,11 @@
         "ExpectedResponses": [
             {
               "type": "message",
-             
-              "serviceUrl": "urn:botframework:websocket:directlinespeech",
-              "channelId": "directlinespeech",
               "speak": "Welcome to Bot Framework!",
               "inputHint": "acceptingInput"
             },
             {
               "type": "message",
-              "serviceUrl": "urn:botframework:websocket:directlinespeech",
-              "channelId": "directlinespeech",
               "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
               "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
               "inputHint": "expectingInput"

@@ -15,8 +15,8 @@
       ]
     }
   ],
-  "InputFolder": "\\testing\\input\\",
-  "OutputFolder": "\\testing\\output\\",
+  "InputFolder": "testing\\input\\",
+  "OutputFolder": "testing\\output\\",
   "SubscriptionKey": "6719034187t67067878k72dg926e9897",
   "Region": "westus2",
   "SRLanguage": "en-US",
@@ -27,5 +27,5 @@
   "AppLogEnabled": true,
   "BotGreeting": true,
   "SpeechSDKLogEnabled": false,
-  "Timeout":  1000
+  "Timeout":  5000
 }

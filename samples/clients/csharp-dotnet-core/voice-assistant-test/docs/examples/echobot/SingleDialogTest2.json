@@ -7,9 +7,7 @@
         "TurnID": 0,
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Hello and welcome!",
             "text": "Hello and welcome!",
             "type": "message"
@@ -24,9 +22,7 @@
         "Activity": "",
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Echo: Hello Echo Bot",
             "text": "Echo: Hello Echo Bot",
             "type": "message"
@@ -40,9 +36,7 @@
         "Utterance": "How are you?",
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Echo: How are you?",
             "text": "Echo: How are you?",
             "type": "message"

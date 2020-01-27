@@ -8,8 +8,6 @@
         "ExpectedResponses": [
           {
             "type": "message",       
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
-            "channelId": "directlinespeech",
             "speak": "Welcome to Bot Framework!",
             "inputHint": "acceptingInput"
           },
@@ -33,8 +31,6 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
-            "channelId": "directlinespeech",
             "text": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-03-01. Is this correct? (1) Yes or (2) No",
             "speak": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-03-01. Is this correct?",
             "inputHint": "expectingInput"
@@ -50,15 +46,12 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "channelId": "directlinespeech",
             "text": "I have you booked to New York from Seattle on 1st March 2020",
             "speak": "I have you booked to New York from Seattle on 1st March 2020",
             "inputHint": "ignoringInput"
           },
           {
             "type": "message",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
-            "channelId": "directlinespeech",
             "text": "What else can I do for you?",
             "speak": "What else can I do for you?",
             "inputHint": "expectingInput"

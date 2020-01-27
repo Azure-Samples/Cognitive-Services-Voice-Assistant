@@ -80,11 +80,11 @@ The following are the fields  in Configuration file:
 |AudioDurationMargin   | string     | Optional         |   200          | 100 |  Margin to verify the duration of Bot response TTS audio.|
 |AppLogEnabled   | boolean     | Optional         |   false          | true |   A boolean that enables Application Logging.|
 |SpeechSDKLogEnabled   | string     | Optional         |   false          | true |   A boolean that enables generating a Speech SDK Logging.|
-|BotGreeting   | boolean     | Optional         |   false          | true |  A boolean which defines if a Bot has a automatic greeting activity response upon conection.|
+|BotGreeting   | boolean     | Optional         |   false          | true |  A boolean which defines if a Bot has a automatic greeting activity response upon conection. [ For more info click on this link](#testing-bot-greetings)|
 |Timeout   | int     | Optional         |   5000          | 2000 |  A global timeout that waits for each bot response.|
 |FileName       | string	 | required		    |           | Start.json	 | Name of the input file|
-|Ignore Activities | Array of JObject	 | Optional	|	          |[{"type": "typing","name": "trace"}, {"name": "setDynamicGrammar"}]| List of activities that are ignored by tool|
-|SingleConnection  | boolean	 | Optional		    | false          | true	 | Boolean which defines whether each Dialog in the input file is processed with the same connection with the Bot or a new connection for each Dialog|
+|IgnoreActivities | Array of JObject	 | Optional	|	          |[{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]| List of activities that are ignored by tool. [ For more info click on this link](#ignoring-certain-bot-reply-activities) |
+|SingleConnection  | boolean	 | Optional		    | false          | true	 | Boolean which defines whether each Dialog in the input file is processed with the same connection with the Bot or a new connection for each Dialog.  [ For more info click on this link](#single-connection-and-Multiple-connection-tests)|
 |Skip       | boolean	 | Optional		    |    false       |true	 | Boolean which defines whether a input file is to be skipped or not|
 
 #### Test configuration file
@@ -101,10 +101,10 @@ The following are the fields  in Input File:
 |Utterance       | string          | required         |           |“Open Start Menu” | Text that is send up to communicate with the Bot.  |
 |Activity        | string          | required         |           |"{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}"|  Input Activity. Activity that is send up to Bot.|
 |WavFile         | string          | required         |           |"test1.WAV" | Input WAV file. Audio that is streamed to Bot |
-|ExpectedResponses| Array of JObject| required        |           |                   |List of Expected responses from Bot. |
+|ExpectedResponses| Array of JObject| required        |           |                   |List of Expected responses from Bot.|
 |ExpectedIntents | Array of JObject   | Optional	      |	          |[{"Item1": "NONE","Item2": 1},{"Item1":"L_DEVICECONTROL","Item2": 2}]|List of expected Intents|
 |ExpectedSlots| Array of JObject| Optional         |           |                   | List of expected Slots.|
-|ExpectedTTSAudioResponseDuration  | int    | Optional        |   2000    | 1500              |  Expected duration of Bot response TTS audio.|
+|ExpectedTTSAudioResponseDuration  | int    | Optional        |   2000    | 1500              |  Expected duration of Bot response TTS audio.  [ For more info click on this link](#testing-bot-response-tts-audio-duration) |
 |ExpectedResponseLatency  | string         | Optional         |  Expectedresponse index to check for is defaulted to Zero |"500,1" |This is a combination of expected latency and Index of the expected response from the list of expected responses that we care for calculating latency.|
 
 ## Topics
@@ -113,17 +113,18 @@ The following are the fields  in Input File:
 
 ### Ignoring certain bot-reply activities
 
-Program captures the Bot-reply activities received for each turn and performs validations on certain parameters to ensure if the turn is passed or failed.
-In order to ignore any one of the Bot-reply activities received for each turn by the tool, "Ignore Activities" field is to be set in the Application Configuration file.
-"Ignore Activities" is an Array that holds the list of activities that are ignored by the tool.
+Tool waits for certain amount of time or until it hits timeout and captures all the Bot-reply activities received for each turn. This time is equal to the length of the ExpectedResponses array that is set in the test configuration file. Tool perfoms validations on these captured Bot-reply activities to check if the turn is passed or failed.
 
-Example : [{"type": "typing","name": "trace"}, {"name": "setDynamicGrammar"}]
+In order to ignore any one of the Bot-reply activities received for each turn by the tool, "IgnoreActivities" field is to be set in the Application Configuration file.
+"IgnoreActivities" is an Array that holds the list of activities that are ignored by the tool. The amount of time for which tool waits to capture the Bot-reply activities does not include the Bot-reply activities that were marked ignore.
 
-In the above example tool ignores all activities which are of type : "typing"and name : "trace" and all activities which have "name" : "setDynamicGrammar"
+Example : [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]
+
+In the above example tool ignores all activities which are of type : "typing"and name : "trace" and all activities which have "name" : "QnAMaker".
 
 ### Testing bot response TTS Audio duration
 
-A Bot-reply activity with speak field enabled, will have a TTS audio.
+A Bot-reply activity with speak field populated, will have a TTS audio.
 Tool stores this TTS audio in a WAV file. The duration of TTS audio is calculated and is verified if it falls within the range of ExpectedTTSAudioResponseDuration +/- AudioDurationMargin.
 if the test is passed TTSAudioResponseDurationMatch is set to true otherwise false.
 
@@ -133,15 +134,15 @@ Bot-Greeting - It is an automatic Bot response that happens when client connect 
 Application Configuration file holds a field called "Bot Greeting" that should be set to true when a Bot has a greeting.
 
 For testing the Bot Greeting when,
-  -Single Connection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied 
-  -Single Connection = "false",test configuration  file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) speciied 
+  -SingleConnection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied 
+  -SingleConnection = "false",test configuration  file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) speciied 
 
 ### Single connection and Multiple connection tests
 
 Single Connection tests:
-When the Single Connection is set to true, a new connection is established with Bot for each Test Configuration file.
+When the SingleConnection is set to true, a new connection is established with Bot for each Test Configuration file.
 Multiple Connection tests:
-When Single Connection is set to false,a new connection is established with Bot for each Dialog in a Test Configuration file.
+When SingleConnection is set to false,a new connection is established with Bot for each Dialog in a Test Configuration file.
 
 ### Skipping tests
 

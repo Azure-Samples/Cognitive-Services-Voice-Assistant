@@ -7,9 +7,7 @@
         "TurnID": 0,
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Hello and welcome!",
             "text": "Hello and welcome!",
             "type": "message"
@@ -25,9 +23,7 @@
         "WavFile": "Hello.WAV",
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Echo: Hello Echo Bot",
             "text": "Echo: Hello Echo Bot",
             "type": "message"
@@ -42,9 +38,7 @@
         "WavFile": "Howareyou.WAV",
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Echo: How are you?",
             "text": "Echo: How are you?",
             "type": "message"
@@ -63,9 +57,7 @@
         "TurnID": 0,
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Hello and welcome!",
             "text": "Hello and welcome!",
             "type": "message"
@@ -81,9 +73,7 @@
         "WavFile": "GoodMorning.WAV",
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Echo: Good Morning",
             "text": "Echo: Good Morning",
             "type": "message"
@@ -98,9 +88,7 @@
         "WavFile": "Weather.WAV",
         "ExpectedResponses": [
           {
-            "channelId": "directlinespeech",
             "inputHint": "acceptingInput",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
             "speak": "Echo: What is the weather today?",
             "text": "Echo: What is the weather today?",
             "type": "message"
