@@ -86,6 +86,7 @@ The following are the fields  in Configuration file:
 |IgnoreActivities | Array of JObject	 | Optional	|	          |[{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]| List of activities that are ignored by tool. [ For more info click on this link](#ignoring-certain-bot-reply-activities) |
 |SingleConnection  | boolean	 | Optional		    | false          | true	 | Boolean which defines whether each Dialog in the input file is processed with the same connection with the Bot or a new connection for each Dialog.  [ For more info click on this link](#single-connection-and-Multiple-connection-tests)|
 |Skip       | boolean	 | Optional		    |    false       |true	 | Boolean which defines whether a input file is to be skipped or not|
+|KeywordRecognitionModel        | string	 | Optional		    |           |C:\\\LUAccuracytool\\\SydneyAssistant\\\test.table	 | Path that contains table files for Keyword recognition. Make sure to specify the entire path along with the table file name.  [ For more info click on this link](#writing-tests-with-keyword-spotting)|
 
 #### Test configuration file
 
@@ -101,6 +102,7 @@ The following are the fields  in Input File:
 |Utterance       | string          | required         |           |“Open Start Menu” | Text that is send up to communicate with the Bot.  |
 |Activity        | string          | required         |           |"{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}"|  Input Activity. Activity that is send up to Bot.|
 |WavFile         | string          | required         |           |"test1.WAV" | Input WAV file. Audio that is streamed to Bot |
+|Keyword         | boolean         | Optional         |  false    | true | Boolean which defines if input WAV file has a keyword or not.  [ For more info click on this link](#writing-tests-with-keyword-spotting) |
 |ExpectedResponses| Array of JObject| required        |           |                   |List of Expected responses from Bot.|
 |ExpectedIntents | Array of JObject   | Optional	      |	          |[{"Item1": "NONE","Item2": 1},{"Item1":"L_DEVICECONTROL","Item2": 2}]|List of expected Intents|
 |ExpectedSlots| Array of JObject| Optional         |           |                   | List of expected Slots.|
@@ -109,9 +111,13 @@ The following are the fields  in Input File:
 
 ## Topics
 
-### Writing tests with keyword spotting
+#### Writing tests with keyword spotting
 
-### Ignoring certain bot-reply activities
+To test a Bot with an audio input with a keyword, populate "KeywordRecognitionModel" in Application Configuration file with the full path of the table file and set the boolean "Keyword" in the test configuration file to "true" if the WAV file used for testing has a keyword.
+
+The keyword that has been recognized will be populated in the output file.
+
+#### Ignoring certain bot-reply activities
 
 Tool waits for certain amount of time or until it hits timeout and captures all the Bot-reply activities received for each turn. This time is equal to the length of the ExpectedResponses array that is set in the test configuration file. Tool perfoms validations on these captured Bot-reply activities to check if the turn is passed or failed.
 
@@ -122,13 +128,13 @@ Example : [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]
 
 In the above example tool ignores all activities which are of type : "typing"and name : "trace" and all activities which have "name" : "QnAMaker".
 
-### Testing bot response TTS Audio duration
+#### Testing bot response TTS Audio duration
 
 A Bot-reply activity with speak field populated, will have a TTS audio.
 Tool stores this TTS audio in a WAV file. The duration of TTS audio is calculated and is verified if it falls within the range of ExpectedTTSAudioResponseDuration +/- AudioDurationMargin.
 if the test is passed TTSAudioResponseDurationMatch is set to true otherwise false.
 
-### Testing bot-greetings
+#### Testing bot-greetings
 
 Bot-Greeting - It is an automatic Bot response that happens when client connect to the Bot with no input from the client.
 Application Configuration file holds a field called "Bot Greeting" that should be set to true when a Bot has a greeting.
@@ -137,14 +143,14 @@ For testing the Bot Greeting when,
   -SingleConnection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied 
   -SingleConnection = "false",test configuration  file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) specified 
 
-### Single connection and Multiple connection tests
+#### Single connection and Multiple connection tests
 
 Single Connection tests:
 When the "SingleConnection" in the Application Configuration file is set to true, a new connection is established with Bot for each Test Configuration file.
 Multiple Connection tests:
 When "SingleConnection" in the Application Configuration file is set to false,a new connection is established with Bot for each Dialog in a Test Configuration file.
 
-### Skipping tests
+#### Skipping tests
 
 Tests can be skipped either at the Test Configuration file level or at the Dialog level.
 
@@ -218,14 +224,13 @@ Example:
     ]
   }
 ]
-
 ```
 
 In the above example Dialog 0 will be skipped from testing.
 
-### Pausing between dailogs or turns
+#### Pausing between dailogs or turns
 
-### Creating new tests ("bootstrapping")
+#### Creating new tests ("bootstrapping")
 
 While creating your own Test configuration file,bootstrapping mode is useful in order to capture all the bot responses
 
@@ -234,8 +239,8 @@ In order to set a turn to bootstrapping mode,in Test Configuration file set the 
 In this mode,tool captures all the bot responses ,doesnt perform any validations and sets the test to pass.
 
 
-### Running tests in an Azure DevOps pipeline
+#### Running tests in an Azure DevOps pipeline
 
-### Custom Commands
-### Custom Speech Recognition
-### Custom TTS voices
+#### Custom Commands
+#### Custom Speech Recognition
+#### Custom TTS voices

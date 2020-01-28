@@ -28,7 +28,7 @@
       "FileName": "MultipleDialogTest2.json",
       "SingleConnection": false,
       "Skip": false,
-      "IgnoreActivities": [
+      "IgnoreActivities": []
     },
     {
       "FileName": "MultipleDialogTest3.json",

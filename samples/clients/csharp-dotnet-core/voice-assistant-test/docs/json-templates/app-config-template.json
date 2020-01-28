@@ -27,5 +27,6 @@
   "AppLogEnabled": true,
   "BotGreeting": true,
   "SpeechSDKLogEnabled": false,
-  "Timeout":  5000
+  "Timeout":  5000,
+  "KeywordRecognitionModel" : ""
 }

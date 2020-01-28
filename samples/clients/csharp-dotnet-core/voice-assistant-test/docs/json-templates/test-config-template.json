@@ -10,6 +10,7 @@
         "Utterance": "Testing Dialog 0 Turn 0",
         "Activity": "",
         "WavFile": "",
+        "Keyword" : false,
         "ExpectedIntents": [
           {
             "Item1": "NONE",
@@ -43,6 +44,7 @@
         "Utterance": "Testing Dialog 0 Turn 1",
         "Activity": "",
         "WavFile": "test1.WAV",
+        "Keyword" : false,
         "ExpectedIntents": [
           {
             "Item1": "NONE",
@@ -71,6 +73,7 @@
         "Utterance": "Testing Dialog 1 Turn 0",
         "Activity": "",
         "WavFile": "test2.WAV",
+        "Keyword" : false,
         "ExpectedIntents": [
           {
             "Item1": "NONE",
