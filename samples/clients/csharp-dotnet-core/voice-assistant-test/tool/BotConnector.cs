@@ -123,11 +123,7 @@ namespace VoiceAssistantTest
                 config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.appsettings.CustomVoiceDeploymentIds);
             }
 
-            if (!string.IsNullOrWhiteSpace(this.appsettings.Timeout))
-            {
-                // TODO: Verify if this string is a valid integer - timeout can only be a non-negative integer representing time in milliseconds.
-                this.timeout = int.Parse(this.appsettings.Timeout, CultureInfo.CurrentCulture);
-            }
+            this.timeout = this.appsettings.Timeout;
 
             if (!string.IsNullOrWhiteSpace(this.appsettings.KeywordRecognitionModel))
             {
