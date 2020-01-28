@@ -1,0 +1,101 @@
+[
+  {
+    "DialogID": 0,
+    "Description" :  "Dialog with Multiple Turns with Text input - 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Hello and welcome!",
+            "text": "Hello and welcome!",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "Hello Echo Bot",
+        "Activity": "",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: Hello Echo Bot",
+            "text": "Echo: Hello Echo Bot",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "How are you?",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: How are you?",
+            "text": "Echo: How are you?",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      }
+    ]
+  },
+  {
+    "DialogID": 1,
+    "Description": "Dialog with Multiple Turns with Text input - 2",
+    "Skip":  true,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Good Morning",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: Good Morning",
+            "text": "Echo: Good Morning",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "What is the weather today?",
+        "Activity": "",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: What is the weather today?",
+            "text": "Echo:What is the weather today?",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 2,
+        "ResponseCount": 1,
+        "Utterance": "It's a rainy day",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: It's a rainy day",
+            "text": "Echo: It's a rainy day",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      }
+    ]
+  }
+]

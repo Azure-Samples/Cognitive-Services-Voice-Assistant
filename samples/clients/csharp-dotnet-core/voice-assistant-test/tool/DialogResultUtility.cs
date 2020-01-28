@@ -210,7 +210,7 @@ namespace VoiceAssistantTest
                     activityIndex = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
                 }
 
-                if (turns.ExpectedResponses != null)
+                if (turns.ExpectedResponses != null && turns.ExpectedResponses.Count != 0)
                 {
                     if (ActivitiesMatch(turns.ExpectedResponses[activityIndex], turnsOutput.ActualResponses[activityIndex]))
                     {
@@ -260,7 +260,7 @@ namespace VoiceAssistantTest
                 {
                     if (!GetStringUsingRegex(turnResult.ActualRecognizedText).Equals(GetStringUsingRegex(turnResult.Utterance), StringComparison.OrdinalIgnoreCase))
                     {
-                        Trace.TraceInformation($"Recognized text \"{turnResult.ActualRecognizedText}\" doest not match \"{turnResult.Utterance}\"");
+                        Trace.TraceInformation($"Recognized text \"{turnResult.ActualRecognizedText}\" does not match \"{turnResult.Utterance}\"");
                         turnResult.UtteranceMatch = false;
                     }
                 }

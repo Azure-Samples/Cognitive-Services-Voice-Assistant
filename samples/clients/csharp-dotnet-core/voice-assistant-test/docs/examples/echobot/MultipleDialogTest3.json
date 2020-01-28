@@ -1,0 +1,102 @@
+[
+  {
+    "DialogID": 0,
+    "Description": "Dialog with Multiple Turns with Voice input - 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Hello and welcome!",
+            "text": "Hello and welcome!",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "Hello Echo Bot",
+        "Activity": "",
+        "WavFile": "Hello.WAV",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: Hello Echo Bot",
+            "text": "Echo: Hello Echo Bot",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "How are you?",
+        "WavFile": "Howareyou.WAV",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: How are you?",
+            "text": "Echo: How are you?",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      }
+    ]
+  },
+  {
+    "DialogID": 1,
+    "Description": "Dialog with Multiple Turns with Voice input - 2",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Hello and welcome!",
+            "text": "Hello and welcome!",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "Good Morning",
+        "Activity": "",
+        "WavFile": "GoodMorning.WAV",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: Good Morning",
+            "text": "Echo: Good Morning",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "What is the weather today?",
+        "WavFile": "Weather.WAV",
+        "ExpectedResponses": [
+          {
+            "inputHint": "acceptingInput",
+            "speak": "Echo: What is the weather today?",
+            "text": "Echo: What is the weather today?",
+            "type": "message"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200"
+      }
+    ]
+  }
+]

@@ -1,156 +1,93 @@
 [
   {
     "DialogID": 0,
-	"Skip": false,
-    "Description": "Description of dialog 0",
-	"Sleep": 500,
+    "Description": "Dialog - 0",
+    "Skip":  false,
     "Turns": [
       {
         "TurnID": 0,
-        "Utterance": "What is the weather in Seattle?",
-        "ExpectedResponse": [
+        "Sleep": 10,
+        "Utterance": "Testing Dialog 0 Turn 0",
+        "Activity": "",
+        "WavFile": "",
+        "Keyword" : false,
+        "ExpectedIntents": [
           {
-            "type":"event",
-            "text": "requestDeviceState[brightness]",
-            "entities": [
-              {
-                "type": "ConversationProtocol",
-                "actionsToExecute": [
-                  {
-                    "actionType": "requestDeviceState",
-                    "requestDeviceState": {
-                      "deviceStates": [
-                        "brightness"
-                      ]
-                    }
-                  }
-                ]
-              }
-            ]
+            "Item1": "NONE",
+            "Item2": 1
           }
         ],
-      },
-      {
-        "TurnID": 1,
-        "Activity": "{\"type\": \"event\", \"entities\": [ {\"type\": \"DeviceStateProtocol\",\"lastUpdateTime\": \"2019-09-26T23:20:39+00:00\",\"componentStates\": [{\"type\": \"brightness\",\"isSupported\": true,\"brightness\": {\"value\": 60}}]}]}",
-        "ExpectedTTSAudioResponseDuration": 2680,
-        "ExpectedResponse": [
+        "ExpectedSlots": "",
+        "ExpectedResponses": [
           {
-            "type": "event",
             "entities": [
               {
                 "type": "ConversationProtocol",
                 "actionsToExecute": [
                   {
-                    "actionType": "changeBrightness",
-                    "changeBrightness": {
-                      "value": 40
-                    }
+                    "actionType": "startMenu"
                   }
                 ]
               }
             ]
           },
           {
-            "type": "message",
-            "text": "Ok.",
-            "speak": "<speak version=\"1.0\" xml:lang=\"en-us\" xmlns:mstts=\"https://www.w3.org/2001/mstts\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, JessaNeural)\"><audio src=\"https://dscintsu01sa02.blob.core.windows.net/sounds/sydney_voice_acknowledge.wav\" /></voice></speak>",
-            "inputHint": "acceptingInput",
-            "attachments": [
-              {
-                "contentType": "application/vnd.microsoft.card.adaptive",
-                "content": {
-                  "body": [
-                    {
-                      "text": "Ok.",
-                      "type": "TextBlock"
-                    }
-                  ],
-                  "speak": "Ok.",
-                  "type": "AdaptiveCard",
-                  "version": "1.2"
-                }
-              }
-            ],
+            "text": "Testing turn 0."
           }
         ],
+        "ExpectedTTSAudioResponseDuration": 1500,
+        "ExpectedResponseLatency": "200,1"
+      },
+      {
+        "TurnID": 1,
+        "Sleep": 20,
+        "Utterance": "Testing Dialog 0 Turn 1",
+        "Activity": "",
+        "WavFile": "test1.WAV",
+        "Keyword" : false,
+        "ExpectedIntents": [
+          {
+            "Item1": "NONE",
+            "Item2": 1
+          }
+        ],
+        "ExpectedSlots": "",
+        "ExpectedResponses": [
+          {
+            "text": "testing turn 1"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1793,
+        "ExpectedResponseLatency": "200,0"
       }
     ]
   },
   {
     "DialogID": 1,
-	"Skip": false,
-    "Description": "TestLowerBrightnessByPercentageValue",
+    "Description": "Dialog - 1",
+    "Skip": true,
     "Turns": [
       {
         "TurnID": 0,
-        "Utterance": "Lower brightness by 50%.",
-        "ExpectedResponse": [
+        "Sleep":  0,
+        "Utterance": "Testing Dialog 1 Turn 0",
+        "Activity": "",
+        "WavFile": "test2.WAV",
+        "Keyword" : false,
+        "ExpectedIntents": [
           {
-            "type":"event",
-            "text": "requestDeviceState[brightness]",
-            "entities": [
-              {
-                "type": "ConversationProtocol",
-                "actionsToExecute": [
-                  {
-                    "actionType": "requestDeviceState",
-                    "requestDeviceState": {
-                      "deviceStates": [
-                        "brightness"
-                      ]
-                    }
-                  }
-                ]
-              }
-            ]
+            "Item1": "NONE",
+            "Item2": 1
           }
         ],
-      },
-      {
-        "TurnID": 1,
-        "Activity": "{\"type\": \"event\", \"entities\": [ {\"type\": \"DeviceStateProtocol\",\"lastUpdateTime\": \"2019-09-26T23:20:39+00:00\",\"componentStates\": [{\"type\": \"brightness\",\"isSupported\": true,\"brightness\": {\"value\": 60}}]}]}",
-        "ExpectedTTSAudioResponseDuration": 2680,
-        "ExpectedResponse": [
+        "ExpectedSlots": "",
+        "ExpectedResponses": [
           {
-            "type": "event",
-            "entities": [
-              {
-                "type": "ConversationProtocol",
-                "actionsToExecute": [
-                  {
-                    "actionType": "changeBrightness",
-                    "changeBrightness": {
-                      "value": 30
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "type": "message",
-            "text": "Ok.",
-            "speak": "<speak version=\"1.0\" xml:lang=\"en-us\" xmlns:mstts=\"https://www.w3.org/2001/mstts\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, JessaNeural)\"><audio src=\"https://dscintsu01sa02.blob.core.windows.net/sounds/sydney_voice_acknowledge.wav\" /></voice></speak>",
-            "inputHint": "acceptingInput",
-            "attachments": [
-              {
-                "contentType": "application/vnd.microsoft.card.adaptive",
-                "content": {
-                  "body": [
-                    {
-                      "text": "Ok.",
-                      "type": "TextBlock"
-                    }
-                  ],
-                  "speak": "Ok.",
-                  "type": "AdaptiveCard",
-                  "version": "1.2"
-                }
-              }
-            ]
+            "text": "testing turn 1"
           }
-        ]
+        ],
+        "ExpectedTTSAudioResponseDuration": 1200,
+        "ExpectedResponseLatency": "500"
       }
     ]
   }
