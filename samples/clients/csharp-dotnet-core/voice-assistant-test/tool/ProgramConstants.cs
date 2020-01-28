@@ -12,17 +12,17 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Name of the final report generated at the end of a test run.
         /// </summary>
-        public const string TestReportFileName = "VoiceAssistantTestReport.txt";
+        public const string TestReportFileName = "VoiceAssistantTestReport.json";
 
         /// <summary>
         /// Default TTS Duration margin to use (in milliseconds).
         /// </summary>
-        public const string DefaultTTSAudioDurationMargin = "200";
+        public const int DefaultTTSAudioDurationMargin = 200;
 
         /// <summary>
         /// Default timeout to use (in milliseconds) while waiting for bot reply activities.
         /// </summary>
-        public const string DefaultTimeout = "5000";
+        public const int DefaultTimeout = 5000;
 
         /// <summary>
         /// Name of the sub folder to use under the main output test folder to write TTS responses.

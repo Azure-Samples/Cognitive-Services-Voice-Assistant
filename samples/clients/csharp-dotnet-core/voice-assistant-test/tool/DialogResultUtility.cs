@@ -239,7 +239,7 @@ namespace VoiceAssistantTest
             turnResult.Pass = true;
             turnResult.TaskCompleted = true;
 
-            int margin = int.Parse(this.appSettings.TTSAudioDurationMargin, CultureInfo.CurrentCulture);
+            int margin = this.appSettings.TTSAudioDurationMargin;
 
             if (!bootstrapMode)
             {

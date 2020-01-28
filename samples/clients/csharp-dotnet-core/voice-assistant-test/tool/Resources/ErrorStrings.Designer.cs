@@ -277,6 +277,24 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Timeout is negative - not a valid time out.
+        /// </summary>
+        public static string TIMEOUT_INVALID {
+            get {
+                return ResourceManager.GetString("TIMEOUT_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTS Audio duration margin is negative - not a valid TTS Audio duration margin.
+        /// </summary>
+        public static string TTS_AUDIO_DURATION_MARGIN_INVALID {
+            get {
+                return ResourceManager.GetString("TTS_AUDIO_DURATION_MARGIN_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Both Utterance and Activity field present. .
         /// </summary>
         public static string UTTERANCE_ACTIVITY_PRESENT {

@@ -22,7 +22,7 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets test configuration of each Input File.
         /// </summary>
-        public TestSettings[] InputFiles { get; set; }
+        public TestSettings[] Tests { get; set; }
 
         /// <summary>
         /// Gets or sets Speech Subscription Key.
@@ -38,7 +38,7 @@ namespace VoiceAssistantTest
         /// Gets or sets the margin for the duration of the Text-To-Speech audio sent by the bot, if any.
         /// The margin sets the acceptable delta value (in excess, or short of) for the actual TTS audio duration (in milliseconds).
         /// </summary>
-        public string TTSAudioDurationMargin { get; set; } = ProgramConstants.DefaultTTSAudioDurationMargin;
+        public int TTSAudioDurationMargin { get; set; } = ProgramConstants.DefaultTTSAudioDurationMargin;
 
         /// <summary>
         /// Gets or sets a value indicating whether to log application traces to a text file.
@@ -104,7 +104,7 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the timeout value. If this value is not set, the default is 5000 milliseconds.
         /// </summary>
-        public string Timeout { get; set; } = ProgramConstants.DefaultTimeout;
+        public int Timeout { get; set; } = ProgramConstants.DefaultTimeout;
 
         /// <summary>
         /// Gets or sets the Keyword Recognition Model File.
@@ -230,7 +230,7 @@ namespace VoiceAssistantTest
                 throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
             }
 
-            if (instance.InputFiles == null || instance.InputFiles.Length == 0)
+            if (instance.Tests == null || instance.Tests.Length == 0)
             {
                 throw new MissingFieldException(ErrorStrings.INPUT_FILE_MISSING);
             }
@@ -305,6 +305,16 @@ namespace VoiceAssistantTest
                 {
                     throw new MissingFieldException($"{ErrorStrings.KEYWORD_RECOGNITION_MODEL_NOT_FOUND} - {keywordFile}");
                 }
+            }
+
+            if (instance.TTSAudioDurationMargin < 0)
+            {
+                throw new MissingFieldException($"{ErrorStrings.TTS_AUDIO_DURATION_MARGIN_INVALID} - {keywordFile}");
+            }
+
+            if (instance.Timeout < 0)
+            {
+                throw new MissingFieldException($"{ErrorStrings.TIMEOUT_INVALID} - {keywordFile}");
             }
         }
 

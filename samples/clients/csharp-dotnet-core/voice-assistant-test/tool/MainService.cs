@@ -50,14 +50,14 @@ namespace VoiceAssistantTest
                 "\n",
             };
 
-            foreach (TestSettings inputFiles in appSettings.InputFiles)
+            foreach (TestSettings tests in appSettings.Tests)
             {
-                if (inputFiles.Skip)
+                if (tests.Skip)
                 {
                     continue;
                 }
 
-                string inputFileName = appSettings.InputFolder + inputFiles.FileName;
+                string inputFileName = appSettings.InputFolder + tests.FileName;
 
                 if (!File.Exists(inputFileName))
                 {
@@ -65,7 +65,7 @@ namespace VoiceAssistantTest
                     continue;
                 }
 
-                Trace.TraceInformation($"Validating file {inputFiles.FileName}");
+                Trace.TraceInformation($"Validating file {tests.FileName}");
                 StreamReader file = new StreamReader(inputFileName, Encoding.UTF8);
                 string txt = file.ReadToEnd();
                 file.Close();
@@ -79,7 +79,7 @@ namespace VoiceAssistantTest
                 {
                     // This will throw a JSONException in case of deserialization issues, which should capture the source (such as a malformed string)
                     // There is no more processing that can be done for this file - move on to the next file
-                    allExceptions.Add($"[{inputFiles.FileName}] : {e.Message}");
+                    allExceptions.Add($"[{tests.FileName}] : {e.Message}");
                     continue;
                 }
 
@@ -91,11 +91,11 @@ namespace VoiceAssistantTest
 
                     foreach (Turn turn in dialog.Turns)
                     {
-                        (bool valid, List<string> turnExceptionMessages) = ValidateTurnInput(turn, appSettings.BotGreeting, inputFiles.SingleConnection, firstDialog, firstTurn);
+                        (bool valid, List<string> turnExceptionMessages) = ValidateTurnInput(turn, appSettings.BotGreeting, tests.SingleConnection, firstDialog, firstTurn);
 
                         if (!valid)
                         {
-                            List<string> completeExceptionMsg = turnExceptionMessages.Select(str => $"[{inputFiles.FileName}][DialogID {dialog.DialogID}, TurnID {turn.TurnID}] : {str}").ToList();
+                            List<string> completeExceptionMsg = turnExceptionMessages.Select(str => $"[{tests.FileName}][DialogID {dialog.DialogID}, TurnID {turn.TurnID}] : {str}").ToList();
                             allExceptions.AddRange(completeExceptionMsg);
                         }
 
@@ -112,22 +112,22 @@ namespace VoiceAssistantTest
                 throw new ArgumentException(msg);
             }
 
-            foreach (TestSettings inputFiles in appSettings.InputFiles)
+            foreach (TestSettings tests in appSettings.Tests)
             {
                 bool isFirstDialog = true;
                 BotConnector botConnector = null;
                 Trace.IndentLevel = 0;
-                if (inputFiles.Skip)
+                if (tests.Skip)
                 {
-                    Trace.TraceInformation($"Skipping file {inputFiles.FileName}");
+                    Trace.TraceInformation($"Skipping file {tests.FileName}");
                     continue;
                 }
                 else
                 {
-                    Trace.TraceInformation($"Processing file {inputFiles.FileName}");
+                    Trace.TraceInformation($"Processing file {tests.FileName}");
                 }
 
-                string inputFileName = appSettings.InputFolder + inputFiles.FileName;
+                string inputFileName = appSettings.InputFolder + tests.FileName;
                 string testName = Path.GetFileNameWithoutExtension(inputFileName);
                 string outputPath = appSettings.OutputFolder + testName + "Output";
                 DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
@@ -168,7 +168,7 @@ namespace VoiceAssistantTest
                     // Keep track of turn pass/fail : per turn.
                     List<bool> turnCompletionStatuses = new List<bool>();
 
-                    if (isFirstDialog || inputFiles.SingleConnection == false)
+                    if (isFirstDialog || tests.SingleConnection == false)
                     {
                         // Always establish a connection with the bot for the first dialog in the test file.
                         // If SingleConnection is false, it also means we need to re-establish the connection before each of the dialogs in the test file.
@@ -211,7 +211,7 @@ namespace VoiceAssistantTest
                             bootstrapMode = false;
                         }
 
-                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, responseCount, inputFiles.IgnoreActivities, turn.ExpectedResponseLatency, turn.Keyword);
+                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.ExpectedResponseLatency, turn.Keyword);
 
                         // Send up WAV File if present
                         if (!string.IsNullOrEmpty(turn.WAVFile))
