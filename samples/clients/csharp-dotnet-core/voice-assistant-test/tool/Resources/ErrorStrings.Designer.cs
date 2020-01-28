@@ -277,7 +277,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Timeout is negative - not a valid time out.
+        ///   Looks up a localized string similar to A negative number is not a valid value for Timeout.
         /// </summary>
         public static string TIMEOUT_INVALID {
             get {
@@ -286,7 +286,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TTS Audio duration margin is negative - not a valid TTS Audio duration margin.
+        ///   Looks up a localized string similar to A negative number is not a valid value for TTSAudioDurationMargin.
         /// </summary>
         public static string TTS_AUDIO_DURATION_MARGIN_INVALID {
             get {
