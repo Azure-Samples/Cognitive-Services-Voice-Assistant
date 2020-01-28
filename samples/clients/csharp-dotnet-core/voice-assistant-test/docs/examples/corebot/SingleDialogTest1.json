@@ -19,7 +19,7 @@
           }
       ],
         "ExpectedTTSAudioResponseDuration": 8197,
-        "ExpectedResponseLatency": "200"
+        "ExpectedResponseLatency": "200,0"
       },
       {
         "TurnID": 1,

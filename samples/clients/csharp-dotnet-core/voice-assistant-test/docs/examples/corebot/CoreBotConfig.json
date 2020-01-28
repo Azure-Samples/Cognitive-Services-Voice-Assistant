@@ -1,20 +1,26 @@
 {
   "InputFiles": [
     {
+      "FileName": "SingleDialogTest1.json",
+      "SingleConnection": true,
+      "Skip": false,
+      "IgnoreActivities": []
+    },
+    {
       "FileName": "SingleDialogTest2.json",
       "SingleConnection": true,
       "Skip": false,
       "IgnoreActivities": []
     }
   ],
-  "InputFolder": "C:\\Users\\v-nagana\\Documents\\GitHub_SydneyAssistant\\Cognitive-Services-Voice-Assistant\\samples\\clients\\csharp-dotnet-core\\voice-assistant-test\\docs\\examples\\corebot\\",
-  "OutputFolder": "C:\\Users\\v-nagana\\Documents\\GitHub_SydneyAssistant\\Cognitive-Services-Voice-Assistant\\samples\\clients\\csharp-dotnet-core\\voice-assistant-test\\docs\\examples\\corebot\\",
-  "SubscriptionKey": "75e2ed6fed8b4b868c973d93989565c3",
+  "InputFolder": "Cognitive-Services-Voice-Assistant\\samples\\clients\\csharp-dotnet-core\\voice-assistant-test\\docs\\examples\\corebot\\",
+  "OutputFolder": "Cognitive-Services-Voice-Assistant\\samples\\clients\\csharp-dotnet-core\\voice-assistant-test\\docs\\examples\\corebot\\",
+  "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
   "Region": "westus2",
-  "SRLanguage": "",
-  "CustomCommandsAppId": "",
-  "CustomSREndpointId": "",
-  "CustomVoiceDeploymentIds": "",
+  "SRLanguage": "en-us",
+  "CustomCommandsAppId": "75tm7ma78sr32eiyp8w345u57989etg9",
+  "CustomSREndpointId":  "676tnv86ut097y9j908w34578cb89dgk",
+  "CustomVoiceDeploymentIds": "6w5tnv8anv84mkv834m578cb9ac93vb9",
   "AudioDurationMargin": "200",
   "AppLogEnabled": true,
   "BotGreeting":  true,

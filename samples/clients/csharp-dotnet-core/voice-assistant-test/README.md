@@ -135,14 +135,14 @@ Application Configuration file holds a field called "Bot Greeting" that should b
 
 For testing the Bot Greeting when,
   -SingleConnection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied 
-  -SingleConnection = "false",test configuration  file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) speciied 
+  -SingleConnection = "false",test configuration  file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) specified 
 
 ### Single connection and Multiple connection tests
 
 Single Connection tests:
-When the SingleConnection is set to true, a new connection is established with Bot for each Test Configuration file.
+When the "SingleConnection" in the Application Configuration file is set to true, a new connection is established with Bot for each Test Configuration file.
 Multiple Connection tests:
-When SingleConnection is set to false,a new connection is established with Bot for each Dialog in a Test Configuration file.
+When "SingleConnection" in the Application Configuration file is set to false,a new connection is established with Bot for each Dialog in a Test Configuration file.
 
 ### Skipping tests
 
@@ -152,7 +152,23 @@ In order to skip a file from the test suite, set the skip field for that file to
 
 Example:
 
-![ScreenShot](docs/TestFileLevelSkip.jpg)
+```
+"InputFiles": 
+[
+    {
+      "FileName": "test-config-template1.json",
+      "SingleConnection": true,
+      "Skip": true
+      "IgnoreActivities": []
+    },
+    {
+      "FileName": "test-config-template2.json",
+      "SingleConnection": true,
+      "Skip": true
+      "IgnoreActivities": []
+    }
+]
+```
 
 In the above example  test configuration file "test-config-template1.json" will be skipped from testing.
 
@@ -161,7 +177,49 @@ In order to skip a Dialog from testing, set the skip field to true for that Dial
 
 Example: 
 
-![ScreenShot](docs/DialogLevelSkip.jpg)
+```
+[
+  {
+    "DialogID": 0,
+    "Description": "Dialog - 0",
+    "Skip":  true,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Sleep": 10,
+        "Utterance": "Testing Dialog 0",
+        "Activity": "",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "text": "Testing turn 0."
+          }
+        ],
+      },
+    ]
+  },
+ {
+    "DialogID": 1,
+    "Description": "Dialog - 1",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Sleep":  0,
+        "Utterance": "Testing Dialog 1",
+        "Activity": "",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "text": "testing turn 1"
+          }
+        ],
+      }
+    ]
+  }
+]
+
+```
 
 In the above example Dialog 0 will be skipped from testing.
 
@@ -173,7 +231,11 @@ While creating your own Test configuration file,bootstrapping mode is useful in 
 
 In order to set a turn to bootstrapping mode,in Test Configuration file set the ExpectedResponses field to either null or empty or dont specify it in the 
 
-In this mode,tool captures all the bot responses ,doesnt perform any validations and sets the test to pass
+In this mode,tool captures all the bot responses ,doesnt perform any validations and sets the test to pass.
 
 
-## Running tests in an Azure DevOps pipeline
+### Running tests in an Azure DevOps pipeline
+
+### Custom Commands
+### Custom Speech Recognition
+### Custom TTS voices
