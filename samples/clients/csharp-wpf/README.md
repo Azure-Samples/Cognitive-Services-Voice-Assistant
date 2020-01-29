@@ -13,7 +13,7 @@ Following the introduction of [Custom Commands](https://docs.microsoft.com/en-us
 * Supports playback of audio response
 * Supports use of [custom wake-words](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws)
 * Supports sending custom [Bot-Framework Activities](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md) as JSON to the bot
-* Displays [Adaptive Cards](https://adaptivecards.io/) sent from your bot implementing the .NET WPF version (https://docs.microsoft.com/en-us/adaptive-cards/sdk/rendering-cards/net-wpf/getting-started)
+* Displays [Adaptive Cards](https://adaptivecards.io/) sent from your bot. On the client we implement the .NET WPF version (https://docs.microsoft.com/en-us/adaptive-cards/sdk/rendering-cards/net-wpf/getting-started)
 * Exports the transcript and activity logs to a file
 
 ## Getting Started
