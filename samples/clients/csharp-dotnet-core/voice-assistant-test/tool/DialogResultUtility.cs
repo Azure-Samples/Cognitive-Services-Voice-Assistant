@@ -179,7 +179,7 @@ namespace VoiceAssistantTest
                 ActualResponses = new List<Activity>(),
             };
 
-            int activityIndex = 0;
+            int activityIndex = turns.ExpectedResponses.Count - 1;
 
             if (turns.ExpectedResponses != null)
             {
@@ -210,7 +210,7 @@ namespace VoiceAssistantTest
                     activityIndex = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
                 }
 
-                if (turns.ExpectedResponses != null && turns.ExpectedResponses.Count != 0)
+                if (turns.ExpectedResponses != null && turns.ExpectedResponses.Count != 0 && turns.ExpectedResponses.Count == turnsOutput.ActualResponses.Count)
                 {
                     if (ActivitiesMatch(turns.ExpectedResponses[activityIndex], turnsOutput.ActualResponses[activityIndex]))
                     {
