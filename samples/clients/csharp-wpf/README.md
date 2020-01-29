@@ -13,7 +13,7 @@ Following the introduction of [Custom Commands](https://docs.microsoft.com/en-us
 * Supports playback of audio response
 * Supports use of [custom wake-words](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws)
 * Supports sending custom [Bot-Framework Activities](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md) as JSON to the bot
-* Displays [Adaptive Cards](https://adaptivecards.io/) sent from your bot (with some limitations)
+* Displays [Adaptive Cards](https://adaptivecards.io/) sent from your bot implementing the .NET WPF version (https://docs.microsoft.com/en-us/adaptive-cards/sdk/rendering-cards/net-wpf/getting-started)
 * Exports the transcript and activity logs to a file
 
 ## Getting Started
@@ -89,6 +89,10 @@ The [Speech Studio Portal](https://speech.microsoft.com/portal/) allows you to c
 ## Use custom commands
 
 If you built your dialog using the [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) service (instead of a Bot-Framework bot registered with Direct Line Speech channel), enter your custom commands application ID in the setting page ("custom commands app id"). This client application will connect to the custom commands service that hosts your dialog.
+
+## Use adaptive cards
+
+If your bot sends down adaptive cards, the client will display them and you will be able to click on the cards and the data from the action will be displayed in a message box. If you would like to send responses back to the bot, you will have to change the code to call the SendActivityAsync() API.
 
 ## Resources
 - [Bot Framework](https://dev.botframework.com/) docs:
