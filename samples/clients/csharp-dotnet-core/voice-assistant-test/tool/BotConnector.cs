@@ -40,6 +40,7 @@ namespace VoiceAssistantTest
         private int turnID;
         private bool audioDownloading = false;
         private int indexActivityWithAudio = 0;
+        private int elapsedTime = 0;
         private List<Activity> ignoreActivitiesList;
         private Stopwatch stopWatch;
         private string expectedRecognition;
@@ -260,6 +261,7 @@ namespace VoiceAssistantTest
         public async Task<BotConnector> SendActivity(string activity)
         {
             this.stopWatch.Restart();
+            this.elapsedTime = 0;
 
             lock (this.ActivityQueue)
             {
@@ -496,6 +498,7 @@ namespace VoiceAssistantTest
                 Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
 
                 this.stopWatch.Restart();
+                this.elapsedTime = 0;
             }
 
             if (e.Result.Reason == ResultReason.RecognizedKeyword)
@@ -519,9 +522,11 @@ namespace VoiceAssistantTest
 
             this.stopWatch.Stop();
 
+            this.elapsedTime += (int)this.stopWatch.ElapsedMilliseconds;
+
             lock (this.ActivityQueue)
             {
-                this.ActivityQueue.Enqueue(new BotReply(activity, (int)this.stopWatch.ElapsedMilliseconds));
+                this.ActivityQueue.Enqueue(new BotReply(activity, this.elapsedTime));
             }
 
             if (e.HasAudio)

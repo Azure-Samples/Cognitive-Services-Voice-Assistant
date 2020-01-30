@@ -63,7 +63,7 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.
         /// </summary>
-        [JsonProperty(Order = 9, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(Order = 9)]
         public int ActualResponseLatency { get; set; }
 
         /// <summary>

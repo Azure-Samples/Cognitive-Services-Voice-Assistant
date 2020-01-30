@@ -88,6 +88,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All the test files are marked to skip.
+        /// </summary>
+        public static string ALL_TESTFILES_SKIPPED {
+            get {
+                return ResourceManager.GetString("ALL_TESTFILES_SKIPPED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input turn is ambiguous. Not a valid combination..
         /// </summary>
         public static string AMBIGUOUS_TURN_INPUT {
@@ -223,6 +232,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedResponseLatency.
+        /// </summary>
+        public static string LATENCY_STRING_PRESENT {
+            get {
+                return ResourceManager.GetString("LATENCY_STRING_PRESENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sleep duration cannot be a negative number..
         /// </summary>
         public static string NEGATIVE_SLEEP_DURATION {
@@ -291,6 +309,15 @@ namespace VoiceAssistantTest.Resources {
         public static string TTS_AUDIO_DURATION_MARGIN_INVALID {
             get {
                 return ResourceManager.GetString("TTS_AUDIO_DURATION_MARGIN_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedTTSAudioDuration.
+        /// </summary>
+        public static string TTS_AUDIO_DURATION_PRESENT {
+            get {
+                return ResourceManager.GetString("TTS_AUDIO_DURATION_PRESENT", resourceCulture);
             }
         }
         

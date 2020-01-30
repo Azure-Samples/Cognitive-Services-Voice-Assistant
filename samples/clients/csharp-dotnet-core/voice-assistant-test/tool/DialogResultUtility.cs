@@ -184,6 +184,7 @@ namespace VoiceAssistantTest
             if (turns.ExpectedResponses != null)
             {
                 turnsOutput.ExpectedResponses = turns.ExpectedResponses;
+                activityIndex = turns.ExpectedResponses.Count - 1;
             }
 
             // Actual values
@@ -210,7 +211,7 @@ namespace VoiceAssistantTest
                     activityIndex = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
                 }
 
-                if (turns.ExpectedResponses != null && turns.ExpectedResponses.Count != 0)
+                if (turns.ExpectedResponses.Count == turnsOutput.ActualResponses.Count)
                 {
                     if (ActivitiesMatch(turns.ExpectedResponses[activityIndex], turnsOutput.ActualResponses[activityIndex]))
                     {
@@ -281,14 +282,14 @@ namespace VoiceAssistantTest
 
                 if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency))
                 {
-                    if (turnResult.ActualResponseLatency > int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture))
+                    if ((turnResult.ActualResponseLatency > int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture)) || (turnResult.ExpectedResponses.Count != turnResult.ActualResponses.Count))
                     {
                         turnResult.ResponseLatencyMatch = false;
                     }
                 }
             }
 
-            turnResult.Pass = turnResult.IntentMatch && turnResult.SlotMatch && turnResult.ResponseMatch && turnResult.UtteranceMatch && turnResult.TTSAudioResponseDurationMatch;
+            turnResult.Pass = turnResult.IntentMatch && turnResult.SlotMatch && turnResult.ResponseMatch && turnResult.UtteranceMatch && turnResult.TTSAudioResponseDurationMatch && turnResult.ResponseLatencyMatch;
             turnResult.TaskCompleted = turnResult.ResponseMatch && turnResult.UtteranceMatch;
 
             this.DisplayTestResultMessage(turnResult);

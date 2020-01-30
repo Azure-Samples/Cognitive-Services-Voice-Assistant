@@ -126,6 +126,9 @@
   <data name="ALL_PRESENT" xml:space="preserve">
     <value>All 3 inputs - text utterance, activity and WAVFile are present. </value>
   </data>
+  <data name="ALL_TESTFILES_SKIPPED" xml:space="preserve">
+    <value>All the test files are marked to skip</value>
+  </data>
   <data name="AMBIGUOUS_TURN_INPUT" xml:space="preserve">
     <value>Input turn is ambiguous. Not a valid combination.</value>
   </data>
@@ -171,6 +174,9 @@
   <data name="LATENCY_STRING_MALFORMED" xml:space="preserve">
     <value>Expected Latency string is malformed - not a valid expected latency</value>
   </data>
+  <data name="LATENCY_STRING_PRESENT" xml:space="preserve">
+    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedResponseLatency</value>
+  </data>
   <data name="NEGATIVE_SLEEP_DURATION" xml:space="preserve">
     <value>Sleep duration cannot be a negative number.</value>
   </data>
@@ -194,6 +200,9 @@
   </data>
   <data name="TTS_AUDIO_DURATION_MARGIN_INVALID" xml:space="preserve">
     <value>A negative number is not a valid value for TTSAudioDurationMargin</value>
+  </data>
+  <data name="TTS_AUDIO_DURATION_PRESENT" xml:space="preserve">
+    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedTTSAudioDuration</value>
   </data>
   <data name="UTTERANCE_ACTIVITY_PRESENT" xml:space="preserve">
     <value>Both Utterance and Activity field present. </value>
