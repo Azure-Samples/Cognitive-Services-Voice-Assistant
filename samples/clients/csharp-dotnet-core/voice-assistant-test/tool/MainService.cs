@@ -50,11 +50,16 @@ namespace VoiceAssistantTest
                 "\n",
             };
 
+            bool noTestFilesForProcessing = true;
             foreach (TestSettings tests in appSettings.Tests)
             {
                 if (tests.Skip)
                 {
                     continue;
+                }
+                else
+                {
+                   noTestFilesForProcessing = false;
                 }
 
                 string inputFileName = appSettings.InputFolder + tests.FileName;
@@ -105,6 +110,11 @@ namespace VoiceAssistantTest
                 }
             }
 
+            if (noTestFilesForProcessing)
+            {
+                allExceptions.Add($"All the test files are marked to skip");
+            }
+
             if (allExceptions.Count > 1)
             {
                 // There are validation errors - throw exception
@@ -115,6 +125,7 @@ namespace VoiceAssistantTest
             foreach (TestSettings tests in appSettings.Tests)
             {
                 bool isFirstDialog = true;
+                bool connectionEstablished = false;
                 BotConnector botConnector = null;
                 Trace.IndentLevel = 0;
                 if (tests.Skip)
@@ -178,6 +189,7 @@ namespace VoiceAssistantTest
                             botConnector.Dispose();
                         }
 
+                        connectionEstablished = true;
                         botConnector = new BotConnector();
                         botConnector.InitConnector(appSettings);
                         await botConnector.Connect().ConfigureAwait(false);
@@ -288,8 +300,12 @@ namespace VoiceAssistantTest
                 allInputFilesTestReport.Add(fileTestReport);
 
                 File.WriteAllText(outputFileName, JsonConvert.SerializeObject(testFileResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
-                await botConnector.Disconnect().ConfigureAwait(false);
-                botConnector.Dispose();
+
+                if (connectionEstablished)
+                {
+                    await botConnector.Disconnect().ConfigureAwait(false);
+                    botConnector.Dispose();
+                }
             } // End of inputFiles loop
 
             File.WriteAllText(appSettings.OutputFolder + ProgramConstants.TestReportFileName, JsonConvert.SerializeObject(allInputFilesTestReport, Formatting.Indented));
