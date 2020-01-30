@@ -65,7 +65,7 @@ namespace VoiceAssistantTest
         /// Gets or sets the expected TTS Audio duration for audio responses from the bot.
         /// A margin defined by <see cref="AppSettings.TTSAudioDurationMargin"/> is applied to this value while validating if the actual TTS audio received matched the expected duration.
         /// </summary>
-        [JsonProperty(Order = 6, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(Order = 6)]
         public int ExpectedTTSAudioResponseDuration { get; set; }
 
         /// <summary>

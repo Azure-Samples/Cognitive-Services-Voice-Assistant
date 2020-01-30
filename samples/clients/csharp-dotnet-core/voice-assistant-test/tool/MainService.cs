@@ -416,11 +416,23 @@ namespace VoiceAssistantTest
 
             if (expectedLatencyPresentValid)
             {
-                var expectedLatencyObjectValid = CheckValidExpectedLatency(turn.ExpectedResponseLatency, turn.ExpectedResponses.Count);
-                if (!expectedLatencyObjectValid)
+                if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0)
                 {
-                    exceptionMessage.Add(ErrorStrings.LATENCY_STRING_MALFORMED);
+                    var expectedLatencyObjectValid = CheckValidExpectedLatency(turn.ExpectedResponseLatency, turn.ExpectedResponses.Count);
+                    if (!expectedLatencyObjectValid)
+                    {
+                        exceptionMessage.Add(ErrorStrings.LATENCY_STRING_MALFORMED);
+                    }
                 }
+                else
+                {
+                    exceptionMessage.Add(ErrorStrings.LATENCY_STRING_PRESENT);
+                }
+            }
+
+            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration > 0)
+            {
+                exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_PRESENT);
             }
 
             if (utterancePresentValid && wavFilePresentValid && activityPresentValid)
