@@ -112,7 +112,7 @@ namespace VoiceAssistantTest
 
             if (noTestFilesForProcessing)
             {
-                allExceptions.Add($"All the test files are marked to skip");
+                allExceptions.Add(ErrorStrings.ALL_TESTFILES_SKIPPED);
             }
 
             if (allExceptions.Count > 1)

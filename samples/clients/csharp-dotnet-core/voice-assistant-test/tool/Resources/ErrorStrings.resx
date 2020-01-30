@@ -126,6 +126,9 @@
   <data name="ALL_PRESENT" xml:space="preserve">
     <value>All 3 inputs - text utterance, activity and WAVFile are present. </value>
   </data>
+  <data name="ALL_TESTFILES_SKIPPED" xml:space="preserve">
+    <value>All the test files are marked to skip</value>
+  </data>
   <data name="AMBIGUOUS_TURN_INPUT" xml:space="preserve">
     <value>Input turn is ambiguous. Not a valid combination.</value>
   </data>

@@ -88,6 +88,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All the test files are marked to skip.
+        /// </summary>
+        public static string ALL_TESTFILES_SKIPPED {
+            get {
+                return ResourceManager.GetString("ALL_TESTFILES_SKIPPED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input turn is ambiguous. Not a valid combination..
         /// </summary>
         public static string AMBIGUOUS_TURN_INPUT {
