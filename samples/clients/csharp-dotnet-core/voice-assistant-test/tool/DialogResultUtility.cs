@@ -10,6 +10,7 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.Linq;
     using Microsoft.Bot.Schema;
+    using Newtonsoft.Json;
     using Activity = Microsoft.Bot.Schema.Activity;
 
     /// <summary>
@@ -48,12 +49,36 @@ namespace VoiceAssistantTest
         public List<TurnResult> Turns { get; set; }
 
         /// <summary>
-        /// Iterates over the List of expected response and actual response Activities.
-        /// Sends a single activity of Expected and Actual into the ActivitiesMatch Method.
+        /// Gets or sets the count of LUIS Traces received.
         /// </summary>
-        /// <param name="expected">List Activities from ExpectedResponse.</param>
-        /// <param name="actual">List of Activities from ActualResponse.</param>
-        /// <returns>Bool value indicating if expected activity matches to actual activity.</returns>
+        [JsonIgnore]
+        public int LUISTraceCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Intents recognized by LUIS.
+        /// </summary>
+        [JsonIgnore]
+        public List<Tuple<string, int>> IntentHierarchy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Entities recognized by LUIS.
+        /// </summary>
+        [JsonIgnore]
+        public Dictionary<string, string> Entities { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of all non-LUIS trace activities received from the Bot.
+        /// </summary>
+        [JsonIgnore]
+        public List<BotReply> FinalResponses { get; set; }
+
+    /// <summary>
+    /// Iterates over the List of expected response and actual response Activities.
+    /// Sends a single activity of Expected and Actual into the ActivitiesMatch Method.
+    /// </summary>
+    /// <param name="expected">List Activities from ExpectedResponse.</param>
+    /// <param name="actual">List of Activities from ActualResponse.</param>
+    /// <returns>Bool value indicating if expected activity matches to actual activity.</returns>
         public static bool ActivityListsMatch(List<Activity> expected, List<Activity> actual)
         {
             bool match = true;
@@ -161,17 +186,75 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
+        /// Organizes Activities received from the Bot.
+        /// Luis Traces containing Entities and Intents are added to the IntentHeirarchy and Entities Data Structures.
+        /// All other activities are added to the list of FinalResponses.
+        /// </summary>
+        /// <param name="allActivities">Activities received from Bot.</param>
+        public void OrganizeActivities(List<BotReply> allActivities)
+        {
+            this.LUISTraceCount = 0;
+            this.IntentHierarchy = new List<Tuple<string, int>>();
+            this.Entities = new Dictionary<string, string>();
+            this.FinalResponses = new List<BotReply>();
+
+            foreach (var item in allActivities)
+            {
+                if (item?.Activity != null)
+                {
+                    // Strip LUIS Trace Activities to validate intents and slots
+                    if (item?.Activity.Label == "Luis Trace")
+                    {
+                        // The Value Field has a Recognizer Result Summary
+                        string traceResult = item.Activity.Value.ToString();
+                        Dictionary<string, object> recognizerResult = JsonConvert.DeserializeObject<Dictionary<string, object>>(traceResult);
+                        Dictionary<string, object> lUISResult = JsonConvert.DeserializeObject<Dictionary<string, object>>(recognizerResult["luisResult"].ToString());
+                        var topScoringIntent = JsonConvert.DeserializeObject<Dictionary<string, object>>(lUISResult["topScoringIntent"].ToString())["intent"].ToString();
+                        var entityString = lUISResult["entities"]?.ToString();
+                        if (entityString == "[]")
+                        {
+                            entityString = string.Empty;
+                        }
+
+                        var entities = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(entityString);
+
+                        if (entities != null)
+                        {
+                            foreach (var entityDict in entities)
+                            {
+                                if (entityDict.TryGetValue("type", out object typeKey))
+                                {
+                                    string key = typeKey.ToString().ToUpperInvariant();
+                                    if (entityDict.TryGetValue("entity", out object entityKey))
+                                    {
+                                        string value = entityKey.ToString().ToUpperInvariant();
+                                        this.Entities.TryAdd(key, value);
+                                    }
+                                }
+                            }
+                        }
+
+                        this.LUISTraceCount += 1;
+                        this.IntentHierarchy.Add(new Tuple<string, int>(topScoringIntent.ToUpperInvariant(), this.LUISTraceCount));
+                    }
+                    else
+                    {
+                        // Populate other bot responses to measure task completion rates
+                        this.FinalResponses.Add(item);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Builds the output.
         /// </summary>
         /// <param name="turns"> Input Turns.</param>
-        /// <param name="intents"> Actual Intents.</param>
-        /// <param name="slots">Actual Slots.</param>
-        /// <param name="response">Actual Bot Responses.</param>
         /// <param name="responseDuration">Actual duration of the TTS audio.</param>
         /// <param name="recognizedText">Recognized text from Speech Recongition.</param>
         /// <param name="recognizedKeyword">Recogized Keyword from Keyword Recognition.</param>
         /// <returns>TurnsOutput.</returns>
-        public TurnResult BuildOutput(Turn turns, List<Tuple<string, int>> intents, Dictionary<string, string> slots, List<BotReply> response, int responseDuration, string recognizedText, string recognizedKeyword)
+        public TurnResult BuildOutput(Turn turns, int responseDuration, string recognizedText, string recognizedKeyword)
         {
             TurnResult turnsOutput = new TurnResult(turns)
             {
@@ -188,15 +271,15 @@ namespace VoiceAssistantTest
             }
 
             // Actual values
-            turnsOutput.ActualIntents = intents;
-            turnsOutput.ActualSlots = slots;
+            turnsOutput.ActualIntents = this.IntentHierarchy;
+            turnsOutput.ActualSlots = this.Entities;
 
             if (recognizedKeyword != null)
             {
                 turnsOutput.KeywordVerified = recognizedKeyword;
             }
 
-            foreach (BotReply botReply in response)
+            foreach (BotReply botReply in this.FinalResponses)
             {
                 turnsOutput.ActualResponses.Add(botReply.Activity);
             }
@@ -215,7 +298,7 @@ namespace VoiceAssistantTest
                 {
                     if (ActivitiesMatch(turns.ExpectedResponses[activityIndex], turnsOutput.ActualResponses[activityIndex]))
                     {
-                        turnsOutput.ActualResponseLatency = response[activityIndex].Latency;
+                        turnsOutput.ActualResponseLatency = this.FinalResponses[activityIndex].Latency;
                     }
                 }
             }
@@ -259,7 +342,10 @@ namespace VoiceAssistantTest
 
                 if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
                 {
-                    if (!GetStringUsingRegex(turnResult.ActualRecognizedText).Equals(GetStringUsingRegex(turnResult.Utterance), StringComparison.OrdinalIgnoreCase))
+                    var normalizedActualRecognizedText = new string(turnResult.ActualRecognizedText.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+                    var normalizedExpectedRecognizedText = new string(turnResult.Utterance.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+
+                    if (!normalizedExpectedRecognizedText.Equals(normalizedActualRecognizedText, StringComparison.OrdinalIgnoreCase))
                     {
                         Trace.TraceInformation($"Recognized text \"{turnResult.ActualRecognizedText}\" does not match \"{turnResult.Utterance}\"");
                         turnResult.UtteranceMatch = false;
@@ -293,13 +379,6 @@ namespace VoiceAssistantTest
             turnResult.TaskCompleted = turnResult.ResponseMatch && turnResult.UtteranceMatch;
 
             this.DisplayTestResultMessage(turnResult);
-        }
-
-        private static string GetStringUsingRegex(string originalString)
-        {
-            string validString;
-            validString = System.Text.RegularExpressions.Regex.Replace(originalString, @"[^\w]", string.Empty).ToLower(CultureInfo.CurrentCulture);
-            return validString;
         }
 
         /// <summary>

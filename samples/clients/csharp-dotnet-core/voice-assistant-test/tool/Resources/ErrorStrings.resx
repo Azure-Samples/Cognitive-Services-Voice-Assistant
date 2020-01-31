@@ -198,6 +198,9 @@
   <data name="TIMEOUT_INVALID" xml:space="preserve">
     <value>A negative number is not a valid value for Timeout</value>
   </data>
+  <data name="TTS_AUDIO_DURATION_INVALID" xml:space="preserve">
+    <value>A negative number is not valid for ExpectedTTSAudioDuration</value>
+  </data>
   <data name="TTS_AUDIO_DURATION_MARGIN_INVALID" xml:space="preserve">
     <value>A negative number is not a valid value for TTSAudioDurationMargin</value>
   </data>
