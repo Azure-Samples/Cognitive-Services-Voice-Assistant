@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "functional": "cpp",
+        "fstream": "cpp",
+        "xstring": "cpp",
+        "memory": "cpp",
+        "iostream": "cpp",
+        "mutex": "cpp"
+    }
+}
