@@ -21,11 +21,6 @@ namespace VoiceAssistantTest
         private AppSettings appSettings;
 
         /// <summary>
-        /// Variable to store the count of LUIS Traces received.
-        /// </summary>
-        private int lUISTraceCount;
-
-        /// <summary>
         ///  Initializes a new instance of the <see cref="DialogResultUtility"/> class.
         /// </summary>
         /// <param name="settings">Application settings.</param>
@@ -52,6 +47,12 @@ namespace VoiceAssistantTest
         /// Gets or sets the List of Turns.
         /// </summary>
         public List<TurnResult> Turns { get; set; }
+
+        /// <summary>
+        /// Gets or sets the count of LUIS Traces received.
+        /// </summary>
+        [JsonIgnore]
+        public int LUISTraceCount { get; set; }
 
         /// <summary>
         /// Gets or sets the Intents recognized by LUIS.
@@ -192,7 +193,7 @@ namespace VoiceAssistantTest
         /// <param name="allActivities">Activities received from Bot.</param>
         public void OrganizeActivities(List<BotReply> allActivities)
         {
-            this.lUISTraceCount = 0;
+            this.LUISTraceCount = 0;
             this.IntentHierarchy = new List<Tuple<string, int>>();
             this.Entities = new Dictionary<string, string>();
             this.FinalResponses = new List<BotReply>();
@@ -233,8 +234,8 @@ namespace VoiceAssistantTest
                             }
                         }
 
-                        this.lUISTraceCount += 1;
-                        this.IntentHierarchy.Add(new Tuple<string, int>(topScoringIntent.ToUpperInvariant(), this.lUISTraceCount));
+                        this.LUISTraceCount += 1;
+                        this.IntentHierarchy.Add(new Tuple<string, int>(topScoringIntent.ToUpperInvariant(), this.LUISTraceCount));
                     }
                     else
                     {
