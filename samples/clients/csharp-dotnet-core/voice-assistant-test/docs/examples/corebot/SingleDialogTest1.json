@@ -39,7 +39,7 @@
         "TurnID": 2,
         "Utterance": "Yes",
         "Activity": "",
-        "WavFile":"Yes.WAV",
+        "WavFile":"",
         "ExpectedResponses": [
           {
             "type": "message",
