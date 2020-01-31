@@ -341,7 +341,6 @@ namespace VoiceAssistantTest
 
                 if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
                 {
-
                     var normalizedActualRecognizedText = new string(turnResult.ActualRecognizedText.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
                     var normalizedExpectedRecognizedText = new string(turnResult.Utterance.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
 
