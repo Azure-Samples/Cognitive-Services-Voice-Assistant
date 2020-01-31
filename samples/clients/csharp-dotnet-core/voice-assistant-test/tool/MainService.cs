@@ -247,11 +247,10 @@ namespace VoiceAssistantTest
                         List<BotReply> responseActivities = botConnector.WaitAndProcessBotReplies(bootstrapMode);
 
                         // Separate LUIS traces and other response activities.
-                        ActivityUtility activityUtility = new ActivityUtility();
-                        activityUtility = activityUtility.OrganizeActivities(responseActivities);
+                        dialogOutput.OrganizeActivities(responseActivities);
 
                         // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogOutput.BuildOutput(turn, activityUtility.IntentHierarchy, activityUtility.Entities, activityUtility.FinalResponses, botConnector.DurationInMs, botConnector.RecognizedText, botConnector.RecognizedKeyword);
+                        TurnResult turnResult = dialogOutput.BuildOutput(turn, botConnector.DurationInMs, botConnector.RecognizedText, botConnector.RecognizedKeyword);
                         dialogOutput.ValidateTurn(turnResult, bootstrapMode);
 
                         // Add the turn result to the list of turn results.
@@ -444,6 +443,11 @@ namespace VoiceAssistantTest
                 {
                     exceptionMessage.Add(ErrorStrings.LATENCY_STRING_PRESENT);
                 }
+            }
+
+            if (turn.ExpectedTTSAudioResponseDuration < 0)
+            {
+                exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
             }
 
             if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration > 0)

@@ -304,6 +304,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A negative number is not valid for ExpectedTTSAudioDuration.
+        /// </summary>
+        public static string TTS_AUDIO_DURATION_INVALID {
+            get {
+                return ResourceManager.GetString("TTS_AUDIO_DURATION_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A negative number is not a valid value for TTSAudioDurationMargin.
         /// </summary>
         public static string TTS_AUDIO_DURATION_MARGIN_INVALID {
