@@ -10,6 +10,7 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Text;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
@@ -39,11 +40,25 @@ namespace VoiceAssistantTest
             }
 
             var appSettings = AppSettings.Load(configFile);
-            List<TestReport> allInputFilesTestReport = new List<TestReport>();
 
             // Adjust application tracing based on loaded settings
             ConfigureTracing(appSettings.AppLogEnabled, appSettings.OutputFolder);
 
+            // Validating the test files
+            ValidateTestFiles(appSettings);
+
+            // Processing the test files
+            await ProcessTestFiles(appSettings).ConfigureAwait(false);
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Validating each test file specified in the App Configuration file.
+        /// </summary>
+        /// <param name="appSettings"> Application settings.</param>
+        private static void ValidateTestFiles(AppSettings appSettings)
+        {
             // Validation loop running separately
             List<string> allExceptions = new List<string>
             {
@@ -51,6 +66,7 @@ namespace VoiceAssistantTest
             };
 
             bool noTestFilesForProcessing = true;
+
             foreach (TestSettings tests in appSettings.Tests)
             {
                 if (tests.Skip)
@@ -59,7 +75,7 @@ namespace VoiceAssistantTest
                 }
                 else
                 {
-                   noTestFilesForProcessing = false;
+                    noTestFilesForProcessing = false;
                 }
 
                 string inputFileName = appSettings.InputFolder + tests.FileName;
@@ -121,6 +137,11 @@ namespace VoiceAssistantTest
                 string msg = string.Join("\n", allExceptions);
                 throw new ArgumentException(msg);
             }
+        }
+
+        private static async Task ProcessTestFiles(AppSettings appSettings)
+        {
+            List<TestReport> allInputFilesTestReport = new List<TestReport>();
 
             foreach (TestSettings tests in appSettings.Tests)
             {
@@ -308,7 +329,6 @@ namespace VoiceAssistantTest
             } // End of inputFiles loop
 
             File.WriteAllText(appSettings.OutputFolder + ProgramConstants.TestReportFileName, JsonConvert.SerializeObject(allInputFilesTestReport, Formatting.Indented));
-            return 0;
         }
 
         /// <summary>
