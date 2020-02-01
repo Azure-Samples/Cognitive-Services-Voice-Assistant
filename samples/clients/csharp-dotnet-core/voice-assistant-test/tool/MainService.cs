@@ -11,7 +11,9 @@ namespace VoiceAssistantTest
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Runtime.CompilerServices;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
@@ -220,6 +222,8 @@ namespace VoiceAssistantTest
 
                     foreach (Turn turn in dialog.Turns)
                     {
+                        // For multi-turn dialogs to wait for StopKeywordRecognitionAsync() to finish.
+                        Thread.Sleep(500);
                         if (turn.Keyword)
                         {
                             await botConnector.StartKeywordRecognition().ConfigureAwait(false);
@@ -282,14 +286,10 @@ namespace VoiceAssistantTest
 
                         // Application crashes in a multi-turn dialog when calling StopKeywordRecognitionAsync.
                         // This is being investigated.
-
-                        // if (turn.Keyword)
-                        // {
-                        //    Task.Run(() =>
-                        //    {
-                        //        botConnector.StopKeywordRecognition();
-                        //    }).Wait();
-                        // }
+                        if (turn.Keyword)
+                        {
+                            await botConnector.StopKeywordRecognition().ConfigureAwait(false);
+                        }
                     } // End of turns loop
 
                     dialogOutput.Turns = turnResults;
