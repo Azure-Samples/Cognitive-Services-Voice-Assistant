@@ -3,7 +3,20 @@
 
 ## Overview
 
-The Voice Assistant Test (VST) tool is a configurable .Net core C# console application for end-to-end regression tests and intent scoring for your Microsoft [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants). It uses the [Microsoft.CognitiveServices.Speech.Dialog](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog?view=azure-dotnet) APIs in the [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to execute a set of single or multi-turn dialogs against your bot or Custom Commands web application. JSON are authored to specify what the client sends to the bot and the expected bot response, for every turn in the dialog. The tool can then run manually or automated as part of CI/CD pipeline to prevent regressions in your bot. It supports sending an audio stream to the bot, simple text messages or full [Bot-Framework Activities](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md). The tool can also aggregate test results for the purpose of creating an intent (task execution) score.  
+
+The Voice Assistant Test (VST) tool is a configurable .NET core C# console application for end-to-end regression tests and intent scoring for your Microsoft [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants). It uses the [Microsoft.CognitiveServices.Speech.Dialog](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog?view=azure-dotnet) APIs in the [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to execute a set of single or multi-turn dialogs against your bot or Custom Commands web application. JSON files are authored to specify what the client sends to the bot and the expected bot response, for every turn in the dialog. The tool can run manually as a console command or automated as part of Azure DevOps CI/CD pipeline to prevent regressions in your bot. The tool can also aggregate test results for the purpose of creating an intent (task execution) scoring report.
+
+Voice Assistant Test supports the following:
+
+* Any Bot-Framework bot or Custom Commands web application
+* Sending a text message, full [Bot-Framework Activity](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md) or audio from a WAV file up to the bot
+* Specifying the expected bot reply Activities
+* Ability to filter out (ignore) bot reply Activities as needed
+* Verifying the duration of the Text-to-Speech (TTS) audio response from the bot
+* Verifying a bot greeting (automatic Activities sent from the bot after initial connection)
+* Measuring the duration it took for the bot to reply
+* Keyword activation on the input audio
+ 
 
 ## Prerequisites
 
@@ -59,9 +72,9 @@ The Application Configuration JSON file will list one or more Test Configuration
 
 ### JSON templates
 
-When creating new tests, you may find it useful to start from these templates and modify them:
-* [Example of an Application Configuration file](docs\json-templates\app-config-template.json), containing all possible fields
-* [Example of a Test Configuration file](docs\json-templates\test-config-template.json), containing all possible fields
+When creating new tests, you may find it useful to start from these templates and modify them, as they contain all the supported JSON fields:
+* [Example of an Application Configuration file](docs\json-templates\app-config-template.json)
+* [Example of a Test Configuration file](docs\json-templates\test-config-template.json)
 
 #### Application configuration file
 
@@ -69,8 +82,8 @@ The following are the fields  in Configuration file:
 
 |Field Name     | Type 	     | Required/Optional| Default   | Example	     | Description|
 |:--------------|:-----------| :---------------:|:----------|:---------------|:----------|
-|InputFolder    | string     | required         |           |"C:\\\LUAccuracytool\\\SydneyAssistant\\\" | Path that contains all the input files and input WAV files |
-|OutputFolder   | string     | required         |           |"C:\\\LUAccuracytool\\\SydneyAssistant\\\" |  Path where the output test files will be generated |
+|InputFolder    | string     | required         |   Empty string        |"C:\\\LUAccuracytool\\\SydneyAssistant\\\\" | Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.|
+|OutputFolder   | string     | required         |  Empty string         |"C:\\\LUAccuracytool\\\SydneyAssistant\\\" |  Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path. |
 |SubscriptionKey| string     | required         |           |“9814793187f7486787898p35f26e9247”|  Cognitive Services Speech API Key. Should be a GUID without dashes |
 |Region         | string     | required         |           |"westus" |  Azure region of your key in the format specified by the "Speech SDK Parameter" |
 |SRLanguage   | string     | Optional             |             |"en-US" |  Speech Recognition Language. It is the source language of your audio.  [Checkout the list of languages supported](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support) |
