@@ -222,6 +222,12 @@ namespace VoiceAssistantTest
 
                     foreach (Turn turn in dialog.Turns)
                     {
+                        // Application crashes in a multi-turn dialog with Keyword in each Turn
+                        // Crash occurs when calling StartKeywordRecognitionAsync after calling StopKeywordRecognitionAsync in the previous Turn.
+                        // In order to avoid this crash, only have Keyword in Turn 0 of a Multi-Turn Keyword containing Dialog.
+                        // This is being investigated.
+                        // Bug Number: 2300634.
+                        // https://msasg.visualstudio.com/Skyman/_workitems/edit/2300634/
                         if (turn.Keyword)
                         {
                             await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
@@ -282,10 +288,6 @@ namespace VoiceAssistantTest
                         // Add the turn completion status to the list of turn completions.
                         turnCompletionStatuses.Add(turnResult.TaskCompleted);
 
-                        // Application crashes in a multi-turn dialog when calling StopKeywordRecognitionAsync.
-                        // This is being investigated.
-                        // Bug Number: 2300634.
-                        // https://msasg.visualstudio.com/Skyman/_workitems/edit/2300634/
                         if (turn.Keyword)
                         {
                             await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);

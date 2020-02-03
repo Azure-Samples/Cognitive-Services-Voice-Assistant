@@ -19,10 +19,10 @@
   "Region": "westus2",
   "SRLanguage": "",
   "CustomCommandsAppId": "",
-  "CustomSREndpointId":  "",
+  "CustomSREndpointId": "",
   "CustomVoiceDeploymentIds": "",
   "AudioDurationMargin": "200",
   "AppLogEnabled": true,
-  "BotGreeting":  true,
+  "BotGreeting": true,
   "SpeechSDKLogEnabled": false
 }
