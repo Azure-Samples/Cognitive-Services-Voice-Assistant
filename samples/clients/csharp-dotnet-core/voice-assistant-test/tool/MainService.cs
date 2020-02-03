@@ -226,7 +226,7 @@ namespace VoiceAssistantTest
                         Thread.Sleep(1000);
                         if (turn.Keyword)
                         {
-                            await botConnector.StartKeywordRecognition().ConfigureAwait(false);
+                            await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
                         }
 
                         Trace.IndentLevel = 2;
@@ -288,7 +288,7 @@ namespace VoiceAssistantTest
                         // This is being investigated.
                         if (turn.Keyword)
                         {
-                            await botConnector.StopKeywordRecognition().ConfigureAwait(true);
+                            await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(true);
                         }
                     } // End of turns loop
 
