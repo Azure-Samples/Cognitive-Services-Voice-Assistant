@@ -288,7 +288,7 @@ namespace VoiceAssistantTest
                         // This is being investigated.
                         if (turn.Keyword)
                         {
-                            await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(true);
+                            await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);
                         }
                     } // End of turns loop
 
