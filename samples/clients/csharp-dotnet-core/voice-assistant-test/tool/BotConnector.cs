@@ -191,6 +191,7 @@ namespace VoiceAssistantTest
         public async Task StopKeywordRecognitionAsync()
         {
             await this.connector.StopKeywordRecognitionAsync().ConfigureAwait(false);
+            Thread.Sleep(1000);
         }
 
         /// <summary>

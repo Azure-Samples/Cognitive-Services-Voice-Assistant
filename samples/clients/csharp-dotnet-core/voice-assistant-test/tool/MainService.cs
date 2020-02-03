@@ -222,8 +222,6 @@ namespace VoiceAssistantTest
 
                     foreach (Turn turn in dialog.Turns)
                     {
-                        // For multi-turn dialogs to wait for StopKeywordRecognitionAsync() to finish.
-                        Thread.Sleep(1000);
                         if (turn.Keyword)
                         {
                             await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
@@ -286,6 +284,8 @@ namespace VoiceAssistantTest
 
                         // Application crashes in a multi-turn dialog when calling StopKeywordRecognitionAsync.
                         // This is being investigated.
+                        // Bug Number: 2300634.
+                        // https://msasg.visualstudio.com/Skyman/_workitems/edit/2300634/
                         if (turn.Keyword)
                         {
                             await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);
