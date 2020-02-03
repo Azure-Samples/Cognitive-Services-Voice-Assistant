@@ -11,7 +11,9 @@ namespace VoiceAssistantTest
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Runtime.CompilerServices;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
@@ -220,9 +222,15 @@ namespace VoiceAssistantTest
 
                     foreach (Turn turn in dialog.Turns)
                     {
+                        // Application crashes in a multi-turn dialog with Keyword in each Turn
+                        // Crash occurs when calling StartKeywordRecognitionAsync after calling StopKeywordRecognitionAsync in the previous Turn.
+                        // In order to avoid this crash, only have Keyword in Turn 0 of a multi-turn Keyword containing Dialog.
+                        // This is being investigated.
+                        // MS-Internal bug number: 2300634.
+                        // https://msasg.visualstudio.com/Skyman/_workitems/edit/2300634/
                         if (turn.Keyword)
                         {
-                            await botConnector.StartKeywordRecognition().ConfigureAwait(false);
+                            await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
                         }
 
                         Trace.IndentLevel = 2;
@@ -280,16 +288,10 @@ namespace VoiceAssistantTest
                         // Add the turn completion status to the list of turn completions.
                         turnCompletionStatuses.Add(turnResult.TaskCompleted);
 
-                        // Application crashes in a multi-turn dialog when calling StopKeywordRecognitionAsync.
-                        // This is being investigated.
-
-                        // if (turn.Keyword)
-                        // {
-                        //    Task.Run(() =>
-                        //    {
-                        //        botConnector.StopKeywordRecognition();
-                        //    }).Wait();
-                        // }
+                        if (turn.Keyword)
+                        {
+                            await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);
+                        }
                     } // End of turns loop
 
                     dialogOutput.Turns = turnResults;

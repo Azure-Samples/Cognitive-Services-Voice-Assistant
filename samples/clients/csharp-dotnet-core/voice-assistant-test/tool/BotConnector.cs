@@ -179,18 +179,19 @@ namespace VoiceAssistantTest
         /// Calls StartKeywordRecognitionAsync.
         /// </summary>
         /// <returns>Opens audio stream with Keyword Recognition Model.</returns>
-        public Task StartKeywordRecognition()
+        public async Task StartKeywordRecognitionAsync()
         {
-            return this.connector.StartKeywordRecognitionAsync(this.kwsTable);
+            await this.connector.StartKeywordRecognitionAsync(this.kwsTable).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Calls StopKeywordRecognitionAsync.
         /// </summary>
         /// <returns>Closes audio stream started by StartKeywordRecognitionAsync.</returns>
-        public Task StopKeywordRecognition()
+        public async Task StopKeywordRecognitionAsync()
         {
-            return this.connector.StopKeywordRecognitionAsync();
+            await this.connector.StopKeywordRecognitionAsync().ConfigureAwait(false);
+            Thread.Sleep(1000);
         }
 
         /// <summary>
@@ -349,7 +350,6 @@ namespace VoiceAssistantTest
         /// </summary>
         public void Dispose()
         {
-            this.StopKeywordRecognition();
             this.kwsTable?.Dispose();
             this.connector.Dispose();
             this.pushAudioInputStream.Dispose();
