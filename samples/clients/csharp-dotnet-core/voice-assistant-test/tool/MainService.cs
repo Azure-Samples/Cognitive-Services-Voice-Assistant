@@ -223,10 +223,10 @@ namespace VoiceAssistantTest
                     foreach (Turn turn in dialog.Turns)
                     {
                         // For multi-turn dialogs to wait for StopKeywordRecognitionAsync() to finish.
-                        Thread.Sleep(500);
+                        Thread.Sleep(1000);
                         if (turn.Keyword)
                         {
-                            await botConnector.StartKeywordRecognition().ConfigureAwait(false);
+                            await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
                         }
 
                         Trace.IndentLevel = 2;
@@ -288,7 +288,7 @@ namespace VoiceAssistantTest
                         // This is being investigated.
                         if (turn.Keyword)
                         {
-                            await botConnector.StopKeywordRecognition().ConfigureAwait(false);
+                            await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);
                         }
                     } // End of turns loop
 
