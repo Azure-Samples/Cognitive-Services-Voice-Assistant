@@ -59,13 +59,13 @@ steps:
     artifact: $(sample1PublishedArtifactName)
 
 # Build .NET Core applications
-- task: DotNetCoreCLI@2
-  inputs:
-    Command: 'build'
-    Projects: $(sample2Solution)
-    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration)'
+#- task: DotNetCoreCLI@2
+#  inputs:
+#    Command: 'build'
+#    Projects: $(sample2Solution)
+#    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration)'
 
-# Publish a self-contained .exe for .NET Core applications    
+# Build .NET Core applications and publish self-contained executables   
 - task: DotNetCoreCLI@2
   inputs:
     Command: 'publish'
