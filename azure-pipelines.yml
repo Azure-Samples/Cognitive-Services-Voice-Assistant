@@ -70,6 +70,7 @@ steps:
   inputs:
     Command: 'publish'
     Projects: $(sample2Solution)
+    publishWebProjects: false
     Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) /p:PublishSingleFile=true'    
 
 - task: PublishPipelineArtifact@1
