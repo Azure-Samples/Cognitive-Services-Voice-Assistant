@@ -22,6 +22,7 @@ variables:
   buildPlatformNative: x64
   buildPlatformManaged: 'Any CPU'
   buildConfiguration: Release
+  dotNetCoreRuntimeIdentifier: win-x64 
   dotNetCoreVersion: '3.1'
 
   # Sample 1: Windows Voice Assistant Client, C# WPF (\samples\clients\csharp-wpf)
@@ -33,7 +34,7 @@ variables:
   # Sample 2: Voice Assistant Test, .NET core (\samples\clients\csharp-dotnet-core\voice-assistant-test)
   sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\VoiceAssistantTest.sln'
-  sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)'
+  sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)\$(dotNetCoreRuntimeIdentifier)\publish'
   sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
 
 steps:
@@ -57,18 +58,25 @@ steps:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
 
-# Build .Net Core applications
+# Build .NET Core applications
 - task: DotNetCoreCLI@2
   inputs:
     Command: 'build'
     Projects: $(sample2Solution)
-    Arguments: '-c $(buildConfiguration)'
+    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration)'
+
+# Publish a self-contained .exe for .NET Core applications    
+- task: DotNetCoreCLI@2
+  inputs:
+    Command: 'publish'
+    Projects: $(sample2Solution)
+    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) /p:PublishSingleFile=true'    
 
 - task: PublishPipelineArtifact@1
   inputs:
     path: $(sample2PublishedArtifactPath)
     artifact: $(sample2PublishedArtifactName)
-
+    
 #- task: VSTest@2
 #  inputs:
 #    platform: '$(buildPlatformNative)'
