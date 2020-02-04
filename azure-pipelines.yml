@@ -24,6 +24,8 @@ variables:
   buildConfiguration: Release
   dotNetCoreRuntimeIdentifier: win-x64 
   dotNetCoreVersion: '3.1'
+  dotNetCorePublishFolder: 'DotNetCorePublish'
+  dotNetCorePublishFile: 'DotNetCoreExecutables'
 
   # Sample 1: Windows Voice Assistant Client, C# WPF (\samples\clients\csharp-wpf)
   sample1Folder: 'samples\clients\csharp-wpf'
@@ -34,8 +36,8 @@ variables:
   # Sample 2: Voice Assistant Test, .NET core (\samples\clients\csharp-dotnet-core\voice-assistant-test)
   sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\VoiceAssistantTest.sln'
-  sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)\$(dotNetCoreRuntimeIdentifier)\publish'
-  sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
+  #sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)\$(dotNetCoreRuntimeIdentifier)\publish'
+  #sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
 
 steps:
 
@@ -67,16 +69,20 @@ steps:
 
 # Build .NET Core applications and publish self-contained executables   
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
   inputs:
     Command: 'publish'
     Projects: $(sample2Solution)
     publishWebProjects: false
-    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) /p:PublishSingleFile=true'    
+    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(dotNetCorePublishFolder)  /p:PublishSingleFile=true'
+    zipAfterPublish: false
+    modifyOutputPath: true    
 
+# Include all .NET Core executables in the resulting artifacts 
 - task: PublishPipelineArtifact@1
   inputs:
-    path: $(sample2PublishedArtifactPath)
-    artifact: $(sample2PublishedArtifactName)
+    path: $(DotNetCorePublish)
+    artifact: $(DotNetCoreExecutables)
 
 #- task: VSTest@2
 #  inputs:
