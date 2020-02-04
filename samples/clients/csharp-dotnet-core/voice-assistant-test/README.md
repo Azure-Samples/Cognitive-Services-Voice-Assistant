@@ -1,30 +1,27 @@
-
 # Voice Assistant Test Tool
 
 ## Overview
-
 
 The Voice Assistant Test (VST) tool is a configurable .NET core C# console application for end-to-end regression tests and intent scoring for your Microsoft [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants). It uses the [Microsoft.CognitiveServices.Speech.Dialog](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog?view=azure-dotnet) APIs in the [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to execute a set of single or multi-turn dialogs against your bot or Custom Commands web application. JSON files are authored to specify what the client sends to the bot and the expected bot response, for every turn in the dialog. The tool can run manually as a console command or automated as part of Azure DevOps CI/CD pipeline to prevent regressions in your bot. The tool can also aggregate test results for the purpose of creating an intent (task execution) scoring report.
 
 Voice Assistant Test supports the following:
 
-* Any Bot-Framework bot or Custom Commands web application
-* Sending a text message, full [Bot-Framework Activity](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md) or audio from a WAV file up to the bot
-* Specifying the expected bot reply Activities
-* Ability to filter out (ignore) bot reply Activities as needed
-* Verifying the duration of the Text-to-Speech (TTS) audio response from the bot
-* Verifying a bot greeting (automatic Activities sent from the bot after initial connection)
-* Measuring the duration it took for the bot to reply
-* Keyword activation on the input audio
- 
+- Any Bot-Framework bot or Custom Commands web application
+- Sending a text message, full [Bot-Framework Activity](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md) or audio from a WAV file up to the bot
+- Specifying the expected bot reply Activities
+- Ability to filter out (ignore) bot reply Activities as needed
+- Verifying the duration of the Text-to-Speech (TTS) audio response from the bot
+- Verifying a bot greeting (automatic Activities sent from the bot after initial connection)
+- Measuring the duration it took for the bot to reply
+- Keyword activation on the input audio
 
 ## Prerequisites
 
-* A subscription key for the Speech service. See [Try the speech service for free](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started).
-* A pre-configured bot created using Bot Framework. See [here for steps on how to create a bot](https://blog.botframework.com/2018/05/07/build-a-microsoft-bot-framework-bot-with-the-bot-builder-sdk-v4/). The bot needs to be registered with [Direct Line Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) channel to send and receive voice. Use your own deployed bot to try out this tool, or one of the many [Bot-Framework samples](https://github.com/Microsoft/BotBuilder-Samples)
-* Alternatively, a [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) web application instead of a Bot-Framework bot.
-* A Windows PC with Windows 10 or later and .NET Core 3.1
-* [Microsoft Visual Studio 2019](https://visualstudio.microsoft.com/)
+- A subscription key for the Speech service. See [Try the speech service for free](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started).
+- A pre-configured bot created using Bot Framework. See [here for steps on how to create a bot](https://blog.botframework.com/2018/05/07/build-a-microsoft-bot-framework-bot-with-the-bot-builder-sdk-v4/). The bot needs to be registered with [Direct Line Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) channel to send and receive voice. Use your own deployed bot to try out this tool, or one of the many [Bot-Framework samples](https://github.com/Microsoft/BotBuilder-Samples)
+- Alternatively, a [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) web application instead of a Bot-Framework bot.
+- A Windows PC with Windows 10 or later and .NET Core 3.1
+- [Microsoft Visual Studio 2019](https://visualstudio.microsoft.com/)
 
 Note: The source code should compile and run on any of the [supported .NET Core platforms](https://github.com/dotnet/core/blob/master/release-notes/3.1/3.1-supported-os.md) but the only platform verified so far is Windows.
 
@@ -39,88 +36,178 @@ cd repoName
 
 ## Getting Started with Sample - This will move to another MD file
 
-
 1. > Follow the [Voice-enable your bot using the Speed SDK Tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) to enable the your bot to use the Direct Line Speech Channel.
 2. > Copy the Cognitive Services Speech API Key by clicking on the Azure Speech resource created in the above listed tutorial
 3. > Set up the Configuration file and Input files
 4. > Copy the path of the Configuration file.
-5. > Open Command Prompt, navigate to the location of the executable 
+5. > Open Command Prompt, navigate to the location of the executable
 6. > Call the executable with path of Configuration file.
 
 ```
-Note : If you want to run the application through a Visual Studio debugger add the configuration file path to application arguments. 
+Note : If you want to run the application through a Visual Studio debugger add the configuration file path to application arguments.
 Click on Solution > Properties > Debug > Enter the configuration file path to application arguments
 ```
+
 ## Getting started guide
 
 Click here for a step by step introduction to the tool.
+We have provided sample Configurations and Tests for Echo Bot and Core Bot in the [docs/examples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/examples) folder.
+<br>
+If you are familiar with Bot Framework and want to Run this tool, go to [Sample Configurations and Tests](###Sample-Configurations-and-Tests)
+<br>
+If you are unfamiliar with Bot Framework visit [Azure Bot Service](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-overview-introduction?view=azure-bot-service-4.0) to learn more. You can also obtain [Bot Framework Samples](https://github.com/microsoft/BotBuilder-Samples) from GitHub to explore further.
+<br>
+There are two ways to create and deploy Bot's
+
+1. > Through Visual Studio
+
+   - Follow this [Tutorial](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-tutorial-basic-deploy?view=azure-bot-service-4.0&tabs=csharp) to Deploy an Echo Bot using Visual Studio
+
+2. > Azure Portal Web App Bot
+   - Follow this [Tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-csharp-tutorial-bf-v4) to Deploy a Core Bot using Azure Portal's Web App Bot Resource
+
+Both Core Bot and Echo Bot can be created and deployed using either of the above Tutorials.
+
+```
+Note: If you want to Voice Enable your Bot you must subscribe to the Direct Line Speech Channel through the Bot Channels Registration Resource.
+Follow the Tutorial below
+```
+
+Follow the [Voice-enable your bot using the Speed SDK Tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) to enable the your bot to use the Direct Line Speech Channel.
+
+Copy and store the Cognitive Services Speech API Key and Region for the Bot(s) you have deployed and want to test.
+
+### Sample Configurations and Tests
+
+Navigate to [docs/examples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/examples) to find Core Bot and Echo Bot folder with sample configurations and tests. Paste the appropriate Bot Speech Key and Region in the Config.json files in each example folder.
+
+Please see [Configuration File Structure](####Application-Configuration-file) and modify the sample configurations appropriately
+
+For examples of configuration and test files, please see the templates in [docs/json-templates/](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/json-templates)
+
+#### Echo Bot
+
+1. > Example 1
+   >
+   > - Test expecting a greeting upon connection with Bot
+2. > Example 2
+   >
+   > - Multiple tests containining a Multi-Turn Dialog with Text as Input.
+3. > Example 3
+   >
+   > - Multiple tests containing Multi Turn Dialogs along with WavFiles as Input
+
+#### Core Bot
+
+1. > Example 1
+   >
+   > - Test expecting a greeting and an adaptive card upon connection with Bot.
+2. > Example 2
+   >
+   > - Multiple tests containing a Multi-Turn Dialog one with Text as Input and other with WavFiles as Input
+
+### Modifying Core Bot Configuration File.
+
+1. > cd to docs/examples/corebot/example1
+2. > Open CoreBotConfig.json
+3. > Populate the InputFolder, and OuputFolder fields with the full path to this folder
+4. > Enter the Speech Key and Region associated with your Voice Enabled Core Bot in the SubscriptionKey and Region fields respectively.
+5. > [Run Voice Assistant Test](###Run-Voice-Assistant-Test)
+6. > Open the folder specified in the OutputFolder to find the OutputFiles generated for the Test.
+7. > cd to docs/examples/corebot/example2 and repeat steps 2 - 6
+   >
+   > - This configuration file contains mulitple test containing a multi-turn dialog, one with Text as Input and other with WavFiles as Input.
+
+### Modifying Core Bot Test File
+
+1. >
+
+### Run Voice Assistant Test
+
+1. ```
+   Open Command prompt
+
+   git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
+   cd to samples/clients/csharp-dotnet-core/voice-assistant-test/tool/
+   dotnet build -c Release
+   cd to bin/Release/netcoreapp3.1/
+   dotnet.exe VoiceAssistantTest.dll {Path of Configuration file to run}
+   ```
+
+2. In the path specified in the OutputFolder of the configuration file, you will find the VoiceAssistantTest logs, report, and test output for each Test File.
+
+```
+Note : If you want to run the application through a Visual Studio debugger add the configuration file path to application arguments.
+Click on Solution > Properties > Debug > Enter the configuration file path to application arguments
+```
 
 ## Reference guide
 
 ### Definitions
 
-* The application executes a single or multiple __Tests__ when it runs. 
-* Each test contains a single or multiple  __Dialogs__. 
-* A dialog contains a single or multiple __Turns__. 
+- The application executes a single or multiple **Tests** when it runs.
+- Each test contains a single or multiple **Dialogs**.
+- A dialog contains a single or multiple **Turns**.
 
-The tests are set up by authoring two types of [JSON files](https://tools.ietf.org/html/rfc7159): 
+The tests are set up by authoring two types of [JSON files](https://tools.ietf.org/html/rfc7159):
 
-* [__Application Configuration__](#Application-Configuration-JSON-File) JSON file - Configuration settings that apply globally to all dialogs in all tests. This JSON file is the only input argument to the application.
-* [__Test Configuration__](#Test-Configuration-JSON-File) JSON file - Settings that are unique to this test, including specifications of all the dialogs and their turns for this test.
+- [**Application Configuration**](#Application-Configuration-JSON-File) JSON file - Configuration settings that apply globally to all dialogs in all tests. This JSON file is the only input argument to the application.
+- [**Test Configuration**](#Test-Configuration-JSON-File) JSON file - Settings that are unique to this test, including specifications of all the dialogs and their turns for this test.
 
 The Application Configuration JSON file will list one or more Test Configuration JSON files.
 
 ### JSON templates
 
 When creating new tests, you may find it useful to start from these templates and modify them, as they contain all the supported JSON fields:
-* [Example of an Application Configuration file](docs\json-templates\app-config-template.json)
-* [Example of a Test Configuration file](docs\json-templates\test-config-template.json)
+
+- [Example of an Application Configuration file](docs\json-templates\app-config-template.json)
+- [Example of a Test Configuration file](docs\json-templates\test-config-template.json)
 
 #### Application configuration file
 
-The following are the fields  in Configuration file:
+The following are the fields in Configuration file:
 
-|Field Name     | Type 	     | Required/Optional| Default   | Example	     | Description|
-|:--------------|:-----------| :---------------:|:----------|:---------------|:----------|
-|InputFolder    | string     | required         |   Empty string        |"C:\\\LUAccuracytool\\\SydneyAssistant\\\\" | Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.|
-|OutputFolder   | string     | required         |  Empty string         |"C:\\\LUAccuracytool\\\SydneyAssistant\\\" |  Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path. |
-|SubscriptionKey| string     | required         |           |“9814793187f7486787898p35f26e9247”|  Cognitive Services Speech API Key. Should be a GUID without dashes |
-|Region         | string     | required         |           |"westus" |  Azure region of your key in the format specified by the "Speech SDK Parameter" |
-|SRLanguage   | string     | Optional             |             |"en-US" |  Speech Recognition Language. It is the source language of your audio.  [Checkout the list of languages supported](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support) |
-|CustomCommandsAppId  | string     | Optional         |             |"80c787bf-806b-402c-9493-79154c08a67d" |  Custom Commands App ID. Should be a GUID. |
-|CustomSREndpointId   | string     | Optional         |             | |  Custom SR Endpoint ID. Sets the endpoint ID of a customized speech model that is used for speech recognition |
-|CustomVoiceDeploymentIds   | string     | Optional         |             |"07a189pb4-U734-47b2-q89l-56e12g0a71h0" | Custom Voice Deployment ID.|
-|TTSAudioDurationMargin   | string     | Optional         |   200          | 100 |  Margin to verify the duration of Bot response TTS audio.|
-|AppLogEnabled   | boolean     | Optional         |   false          | true |   A boolean that enables Application Logging.|
-|SpeechSDKLogEnabled   | string     | Optional         |   false          | true |   A boolean that enables generating a Speech SDK Logging.|
-|BotGreeting   | boolean     | Optional         |   false          | true |  A boolean which defines if a Bot has a automatic greeting activity response upon conection. [ For more info click on this link](#testing-bot-greetings)|
-|Timeout   | int     | Optional         |   5000          | 2000 |  A global timeout that waits for each bot response.|
-|FileName       | string	 | required		    |           | Start.json	 | Name of the input file|
-|IgnoreActivities | Array of JObject	 | Optional	|	          |[{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]| List of activities that are ignored by tool. [ For more info click on this link](#ignoring-certain-bot-reply-activities) |
-|SingleConnection  | boolean	 | Optional		    | false          | true	 | Boolean which defines whether each Dialog in the input file is processed with the same connection with the Bot or a new connection for each Dialog.  [ For more info click on this link](#single-connection-and-Multiple-connection-tests)|
-|Skip       | boolean	 | Optional		    |    false       |true	 | Boolean which defines whether a input file is to be skipped or not|
-|KeywordRecognitionModel        | string	 | Optional		    |           |C:\\\LUAccuracytool\\\SydneyAssistant\\\test.table	 | Path that contains table files for Keyword recognition. Make sure to specify the entire path along with the table file name.  [ For more info click on this link](#writing-tests-with-keyword-spotting)|
+| Field Name               | Type             | Required/Optional | Default      | Example                                                    | Description                                                                                                                                                                                                                               |
+| :----------------------- | :--------------- | :---------------: | :----------- | :--------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| InputFolder              | string           |     required      | Empty string | "C:\\\LUAccuracytool\\\SydneyAssistant\\\\"                | Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.                                   |
+| OutputFolder             | string           |     required      | Empty string | "C:\\\LUAccuracytool\\\SydneyAssistant\\\"                 | Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
+| SubscriptionKey          | string           |     required      |              | “9814793187f7486787898p35f26e9247”                         | Cognitive Services Speech API Key. Should be a GUID without dashes                                                                                                                                                                        |
+| Region                   | string           |     required      |              | "westus"                                                   | Azure region of your key in the format specified by the "Speech SDK Parameter"                                                                                                                                                            |
+| SRLanguage               | string           |     Optional      |              | "en-US"                                                    | Speech Recognition Language. It is the source language of your audio. [Checkout the list of languages supported](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support)                               |
+| CustomCommandsAppId      | string           |     Optional      |              | "80c787bf-806b-402c-9493-79154c08a67d"                     | Custom Commands App ID. Should be a GUID.                                                                                                                                                                                                 |
+| CustomSREndpointId       | string           |     Optional      |              |                                                            | Custom SR Endpoint ID. Sets the endpoint ID of a customized speech model that is used for speech recognition                                                                                                                              |
+| CustomVoiceDeploymentIds | string           |     Optional      |              | "07a189pb4-U734-47b2-q89l-56e12g0a71h0"                    | Custom Voice Deployment ID.                                                                                                                                                                                                               |
+| TTSAudioDurationMargin   | string           |     Optional      | 200          | 100                                                        | Margin to verify the duration of Bot response TTS audio.                                                                                                                                                                                  |
+| AppLogEnabled            | boolean          |     Optional      | false        | true                                                       | A boolean that enables Application Logging.                                                                                                                                                                                               |
+| SpeechSDKLogEnabled      | string           |     Optional      | false        | true                                                       | A boolean that enables generating a Speech SDK Logging.                                                                                                                                                                                   |
+| BotGreeting              | boolean          |     Optional      | false        | true                                                       | A boolean which defines if a Bot has a automatic greeting activity response upon conection. [ For more info click on this link](#testing-bot-greetings)                                                                                   |
+| Timeout                  | int              |     Optional      | 5000         | 2000                                                       | A global timeout that waits for each bot response.                                                                                                                                                                                        |
+| FileName                 | string           |     required      |              | Start.json                                                 | Name of the input file                                                                                                                                                                                                                    |
+| IgnoreActivities         | Array of JObject |     Optional      |              | [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}] | List of activities that are ignored by tool. [ For more info click on this link](#ignoring-certain-bot-reply-activities)                                                                                                                  |
+| SingleConnection         | boolean          |     Optional      | false        | true                                                       | Boolean which defines whether each Dialog in the input file is processed with the same connection with the Bot or a new connection for each Dialog. [ For more info click on this link](#single-connection-and-Multiple-connection-tests) |
+| Skip                     | boolean          |     Optional      | false        | true                                                       | Boolean which defines whether a input file is to be skipped or not                                                                                                                                                                        |
+| KeywordRecognitionModel  | string           |     Optional      |              | C:\\\LUAccuracytool\\\SydneyAssistant\\\test.table         | Path that contains table files for Keyword recognition. Make sure to specify the entire path along with the table file name. [ For more info click on this link](#writing-tests-with-keyword-spotting)                                    |
 
 #### Test configuration file
 
-The following are the fields  in Input File:
+The following are the fields in Input File:
 
-|Field Name      | Type 	       | Required/Optional| Default   | Example	         | Description|
-|:---------------|:----------------| :---------------:|:----------|:-----------------|:----------|
-|DialogId        | string	       | required		  |           |   "0"	         | A unique value that identifies each dialog|
-|Description     | string          | Optional         |           | "Testing a Dialog" | Describes the what the test does
-|Skip            | boolean	       | Optional		  |    false  | true	         | Boolean which defines whether a Dialog is to be skipped or not|
-|Sleep           | int	           | Optional		  |    0      | 10	             | |
-|TurnId          | int             | required         |           |    1             | A unique value that identifies each turn in a specific Dialog. |
-|Utterance       | string          | required         |           |“Open Start Menu” | Text that is send up to communicate with the Bot.  |
-|Activity        | string          | required         |           |"{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}"|  Input Activity. Activity that is send up to Bot.|
-|WavFile         | string          | required         |           |"test1.WAV" | Input WAV file. Audio that is streamed to Bot |
-|Keyword         | boolean         | Optional         |  false    | true | Boolean which defines if input WAV file has a keyword or not.  [ For more info click on this link](#writing-tests-with-keyword-spotting) |
-|ExpectedResponses| Array of JObject| required        |           |                   |List of Expected responses from Bot.|
-|ExpectedIntents | Array of JObject   | Optional	      |	          |[{"Item1": "NONE","Item2": 1},{"Item1":"L_DEVICECONTROL","Item2": 2}]|List of expected Intents|
-|ExpectedSlots| Array of JObject| Optional         |           |                   | List of expected Slots.|
-|ExpectedTTSAudioResponseDuration  | int    | Optional        |   2000    | 1500              |  Expected duration of Bot response TTS audio.  [ For more info click on this link](#testing-bot-response-tts-audio-duration) |
-|ExpectedResponseLatency  | string         | Optional         |  Expectedresponse index to check for is defaulted to Zero |"500,1" |This is a combination of expected latency and Index of the expected response from the list of expected responses that we care for calculating latency.|
+| Field Name                       | Type             | Required/Optional | Default                                                  | Example                                                               | Description                                                                                                                                            |
+| :------------------------------- | :--------------- | :---------------: | :------------------------------------------------------- | :-------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DialogId                         | string           |     required      |                                                          | "0"                                                                   | A unique value that identifies each dialog                                                                                                             |
+| Description                      | string           |     Optional      |                                                          | "Testing a Dialog"                                                    | Describes the what the test does                                                                                                                       |
+| Skip                             | boolean          |     Optional      | false                                                    | true                                                                  | Boolean which defines whether a Dialog is to be skipped or not                                                                                         |
+| Sleep                            | int              |     Optional      | 0                                                        | 10                                                                    |                                                                                                                                                        |
+| TurnId                           | int              |     required      |                                                          | 1                                                                     | A unique value that identifies each turn in a specific Dialog.                                                                                         |
+| Utterance                        | string           |     required      |                                                          | “Open Start Menu”                                                     | Text that is send up to communicate with the Bot.                                                                                                      |
+| Activity                         | string           |     required      |                                                          | "{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}" | Input Activity. Activity that is send up to Bot.                                                                                                       |
+| WavFile                          | string           |     required      |                                                          | "test1.WAV"                                                           | Input WAV file. Audio that is streamed to Bot                                                                                                          |
+| Keyword                          | boolean          |     Optional      | false                                                    | true                                                                  | Boolean which defines if input WAV file has a keyword or not. [ For more info click on this link](#writing-tests-with-keyword-spotting)                |
+| ExpectedResponses                | Array of JObject |     required      |                                                          |                                                                       | List of Expected responses from Bot.                                                                                                                   |
+| ExpectedIntents                  | Array of JObject |     Optional      |                                                          | [{"Item1": "NONE","Item2": 1},{"Item1":"L_DEVICECONTROL","Item2": 2}] | List of expected Intents                                                                                                                               |
+| ExpectedSlots                    | Array of JObject |     Optional      |                                                          |                                                                       | List of expected Slots.                                                                                                                                |
+| ExpectedTTSAudioResponseDuration | int              |     Optional      | 2000                                                     | 1500                                                                  | Expected duration of Bot response TTS audio. [ For more info click on this link](#testing-bot-response-tts-audio-duration)                             |
+| ExpectedResponseLatency          | string           |     Optional      | Expectedresponse index to check for is defaulted to Zero | "500,1"                                                               | This is a combination of expected latency and Index of the expected response from the list of expected responses that we care for calculating latency. |
 
 ## Topics
 
@@ -129,6 +216,8 @@ The following are the fields  in Input File:
 To test a Bot with an audio input with a keyword, populate "KeywordRecognitionModel" in Application Configuration file with the full path of the table file and set the boolean "Keyword" in the test configuration file to "true" if the WAV file used for testing has a keyword.
 
 The keyword that has been recognized will be populated in the output file.
+
+A dialog can only have a Keyword in Turn 0.
 
 #### Ignoring certain bot-reply activities
 
@@ -153,8 +242,8 @@ Bot-Greeting - It is an automatic Bot response that happens when client connect 
 Application Configuration file holds a field called "Bot Greeting" that should be set to true when a Bot has a greeting.
 
 For testing the Bot Greeting when,
-  -SingleConnection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied 
-  -SingleConnection = "false",test configuration  file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) specified 
+-SingleConnection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied
+-SingleConnection = "false",test configuration file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) specified
 
 #### Single connection and Multiple connection tests
 
@@ -172,71 +261,74 @@ In order to skip a file from the test suite, set the skip field for that file to
 Example:
 
 ```
-"InputFiles": 
+
+"InputFiles":
 [
-    {
-      "FileName": "test-config-template1.json",
-      "SingleConnection": true,
-      "Skip": true
-      "IgnoreActivities": []
-    },
-    {
-      "FileName": "test-config-template2.json",
-      "SingleConnection": true,
-      "Skip": true
-      "IgnoreActivities": []
-    }
+{
+"FileName": "test-config-template1.json",
+"SingleConnection": true,
+"Skip": true
+"IgnoreActivities": []
+},
+{
+"FileName": "test-config-template2.json",
+"SingleConnection": true,
+"Skip": true
+"IgnoreActivities": []
+}
 ]
+
 ```
 
-In the above example  test configuration file "test-config-template1.json" will be skipped from testing.
-
+In the above example test configuration file "test-config-template1.json" will be skipped from testing.
 
 In order to skip a Dialog from testing, set the skip field to true for that Dialog in the test configuration file
 
-Example: 
+Example:
 
 ```
+
 [
+{
+  "DialogID": 0,
+  "Description": "Dialog - 0",
+  "Skip": true,
+  "Turns": [
   {
-    "DialogID": 0,
-    "Description": "Dialog - 0",
-    "Skip":  true,
-    "Turns": [
+    "TurnID": 0,
+    "Sleep": 10,
+    "Utterance": "Testing Dialog 0",
+    "Activity": "",
+    "WavFile": "",
+    "ExpectedResponses": [
       {
-        "TurnID": 0,
-        "Sleep": 10,
-        "Utterance": "Testing Dialog 0",
-        "Activity": "",
-        "WavFile": "",
-        "ExpectedResponses": [
-          {
-            "text": "Testing turn 0."
-          }
-        ],
-      },
-    ]
-  },
- {
-    "DialogID": 1,
-    "Description": "Dialog - 1",
-    "Skip": false,
-    "Turns": [
-      {
-        "TurnID": 0,
-        "Sleep":  0,
-        "Utterance": "Testing Dialog 1",
-        "Activity": "",
-        "WavFile": "",
-        "ExpectedResponses": [
-          {
-            "text": "testing turn 1"
-          }
-        ],
+        "text": "Testing turn 0."
       }
-    ]
+    ],
+  },
+  ]
+},
+{
+  "DialogID": 1,
+  "Description": "Dialog - 1",
+  "Skip": false,
+  "Turns": [
+  {
+    "TurnID": 0,
+    "Sleep": 0,
+    "Utterance": "Testing Dialog 1",
+    "Activity": "",
+    "WavFile": "",
+    "ExpectedResponses": [
+      {
+        "text": "testing turn 1"
+      }
+    ],
   }
+  ]
+}
 ]
+
 ```
 
 In the above example Dialog 0 will be skipped from testing.
@@ -247,13 +339,18 @@ In the above example Dialog 0 will be skipped from testing.
 
 While creating your own Test configuration file,bootstrapping mode is useful in order to capture all the bot responses
 
-In order to set a turn to bootstrapping mode,in Test Configuration file set the ExpectedResponses field to either null or empty or dont specify it in the 
+In order to set a turn to bootstrapping mode,in Test Configuration file set the ExpectedResponses field to either null or empty or dont specify it in the
 
 In this mode,tool captures all the bot responses ,doesnt perform any validations and sets the test to pass.
-
 
 #### Running tests in an Azure DevOps pipeline
 
 #### Custom Commands
+
 #### Custom Speech Recognition
+
 #### Custom TTS voices
+
+```
+
+```
