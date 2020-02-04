@@ -3,7 +3,8 @@ setlocal
 
 set imageId=74a75a0a9a27
 set dockerRunEnv=--rm --workdir /nf --volume %cd%:/nf %imageId%
-set buildCmd=docker run %dockerRunEnv% g++
+set buildCmd=docker run %dockerRunEnv% g++ 
+REM -march=armv6 -mfpu=vfp -marm -Wl,-latomic
 
 set inc=-I include %inc%
 set inc=-I include/cxx_api %inc%

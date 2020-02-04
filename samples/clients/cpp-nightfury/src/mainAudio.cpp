@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string> 
 #include <fstream>
+#include <thread>
+#include <chrono>
 #include "AgentConfiguration.h"
 #include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
@@ -35,6 +37,7 @@ void log_t(T v, Args... args)
 // TODO Temporary method while TLS issues are diagnosed
 void add_config_tls_workaround(shared_ptr<DialogServiceConfig> dialog_config)
 {
+    log_t("Adding TLS workaround");
     constexpr char baltimoreCyberTrustRoot[] =
         "-----BEGIN CERTIFICATE-----\n"
         "MIIDdzCCAl+gAwIBAgIEAgAAuTANBgkqhkiG9w0BAQUFADBaMQswCQYDVQQGEwJJ\n"
@@ -60,26 +63,50 @@ void add_config_tls_workaround(shared_ptr<DialogServiceConfig> dialog_config)
 
     dialog_config->SetProperty("OPENSSL_SINGLE_TRUSTED_CERT", baltimoreCyberTrustRoot);
     dialog_config->SetProperty("OPENSSL_SINGLE_TRUSTED_CERT_CRL_CHECK", "false");
+    log_t("TLS workaround completed");
 }
 
 int main (int argc, char** argv) 
 {
     
-    if(argc != 2){
+    if(argc < 2){
         log("Usage:\n", argv[0] ," [config file path]\n");
         return 0;
     }
+    
+    bool volumeOn = false;
+    
+    if(argc >= 3)
+    {
+        if(strcmp(argv[2], "on") == 0){
+            volumeOn = true;
+        }
+    }
+    
     string configFilePath = argv[1];
     string s;
     int rc;
     const char * device = "default";
     bool keywordListeningEnabled = false;
     
+    shared_ptr<AgentConfiguration> agentConfig;
+    shared_ptr<DialogServiceConnector> dialogServiceConnector;
+    
+    IAudioPlayer* player;
+    if(volumeOn){
+        //TODO switch to IAudioPlayer once volume is handled
+        //IAudioPlayer* player = new LinuxAudioPlayer();
+        player = new LinuxAudioPlayer();
+    }
+    int bufferSize = 1024;
+    unsigned char * buffer = (unsigned char *)malloc(bufferSize);
+    
+    auto initFromPath = [&](string path)
+    {
     DeviceStatusIndicators::SetStatus(DeviceStatus::Initializing);
+    log_t("Loading configuration from file: ", path);
     
-    log_t("Loading configuration from file: ", configFilePath);
-    
-    shared_ptr<AgentConfiguration> agentConfig = AgentConfiguration::LoadFromFile(configFilePath);
+    agentConfig = AgentConfiguration::LoadFromFile(path);
     
     if (agentConfig->LoadResult() != AgentConfigurationLoadResult::Success)
     {
@@ -90,19 +117,28 @@ int main (int argc, char** argv)
     log_t("Configuration loaded. Creating connector...");
     
     shared_ptr<DialogServiceConfig> config = agentConfig->CreateDialogServiceConfig();
+    
     //TODO remove once fixed
     add_config_tls_workaround(config);
 
-    config->SetProperty(PropertyId::Speech_LogFilename, "/data/cppSample/log.txt");
+    config->SetProperty(PropertyId::Speech_LogFilename, "./log.txt");
 
-    shared_ptr<DialogServiceConnector> dialogServiceConnector = DialogServiceConnector::FromConfig(config);
-    
-    //TODO switch to IAudioPlayer once volume is handled
-    //IAudioPlayer* player = new LinuxAudioPlayer();
-    LinuxAudioPlayer* player = new LinuxAudioPlayer();
-    player->SetAlsaMasterVolume(atoi(agentConfig->_volume.c_str()));
-    int bufferSize = 1024;
-    unsigned char * buffer = (unsigned char *)malloc(bufferSize);
+    dialogServiceConnector = DialogServiceConnector::FromConfig(config);
+    log_t("Connector created");
+    dialogServiceConnector->ConnectAsync();
+    log_t("Connector connected");
+    nlohmann::json keywordPrimingActivity =
+    {
+        { "type", "event" },
+        { "name", "KeywordPrefix" },
+        { "value", agentConfig->KeywordDisplayName() }
+    };
+    log_t("Creating prime activity");
+    auto keywordPrimingActivityText = keywordPrimingActivity.dump();
+    log_t("Sending inform-of-keyword activity: ", keywordPrimingActivityText);
+    dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
+
+    log_t("Connector successfully initialized!");
     
     if(agentConfig->KeywordModel().length() > 0){
         keywordListeningEnabled = true;
@@ -110,6 +146,7 @@ int main (int argc, char** argv)
     
     auto startKwsIfApplicable = [&]()
     {
+        log_t("startKWS called");
         if (keywordListeningEnabled)
         {
             auto modelPath = agentConfig->KeywordModel();
@@ -156,6 +193,7 @@ int main (int argc, char** argv)
         {
             printf("CANCELED: ErrorDetails=%s\n", event.ErrorDetails.c_str());
             printf("CANCELED: Did you update the subscription info?\n");
+            startKwsIfApplicable();
         }
     };
 
@@ -171,6 +209,7 @@ int main (int argc, char** argv)
 
             auto continue_multiturn = activity.value<string>("inputHint", "") == "expectingInput";
 
+            uint32_t total_bytes_read = 0;
             if (event.HasAudio())
             {
                 log_t("Activity has audio, playing synchronously");
@@ -187,19 +226,21 @@ int main (int argc, char** argv)
 
                 // TODO: AEC + Barge-in
                 // For now: no KWS during playback
-                //log_t("stopping KWS for playback");
-                //auto fut = dialogServiceConnector->StopKeywordRecognitionAsync();
-                //log_t("KWS stopped");
+                log_t("stopping KWS for playback");
+                dialogServiceConnector->StopKeywordRecognitionAsync();
+                log_t("KWS stopped");
 
                 auto audio = event.GetAudio();
                 uint32_t bytes_read = 0;
-                uint32_t total_bytes_read = 0;
                   
                 do
                 {   
                     
                      bytes_read = audio->Read(buffer, bufferSize);
-                     auto play_result = player->PlaySynchronous(buffer, bytes_read);
+                     int play_result = 0;
+                     if(volumeOn){
+                        play_result = player->Play(buffer, bytes_read);
+                     }
                      total_bytes_read += bytes_read;
                     
 
@@ -233,17 +274,25 @@ int main (int argc, char** argv)
             }
             else
             {
-                //startKwsIfApplicable();
+                //TODO remove once we have echo cancellation
+                int secondsOfAudio = total_bytes_read / 32000;
+                std::this_thread::sleep_for(std::chrono::milliseconds(secondsOfAudio*1000));
+                startKwsIfApplicable();
             }
         };
+    
+    startKwsIfApplicable();
+    DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
+    return 0;
+    };
+    
+    initFromPath(configFilePath);
     
     cout << "Commands:" << endl;
     cout << "1 [listen once]" << endl;
     cout << "2 [start keyword listening]" << endl;
     cout << "3 [stop keyword listening]" << endl;
     cout << "x [exit]" << endl;
-    
-    DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
     
     s = "";
     while(s != "x")
@@ -254,7 +303,7 @@ int main (int argc, char** argv)
             dialogServiceConnector->ListenOnceAsync();
         }
         if(s == "2"){
-            startKwsIfApplicable();
+            //startKwsIfApplicable();
         }
         if(s == "3"){
             if(keywordListeningEnabled){
@@ -273,7 +322,9 @@ int main (int argc, char** argv)
     }
     cout << "Closing down and freeing variables" << endl;
     
-    player->Close();
+    if(volumeOn){
+        player->Close();
+    }
     free(buffer);
     
     return 0;

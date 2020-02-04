@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set outDir=/data/cppSample/
+set outDir=/data/cppSampleOld/
 set progName=sample.exe
 
 adb shell mkdir %outDir%

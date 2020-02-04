@@ -14,7 +14,7 @@ LinuxAudioPlayer::LinuxAudioPlayer(){
     fprintf(stdout, "creating thread\n");
     Open();
     SetAlsaMasterVolume(25);
-    //m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
+    m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
     
 }
 
@@ -104,7 +104,7 @@ void LinuxAudioPlayer::SetAlsaMasterVolume(long volume)
     long min, max;
     snd_mixer_t *handle;
     snd_mixer_selem_id_t *sid;
-    const char *card = m_device.c_str();;
+    const char *card = m_device.c_str();
     const char *selem_name = "Master";
 
     snd_mixer_open(&handle, 0);
@@ -169,7 +169,6 @@ void LinuxAudioPlayer::PlayerThreadMain(){
 
 int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
     int rc = 0;
-    fprintf(stdout, "Play. bufferSize = %d\n", bufferSize);
     AudioPlayerEntry entry(buffer, bufferSize);
     //fprintf(stdout, "Play. aquiring lock\n");
     m_queueMutex.lock();

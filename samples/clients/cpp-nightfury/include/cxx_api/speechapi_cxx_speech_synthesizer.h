@@ -20,7 +20,7 @@ namespace Speech {
 
 /// <summary>
 /// Class for speech synthesizer.
-/// Updated in version 1.7.0
+/// Updated in version 1.9.0
 /// </summary>
 class SpeechSynthesizer : public std::enable_shared_from_this<SpeechSynthesizer>
 {
@@ -30,6 +30,8 @@ private:
     /// Internal member variable that holds the speech synthesizer handle.
     /// </summary>
     SPXSYNTHHANDLE m_hsynth;
+
+    std::shared_ptr<Audio::AudioConfig> m_audioConfig;
 
     /*! \cond PRIVATE */
 
@@ -107,7 +109,9 @@ public:
 
         SPX_THROW_ON_FAIL(::synthesizer_create_speech_synthesizer_from_config(&hsynth, hspeechconfig, haudioconfig));
         auto ptr = new SpeechSynthesizer(hsynth);
-        return std::shared_ptr<SpeechSynthesizer>(ptr);
+        auto synthesizer = std::shared_ptr<SpeechSynthesizer>(ptr);
+        synthesizer->m_audioConfig = audioconfig;
+        return synthesizer;
     }
 
     /// <summary>
@@ -123,6 +127,19 @@ public:
         return std::make_shared<SpeechSynthesisResult>(hresult);
     }
 
+#ifndef SWIG
+    /// <summary>
+    /// Execute the speech synthesis on plain text, synchronously.
+    /// Added in 1.9.0
+    /// </summary>
+    /// <param name="text">The plain text for synthesis.</param>
+    /// <returns>A smart pointer wrapping a speech synthesis result.</returns>
+    std::shared_ptr<SpeechSynthesisResult> SpeakText(const std::wstring& text)
+    {
+        return SpeakText(Utils::ToUTF8(text));
+    }
+#endif
+
     /// <summary>
     /// Execute the speech synthesis on SSML, synchronously.
     /// </summary>
@@ -135,6 +152,19 @@ public:
 
         return std::make_shared<SpeechSynthesisResult>(hresult);
     }
+
+#ifndef SWIG
+    /// <summary>
+    /// Execute the speech synthesis on SSML, synchronously.
+    /// Added in version 1.9.0
+    /// </summary>
+    /// <param name="ssml">The SSML for synthesis.</param>
+    /// <returns>A smart pointer wrapping a speech synthesis result.</returns>
+    std::shared_ptr<SpeechSynthesisResult> SpeakSsml(const std::wstring& ssml)
+    {
+        return SpeakSsml(Utils::ToUTF8(ssml));
+    }
+#endif
 
     /// <summary>
     /// Execute the speech synthesis on plain text, asynchronously.
@@ -161,6 +191,19 @@ public:
         return future;
     }
 
+#ifndef SWIG
+    /// <summary>
+    /// Execute the speech synthesis on plain text, asynchronously.
+    /// Added in version 1.9.0
+    /// </summary>
+    /// <param name="text">The plain text for synthesis.</param>
+    /// <returns>An asynchronous operation representing the synthesis. It returns a value of <see cref="SpeechSynthesisResult"/> as result.</returns>
+    std::future<std::shared_ptr<SpeechSynthesisResult>> SpeakTextAsync(const std::wstring& text)
+    {
+        return SpeakTextAsync(Utils::ToUTF8(text));
+    }
+#endif
+
     /// <summary>
     /// Execute the speech synthesis on SSML, asynchronously.
     /// </summary>
@@ -186,6 +229,19 @@ public:
         return future;
     }
 
+#ifndef SWIG
+    /// <summary>
+    /// Execute the speech synthesis on SSML, asynchronously.
+    /// Added in version 1.9.0
+    /// </summary>
+    /// <param name="ssml">The SSML for synthesis.</param>
+    /// <returns>An asynchronous operation representing the synthesis. It returns a value of <see cref="SpeechSynthesisResult"/> as result.</returns>
+    std::future<std::shared_ptr<SpeechSynthesisResult>> SpeakSsmlAsync(const std::wstring& ssml)
+    {
+        return SpeakSsmlAsync(Utils::ToUTF8(ssml));
+    }
+#endif
+
     /// <summary>
     /// Start the speech synthesis on plain text, synchronously.
     /// </summary>
@@ -199,6 +255,19 @@ public:
         return std::make_shared<SpeechSynthesisResult>(hresult);
     }
 
+#ifndef SWIG
+    /// <summary>
+    /// Start the speech synthesis on plain text, synchronously.
+    /// Added in version 1.9.0
+    /// </summary>
+    /// <param name="text">The plain text for synthesis.</param>
+    /// <returns>A smart pointer wrapping a speech synthesis result.</returns>
+    std::shared_ptr<SpeechSynthesisResult> StartSpeakingText(const std::wstring& text)
+    {
+        return StartSpeakingText(Utils::ToUTF8(text));
+    }
+#endif
+
     /// <summary>
     /// Start the speech synthesis on SSML, synchronously.
     /// </summary>
@@ -211,6 +280,19 @@ public:
 
         return std::make_shared<SpeechSynthesisResult>(hresult);
     }
+
+#ifndef SWIG
+    /// <summary>
+    /// Start the speech synthesis on SSML, synchronously.
+    /// Added in version 1.9.0
+    /// </summary>
+    /// <param name="ssml">The SSML for synthesis.</param>
+    /// <returns>A smart pointer wrapping a speech synthesis result.</returns>
+    std::shared_ptr<SpeechSynthesisResult> StartSpeakingSsml(const std::wstring& ssml)
+    {
+        return StartSpeakingSsml(Utils::ToUTF8(ssml));
+    }
+#endif
 
     /// <summary>
     /// Start the speech synthesis on plain text, asynchronously.
@@ -237,6 +319,19 @@ public:
         return future;
     }
 
+#ifndef SWIG
+    /// <summary>
+    /// Start the speech synthesis on plain text, asynchronously.
+    /// Added in version 1.9.0
+    /// </summary>
+    /// <param name="text">The plain text for synthesis.</param>
+    /// <returns>An asynchronous operation representing the synthesis. It returns a value of <see cref="SpeechSynthesisResult"/> as result.</returns>
+    std::future<std::shared_ptr<SpeechSynthesisResult>> StartSpeakingTextAsync(const std::wstring& text)
+    {
+        return StartSpeakingTextAsync(Utils::ToUTF8(text));
+    }
+#endif
+
     /// <summary>
     /// Start the speech synthesis on SSML, asynchronously.
     /// </summary>
@@ -261,6 +356,19 @@ public:
 
         return future;
     }
+
+#ifndef SWIG
+    /// <summary>
+    /// Start the speech synthesis on SSML, asynchronously.
+    /// Added in version 1.9.0
+    /// </summary>
+    /// <param name="ssml">The SSML for synthesis.</param>
+    /// <returns>An asynchronous operation representing the synthesis. It returns a value of <see cref="SpeechSynthesisResult"/> as result.</returns>
+    std::future<std::shared_ptr<SpeechSynthesisResult>> StartSpeakingSsmlAsync(const std::wstring& ssml)
+    {
+        return StartSpeakingSsmlAsync(Utils::ToUTF8(ssml));
+    }
+#endif
 
     /// <summary>
     /// Sets the authorization token that will be used for connecting to the service.
@@ -303,7 +411,7 @@ public:
     }
 
     /// <summary>
-    /// A collection or properties and their values defined for this <see cref="SpeechSynthesizer"/>.
+    /// A collection of properties and their values defined for this <see cref="SpeechSynthesizer"/>.
     /// </summary>
     PropertyCollection& Properties;
 
