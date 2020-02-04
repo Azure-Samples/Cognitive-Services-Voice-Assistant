@@ -76,7 +76,7 @@ steps:
   inputs:
     path: $(sample2PublishedArtifactPath)
     artifact: $(sample2PublishedArtifactName)
-    
+
 #- task: VSTest@2
 #  inputs:
 #    platform: '$(buildPlatformNative)'

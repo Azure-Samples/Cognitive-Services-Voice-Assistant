@@ -1,9 +1,0 @@
-{
-  "SubscriptionKey": "4810558187f748678789bfd5f26e9247",
-  "Region": "westus",
-  "InputFiles": [
-    {
-      "FileName": test1.json",
-    }
-  ]
-}
