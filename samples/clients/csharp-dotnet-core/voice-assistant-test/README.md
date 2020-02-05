@@ -50,7 +50,7 @@ Click on Solution > Properties > Debug > Enter the configuration file path to ap
 
 ## Getting started guide
 
-Click [here](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/samples/clients/csharp-dotnet-core/voice-assistant-test/GUIDE.md) for a step by step introduction to the tool.
+Click [here](GUIDE.md) for a step by step introduction to the tool.
 
 ## Reference guide
 
