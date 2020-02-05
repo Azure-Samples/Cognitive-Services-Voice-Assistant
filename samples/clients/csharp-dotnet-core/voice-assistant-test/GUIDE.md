@@ -19,7 +19,7 @@ cd Cognitive-Services-Voice-Assistant/samples/clients/csharp-dotnet-core/voice-a
 
 Navigate to [docs/examples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/examples) to find Core Bot and Echo Bot folder with sample configurations and tests. Paste the appropriate Bot Speech Key and Region in the Config.json files in each example folder.
 
-Please see [Configuration File Structure](README####Application-Configuration-file) for reference and modify the sample configurations appropriately
+Please see [Configuration File Structure](./README#Application-Configuration-file) for reference and modify the sample configurations appropriately
 
 For examples of configuration and test files, please see the templates in [docs/json-templates/](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/json-templates)
 
