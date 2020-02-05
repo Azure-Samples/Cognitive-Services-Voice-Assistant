@@ -1,13 +1,40 @@
 # Getting Started Guide
 
-## Samples List
+## Overview
+This is a step-by-step guide for first time users of the tool, showing how to write configuration files for the most common end-to-end tests, and how to run the tool. The guide uses Bot-Framework's "Echo Bot" and "Core Bot" as the example bot to be tested.
 
-Get started implementing your own Application using Azure Cognitive Services. To use the samples provided, clone this GitHub repository using Git.
+## Step 1: Clone the repo and build the tool
 
-```
+Per the prerequisite, make sure you have the following installed on your Windows 10 PC:
+- [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+- [Git for Windows](https://git-scm.com/downloads)
+- [Microsoft Visual Studio 2019](https://visualstudio.microsoft.com/)
+
+Clone the repo to some folder on your PC (e.g. "c:\repo" in this example) and build the tool from the command line:
+
+```cmd
+cd /d c:\repo
 git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-cd Cognitive-Services-Voice-Assistant/samples/clients/csharp-dotnet-core/voice-assistant-test/
+cd Cognitive-Services-Voice-Assistant\samples\clients\csharp-dotnet-core\voice-assistant-test\tool
+dotnet build
 ```
+
+The build will create a self-contained .NET core executable VoiceAssistantTest.exe that you can copy to your working folder, where you will run your tests. It's best not to run the test under your repo folder. Create a test folder (e.g. "c:\test" in this example), copy the executable to this folder and run it without arguments:
+
+```cmd
+cd /d c:\test
+copy c:\repo\Cognitive-Services-Voice-Assistant\samples\clients\csharp-dotnet-core\voice-assistant-test\tool\XXXX\VoiceAssistnatText.exe
+VoiceAssistantText.exe
+```
+You will get the following error:
+```
+VoiceAssistantTest Error: 0 : System.ArgumentException: Configuration file is not specified. Please pass a valid configuration file as an argument.
+```
+This is good. The tool works. You are now ready to author your first application and test configuration files. The application configuration file is needed as the single run-time argument when running the tool. But before we write the test, we need to make sure we have a bot web service hosted to test against.
+
+## Step 2: Deploy the Echo Bot
+
+
 
 ## Getting Started with Sample
 

@@ -18,39 +18,16 @@ Voice Assistant Test supports the following:
 ## Prerequisites
 
 - A subscription key for the Speech service. See [Try the speech service for free](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started).
-- A pre-configured bot created using Bot Framework. See [here for steps on how to create a bot](https://blog.botframework.com/2018/05/07/build-a-microsoft-bot-framework-bot-with-the-bot-builder-sdk-v4/). The bot needs to be registered with [Direct Line Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) channel to send and receive voice. Use your own deployed bot to try out this tool, or one of the many [Bot-Framework samples](https://github.com/Microsoft/BotBuilder-Samples)
-- Alternatively, a [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) web application instead of a Bot-Framework bot.
-- A Windows PC with Windows 10 or later and .NET Core 3.1
+- A bot built using [Microsoft Bot Framework](https://blog.botframework.com/2018/05/07/build-a-microsoft-bot-framework-bot-with-the-bot-builder-sdk-v4/) and hosted on Azure or other cloud service. The bot needs to be voice-enabled and registered with [Direct Line Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) channel to send and receive audio. [See this tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) to get your started. Use your own deployed bot to try out this tool, or one of the many [Bot-Framework samples](https://github.com/Microsoft/BotBuilder-Samples). 
+- Alternatively, a [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) web application hosted on Azure on your behalf, instead of a Bot-Framework bot.
+- A Windows PC with Windows 10 or later and [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
 - [Microsoft Visual Studio 2019](https://visualstudio.microsoft.com/)
 
 Note: The source code should compile and run on any of the [supported .NET Core platforms](https://github.com/dotnet/core/blob/master/release-notes/3.1/3.1-supported-os.md) but the only platform verified so far is Windows.
 
-## Samples List - This will move to another MD file
-
-Get started implementing your own Application using Azure Cognitive Services. To use the samples provided, clone this GitHub repository using Git.
-
-```
-git clone https://github.com/Microsoft/repoName.git
-cd repoName
-```
-
-## Getting Started with Sample - This will move to another MD file
-
-1. > Follow the [Voice-enable your bot using the Speed SDK Tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) to enable the your bot to use the Direct Line Speech Channel.
-2. > Copy the Cognitive Services Speech API Key by clicking on the Azure Speech resource created in the above listed tutorial
-3. > Set up the Configuration file and Input files
-4. > Copy the path of the Configuration file.
-5. > Open Command Prompt, navigate to the location of the executable
-6. > Call the executable with path of Configuration file.
-
-```
-Note : If you want to run the application through a Visual Studio debugger add the configuration file path to application arguments.
-Click on Solution > Properties > Debug > Enter the configuration file path to application arguments
-```
-
 ## Getting started guide
 
-Click [here](GUIDE.md) for a step by step introduction to the tool.
+First time users, please follow the [Getting Started Guide](docs\GETTING-STARTED-GUID.md) for a step by step introductions how hot to write configuration files for your tests and run the tool.
 
 ## Reference guide
 
@@ -69,7 +46,7 @@ The Application Configuration JSON file will list one or more Test Configuration
 
 ### JSON templates
 
-When creating new tests, you may find it useful to start from these templates and modify them, as they contain all the supported JSON fields:
+When creating new tests, you may find it useful to start from these templates and modify them, as they contain all the supported JSON fields. Fields that are optional are present and set to their default value.
 
 - [Example of an Application Configuration file](docs\json-templates\app-config-template.json)
 - [Example of a Test Configuration file](docs\json-templates\test-config-template.json)
@@ -260,6 +237,8 @@ In this mode,tool captures all the bot responses ,doesnt perform any validations
 #### Custom Speech Recognition
 
 #### Custom TTS voices
+
+#### Intent Scoring
 
 ```
 
