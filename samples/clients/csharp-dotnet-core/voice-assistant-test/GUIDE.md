@@ -6,7 +6,7 @@ Get started implementing your own Application using Azure Cognitive Services. To
 
 ```
 git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-cd Cognitive-Services-Voice-Assistant
+cd Cognitive-Services-Voice-Assistant/samples/clients/csharp-dotnet-core/voice-assistant-test/
 ```
 
 ## Getting Started with Sample
