@@ -7,7 +7,7 @@
         "TurnID": 0,
         "ExpectedResponses": [
           {
-            "type": "message",       
+            "type": "message",
             "speak": "Welcome to Bot Framework!",
             "inputHint": "acceptingInput"
           },
@@ -19,7 +19,7 @@
             "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
             "inputHint": "expectingInput"
           }
-      ],
+        ],
         "ExpectedTTSAudioResponseDuration": 8197,
         "ExpectedResponseLatency": "200"
       },
@@ -27,7 +27,7 @@
         "TurnID": 1,
         "Utterance": "Book a flight from Seattle to New York on March 1st ,2020",
         "Activity": "",
-        "WavFile":"BookFlight.WAV",
+        "WavFile": "WavFiles\\BookFlight.WAV",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -42,7 +42,7 @@
         "TurnID": 2,
         "Utterance": "Yes",
         "Activity": "",
-        "WavFile":"Yes.WAV",
+        "WavFile": "WavFiles\\Yes.WAV",
         "ExpectedResponses": [
           {
             "type": "message",

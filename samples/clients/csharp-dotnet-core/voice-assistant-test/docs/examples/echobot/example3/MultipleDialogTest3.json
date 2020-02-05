@@ -20,7 +20,7 @@
         "TurnID": 1,
         "Utterance": "Hello Echo Bot",
         "Activity": "",
-        "WavFile": "Hello.WAV",
+        "WavFile": "WavFiles\\Hello.WAV",
         "ExpectedResponses": [
           {
             "inputHint": "acceptingInput",
@@ -35,7 +35,7 @@
       {
         "TurnID": 2,
         "Utterance": "How are you?",
-        "WavFile": "Howareyou.WAV",
+        "WavFile": "WavFiles\\Howareyou.WAV",
         "ExpectedResponses": [
           {
             "inputHint": "acceptingInput",
@@ -70,7 +70,7 @@
         "TurnID": 1,
         "Utterance": "Good Morning",
         "Activity": "",
-        "WavFile": "GoodMorning.WAV",
+        "WavFile": "WavFiles\\GoodMorning.WAV",
         "ExpectedResponses": [
           {
             "inputHint": "acceptingInput",
@@ -85,7 +85,7 @@
       {
         "TurnID": 2,
         "Utterance": "What is the weather today?",
-        "WavFile": "Weather.WAV",
+        "WavFile": "WavFiles\\Weather.WAV",
         "ExpectedResponses": [
           {
             "inputHint": "acceptingInput",
