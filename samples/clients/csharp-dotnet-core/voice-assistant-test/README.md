@@ -50,123 +50,7 @@ Click on Solution > Properties > Debug > Enter the configuration file path to ap
 
 ## Getting started guide
 
-Click here for a step by step introduction to the tool.
-We have provided sample Configurations and Tests for Echo Bot and Core Bot in the [docs/examples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/examples) folder.
-<br>
-If you are familiar with Bot Framework and want to Run this tool, go to [Sample Configurations and Tests](###Sample-Configurations-and-Tests)
-<br>
-If you are unfamiliar with Bot Framework visit [Azure Bot Service](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-overview-introduction?view=azure-bot-service-4.0) to learn more. You can also obtain [Bot Framework Samples](https://github.com/microsoft/BotBuilder-Samples) from GitHub to explore further.
-<br>
-There are two ways to create and deploy Bot's
-
-1. > Through Visual Studio
-
-   - Follow this [Tutorial](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-tutorial-basic-deploy?view=azure-bot-service-4.0&tabs=csharp) to Deploy an Echo Bot using Visual Studio
-
-2. > Azure Portal Web App Bot
-   - Follow this [Tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-csharp-tutorial-bf-v4) to Deploy a Core Bot using Azure Portal's Web App Bot Resource
-
-Both Core Bot and Echo Bot can be created and deployed using either of the above Tutorials.
-
-```
-Note: If you want to Voice Enable your Bot you must subscribe to the Direct Line Speech Channel through the Bot Channels Registration Resource.
-Follow the Tutorial below
-```
-
-Follow the [Voice-enable your bot using the Speed SDK Tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) to enable the your bot to use the Direct Line Speech Channel.
-
-Copy and store the Cognitive Services Speech API Key and Region for the Bot(s) you have deployed and want to test.
-
-### Sample Configurations and Tests
-
-Navigate to [docs/examples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/examples) to find Core Bot and Echo Bot folder with sample configurations and tests. Paste the appropriate Bot Speech Key and Region in the Config.json files in each example folder.
-
-Please see [Configuration File Structure](####Application-Configuration-file) and modify the sample configurations appropriately
-
-For examples of configuration and test files, please see the templates in [docs/json-templates/](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/json-templates)
-
-#### Echo Bot
-
-1. > Example 1
-   >
-   > - Test expecting a greeting upon connection with Bot
-2. > Example 2
-   >
-   > - Multiple tests containining a Multi-Turn Dialog with Text as Input.
-3. > Example 3
-   >
-   > - Multiple tests containing Multi Turn Dialogs along with WavFiles as Input
-
-#### Core Bot
-
-1. > Example 1
-   >
-   > - Test expecting a greeting and an adaptive card upon connection with Bot.
-2. > Example 2
-   >
-   > - Multiple tests containing a Multi-Turn Dialog one with Text as Input and other with WavFiles as Input
-
-### Modifying Core Bot Configuration File.
-
-1. > cd to docs/examples/corebot/example1
-2. > Open CoreBotConfig.json
-3. > Populate the InputFolder, and OuputFolder fields with the full path to this folder
-4. > Enter the Speech Key and Region associated with your Voice Enabled Core Bot in the SubscriptionKey and Region fields respectively.
-5. > [Run Voice Assistant Test](###Run-Voice-Assistant-Test)
-6. > Open the folder specified in the OutputFolder to find the OutputFiles generated for the Test.
-7. > cd to docs/examples/corebot/example2 and repeat steps 2 - 6
-   >
-   > - This configuration file contains mulitple test containing a multi-turn dialog, one with Text as Input and other with WavFiles as Input.
-
-### Modifying Core Bot Test File
-
-After running corebot/example2, take a look at VoiceAssistantTest.log. You will notice that Dialog 0 for SingleDialogTest1.json failed. Now take a look at SingleDialogTest1Ouput/SingleDialogTest1Output.txt, you will see that the text and speak fields in ExpectedResponses for Dialog 0 Turn 2 do not match the text and speak fields in ActualResponses.
-To Fix this,
-Paste the following for Dialog 0 Turn 2 in SingleDialogTest1.json
-
-```
-      {
-        "TurnID": 2,
-        "Utterance": "Yes",
-        "Activity": "",
-        "WavFile": "",
-        "ExpectedResponses": [
-          {
-            "type": "message",
-            "text": "I have you booked to New York from Seattle on 10th February 2025",
-            "speak": "I have you booked to New York from Seattle on 10th February 2025",
-            "inputHint": "ignoringInput"
-          },
-          {
-            "type": "message",
-            "text": "What else can I do for you?",
-            "speak": "What else can I do for you?",
-            "inputHint": "expectingInput"
-          }
-        ]
-      }
-```
-
-Looking at the VoiceAssistantTest.log, you will see that Dialog 0 has now passed. The tool checks Expected with Actual to determine if a dialog and turn passes or fails.
-
-### Run Voice Assistant Test
-
-1. ```
-   Open Command prompt
-
-   git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-   cd to samples/clients/csharp-dotnet-core/voice-assistant-test/tool/
-   dotnet build -c Release
-   cd to bin/Release/netcoreapp3.1/
-   dotnet.exe VoiceAssistantTest.dll {Path of Configuration file to run}
-   ```
-
-2. In the path specified in the OutputFolder of the configuration file, you will find the VoiceAssistantTest logs, report, and test output for each Test File.
-
-```
-Note : If you want to run the application through a Visual Studio debugger add the configuration file path to application arguments.
-Click on Solution > Properties > Debug > Enter the configuration file path to application arguments
-```
+Click [here](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/samples/clients/csharp-dotnet-core/voice-assistant-test/GUIDE.md) for a step by step introduction to the tool.
 
 ## Reference guide
 
@@ -289,20 +173,19 @@ Example:
 
 ```
 
-"InputFiles":
-[
-{
-"FileName": "test-config-template1.json",
-"SingleConnection": true,
-"Skip": true
-"IgnoreActivities": []
-},
-{
-"FileName": "test-config-template2.json",
-"SingleConnection": true,
-"Skip": true
-"IgnoreActivities": []
-}
+"InputFiles":[
+  {
+    "FileName": "test-config-template1.json",
+    "SingleConnection": true,
+    "Skip": true
+    "IgnoreActivities": []
+  },
+  {
+    "FileName": "test-config-template2.json",
+    "SingleConnection": true,
+    "Skip": true
+    "IgnoreActivities": []
+  }
 ]
 
 ```
@@ -316,44 +199,44 @@ Example:
 ```
 
 [
-{
-  "DialogID": 0,
-  "Description": "Dialog - 0",
-  "Skip": true,
-  "Turns": [
   {
-    "TurnID": 0,
-    "Sleep": 10,
-    "Utterance": "Testing Dialog 0",
-    "Activity": "",
-    "WavFile": "",
-    "ExpectedResponses": [
+    "DialogID": 0,
+    "Description": "Dialog - 0",
+    "Skip": true,
+    "Turns": [
       {
-        "text": "Testing turn 0."
-      }
-    ],
+        "TurnID": 0,
+        "Sleep": 10,
+        "Utterance": "Testing Dialog 0",
+        "Activity": "",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "text": "Testing turn 0."
+          }
+        ],
+      },
+    ]
   },
-  ]
-},
-{
-  "DialogID": 1,
-  "Description": "Dialog - 1",
-  "Skip": false,
-  "Turns": [
   {
-    "TurnID": 0,
-    "Sleep": 0,
-    "Utterance": "Testing Dialog 1",
-    "Activity": "",
-    "WavFile": "",
-    "ExpectedResponses": [
+    "DialogID": 1,
+    "Description": "Dialog - 1",
+    "Skip": false,
+    "Turns": [
       {
-        "text": "testing turn 1"
+        "TurnID": 0,
+        "Sleep": 0,
+        "Utterance": "Testing Dialog 1",
+        "Activity": "",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "text": "testing turn 1"
+          }
+        ],
       }
-    ],
+    ]
   }
-  ]
-}
 ]
 
 ```
