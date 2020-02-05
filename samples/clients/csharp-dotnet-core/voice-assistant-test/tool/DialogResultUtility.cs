@@ -83,22 +83,19 @@ namespace VoiceAssistantTest
         {
             bool match = true;
 
-            if (expected.Count == actual.Count)
+            for (int index = 0; index < expected.Count; index++)
             {
-                for (int index = 0; index < expected.Count; index++)
+                if (!ActivitiesMatch(expected[index], actual[index], true))
                 {
-                    if (!ActivitiesMatch(expected[index], actual[index], true))
-                    {
-                        Trace.TraceInformation($"Expected activity at index {index} does not match actual activity");
-                        match = false;
-                        break;
-                    }
+                    Trace.TraceInformation($"Expected activity at index {index} does not match actual activity");
+                    match = false;
+                    break;
                 }
             }
-            else
+
+            if (expected.Count != actual.Count)
             {
-                Trace.TraceInformation($"Failed because number of expected activities ({expected.Count}) does not match number of actual activities ({actual.Count})");
-                match = false;
+                Trace.TraceInformation($"Number of expected activities ({expected.Count}) does not match number of actual activities ({actual.Count})");
             }
 
             return match;
@@ -260,6 +257,7 @@ namespace VoiceAssistantTest
             {
                 ExpectedSlots = new Dictionary<string, string>(),
                 ActualResponses = new List<Activity>(),
+                ActualTTSAudioReponseDuration = new List<int>(),
             };
 
             int activityIndex = 0;
@@ -282,9 +280,9 @@ namespace VoiceAssistantTest
             foreach (BotReply botReply in this.FinalResponses)
             {
                 turnsOutput.ActualResponses.Add(botReply.Activity);
+                turnsOutput.ActualTTSAudioReponseDuration.Add(botReply.TTSAudioDuration);
             }
 
-            turnsOutput.ActualTTSAudioReponseDuration = responseDuration;
             turnsOutput.ActualRecognizedText = recognizedText;
 
             if (!string.IsNullOrWhiteSpace(turnsOutput.ExpectedResponseLatency))
@@ -352,17 +350,22 @@ namespace VoiceAssistantTest
                     }
                 }
 
-                if (turnResult.ExpectedTTSAudioResponseDuration > 0)
+                if (turnResult.ExpectedTTSAudioResponseDuration != null && turnResult.ExpectedTTSAudioResponseDuration.Count != 0)
                 {
-                    int expectedResponseDuration = turnResult.ExpectedTTSAudioResponseDuration;
-                    if (turnResult.ActualTTSAudioReponseDuration >= (expectedResponseDuration - margin) && turnResult.ActualTTSAudioReponseDuration <= (expectedResponseDuration + margin))
+                    for (int i = 0; i < turnResult.ExpectedTTSAudioResponseDuration.Count; i++)
                     {
-                        turnResult.TTSAudioResponseDurationMatch = true;
-                    }
-                    else
-                    {
-                        Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioReponseDuration} is outside the expected range {expectedResponseDuration}+/-{margin}");
-                        turnResult.TTSAudioResponseDurationMatch = false;
+                        if (turnResult.ExpectedTTSAudioResponseDuration[i] > 0)
+                        {
+                            if (turnResult.ActualTTSAudioReponseDuration[i] >= (turnResult.ExpectedTTSAudioResponseDuration[i] - margin) && turnResult.ActualTTSAudioReponseDuration[i] <= (turnResult.ExpectedTTSAudioResponseDuration[i] + margin))
+                            {
+                                turnResult.TTSAudioResponseDurationMatch = true;
+                            }
+                            else
+                            {
+                                Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioReponseDuration[i]} is outside the expected range {turnResult.ExpectedTTSAudioResponseDuration[i]}+/-{margin}");
+                                turnResult.TTSAudioResponseDurationMatch = false;
+                            }
+                        }
                     }
                 }
 

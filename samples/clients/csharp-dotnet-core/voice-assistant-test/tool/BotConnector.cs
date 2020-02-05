@@ -9,9 +9,11 @@ namespace VoiceAssistantTest
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.Bot.Schema;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
@@ -40,6 +42,7 @@ namespace VoiceAssistantTest
         private int turnID;
         private bool audioDownloading = false;
         private int indexActivityWithAudio = 0;
+        private int activityHasAudio = 0;
         private int elapsedTime = 0;
         private List<Activity> ignoreActivitiesList;
         private Stopwatch stopWatch;
@@ -65,6 +68,8 @@ namespace VoiceAssistantTest
 
         private Queue<BotReply> ActivityQueue { get; set; }
 
+        private List<BotReply> ActivityList { get; set; }
+
         /// <summary>
         /// Initializes the connection to the Bot.
         /// </summary>
@@ -73,6 +78,7 @@ namespace VoiceAssistantTest
         {
             DialogServiceConfig config;
             this.ActivityQueue = new Queue<BotReply>();
+            this.ActivityList = new List<BotReply>();
             this.stopWatch = new Stopwatch();
             this.appsettings = settings;
 
@@ -218,6 +224,7 @@ namespace VoiceAssistantTest
             lock (this.ActivityQueue)
             {
                 this.ActivityQueue.Clear();
+                this.ActivityList.Clear();
                 this.indexActivityWithAudio = 0;
             }
 
@@ -266,6 +273,7 @@ namespace VoiceAssistantTest
             lock (this.ActivityQueue)
             {
                 this.ActivityQueue.Clear();
+                this.ActivityList.Clear();
                 this.indexActivityWithAudio = 0;
             }
 
@@ -285,23 +293,49 @@ namespace VoiceAssistantTest
         {
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
-            List<BotReply> activities = new List<BotReply>();
+            //List<BotReply> activities = new List<BotReply>();
+            int activities = 0;
 
             var getExpectedResponses = Task.Run(
                 () =>
                 {
                     // Make this configurable per interaction as an input row
-                    while (bootstrapMode || activities.Count < this.responseCount)
+                    while (true)
                     {
                         Thread.Sleep((int)ResponseCheckInterval);
 
-                        lock (this.ActivityQueue)
+                        //lock (this.ActivityQueue)
+                        //{
+                        //    if (this.ActivityQueue.TryDequeue(out var item))
+                        //    {
+                        //        if (!this.IgnoreActivity((Activity)item.Activity))
+                        //        {
+                        //            activities.Add((BotReply)item);
+                        //        }
+                        //    }
+                        //}
+                        lock (this.ActivityList)
                         {
-                            if (this.ActivityQueue.TryDequeue(out var item))
+                            activities = 0;
+                            for (int i = 0; i < this.ActivityList.Count; i++)
                             {
-                                if (!this.IgnoreActivity((Activity)item.Activity))
+                                //Console.WriteLine("for loop" + this.ActivityList[i].Activity.Name + this.ActivityList[i].Activity.Type);
+                                if (!this.ActivityList[i].Ignore)
                                 {
-                                    activities.Add((BotReply)item);
+                                    activities++;
+                                    //Console.WriteLine("not ignore: " + activities +  this.ActivityList[i].Activity.Name + this.ActivityList[i].Activity.Type );
+                                }
+                                else
+                                {
+                                    //Console.WriteLine("ignore" + this.ActivityList[i].Activity.Name + this.ActivityList[i].Activity.Type);
+                                }
+                            }
+
+                            if (!bootstrapMode)
+                            {
+                                if (activities >= this.responseCount)
+                                {
+                                    break;
                                 }
                             }
                         }
@@ -309,7 +343,7 @@ namespace VoiceAssistantTest
 
                     // Wait until TTS audio finishes downloading (if there is one), so its duration can be calculated. TTS audio duration
                     // may be part of test pass/fail validation.
-                    while (this.audioDownloading)
+                    while (this.activityHasAudio > 0)
                     {
                         Thread.Sleep((int)ResponseCheckInterval);
                     }
@@ -317,31 +351,42 @@ namespace VoiceAssistantTest
 
             if (Task.WhenAny(getExpectedResponses, Task.Delay((int)this.timeout)).Result == getExpectedResponses)
             {
-                Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {activities.Count} activities, as expected (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {activities} activities, as expected (configured to wait for {this.responseCount}):");
             }
             else if (!bootstrapMode)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {activities.Count} activities (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {activities} activities (configured to wait for {this.responseCount}):");
                 source.Cancel();
             }
             else
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Received {activities.Count} activities.");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Received {activities} activities.");
                 source.Cancel();
             }
 
-            for (int count = 0; count < activities.Count; count++)
+            //Console.WriteLine("count " + this.ActivityList.Count);
+            for (int index = 0; index < this.ActivityList.Count; index++)
             {
-                Trace.TraceInformation($"[{count}]: Latency {activities[count].Latency} msec");
+                if (this.ActivityList[index].Ignore)
+                {
+                    this.ActivityList.RemoveAt(index);
+                }
             }
 
-            activities.Sort((a, b) =>
+            for (int count = 0; count < this.ActivityList.Count; count++)
+            {
+
+                Trace.TraceInformation($"[{count}]: Latency {this.ActivityList[count].Latency} msec");
+                Console.WriteLine("last loop:"+ this.ActivityList[count].Activity.Type + this.ActivityList[count].Activity.Name);
+            }
+
+            this.ActivityList.Sort((a, b) =>
             {
                 return DateTimeOffset.Compare(a.Activity.Timestamp ?? default, b.Activity.Timestamp ?? default);
             });
 
             source.Dispose();
-            return activities;
+            return this.ActivityList;
         }
 
         /// <summary>
@@ -524,16 +569,35 @@ namespace VoiceAssistantTest
 
             this.elapsedTime += (int)this.stopWatch.ElapsedMilliseconds;
 
-            lock (this.ActivityQueue)
+            bool ignoreActivity = this.IgnoreActivity(activity);
+            int activityIndex = 0;
+            int ttsDuration = 0;
+
+            //lock (this.ActivityQueue)
+            //{
+            //    this.ActivityQueue.Enqueue(new BotReply(activity, this.elapsedTime));
+            //}
+
+            lock (this.ActivityList)
             {
-                this.ActivityQueue.Enqueue(new BotReply(activity, this.elapsedTime));
+                this.ActivityList.Add(new BotReply(activity, this.elapsedTime, -1, ignoreActivity));
+                activityIndex = this.ActivityList.Count - 1;
+                //Console.WriteLine("Event thread lock: " + this.ActivityList.Count);
+                Console.WriteLine("Event thread lock: " + activity.Name + activity.Type);
             }
 
             if (e.HasAudio)
             {
+                this.activityHasAudio++;
                 this.audioDownloading = true;
-                this.WriteAudioToWAVfile(e.Audio, this.baseFileName, this.dialogID, this.turnID, this.indexActivityWithAudio);
+                ttsDuration = this.WriteAudioToWAVfile(e.Audio, this.baseFileName, this.dialogID, this.turnID, this.indexActivityWithAudio);
                 this.indexActivityWithAudio++;
+                this.activityHasAudio--;
+
+                lock (this.ActivityList)
+                {
+                    this.ActivityList[activityIndex].TTSAudioDuration = ttsDuration;
+                }
             }
 
             this.stopWatch.Restart();
@@ -569,11 +633,12 @@ namespace VoiceAssistantTest
         /// <param name="dialogID">The value of the DialogID in the input test file.</param>
         /// <param name="turnID">The value of the TurnID in the input test file.</param>
         /// <param name="indexActivityWithAudio">Index value of the current TTS response.</param>
-        private void WriteAudioToWAVfile(PullAudioOutputStream audio, string baseFileName, string dialogID, int turnID, int indexActivityWithAudio)
+        private int WriteAudioToWAVfile(PullAudioOutputStream audio, string baseFileName, string dialogID, int turnID, int indexActivityWithAudio)
         {
             FileStream fs = null;
             string testFileOutputFolder = Path.Combine(this.appsettings.OutputFolder, baseFileName + "Output");
             string wAVFolderPath = Path.Combine(testFileOutputFolder, ProgramConstants.WAVFileFolderName);
+            int durationInMS = 0;
 
             if (indexActivityWithAudio == 0)
             {
@@ -606,9 +671,10 @@ namespace VoiceAssistantTest
             }
 
             WaveFileReader waveFileReader = new WaveFileReader(this.outputWAV);
-            this.DurationInMs = (int)waveFileReader.TotalTime.TotalMilliseconds;
+            durationInMS = (int)waveFileReader.TotalTime.TotalMilliseconds;
             waveFileReader.Dispose();
-            this.audioDownloading = false;
+            return durationInMS;
+            //this.audioDownloading = false;
         }
     }
 }

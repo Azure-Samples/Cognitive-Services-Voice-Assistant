@@ -465,12 +465,12 @@ namespace VoiceAssistantTest
                 }
             }
 
-            if (turn.ExpectedTTSAudioResponseDuration < 0)
-            {
-                exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
-            }
+            //if (turn.ExpectedTTSAudioResponseDuration < 0)
+            //{
+            //    exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
+            //}
 
-            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration > 0)
+            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration != null)
             {
                 exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_PRESENT);
             }
