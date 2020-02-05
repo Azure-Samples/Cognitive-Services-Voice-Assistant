@@ -38,8 +38,6 @@ variables:
   sample2Name: VoiceAssistantTest
   sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\$(sample2Name).sln'
-  #sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)\$(dotNetCoreRuntimeIdentifier)\publish'
-  #sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
 
 steps:
 
@@ -51,7 +49,7 @@ steps:
 
 # Build .Net Standard applications
 - task: VSBuild@1
-  displayName: 'VSBuild - dotnet publish $(sample1Name)'
+  displayName: 'VSBuild - $(sample1Name)'
   inputs:
     solution: '$(sample1Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -64,16 +62,9 @@ steps:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
 
-# Build .NET Core applications
-#- task: DotNetCoreCLI@2
-#  inputs:
-#    Command: 'build'
-#    Projects: $(sample2Solution)
-#    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration)'
-
 # Build .NET Core applications and publish self-contained executables   
 - task: DotNetCoreCLI@2
-  displayName: 'DotNetCoreCLI - dotnet publish $(sample2Name)'
+  displayName: 'DotNetCoreCLI - .NET Core build and publish $(sample2Name)'
   inputs:
     Command: 'publish'
     Projects: $(sample2Solution)
