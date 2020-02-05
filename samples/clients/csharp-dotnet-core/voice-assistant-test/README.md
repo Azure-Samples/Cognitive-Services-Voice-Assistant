@@ -120,7 +120,34 @@ For examples of configuration and test files, please see the templates in [docs/
 
 ### Modifying Core Bot Test File
 
-1. >
+After running corebot/example2, take a look at VoiceAssistantTest.log. You will notice that Dialog 0 for SingleDialogTest1.json failed. Now take a look at SingleDialogTest1Ouput/SingleDialogTest1Output.txt, you will see that the text and speak fields in ExpectedResponses for Dialog 0 Turn 2 do not match the text and speak fields in ActualResponses.
+To Fix this,
+Paste the following for Dialog 0 Turn 2 in SingleDialogTest1.json
+
+```
+      {
+        "TurnID": 2,
+        "Utterance": "Yes",
+        "Activity": "",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "I have you booked to New York from Seattle on 10th February 2025",
+            "speak": "I have you booked to New York from Seattle on 10th February 2025",
+            "inputHint": "ignoringInput"
+          },
+          {
+            "type": "message",
+            "text": "What else can I do for you?",
+            "speak": "What else can I do for you?",
+            "inputHint": "expectingInput"
+          }
+        ]
+      }
+```
+
+Looking at the VoiceAssistantTest.log, you will see that Dialog 0 has now passed. The tool checks Expected with Actual to determine if a dialog and turn passes or fails.
 
 ### Run Voice Assistant Test
 
