@@ -83,19 +83,22 @@ namespace VoiceAssistantTest
         {
             bool match = true;
 
-            for (int index = 0; index < expected.Count; index++)
+            if (expected.Count == actual.Count)
             {
-                if (!ActivitiesMatch(expected[index], actual[index], true))
+                for (int index = 0; index < expected.Count; index++)
                 {
-                    Trace.TraceInformation($"Expected activity at index {index} does not match actual activity");
-                    match = false;
-                    break;
+                    if (!ActivitiesMatch(expected[index], actual[index], true))
+                    {
+                        Trace.TraceInformation($"Expected activity at index {index} does not match actual activity");
+                        match = false;
+                        break;
+                    }
                 }
             }
-
-            if (expected.Count != actual.Count)
+            else
             {
-                Trace.TraceInformation($"Number of expected activities ({expected.Count}) does not match number of actual activities ({actual.Count})");
+                Trace.TraceInformation($"Failed because number of expected activities ({expected.Count}) does not match number of actual activities ({actual.Count})");
+                match = false;
             }
 
             return match;
