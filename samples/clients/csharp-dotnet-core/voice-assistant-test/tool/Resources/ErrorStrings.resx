@@ -166,7 +166,7 @@
     <value>Folder not found. </value>
   </data>
   <data name="INPUT_FILE_MISSING" xml:space="preserve">
-    <value>No Input file specified.</value>
+    <value>No Input test files were specified.</value>
   </data>
   <data name="KEYWORD_RECOGNITION_MODEL_NOT_FOUND" xml:space="preserve">
     <value>Keyword Recognition Model File not found. </value>
@@ -199,7 +199,7 @@
     <value>A negative number is not a valid value for Timeout</value>
   </data>
   <data name="TTS_AUDIO_DURATION_INVALID" xml:space="preserve">
-    <value>Number of entries in ExpectedTTSAudioDuration is not equal to number of entries in ExpectedResponses</value>
+    <value>A negative number is not valid for ExpectedTTSAudioDuration</value>
   </data>
   <data name="TTS_AUDIO_DURATION_MARGIN_INVALID" xml:space="preserve">
     <value>A negative number is not a valid value for TTSAudioDurationMargin</value>

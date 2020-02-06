@@ -1,5 +1,5 @@
 {
-  "InputFiles": [
+  "Tests": [
     {
       "FileName": "SingleDialogTest1.json",
       "SingleConnection": true,
@@ -17,12 +17,8 @@
   "OutputFolder": "Cognitive-Services-Voice-Assistant\\samples\\clients\\csharp-dotnet-core\\voice-assistant-test\\docs\\examples\\corebot\\",
   "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
   "Region": "westus2",
-  "SRLanguage": "",
-  "CustomCommandsAppId": "",
-  "CustomSREndpointId":  "",
-  "CustomVoiceDeploymentIds": "",
   "AudioDurationMargin": "200",
   "AppLogEnabled": true,
-  "BotGreeting":  true,
+  "BotGreeting": true,
   "SpeechSDKLogEnabled": false
 }

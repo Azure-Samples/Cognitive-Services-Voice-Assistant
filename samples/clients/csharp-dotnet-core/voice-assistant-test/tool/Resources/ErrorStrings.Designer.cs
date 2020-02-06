@@ -205,7 +205,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No Input file specified..
+        ///   Looks up a localized string similar to No Input test files were specified..
         /// </summary>
         public static string INPUT_FILE_MISSING {
             get {
@@ -304,7 +304,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Number of entries in ExpectedTTSAudioDuration is not equal to number of entries in ExpectedResponses.
+        ///   Looks up a localized string similar to A negative number is not valid for ExpectedTTSAudioDuration.
         /// </summary>
         public static string TTS_AUDIO_DURATION_INVALID {
             get {
