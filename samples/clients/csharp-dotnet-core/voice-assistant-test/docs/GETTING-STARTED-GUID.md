@@ -34,7 +34,35 @@ This is good. The tool works. You are now ready to author your first application
 
 ## Step 2: Deploy the Echo Bot
 
+In order to write and execute your first test, you will need to deploy Bot Framework's "echo bot" into your own Azure subscription. The echo bot has to then be voiced enabled and registered with Direct Line Speech channel. This is all covered in details in the ["Voice-enable your bot using the Speech SDK"](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) tutorial. Go ahead to spend some time doing the tutorial. At the end, and before proceeding with this guide, you should have:
+* A Cognitive Services speech key. 
+* An Azure region associated with the speech key.
+* An Echo Bot hosted in your Azure subscription, registered with Direct Line Speech channed, and verified to be working end-to-end using the [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf) application.
 
+## Step 3: Write your first test!
+
+As you have noticed when you tested the echo bot, it support a "greeting". This is when the bot automatically sends a message (or messages) to the client application as soon as a connection is made with the bot. Let's write a simple test to verify that the bot sends the correct greeting message.
+
+First, we will write the Application configuration. Copy and paste the following to your text editor: 
+```json
+{
+  "Tests": [
+    {
+      "FileName": "GreetingTest.json",
+    }
+  ],
+  "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
+  "Region": "westus2",
+  "BotGreeting": true
+}
+```
+Replace "SubscriptionKey" and "Region" fields with your own speech key and region, and save it as file "AppConfig.json" in your test folder (e.g. c:\test).
+
+The application configuration file instructs the tool to execute the dialogs listed in a single test file "GreetingTest.json". We will create that file shortly. 
+
+All needed input files (just "GreetingTest.json" in this case) and output files will be written to the current folder since the "InputFolder" and "OutputFolder" are blank. 
+
+"BotGreeting" field needs to be specified and set to true for echo bot tests, since by default it is false. A "true" value instructs the tool to verify that the test configuration is written correctly to test for a bot greeting.
 
 ## Getting Started with Sample
 
