@@ -304,7 +304,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A negative number is not valid for ExpectedTTSAudioDuration.
+        ///   Looks up a localized string similar to Number of entries in ExpectedTTSAudioDuration is not equal to number of entries in ExpectedResponses.
         /// </summary>
         public static string TTS_AUDIO_DURATION_INVALID {
             get {
