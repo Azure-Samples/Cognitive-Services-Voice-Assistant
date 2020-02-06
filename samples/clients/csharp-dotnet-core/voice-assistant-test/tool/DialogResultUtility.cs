@@ -247,11 +247,10 @@ namespace VoiceAssistantTest
         /// Builds the output.
         /// </summary>
         /// <param name="turns"> Input Turns.</param>
-        /// <param name="responseDuration">Actual duration of the TTS audio.</param>
         /// <param name="recognizedText">Recognized text from Speech Recongition.</param>
         /// <param name="recognizedKeyword">Recogized Keyword from Keyword Recognition.</param>
         /// <returns>TurnsOutput.</returns>
-        public TurnResult BuildOutput(Turn turns, int responseDuration, string recognizedText, string recognizedKeyword)
+        public TurnResult BuildOutput(Turn turns, string recognizedText, string recognizedKeyword)
         {
             TurnResult turnsOutput = new TurnResult(turns)
             {

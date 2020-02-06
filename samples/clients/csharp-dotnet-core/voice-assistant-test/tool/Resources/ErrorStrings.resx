@@ -199,7 +199,7 @@
     <value>A negative number is not a valid value for Timeout</value>
   </data>
   <data name="TTS_AUDIO_DURATION_INVALID" xml:space="preserve">
-    <value>A negative number is not valid for ExpectedTTSAudioDuration</value>
+    <value>Number of entries in ExpectedTTSAudioDuration is not equal to number of entries in ExpectedResponses</value>
   </data>
   <data name="TTS_AUDIO_DURATION_MARGIN_INVALID" xml:space="preserve">
     <value>A negative number is not a valid value for TTSAudioDurationMargin</value>

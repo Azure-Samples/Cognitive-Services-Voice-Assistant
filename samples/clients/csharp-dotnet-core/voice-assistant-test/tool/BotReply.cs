@@ -16,12 +16,12 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="activity"> Bot Activity.</param>
         /// <param name="latency"> Latency of Bot Activity.</param>
-        public BotReply(IActivity activity, int latency, int ttsAudioDuration, bool ignore)
+        /// <param name="ttsAudioDuration"> TTS Audio duration of Bot Activity.</param>
+        public BotReply(IActivity activity, int latency, int ttsAudioDuration)
         {
             this.Activity = (Activity)activity;
             this.Latency = latency;
             this.TTSAudioDuration = ttsAudioDuration;
-            this.Ignore = ignore;
         }
 
         /// <summary>
@@ -38,7 +38,5 @@ namespace VoiceAssistantTest
         /// Gets or sets the Latency.
         /// </summary>
         public int TTSAudioDuration { get; set; }
-
-        public bool Ignore { get; set; }
     }
 }

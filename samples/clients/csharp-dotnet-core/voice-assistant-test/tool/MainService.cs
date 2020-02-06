@@ -271,7 +271,7 @@ namespace VoiceAssistantTest
                         dialogOutput.OrganizeActivities(responseActivities);
 
                         // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogOutput.BuildOutput(turn, botConnector.DurationInMs, botConnector.RecognizedText, botConnector.RecognizedKeyword);
+                        TurnResult turnResult = dialogOutput.BuildOutput(turn, botConnector.RecognizedText, botConnector.RecognizedKeyword);
                         dialogOutput.ValidateTurn(turnResult, bootstrapMode);
 
                         // Add the turn result to the list of turn results.
@@ -465,10 +465,13 @@ namespace VoiceAssistantTest
                 }
             }
 
-            //if (turn.ExpectedTTSAudioResponseDuration < 0)
-            //{
-            //    exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
-            //}
+            if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0 && turn.ExpectedTTSAudioResponseDuration != null)
+            {
+                if (turn.ExpectedTTSAudioResponseDuration.Count != turn.ExpectedResponses.Count)
+                {
+                    exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
+                }
+            }
 
             if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration != null)
             {
