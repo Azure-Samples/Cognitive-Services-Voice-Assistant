@@ -318,11 +318,11 @@ namespace VoiceAssistantTest
 
             if (Task.WhenAny(getExpectedResponses, Task.Delay((int)this.timeout)).Result == getExpectedResponses)
             {
-                Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {activities.Count} activities, as expected (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {activities.Count} activities, as expected (configured to wait for {this.responseCount})");
             }
             else if (!bootstrapMode)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {activities.Count} activities (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {activities.Count} activities (configured to wait for {this.responseCount})");
                 source.Cancel();
             }
             else
@@ -333,7 +333,7 @@ namespace VoiceAssistantTest
 
             for (int count = 0; count < activities.Count; count++)
             {
-                Trace.TraceInformation($"[{count}]: Latency {activities[count].Latency} msec");
+                Trace.TraceInformation($"Latency of bot response [{count}] is {activities[count].Latency} msec");
             }
 
             activities.Sort((a, b) =>

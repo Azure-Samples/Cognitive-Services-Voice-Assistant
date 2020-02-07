@@ -21,8 +21,16 @@ namespace VoiceAssistantTest
         {
             try
             {
-                await MainService.StartUp(configFile).ConfigureAwait(false);
-                return 0;
+                bool testPass = await MainService.StartUp(configFile).ConfigureAwait(false);
+
+                if (testPass)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
             }
             catch (Exception e)
             {
