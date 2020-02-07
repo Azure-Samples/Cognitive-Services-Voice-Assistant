@@ -37,7 +37,7 @@ This is good. The tool works. You are now ready to author your first application
 In order to write and execute your first test, you will need to deploy Bot Framework's "echo bot" into your own Azure subscription. The echo bot has to then be voiced enabled and registered with Direct Line Speech channel. This is all covered in details in the ["Voice-enable your bot using the Speech SDK"](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) tutorial. Go ahead to spend some time doing the tutorial. At the end, and before proceeding with this guide, you should have:
 * A Cognitive Services speech key. 
 * An Azure region associated with the speech key.
-* An Echo Bot hosted in your Azure subscription, registered with Direct Line Speech channed, and verified to be working end-to-end using the [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf) application.
+* An Echo Bot hosted in your Azure subscription, registered with Direct Line Speech channel, and verified to be working end-to-end using the [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf) application.
 
 ## Step 3: Write your first test!
 
