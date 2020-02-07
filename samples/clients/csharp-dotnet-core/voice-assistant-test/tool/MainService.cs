@@ -29,8 +29,8 @@ namespace VoiceAssistantTest
         /// Obtains the appsettings to connect to a Bot. Sends the inputs specified in each row of an Input File to the bot. Aggregates the responses from the bot and writes to an output file.
         /// </summary>
         /// <param name="configFile">App level config file.</param>
-        /// <returns>Returns 0 if all tests executed successfully.</returns>
-        public static async Task<int> StartUp(string configFile)
+        /// <returns>Returns ture if all tests executed successfully.</returns>
+        public static async Task<bool> StartUp(string configFile)
         {
             // Set default configuration for application tracing
             InitializeTracing();
@@ -41,7 +41,7 @@ namespace VoiceAssistantTest
                 throw new ArgumentException(ErrorStrings.CONFIG_FILE_MISSING);
             }
 
-            var appSettings = AppSettings.Load(configFile);
+            AppSettings appSettings = AppSettings.Load(configFile);
 
             // Adjust application tracing based on loaded settings
             ConfigureTracing(appSettings.AppLogEnabled, appSettings.OutputFolder);
@@ -50,9 +50,7 @@ namespace VoiceAssistantTest
             ValidateTestFiles(appSettings);
 
             // Processing the test files
-            await ProcessTestFiles(appSettings).ConfigureAwait(false);
-
-            return 0;
+            return await ProcessTestFiles(appSettings).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -141,9 +139,10 @@ namespace VoiceAssistantTest
             }
         }
 
-        private static async Task ProcessTestFiles(AppSettings appSettings)
+        private static async Task<bool> ProcessTestFiles(AppSettings appSettings)
         {
             List<TestReport> allInputFilesTestReport = new List<TestReport>();
+            bool testPass = true;
 
             foreach (TestSettings tests in appSettings.Tests)
             {
@@ -280,7 +279,10 @@ namespace VoiceAssistantTest
 
                         // Capture the result of this turn in this variable and validate the turn.
                         TurnResult turnResult = dialogOutput.BuildOutput(turn, botConnector.DurationInMs, botConnector.RecognizedText, botConnector.RecognizedKeyword);
-                        dialogOutput.ValidateTurn(turnResult, bootstrapMode);
+                        if (!dialogOutput.ValidateTurn(turnResult, bootstrapMode))
+                        {
+                            testPass = false;
+                        }
 
                         // Add the turn result to the list of turn results.
                         turnResults.Add(turnResult);
@@ -331,6 +333,17 @@ namespace VoiceAssistantTest
             } // End of inputFiles loop
 
             File.WriteAllText(appSettings.OutputFolder + ProgramConstants.TestReportFileName, JsonConvert.SerializeObject(allInputFilesTestReport, Formatting.Indented));
+
+            Trace.IndentLevel = 0;
+            if (testPass)
+            {
+                Trace.TraceInformation("********** TEST PASS **********");
+            }
+            else
+            {
+                Trace.TraceInformation("********** TEST FAILED **********");
+            }
+            return testPass;
         }
 
         /// <summary>
@@ -374,7 +387,7 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="activity">String serialization of an Activity.</param>
         /// <returns>True if the string represents a valid activity.</returns>
-        private static (bool, string) CheckValidActivity(string activity)
+        private static (bool ValidActivity, string ErrorString) CheckValidActivity(string activity)
         {
             Activity activityObject;
             try
@@ -433,7 +446,7 @@ namespace VoiceAssistantTest
         /// <param name="firstDialog">true if this is the first dialog in the test file.</param>
         /// <param name="firstTurn">true if this is the first turn in the dialog.</param>
         /// <returns>A tuple of a boolean and a list of strings. The boolean is set to true if the string is valid and the list of strings captures the error messages if the turn is not valid.</returns>
-        private static (bool, List<string>) ValidateTurnInput(Turn turn, bool botGreeting, bool singleConnection, bool firstDialog, bool firstTurn)
+        private static (bool ValidTurn, List<string> ExceptionMesssage) ValidateTurnInput(Turn turn, bool botGreeting, bool singleConnection, bool firstDialog, bool firstTurn)
         {
             bool utterancePresentValid = CheckNotNullNotEmptyString(turn.Utterance);
             bool activityPresentValid = CheckNotNullNotEmptyString(turn.Activity);

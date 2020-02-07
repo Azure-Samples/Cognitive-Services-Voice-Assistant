@@ -19,11 +19,11 @@ cd Cognitive-Services-Voice-Assistant\samples\clients\csharp-dotnet-core\voice-a
 dotnet build
 ```
 
-The build will create a self-contained .NET core executable VoiceAssistantTest.exe that you can copy to your working folder, where you will run your tests. It's best not to run the test under your repo folder. Create a test folder (e.g. "c:\test" in this example), copy the executable to this folder and run it without arguments:
+The build will create a self-contained .NET core executable VoiceAssistantTest.exe in a "publish" folder that you can copy to your working folder, where you will run your tests. It's best not to run the test under your repo folder. Create a test folder (e.g. "c:\test" in this example), copy the executable to this folder and run it without arguments:
 
 ```cmd
 cd /d c:\test
-copy c:\repo\Cognitive-Services-Voice-Assistant\samples\clients\csharp-dotnet-core\voice-assistant-test\tool\XXXX\VoiceAssistnatText.exe
+copy c:\repo\Cognitive-Services-Voice-Assistant\samples\clients\csharp-dotnet-core\voice-assistant-test\tool\bin\Debug\netcoreapp3.1\win-x64\publish\VoiceAssistnatText.exe
 VoiceAssistantText.exe
 ```
 You will get the following error:
@@ -53,7 +53,9 @@ First, we will write the Application configuration. Copy and paste the following
   ],
   "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
   "Region": "westus2",
-  "BotGreeting": true
+  "BotGreeting": true,
+  "InputFolder": "c:\\test\\",
+  "OutputFolder": "c:\\test\\"
 }
 ```
 Replace "SubscriptionKey" and "Region" fields with your own speech key and region, and save it as file "AppConfig.json" in your test folder (e.g. c:\test).
@@ -62,7 +64,40 @@ The application configuration file instructs the tool to execute the dialogs lis
 
 All needed input files (just "GreetingTest.json" in this case) and output files will be written to the current folder since the "InputFolder" and "OutputFolder" are blank. 
 
-"BotGreeting" field needs to be specified and set to true for echo bot tests, since by default it is false. A "true" value instructs the tool to verify that the test configuration is written correctly to test for a bot greeting.
+"BotGreeting" field needs to be specified and set to true for echo bot tests, since by default it is false. A "true" value instructs the tool to verify that the test configuration is written correctly and the test is executed expecting a bot greeting after connection is established with the bot.
+
+Now, write the test configuration. Copy and paste the following to your text editor and save the file as "AppConfig.json" in your test folder (e.g. c:\test):
+
+```json
+[
+  {
+    "DialogID": 0,
+    "Description": "test echo bot greeting",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Hello and welcome!",
+            "speak": "Hello and welcome!",
+            "inputHint": "acceptingInput",
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": 1800,
+        "ExpectedResponseLatency": "2000"
+      }
+    ]
+  }
+]
+```
+
+
+!! *TODO: Make these work:*
+* *"VoiceAssistantTest.exe AppSetting.json" (no need to specify full path to app settings file)*
+* *app settings files should have a working default where "InputFolder" and "OutputFolder" are not specified.*
+
+
 
 ## Getting Started with Sample
 
