@@ -330,16 +330,16 @@ namespace VoiceAssistantTest
 
             try
             {
-               File.WriteAllText(fullPath, "\n");
+                File.WriteAllText(fullPath, "\n");
 
-               if (File.Exists(fullPath))
-               {
-                   success = true;
-               }
+                if (File.Exists(fullPath))
+                {
+                    success = true;
+                }
             }
             catch (Exception)
             {
-               success = false;
+                success = false;
             }
 
             return success;

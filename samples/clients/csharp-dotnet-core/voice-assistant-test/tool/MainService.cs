@@ -97,6 +97,8 @@ namespace VoiceAssistantTest
                 try
                 {
                     fileContents = JsonConvert.DeserializeObject<List<Dialog>>(txt);
+
+                    ValidateUniqueDialogID(fileContents);
                 }
                 catch (Exception e)
                 {
@@ -111,9 +113,11 @@ namespace VoiceAssistantTest
                 foreach (Dialog dialog in fileContents)
                 {
                     bool firstTurn = true;
+                    int turnIndex = 0;
 
                     foreach (Turn turn in dialog.Turns)
                     {
+                        ValidateTurnID(turn, turnIndex);
                         (bool valid, List<string> turnExceptionMessages) = ValidateTurnInput(turn, appSettings.BotGreeting, tests.SingleConnection, firstDialog, firstTurn);
 
                         if (!valid)
@@ -124,6 +128,7 @@ namespace VoiceAssistantTest
 
                         firstDialog = false;
                         firstTurn = false;
+                        turnIndex++;
                     }
                 }
             }
@@ -528,6 +533,33 @@ namespace VoiceAssistantTest
             }
 
             return (true, exceptionMessage);
+        }
+
+        private static void ValidateUniqueDialogID(List<Dialog> testValues)
+        {
+            List<string> uniqueDialog = new List<string>();
+            foreach (var item in testValues)
+            {
+                uniqueDialog.Add(item.DialogID);
+            }
+
+            if (uniqueDialog.GroupBy(x => x).Any(y => y.Count() > 1))
+            {
+                throw new ArgumentException(ErrorStrings.DUPLICATE_DIALOGID);
+            }
+        }
+
+        private static void ValidateTurnID(Turn turn, int turnIndex)
+        {
+            if (turn.TurnID < 0)
+            {
+                throw new ArgumentException(ErrorStrings.NEGATIVE_TURNID);
+            }
+
+            if (turn.TurnID != turnIndex)
+            {
+                throw new ArgumentException(ErrorStrings.INVALID_TURNID_SEQUENCE);
+            }
         }
     }
 }

@@ -178,6 +178,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dialog ID&apos;s in Test File are not unique..
+        /// </summary>
+        public static string DUPLICATE_DIALOGID {
+            get {
+                return ResourceManager.GetString("DUPLICATE_DIALOGID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not create Output Folder.
         /// </summary>
         public static string FAILED_CREATING_OUPUT_FOLDER {
@@ -214,6 +223,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TurnID sequence is invalid..
+        /// </summary>
+        public static string INVALID_TURNID_SEQUENCE {
+            get {
+                return ResourceManager.GetString("INVALID_TURNID_SEQUENCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keyword Recognition Model File not found. .
         /// </summary>
         public static string KEYWORD_RECOGNITION_MODEL_NOT_FOUND {
@@ -246,6 +264,15 @@ namespace VoiceAssistantTest.Resources {
         public static string NEGATIVE_SLEEP_DURATION {
             get {
                 return ResourceManager.GetString("NEGATIVE_SLEEP_DURATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turn ID must be a non-negative integer..
+        /// </summary>
+        public static string NEGATIVE_TURNID {
+            get {
+                return ResourceManager.GetString("NEGATIVE_TURNID", resourceCulture);
             }
         }
         
