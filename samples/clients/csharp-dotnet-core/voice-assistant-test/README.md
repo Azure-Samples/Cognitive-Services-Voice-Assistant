@@ -28,7 +28,7 @@ Note: The source code should compile and run on any of the [supported .NET Core 
 
 ## Getting started guide
 
-First time users, please follow the [Getting Started Guide](docs\GETTING-STARTED-GUID.md) for a step by step introductions how hot to write configuration files for your tests and run the tool.
+First time users, please follow the [Getting Started Guide](docs\GETTING-STARTED-GUID.md) for a step by step introduction on how to write configuration files and run tests.
 
 ## Reference guide
 

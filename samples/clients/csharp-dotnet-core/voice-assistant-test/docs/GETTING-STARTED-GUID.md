@@ -41,7 +41,7 @@ In order to write and execute your first test, you will need to deploy Bot Frame
 
 ## Step 3: Write your first test!
 
-As you have noticed when you tested the echo bot, it support a "greeting". This is when the bot automatically sends a message (or messages) to the client application as soon as a connection is made with the bot. Let's write a simple test to verify that the bot sends the correct greeting message.
+As you have noticed when you tested the echo bot, it supports a "greeting". This is when the bot automatically sends a message (or messages) to the client application as soon as a connection is made with the bot. Let's write a simple test to verify that the bot sends the correct greeting message.
 
 First, we will write the Application configuration. Copy and paste the following to your text editor: 
 ```json
