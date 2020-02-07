@@ -312,7 +312,8 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="turnResult">TurnResult object capturing the responses from the bot for this turn.</param>
         /// <param name="bootstrapMode"> Boolean which defines if turn is in bootstrapping mode or not.</param>
-        public void ValidateTurn(TurnResult turnResult, bool bootstrapMode)
+        /// <returns>true if the all turn tests pass, false if any of the test failed.</returns>
+        public bool ValidateTurn(TurnResult turnResult, bool bootstrapMode)
         {
             turnResult.IntentMatch = true;
             turnResult.SlotMatch = true;
@@ -368,8 +369,10 @@ namespace VoiceAssistantTest
 
                 if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency))
                 {
-                    if ((turnResult.ActualResponseLatency > int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture)) || (turnResult.ExpectedResponses.Count != turnResult.ActualResponses.Count))
+                    int expectedResponseLatency = int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture);
+                    if ((turnResult.ActualResponseLatency > expectedResponseLatency) || (turnResult.ExpectedResponses.Count != turnResult.ActualResponses.Count))
                     {
+                        Trace.TraceInformation($"Actual bot response latency {turnResult.ActualResponseLatency} exceeds expected latency {expectedResponseLatency}");
                         turnResult.ResponseLatencyMatch = false;
                     }
                 }
@@ -379,6 +382,8 @@ namespace VoiceAssistantTest
             turnResult.TaskCompleted = turnResult.ResponseMatch && turnResult.UtteranceMatch;
 
             this.DisplayTestResultMessage(turnResult);
+
+            return turnResult.Pass;
         }
 
         /// <summary>
@@ -398,6 +403,17 @@ namespace VoiceAssistantTest
                 if (!turnResult.IntentMatch)
                 {
                     failMessage += "intent mismatch";
+                    commaNeeded = true;
+                }
+
+                if (!turnResult.ResponseLatencyMatch)
+                {
+                    if (commaNeeded)
+                    {
+                        failMessage += ", ";
+                    }
+
+                    failMessage += "latency mismatch";
                     commaNeeded = true;
                 }
 
