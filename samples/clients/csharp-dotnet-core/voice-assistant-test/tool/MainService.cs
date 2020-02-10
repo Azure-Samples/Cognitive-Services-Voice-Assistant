@@ -560,14 +560,11 @@ namespace VoiceAssistantTest
 
             uniqueDialog.Sort();
 
-            for (int i = 0; i < uniqueDialog.Count; i++)
+            for (int i = 0; i < uniqueDialog.Count - 1; i++)
             {
-                if (i + 1 < uniqueDialog.Count)
+                if (uniqueDialog[i] == uniqueDialog[i + 1])
                 {
-                    if (uniqueDialog[i] == uniqueDialog[i + 1])
-                    {
-                        throw new ArgumentException($"{ErrorStrings.DUPLICATE_DIALOGID} - {uniqueDialog[i]}");
-                    }
+                    throw new ArgumentException($"{ErrorStrings.DUPLICATE_DIALOGID} - {uniqueDialog[i]}");
                 }
             }
         }
