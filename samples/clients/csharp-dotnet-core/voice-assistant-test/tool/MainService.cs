@@ -441,6 +441,7 @@ namespace VoiceAssistantTest
                     }
                 }
             }
+
             return true;
         }
 
@@ -489,7 +490,6 @@ namespace VoiceAssistantTest
 
             if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0 && turn.ExpectedTTSAudioResponseDuration != null)
             {
-
                 if (turn.ExpectedTTSAudioResponseDuration.Count != turn.ExpectedResponses.Count)
                 {
                     exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);

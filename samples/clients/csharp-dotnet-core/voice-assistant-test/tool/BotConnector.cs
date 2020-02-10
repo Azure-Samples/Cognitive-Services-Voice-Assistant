@@ -285,6 +285,7 @@ namespace VoiceAssistantTest
             CancellationToken token = source.Token;
             List<BotReply> filteredBotReplyList = new List<BotReply>();
             int activities = 0;
+            int item = 0;
 
             var getExpectedResponses = Task.Run(
                 () =>
@@ -296,16 +297,18 @@ namespace VoiceAssistantTest
 
                         lock (this.BotReplyList)
                         {
-                            if (this.BotReplyList.Count != 0 && this.BotReplyList[activities] != null)
+                            if (this.BotReplyList.Count != 0 && this.BotReplyList[item] != null)
                             {
-                                if (this.IgnoreActivity(this.BotReplyList[activities].Activity))
+                                if (this.IgnoreActivity(this.BotReplyList[item].Activity))
                                 {
-                                    this.BotReplyList[activities].Ignore = true;
+                                    this.BotReplyList[item].Ignore = true;
                                 }
                                 else
                                 {
                                     activities++;
                                 }
+
+                                item++;
                             }
                         }
                     }
@@ -335,7 +338,12 @@ namespace VoiceAssistantTest
 
             for (int index = 0; index < this.BotReplyList.Count; index++)
             {
-                if (this.BotReplyList[index].Ignore == false && filteredBotReplyList.Count < activities)
+                if (filteredBotReplyList.Count < activities)
+                {
+                    break;
+                }
+
+                if (this.BotReplyList[index].Ignore == false)
                 {
                     filteredBotReplyList.Add(this.BotReplyList[index]);
                 }
