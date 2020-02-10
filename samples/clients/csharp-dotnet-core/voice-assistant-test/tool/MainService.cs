@@ -81,6 +81,11 @@ namespace VoiceAssistantTest
 
                 string inputFileName = appSettings.InputFolder + tests.FileName;
 
+                if (tests.FileName.Contains(appSettings.InputFolder, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new ArgumentException($"{ErrorStrings.FILENAME_PATH_NOT_RELATIVE}");
+                }
+
                 if (!File.Exists(inputFileName))
                 {
                     allExceptions.Add($"[{inputFileName}] : {ErrorStrings.FILE_DOES_NOT_EXIST}");
