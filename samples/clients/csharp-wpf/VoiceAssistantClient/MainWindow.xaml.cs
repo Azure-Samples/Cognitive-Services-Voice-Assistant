@@ -81,7 +81,7 @@ namespace VoiceAssistantClient
             get
             {
                 Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                return $"Direct Line Speech Client v{version.Major}.{version.Minor}.{version.Build}";
+                return $"Windows Voice Assistant Client v{version.Major}.{version.Minor}.{version.Build}";
             }
         }
 
