@@ -167,6 +167,8 @@ namespace VoiceAssistantTest
 
                 string inputFileName = appSettings.InputFolder + tests.FileName;
                 string testName = Path.GetFileNameWithoutExtension(inputFileName);
+                string inputPath = appSettings.InputFolder;
+
                 string outputPath = appSettings.OutputFolder + testName + "Output";
                 DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
 
@@ -348,6 +350,7 @@ namespace VoiceAssistantTest
             {
                 Trace.TraceInformation("********** TEST FAILED **********");
             }
+
             return testPass;
         }
 

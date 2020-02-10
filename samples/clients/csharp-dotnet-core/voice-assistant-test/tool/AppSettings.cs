@@ -18,8 +18,6 @@ namespace VoiceAssistantTest
     /// </summary>
     internal class AppSettings
     {
-        private static AppSettings instance;
-
         /// <summary>
         /// Gets or sets test configuration of each Input File.
         /// </summary>
@@ -118,19 +116,15 @@ namespace VoiceAssistantTest
         /// <returns>An AppSettings instance.</returns>
         public static AppSettings Load(string configFile)
         {
-            if (instance != null)
-            {
-                return instance;
-            }
-
             Trace.TraceInformation($"Parsing {configFile}");
 
             StreamReader file = new StreamReader(configFile);
             string config = file.ReadToEnd();
             file.Close();
-            AppSettings settings = JsonConvert.DeserializeObject<AppSettings>(config);
+            AppSettings instance = JsonConvert.DeserializeObject<AppSettings>(config);
+            ValidateAppSettings(instance);
 
-            return settings;
+            return instance;
         }
 
         /// <summary>
@@ -238,7 +232,7 @@ namespace VoiceAssistantTest
 
             if (string.IsNullOrEmpty(instance.InputFolder))
             {
-                inputDirectory = Path.GetRelativePath(Directory.GetCurrentDirectory(), string.Empty);
+                inputDirectory = Directory.GetCurrentDirectory();
             }
 
             string outputDirectory = string.Empty;
@@ -261,7 +255,7 @@ namespace VoiceAssistantTest
 
             if (string.IsNullOrEmpty(instance.OutputFolder))
             {
-                outputDirectory = Path.GetRelativePath(Directory.GetCurrentDirectory(), string.Empty);
+                outputDirectory = Directory.GetCurrentDirectory();
             }
 
             if (!Directory.Exists(outputDirectory))
