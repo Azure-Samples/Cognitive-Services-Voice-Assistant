@@ -125,7 +125,7 @@ namespace VoiceAssistantTest
             Trace.TraceInformation($"Parsing {configFile}");
 
             IConfigurationRoot config = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile(configFile)
                 .Build();
             instance = config.Get<AppSettings>();
@@ -234,6 +234,13 @@ namespace VoiceAssistantTest
                 throw new MissingFieldException(ErrorStrings.INPUT_FILE_MISSING);
             }
 
+            string inputDirectory = instance.InputFolder;
+
+            if (string.IsNullOrEmpty(instance.InputFolder))
+            {
+                inputDirectory = Directory.GetCurrentDirectory();
+            }
+
             string outputDirectory = string.Empty;
 
             if (!string.IsNullOrWhiteSpace(instance.OutputFolder))
@@ -250,6 +257,11 @@ namespace VoiceAssistantTest
                         throw new Exception($"{ErrorStrings.FAILED_CREATING_OUPUT_FOLDER} - {outputDirectory}");
                     }
                 }
+            }
+
+            if (string.IsNullOrEmpty(instance.OutputFolder))
+            {
+                outputDirectory = Directory.GetCurrentDirectory();
             }
 
             if (!Directory.Exists(outputDirectory))
