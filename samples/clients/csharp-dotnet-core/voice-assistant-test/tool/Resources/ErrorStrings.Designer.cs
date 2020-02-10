@@ -304,7 +304,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Number of entries in ExpectedTTSAudioDuration is not equal to number of entries in ExpectedResponses.
+        ///   Looks up a localized string similar to Size of ExpectedTTSAudioDuration does not match the sixe of ExpectedResponses..
         /// </summary>
         public static string TTS_AUDIO_DURATION_INVALID {
             get {
@@ -327,6 +327,15 @@ namespace VoiceAssistantTest.Resources {
         public static string TTS_AUDIO_DURATION_PRESENT {
             get {
                 return ResourceManager.GetString("TTS_AUDIO_DURATION_PRESENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid..
+        /// </summary>
+        public static string TTS_AUDIO_DURATION_VALUES_INVALID {
+            get {
+                return ResourceManager.GetString("TTS_AUDIO_DURATION_VALUES_INVALID", resourceCulture);
             }
         }
         

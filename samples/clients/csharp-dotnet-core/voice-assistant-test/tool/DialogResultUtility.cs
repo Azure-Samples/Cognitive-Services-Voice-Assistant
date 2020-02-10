@@ -352,7 +352,9 @@ namespace VoiceAssistantTest
                     }
                 }
 
-                if (turnResult.ExpectedTTSAudioResponseDuration != null && turnResult.ExpectedTTSAudioResponseDuration.Count != 0)
+                bool durationMatch = true;
+
+                if (turnResult.ExpectedTTSAudioResponseDuration != null && turnResult.ExpectedTTSAudioResponseDuration.Count != 0 && turnResult.ActualTTSAudioReponseDuration != null && turnResult.ActualTTSAudioReponseDuration.Count != 0)
                 {
                     for (int i = 0; i < turnResult.ExpectedTTSAudioResponseDuration.Count; i++)
                     {
@@ -360,11 +362,15 @@ namespace VoiceAssistantTest
                         {
                             if (turnResult.ActualTTSAudioReponseDuration[i] >= (turnResult.ExpectedTTSAudioResponseDuration[i] - margin) && turnResult.ActualTTSAudioReponseDuration[i] <= (turnResult.ExpectedTTSAudioResponseDuration[i] + margin))
                             {
-                                turnResult.TTSAudioResponseDurationMatch = true;
+                                if (durationMatch)
+                                {
+                                    turnResult.TTSAudioResponseDurationMatch = true;
+                                }
                             }
                             else
                             {
                                 Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioReponseDuration[i]} is outside the expected range {turnResult.ExpectedTTSAudioResponseDuration[i]}+/-{margin}");
+                                durationMatch = false;
                                 turnResult.TTSAudioResponseDurationMatch = false;
                             }
                         }

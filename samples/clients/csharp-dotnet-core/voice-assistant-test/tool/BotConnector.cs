@@ -30,7 +30,6 @@ namespace VoiceAssistantTest
         private const int MaxSizeOfTtsAudioInBytes = 65536;
         private const int WavHeaderSizeInBytes = 44;
         private const int BytesToRead = 3200;
-        private const int DefaultTTSAudioDuration = -1;
         private const uint ResponseCheckInterval = 100; // milliseconds
         private int responseCount;
         private int timeout;
@@ -42,7 +41,7 @@ namespace VoiceAssistantTest
         private string dialogID;
         private int turnID;
         private int indexActivityWithAudio = 0;
-        private int activityHasAudio = 0;
+        private int ttsStreamDownloadCount = 0;
         private int elapsedTime = 0;
         private List<Activity> ignoreActivitiesList;
         private Stopwatch stopWatch;
@@ -285,12 +284,13 @@ namespace VoiceAssistantTest
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
             List<BotReply> filteredBotReplyList = new List<BotReply>();
+            int activities = 0;
 
             var getExpectedResponses = Task.Run(
                 () =>
                 {
                     // Make this configurable per interaction as an input row
-                    while (bootstrapMode || filteredBotReplyList.Count < this.responseCount)
+                    while (bootstrapMode || activities < this.responseCount)
                     {
                         Thread.Sleep((int)ResponseCheckInterval);
 
@@ -298,20 +298,13 @@ namespace VoiceAssistantTest
                         {
                             if (this.BotReplyList.Count != 0 && this.BotReplyList[0] != null)
                             {
-                                for (int i = 0; i < this.BotReplyList.Count; i++)
+                                if (this.IgnoreActivity(this.BotReplyList[activities].Activity))
                                 {
-                                    if (!filteredBotReplyList.Contains(this.BotReplyList[i]))
-                                    {
-                                        if (!this.IgnoreActivity(this.BotReplyList[i].Activity))
-                                        {
-                                            filteredBotReplyList.Add((BotReply)this.BotReplyList[i]);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        int index = filteredBotReplyList.FindIndex(botReply => botReply.Activity == this.BotReplyList[i].Activity);
-                                        filteredBotReplyList[index].TTSAudioDuration = this.BotReplyList[i].TTSAudioDuration;
-                                    }
+                                    this.BotReplyList[activities].Ignore = true;
+                                }
+                                else
+                                {
+                                    activities++;
                                 }
                             }
                         }
@@ -319,7 +312,7 @@ namespace VoiceAssistantTest
 
                     // Wait until TTS audio finishes downloading (if there is one), so its duration can be calculated. TTS audio duration
                     // may be part of test pass/fail validation.
-                    while (this.activityHasAudio > 0)
+                    while (this.ttsStreamDownloadCount > 0)
                     {
                         Thread.Sleep((int)ResponseCheckInterval);
                     }
@@ -327,17 +320,25 @@ namespace VoiceAssistantTest
 
             if (Task.WhenAny(getExpectedResponses, Task.Delay((int)this.timeout)).Result == getExpectedResponses)
             {
-                Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {filteredBotReplyList.Count} activities, as expected (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {activities} activities, as expected (configured to wait for {this.responseCount}):");
             }
             else if (!bootstrapMode)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {filteredBotReplyList.Count} activities (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {activities} activities (configured to wait for {this.responseCount}):");
                 source.Cancel();
             }
             else
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Received {filteredBotReplyList.Count} activities.");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Received {activities} activities.");
                 source.Cancel();
+            }
+
+            for (int index = 0; index < this.BotReplyList.Count; index++)
+            {
+                if (this.BotReplyList[index].Ignore == false && filteredBotReplyList.Count < activities)
+                {
+                    filteredBotReplyList.Add(this.BotReplyList[index]);
+                }
             }
 
             for (int count = 0; count < filteredBotReplyList.Count; count++)
@@ -538,16 +539,16 @@ namespace VoiceAssistantTest
 
             lock (this.BotReplyList)
             {
-                this.BotReplyList.Add(new BotReply(activity, this.elapsedTime, DefaultTTSAudioDuration));
+                this.BotReplyList.Add(new BotReply(activity, this.elapsedTime, false));
                 activityIndex = this.BotReplyList.Count - 1;
             }
 
             if (e.HasAudio)
             {
-                this.activityHasAudio++;
+                this.ttsStreamDownloadCount++;
                 this.indexActivityWithAudio++;
                 ttsDuration = this.WriteAudioToWAVfile(e.Audio, this.baseFileName, this.dialogID, this.turnID, this.indexActivityWithAudio);
-                this.activityHasAudio--;
+                this.ttsStreamDownloadCount--;
                 lock (this.BotReplyList)
                 {
                     this.BotReplyList[activityIndex].TTSAudioDuration = ttsDuration;
