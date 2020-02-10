@@ -15,6 +15,7 @@ namespace VoiceAssistantTest
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using NAudio.MediaFoundation;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
     using Activity = Microsoft.Bot.Schema.Activity;
@@ -348,6 +349,7 @@ namespace VoiceAssistantTest
             {
                 Trace.TraceInformation("********** TEST FAILED **********");
             }
+
             return testPass;
         }
 
@@ -556,9 +558,17 @@ namespace VoiceAssistantTest
                 uniqueDialog.Add(item.DialogID);
             }
 
-            if (uniqueDialog.GroupBy(x => x).Any(y => y.Count() > 1))
+            uniqueDialog.Sort();
+
+            for (int i = 0; i < uniqueDialog.Count; i++)
             {
-                throw new ArgumentException(ErrorStrings.DUPLICATE_DIALOGID);
+                if (i + 1 < uniqueDialog.Count)
+                {
+                    if (uniqueDialog[i] == uniqueDialog[i + 1])
+                    {
+                        throw new ArgumentException($"{ErrorStrings.DUPLICATE_DIALOGID} - {uniqueDialog[i]}");
+                    }
+                }
             }
         }
 
@@ -566,12 +576,12 @@ namespace VoiceAssistantTest
         {
             if (turn.TurnID < 0)
             {
-                throw new ArgumentException(ErrorStrings.NEGATIVE_TURNID);
+                throw new ArgumentException($"{ErrorStrings.NEGATIVE_TURNID} - {turn.TurnID}");
             }
 
             if (turn.TurnID != turnIndex)
             {
-                throw new ArgumentException(ErrorStrings.INVALID_TURNID_SEQUENCE);
+                throw new ArgumentException($"{ErrorStrings.INVALID_TURNID_SEQUENCE} - {turn.TurnID}");
             }
         }
     }
