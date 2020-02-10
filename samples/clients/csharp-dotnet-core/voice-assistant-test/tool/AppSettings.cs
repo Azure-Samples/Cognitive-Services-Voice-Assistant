@@ -10,6 +10,7 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using Microsoft.Extensions.Configuration;
+    using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
 
     /// <summary>
@@ -124,13 +125,12 @@ namespace VoiceAssistantTest
 
             Trace.TraceInformation($"Parsing {configFile}");
 
-            IConfigurationRoot config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(configFile)
-                .Build();
-            instance = config.Get<AppSettings>();
-            ValidateAppSettings(instance);
-            return instance;
+            StreamReader file = new StreamReader(configFile);
+            string config = file.ReadToEnd();
+            file.Close();
+            AppSettings settings = JsonConvert.DeserializeObject<AppSettings>(config);
+
+            return settings;
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace VoiceAssistantTest
 
             if (string.IsNullOrEmpty(instance.InputFolder))
             {
-                inputDirectory = Directory.GetCurrentDirectory();
+                inputDirectory = Path.GetRelativePath(Directory.GetCurrentDirectory(), string.Empty);
             }
 
             string outputDirectory = string.Empty;
@@ -261,7 +261,7 @@ namespace VoiceAssistantTest
 
             if (string.IsNullOrEmpty(instance.OutputFolder))
             {
-                outputDirectory = Directory.GetCurrentDirectory();
+                outputDirectory = Path.GetRelativePath(Directory.GetCurrentDirectory(), string.Empty);
             }
 
             if (!Directory.Exists(outputDirectory))
