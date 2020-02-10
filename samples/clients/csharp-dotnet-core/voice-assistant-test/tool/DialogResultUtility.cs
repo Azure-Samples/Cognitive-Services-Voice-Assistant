@@ -72,13 +72,13 @@ namespace VoiceAssistantTest
         [JsonIgnore]
         public List<BotReply> FinalResponses { get; set; }
 
-    /// <summary>
-    /// Iterates over the List of expected response and actual response Activities.
-    /// Sends a single activity of Expected and Actual into the ActivitiesMatch Method.
-    /// </summary>
-    /// <param name="expected">List Activities from ExpectedResponse.</param>
-    /// <param name="actual">List of Activities from ActualResponse.</param>
-    /// <returns>Bool value indicating if expected activity matches to actual activity.</returns>
+        /// <summary>
+        /// Iterates over the List of expected response and actual response Activities.
+        /// Sends a single activity of Expected and Actual into the ActivitiesMatch Method.
+        /// </summary>
+        /// <param name="expected">List Activities from ExpectedResponse.</param>
+        /// <param name="actual">List of Activities from ActualResponse.</param>
+        /// <returns>Bool value indicating if expected activity matches to actual activity.</returns>
         public static bool ActivityListsMatch(List<Activity> expected, List<Activity> actual)
         {
             bool match = true;

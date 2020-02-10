@@ -156,6 +156,9 @@
   <data name="CUSTOM_VOICE_DEPLOYMENT_ID_INVALID" xml:space="preserve">
     <value>Custom Voice Deployment Id is invalid.</value>
   </data>
+  <data name="DUPLICATE_DIALOGID" xml:space="preserve">
+    <value>Dialog ID's in Test File are not unique.</value>
+  </data>
   <data name="FAILED_CREATING_OUPUT_FOLDER" xml:space="preserve">
     <value>Could not create Output Folder</value>
   </data>
@@ -168,6 +171,9 @@
   <data name="INPUT_FILE_MISSING" xml:space="preserve">
     <value>No Input test files were specified.</value>
   </data>
+  <data name="INVALID_TURNID_SEQUENCE" xml:space="preserve">
+    <value>TurnID sequence is invalid.</value>
+  </data>
   <data name="KEYWORD_RECOGNITION_MODEL_NOT_FOUND" xml:space="preserve">
     <value>Keyword Recognition Model File not found. </value>
   </data>
@@ -179,6 +185,9 @@
   </data>
   <data name="NEGATIVE_SLEEP_DURATION" xml:space="preserve">
     <value>Sleep duration cannot be a negative number.</value>
+  </data>
+  <data name="NEGATIVE_TURNID" xml:space="preserve">
+    <value>Turn ID must be a non-negative integer.</value>
   </data>
   <data name="NONE_PRESENT" xml:space="preserve">
     <value>All input fields are empty.</value>

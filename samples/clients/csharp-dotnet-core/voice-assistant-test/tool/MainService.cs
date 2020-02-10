@@ -15,6 +15,7 @@ namespace VoiceAssistantTest
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using NAudio.MediaFoundation;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
     using Activity = Microsoft.Bot.Schema.Activity;
@@ -95,6 +96,8 @@ namespace VoiceAssistantTest
                 try
                 {
                     fileContents = JsonConvert.DeserializeObject<List<Dialog>>(txt);
+
+                    ValidateUniqueDialogID(fileContents);
                 }
                 catch (Exception e)
                 {
@@ -109,9 +112,11 @@ namespace VoiceAssistantTest
                 foreach (Dialog dialog in fileContents)
                 {
                     bool firstTurn = true;
+                    int turnIndex = 0;
 
                     foreach (Turn turn in dialog.Turns)
                     {
+                        ValidateTurnID(turn, turnIndex);
                         (bool valid, List<string> turnExceptionMessages) = ValidateTurnInput(turn, appSettings.BotGreeting, tests.SingleConnection, firstDialog, firstTurn);
 
                         if (!valid)
@@ -122,6 +127,7 @@ namespace VoiceAssistantTest
 
                         firstDialog = false;
                         firstTurn = false;
+                        turnIndex++;
                     }
                 }
             }
@@ -343,6 +349,7 @@ namespace VoiceAssistantTest
             {
                 Trace.TraceInformation("********** TEST FAILED **********");
             }
+
             return testPass;
         }
 
@@ -541,6 +548,38 @@ namespace VoiceAssistantTest
             }
 
             return (true, exceptionMessage);
+        }
+
+        private static void ValidateUniqueDialogID(List<Dialog> testValues)
+        {
+            List<string> uniqueDialog = new List<string>();
+            foreach (var item in testValues)
+            {
+                uniqueDialog.Add(item.DialogID);
+            }
+
+            uniqueDialog.Sort();
+
+            for (int i = 0; i < uniqueDialog.Count - 1; i++)
+            {
+                if (uniqueDialog[i] == uniqueDialog[i + 1])
+                {
+                    throw new ArgumentException($"{ErrorStrings.DUPLICATE_DIALOGID} - {uniqueDialog[i]}");
+                }
+            }
+        }
+
+        private static void ValidateTurnID(Turn turn, int turnIndex)
+        {
+            if (turn.TurnID < 0)
+            {
+                throw new ArgumentException($"{ErrorStrings.NEGATIVE_TURNID} - {turn.TurnID}");
+            }
+
+            if (turn.TurnID != turnIndex)
+            {
+                throw new ArgumentException($"{ErrorStrings.INVALID_TURNID_SEQUENCE} - {turn.TurnID}");
+            }
         }
     }
 }
