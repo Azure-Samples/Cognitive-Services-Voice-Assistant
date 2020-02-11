@@ -72,13 +72,13 @@ namespace VoiceAssistantTest
         [JsonIgnore]
         public List<BotReply> FinalResponses { get; set; }
 
-    /// <summary>
-    /// Iterates over the List of expected response and actual response Activities.
-    /// Sends a single activity of Expected and Actual into the ActivitiesMatch Method.
-    /// </summary>
-    /// <param name="expected">List Activities from ExpectedResponse.</param>
-    /// <param name="actual">List of Activities from ActualResponse.</param>
-    /// <returns>Bool value indicating if expected activity matches to actual activity.</returns>
+        /// <summary>
+        /// Iterates over the List of expected response and actual response Activities.
+        /// Sends a single activity of Expected and Actual into the ActivitiesMatch Method.
+        /// </summary>
+        /// <param name="expected">List Activities from ExpectedResponse.</param>
+        /// <param name="actual">List of Activities from ActualResponse.</param>
+        /// <returns>Bool value indicating if expected activity matches to actual activity.</returns>
         public static bool ActivityListsMatch(List<Activity> expected, List<Activity> actual)
         {
             bool match = true;
@@ -312,7 +312,8 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="turnResult">TurnResult object capturing the responses from the bot for this turn.</param>
         /// <param name="bootstrapMode"> Boolean which defines if turn is in bootstrapping mode or not.</param>
-        public void ValidateTurn(TurnResult turnResult, bool bootstrapMode)
+        /// <returns>true if the all turn tests pass, false if any of the test failed.</returns>
+        public bool ValidateTurn(TurnResult turnResult, bool bootstrapMode)
         {
             turnResult.IntentMatch = true;
             turnResult.SlotMatch = true;
@@ -379,8 +380,10 @@ namespace VoiceAssistantTest
 
                 if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency))
                 {
-                    if ((turnResult.ActualResponseLatency > int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture)) || (turnResult.ExpectedResponses.Count != turnResult.ActualResponses.Count))
+                    int expectedResponseLatency = int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture);
+                    if ((turnResult.ActualResponseLatency > expectedResponseLatency) || (turnResult.ExpectedResponses.Count != turnResult.ActualResponses.Count))
                     {
+                        Trace.TraceInformation($"Actual bot response latency {turnResult.ActualResponseLatency} exceeds expected latency {expectedResponseLatency}");
                         turnResult.ResponseLatencyMatch = false;
                     }
                 }
@@ -390,6 +393,8 @@ namespace VoiceAssistantTest
             turnResult.TaskCompleted = turnResult.ResponseMatch && turnResult.UtteranceMatch;
 
             this.DisplayTestResultMessage(turnResult);
+
+            return turnResult.Pass;
         }
 
         /// <summary>
@@ -409,6 +414,17 @@ namespace VoiceAssistantTest
                 if (!turnResult.IntentMatch)
                 {
                     failMessage += "intent mismatch";
+                    commaNeeded = true;
+                }
+
+                if (!turnResult.ResponseLatencyMatch)
+                {
+                    if (commaNeeded)
+                    {
+                        failMessage += ", ";
+                    }
+
+                    failMessage += "latency mismatch";
                     commaNeeded = true;
                 }
 

@@ -45,7 +45,7 @@ namespace VoiceAssistantTest
         /// The text file name is VoiceAssistantTest.log and it will be written to the folder
         /// specified by the OutputFolder property.
         /// </summary>
-        public bool AppLogEnabled { get; set; }
+        public bool AppLogEnabled { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether a Speech SDK log should be written when the test is run.
@@ -54,13 +54,12 @@ namespace VoiceAssistantTest
         /// The file name will have the time-stamped format SpeechSDKLog-yyyy-MM-dd-HH-mm-ss.txt,
         /// and it will be written to the folder specified by the OutputFolder property.
         /// </summary>
-        public bool SpeechSDKLogEnabled { get; set; }
+        public bool SpeechSDKLogEnabled { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets the speech recognition language. If this value is not set,
-        /// the default is en-us.
+        /// Gets or sets the speech recognition language.
         /// </summary>
-        public string SRLanguage { get; set; }
+        public string SRLanguage { get; set; } = "en-us";
 
         /// <summary>
         /// Gets or sets the Custom Commands Application ID. If this value is not set,
@@ -125,7 +124,7 @@ namespace VoiceAssistantTest
 
             Trace.TraceInformation($"Parsing {configFile}");
 
-            var config = new ConfigurationBuilder()
+            IConfigurationRoot config = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .AddJsonFile(configFile)
                 .Build();
@@ -330,16 +329,16 @@ namespace VoiceAssistantTest
 
             try
             {
-               File.WriteAllText(fullPath, "\n");
+                File.WriteAllText(fullPath, "\n");
 
-               if (File.Exists(fullPath))
-               {
-                   success = true;
-               }
+                if (File.Exists(fullPath))
+                {
+                    success = true;
+                }
             }
             catch (Exception)
             {
-               success = false;
+                success = false;
             }
 
             return success;

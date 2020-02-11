@@ -178,6 +178,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dialog ID&apos;s in Test File are not unique..
+        /// </summary>
+        public static string DUPLICATE_DIALOGID {
+            get {
+                return ResourceManager.GetString("DUPLICATE_DIALOGID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not create Output Folder.
         /// </summary>
         public static string FAILED_CREATING_OUPUT_FOLDER {
@@ -214,6 +223,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TurnID sequence is invalid..
+        /// </summary>
+        public static string INVALID_TURNID_SEQUENCE {
+            get {
+                return ResourceManager.GetString("INVALID_TURNID_SEQUENCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keyword Recognition Model File not found. .
         /// </summary>
         public static string KEYWORD_RECOGNITION_MODEL_NOT_FOUND {
@@ -246,6 +264,15 @@ namespace VoiceAssistantTest.Resources {
         public static string NEGATIVE_SLEEP_DURATION {
             get {
                 return ResourceManager.GetString("NEGATIVE_SLEEP_DURATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turn ID must be a non-negative integer..
+        /// </summary>
+        public static string NEGATIVE_TURNID {
+            get {
+                return ResourceManager.GetString("NEGATIVE_TURNID", resourceCulture);
             }
         }
         
@@ -304,7 +331,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Size of ExpectedTTSAudioDuration does not match the sixe of ExpectedResponses..
+        ///   Looks up a localized string similar to A negative number is not valid for ExpectedTTSAudioDuration.
         /// </summary>
         public static string TTS_AUDIO_DURATION_INVALID {
             get {
@@ -327,15 +354,6 @@ namespace VoiceAssistantTest.Resources {
         public static string TTS_AUDIO_DURATION_PRESENT {
             get {
                 return ResourceManager.GetString("TTS_AUDIO_DURATION_PRESENT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid..
-        /// </summary>
-        public static string TTS_AUDIO_DURATION_VALUES_INVALID {
-            get {
-                return ResourceManager.GetString("TTS_AUDIO_DURATION_VALUES_INVALID", resourceCulture);
             }
         }
         
