@@ -182,6 +182,6 @@ namespace AudioPlayer
 
             std::thread m_playerThread;
             void PlayerThreadMain();
-            int WriteToPCM(uint8_t* buffer);
+            int WriteToALSA(uint8_t* buffer);
     };
 }

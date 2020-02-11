@@ -11,9 +11,11 @@ using namespace AudioPlayer;
 
 LinuxAudioPlayer::LinuxAudioPlayer(){
     
-    fprintf(stdout, "creating thread\n");
     Open();
+    //TODO remove once nightfury volume is handled better
+    #ifdef NIGHTFURY
     SetAlsaMasterVolume(25);
+    #endif
     m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
     
 }
@@ -136,11 +138,11 @@ int LinuxAudioPlayer::GetBufferSize(){
 void LinuxAudioPlayer::PlayerThreadMain(){
     m_canceled = false;
     while(m_canceled == false){
+        // here we will wait to be woken up since there is no audio left to play
         std::unique_lock<std::mutex> lk{ m_threadMutex };
-        fprintf(stdout, "AudioThread: waiting for condition\n");
         m_conditionVariable.wait(lk);
         lk.unlock();
-        fprintf(stdout, "AudioThread: wait complete\n");
+        
         unsigned int playBufferSize = GetBufferSize();
         while(m_audioQueue.size() > 0){
             m_isPlaying = true;
@@ -156,7 +158,7 @@ void LinuxAudioPlayer::PlayerThreadMain(){
                     memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
                     bufferLeft = 0;
                 }
-                WriteToPCM(playBuffer.get());
+                WriteToALSA(playBuffer.get());
             }
             m_queueMutex.lock();
             m_audioQueue.pop_front();
@@ -170,38 +172,19 @@ void LinuxAudioPlayer::PlayerThreadMain(){
 int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
     int rc = 0;
     AudioPlayerEntry entry(buffer, bufferSize);
-    //fprintf(stdout, "Play. aquiring lock\n");
     m_queueMutex.lock();
     m_audioQueue.push_back(entry);
     m_queueMutex.unlock();
     
-    //fprintf(stdout, "Play. isPlaying = %d\n", m_isPlaying);
     if(!m_isPlaying){
-        fprintf(stdout, "notifying condition variable\n");
+        //wake up the audio thread
         m_conditionVariable.notify_one();
     }
     
     return rc;
 }
 
-int LinuxAudioPlayer::PlaySynchronous(uint8_t* buffer, size_t bufferSize){
-    int rc;
-    rc = snd_pcm_writei(m_playback_handle, buffer, m_frames);
-    if (rc == -EPIPE) {
-        /* EPIPE means underrun */
-        fprintf(stderr, "underrun occurred\n");
-        snd_pcm_prepare(m_playback_handle);
-    } else if (rc < 0) {
-        fprintf(stderr,
-                "error from writei: %s\n",
-                snd_strerror(rc));
-    }  else if (rc != (int)m_frames) {
-        fprintf(stderr, "short write, write %d frames\n", rc);
-    }
-    return rc;
-}
-
-int LinuxAudioPlayer::WriteToPCM(uint8_t* buffer){
+int LinuxAudioPlayer::WriteToALSA(uint8_t* buffer){
     int rc = 0;
     
     rc = snd_pcm_writei(m_playback_handle, buffer, m_frames);
@@ -218,10 +201,6 @@ int LinuxAudioPlayer::WriteToPCM(uint8_t* buffer){
     }
     
     return rc;
-}
-
-int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize, AudioPlayerFormat format){
-    return 0;
 }
 
 int LinuxAudioPlayer::Close(){

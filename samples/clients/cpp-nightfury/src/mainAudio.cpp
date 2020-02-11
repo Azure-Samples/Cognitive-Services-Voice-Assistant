@@ -101,6 +101,22 @@ int main (int argc, char** argv)
     int bufferSize = 1024;
     unsigned char * buffer = (unsigned char *)malloc(bufferSize);
     
+    auto startKwsIfApplicable = [&]()
+    {
+        log_t("startKWS called");
+        if (keywordListeningEnabled)
+        {
+            auto modelPath = agentConfig->KeywordModel();
+            log_t("Initializing keyword recognition with: ", modelPath);
+            auto model = KeywordRecognitionModel::FromFile(modelPath);
+            dialogServiceConnector->StartKeywordRecognitionAsync(model);
+            log_t("KWS initialized");
+        }
+        else {
+            log_t("no model file specified. Cannot start keyword listening");
+        }
+    };
+    
     auto initFromPath = [&](string path)
     {
     DeviceStatusIndicators::SetStatus(DeviceStatus::Initializing);
@@ -119,21 +135,21 @@ int main (int argc, char** argv)
     shared_ptr<DialogServiceConfig> config = agentConfig->CreateDialogServiceConfig();
     
     //TODO remove once fixed
+    #ifdef NIGHTFURY
     add_config_tls_workaround(config);
-
-    config->SetProperty(PropertyId::Speech_LogFilename, "./log.txt");
+    #endif
 
     dialogServiceConnector = DialogServiceConnector::FromConfig(config);
     log_t("Connector created");
     dialogServiceConnector->ConnectAsync();
-    log_t("Connector connected");
+    
+    log_t("Creating prime activity");
     nlohmann::json keywordPrimingActivity =
     {
         { "type", "event" },
         { "name", "KeywordPrefix" },
         { "value", agentConfig->KeywordDisplayName() }
     };
-    log_t("Creating prime activity");
     auto keywordPrimingActivityText = keywordPrimingActivity.dump();
     log_t("Sending inform-of-keyword activity: ", keywordPrimingActivityText);
     dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
@@ -143,22 +159,6 @@ int main (int argc, char** argv)
     if(agentConfig->KeywordModel().length() > 0){
         keywordListeningEnabled = true;
     }
-    
-    auto startKwsIfApplicable = [&]()
-    {
-        log_t("startKWS called");
-        if (keywordListeningEnabled)
-        {
-            auto modelPath = agentConfig->KeywordModel();
-            log_t("Initializing keyword recognition with: ", modelPath);
-            auto model = KeywordRecognitionModel::FromFile(modelPath);
-            dialogServiceConnector->StartKeywordRecognitionAsync(model);
-            log_t("KWS initialized");
-        }
-        else {
-            log_t("no model file specified. Cannot start keyword listening");
-        }
-    };
     
     dialogServiceConnector->SessionStarted += [&](const SessionEventArgs& event) {
         printf("SESSION STARTED: %s ...\n", event.SessionId.c_str());
@@ -303,7 +303,7 @@ int main (int argc, char** argv)
             dialogServiceConnector->ListenOnceAsync();
         }
         if(s == "2"){
-            //startKwsIfApplicable();
+            startKwsIfApplicable();
         }
         if(s == "3"){
             if(keywordListeningEnabled){

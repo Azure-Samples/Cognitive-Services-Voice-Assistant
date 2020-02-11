@@ -86,30 +86,6 @@ class IAudioPlayer{
     virtual int Play(uint8_t* buffer, size_t bufferSize) = 0;
     
     /// <summary>
-    /// This method is used to actually play the audio. The buffer passed in 
-    /// should contain the raw audio bytes. The AudioPlayerFormat is used to determine how to play it.
-    /// </summary>
-    /// <param name="buffer">A point to the buffer containing the audio bytes</param>
-    /// <param name="bufferSize">The size in bytes of the buffer being passed in.</param>
-    /// <param name="format">The AudioPlayerFormat enum to define the settings for the audio player</param>
-    /// <returns>A return code with < 0 as an error and any other int as success</returns>
-    /// <example>
-    /// <code>
-    /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-    /// audioPlayer->Open();
-    /// int bufferSize = 1024;
-    /// unsigned char * buffer = (unsigned char *)malloc(bufferSize);
-    /// // fill buffer with audio from somewhere
-    /// audioPLayer->Play(buffer, bufferSize, IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
-    /// </code>
-    /// </example>
-    /// <remarks>
-    /// Here we use the LinuxAudioPlayer as an example. It returns the number of frames written to ALSA.
-    /// In our implementation we assume Open is called before playing.
-    /// </remarks>
-    virtual int Play(uint8_t* buffer, size_t bufferSize, AudioPlayerFormat format) = 0;
-    
-    /// <summary>
     /// This function is used to clean up the audio players resources.
     /// </summary>
     /// <returns>A return code with < 0 as an error and any other int as success</returns>
