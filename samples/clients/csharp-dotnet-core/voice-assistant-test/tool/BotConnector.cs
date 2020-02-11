@@ -284,31 +284,31 @@ namespace VoiceAssistantTest
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
             List<BotReply> filteredBotReplyList = new List<BotReply>();
-            int activities = 0;
-            int item = 0;
+            int filteredactivities = 0;
+            int botReplyIndex = 0;
 
             var getExpectedResponses = Task.Run(
                 () =>
                 {
                     // Make this configurable per interaction as an input row
-                    while (bootstrapMode || activities < this.responseCount)
+                    while (bootstrapMode || filteredactivities < this.responseCount)
                     {
                         Thread.Sleep((int)ResponseCheckInterval);
 
                         lock (this.BotReplyList)
                         {
-                            if (this.BotReplyList.Count != 0 && this.BotReplyList[item] != null)
+                            if (this.BotReplyList.Count != 0 && botReplyIndex <= (this.BotReplyList.Count - 1))
                             {
-                                if (this.IgnoreActivity(this.BotReplyList[item].Activity))
+                                if (this.IgnoreActivity(this.BotReplyList[botReplyIndex].Activity))
                                 {
-                                    this.BotReplyList[item].Ignore = true;
+                                    this.BotReplyList[botReplyIndex].Ignore = true;
                                 }
                                 else
                                 {
-                                    activities++;
+                                    filteredactivities++;
                                 }
 
-                                item++;
+                                botReplyIndex++;
                             }
                         }
                     }
@@ -323,29 +323,24 @@ namespace VoiceAssistantTest
 
             if (Task.WhenAny(getExpectedResponses, Task.Delay((int)this.timeout)).Result == getExpectedResponses)
             {
-                Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {activities} activities, as expected (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"Task status {getExpectedResponses.Status}. Received {filteredactivities} activities, as expected (configured to wait for {this.responseCount}):");
             }
             else if (!bootstrapMode)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {activities} activities (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {filteredactivities} activities (configured to wait for {this.responseCount}):");
                 source.Cancel();
             }
             else
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Received {activities} activities.");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Received {filteredactivities} activities.");
                 source.Cancel();
             }
 
-            for (int index = 0; index < this.BotReplyList.Count; index++)
+            for (int filteredBotReplyIndex = 0; filteredBotReplyIndex < this.BotReplyList.Count && filteredBotReplyList.Count < filteredactivities; filteredBotReplyIndex++)
             {
-                if (filteredBotReplyList.Count < activities)
+                if (this.BotReplyList[filteredBotReplyIndex].Ignore == false)
                 {
-                    break;
-                }
-
-                if (this.BotReplyList[index].Ignore == false)
-                {
-                    filteredBotReplyList.Add(this.BotReplyList[index]);
+                    filteredBotReplyList.Add(this.BotReplyList[filteredBotReplyIndex]);
                 }
             }
 
