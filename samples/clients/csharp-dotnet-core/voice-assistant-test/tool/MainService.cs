@@ -79,9 +79,9 @@ namespace VoiceAssistantTest
                     noTestFilesForProcessing = false;
                 }
 
-                string inputFileName = appSettings.InputFolder + tests.FileName;
+                string inputFileName = Path.Combine(appSettings.InputFolder, tests.FileName);
 
-                if (tests.FileName.Contains(appSettings.InputFolder, StringComparison.InvariantCultureIgnoreCase))
+                if (Path.IsPathRooted(tests.FileName))
                 {
                     throw new ArgumentException($"{ErrorStrings.FILENAME_PATH_NOT_RELATIVE}");
                 }
@@ -171,10 +171,10 @@ namespace VoiceAssistantTest
                     Trace.TraceInformation($"Processing file {tests.FileName}");
                 }
 
-                string inputFileName = appSettings.InputFolder + tests.FileName;
+                string inputFileName = Path.Combine(appSettings.InputFolder, tests.FileName);
                 string testName = Path.GetFileNameWithoutExtension(inputFileName);
 
-                string outputPath = appSettings.OutputFolder + testName + "Output";
+                string outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output");
                 DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
 
                 string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.txt");

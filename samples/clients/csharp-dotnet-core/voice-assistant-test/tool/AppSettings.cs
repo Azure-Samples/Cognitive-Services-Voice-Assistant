@@ -9,7 +9,6 @@ namespace VoiceAssistantTest
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
 

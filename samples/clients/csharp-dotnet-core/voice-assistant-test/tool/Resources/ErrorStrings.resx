@@ -163,7 +163,7 @@
     <value>Could not create Output Folder</value>
   </data>
   <data name="FILENAME_PATH_NOT_RELATIVE" xml:space="preserve">
-    <value>File name path is not relative to InputFolder Path.</value>
+    <value>Test file names may include relative path, not full paths</value>
   </data>
   <data name="FILE_DOES_NOT_EXIST" xml:space="preserve">
     <value>File with this name and path does not exist.</value>

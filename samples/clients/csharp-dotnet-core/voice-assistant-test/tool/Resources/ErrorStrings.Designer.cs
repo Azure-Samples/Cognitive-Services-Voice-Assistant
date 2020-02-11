@@ -205,7 +205,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File name path is not relative to InputFolder Path..
+        ///   Looks up a localized string similar to Test file names may include relative path, not full paths.
         /// </summary>
         public static string FILENAME_PATH_NOT_RELATIVE {
             get {
