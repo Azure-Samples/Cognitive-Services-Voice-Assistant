@@ -297,7 +297,7 @@ namespace VoiceAssistantTest
 
                         lock (this.BotReplyList)
                         {
-                            if (this.BotReplyList.Count != 0 && botReplyIndex <= (this.BotReplyList.Count - 1))
+                            if (this.BotReplyList.Count != 0 && botReplyIndex < this.BotReplyList.Count)
                             {
                                 if (this.IgnoreActivity(this.BotReplyList[botReplyIndex].Activity))
                                 {
