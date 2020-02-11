@@ -250,16 +250,16 @@ namespace VoiceAssistantTest
         /// Builds the output.
         /// </summary>
         /// <param name="turns"> Input Turns.</param>
-        /// <param name="responseDuration">Actual duration of the TTS audio.</param>
         /// <param name="recognizedText">Recognized text from Speech Recongition.</param>
         /// <param name="recognizedKeyword">Recogized Keyword from Keyword Recognition.</param>
         /// <returns>TurnsOutput.</returns>
-        public TurnResult BuildOutput(Turn turns, int responseDuration, string recognizedText, string recognizedKeyword)
+        public TurnResult BuildOutput(Turn turns, string recognizedText, string recognizedKeyword)
         {
             TurnResult turnsOutput = new TurnResult(turns)
             {
                 ExpectedSlots = new Dictionary<string, string>(),
                 ActualResponses = new List<Activity>(),
+                ActualTTSAudioReponseDuration = new List<int>(),
             };
 
             int activityIndex = 0;
@@ -282,9 +282,9 @@ namespace VoiceAssistantTest
             foreach (BotReply botReply in this.FinalResponses)
             {
                 turnsOutput.ActualResponses.Add(botReply.Activity);
+                turnsOutput.ActualTTSAudioReponseDuration.Add(botReply.TTSAudioDuration);
             }
 
-            turnsOutput.ActualTTSAudioReponseDuration = responseDuration;
             turnsOutput.ActualRecognizedText = recognizedText;
 
             if (!string.IsNullOrWhiteSpace(turnsOutput.ExpectedResponseLatency))
@@ -353,17 +353,28 @@ namespace VoiceAssistantTest
                     }
                 }
 
-                if (turnResult.ExpectedTTSAudioResponseDuration > 0)
+                bool durationMatch = true;
+
+                if (turnResult.ExpectedTTSAudioResponseDuration != null && turnResult.ExpectedTTSAudioResponseDuration.Count != 0 && turnResult.ActualTTSAudioReponseDuration != null && turnResult.ActualTTSAudioReponseDuration.Count != 0)
                 {
-                    int expectedResponseDuration = turnResult.ExpectedTTSAudioResponseDuration;
-                    if (turnResult.ActualTTSAudioReponseDuration >= (expectedResponseDuration - margin) && turnResult.ActualTTSAudioReponseDuration <= (expectedResponseDuration + margin))
+                    for (int i = 0; i < turnResult.ExpectedTTSAudioResponseDuration.Count; i++)
                     {
-                        turnResult.TTSAudioResponseDurationMatch = true;
-                    }
-                    else
-                    {
-                        Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioReponseDuration} is outside the expected range {expectedResponseDuration}+/-{margin}");
-                        turnResult.TTSAudioResponseDurationMatch = false;
+                        if (turnResult.ExpectedTTSAudioResponseDuration[i] > 0)
+                        {
+                            if (turnResult.ActualTTSAudioReponseDuration[i] >= (turnResult.ExpectedTTSAudioResponseDuration[i] - margin) && turnResult.ActualTTSAudioReponseDuration[i] <= (turnResult.ExpectedTTSAudioResponseDuration[i] + margin))
+                            {
+                                if (durationMatch)
+                                {
+                                    turnResult.TTSAudioResponseDurationMatch = true;
+                                }
+                            }
+                            else
+                            {
+                                Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioReponseDuration[i]} is outside the expected range {turnResult.ExpectedTTSAudioResponseDuration[i]}+/-{margin}");
+                                durationMatch = false;
+                                turnResult.TTSAudioResponseDurationMatch = false;
+                            }
+                        }
                     }
                 }
 

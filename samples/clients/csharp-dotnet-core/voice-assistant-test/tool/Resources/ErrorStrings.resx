@@ -208,13 +208,16 @@
     <value>A negative number is not a valid value for Timeout</value>
   </data>
   <data name="TTS_AUDIO_DURATION_INVALID" xml:space="preserve">
-    <value>A negative number is not valid for ExpectedTTSAudioDuration</value>
+    <value>Size of ExpectedTTSAudioDuration does not match the size of ExpectedResponses</value>
   </data>
   <data name="TTS_AUDIO_DURATION_MARGIN_INVALID" xml:space="preserve">
     <value>A negative number is not a valid value for TTSAudioDurationMargin</value>
   </data>
   <data name="TTS_AUDIO_DURATION_PRESENT" xml:space="preserve">
     <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedTTSAudioDuration</value>
+  </data>
+  <data name="TTS_AUDIO_DURATION_VALUES_INVALID" xml:space="preserve">
+    <value>ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid</value>
   </data>
   <data name="UTTERANCE_ACTIVITY_PRESENT" xml:space="preserve">
     <value>Both Utterance and Activity field present. </value>
