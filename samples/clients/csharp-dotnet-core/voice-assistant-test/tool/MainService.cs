@@ -290,7 +290,7 @@ namespace VoiceAssistantTest
                         dialogOutput.OrganizeActivities(responseActivities);
 
                         // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogOutput.BuildOutput(turn, botConnector.DurationInMs, botConnector.RecognizedText, botConnector.RecognizedKeyword);
+                        TurnResult turnResult = dialogOutput.BuildOutput(turn, botConnector.RecognizedText, botConnector.RecognizedKeyword);
                         if (!dialogOutput.ValidateTurn(turnResult, bootstrapMode))
                         {
                             testPass = false;
@@ -451,6 +451,27 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
+        /// Checks if the Expected TTS Duration has valid values.
+        /// </summary>
+        /// <param name="expectedTTSAudioDuration"> ExpectedTTSAudioDuration.</param>
+        /// <returns>True if the ListExpected TTS Duration has valid values else false.</returns>
+        private static bool CheckValidExpectedTTSAudioDuration(List<int> expectedTTSAudioDuration)
+        {
+            for (int i = 0; i < expectedTTSAudioDuration.Count; i++)
+            {
+                if (expectedTTSAudioDuration[i] != -1)
+                {
+                    if (expectedTTSAudioDuration[i] <= 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Checks for proper, valid input combination of the dialog turns.
         /// </summary>
         /// <param name="turn">A turn object.</param>
@@ -493,12 +514,21 @@ namespace VoiceAssistantTest
                 }
             }
 
-            if (turn.ExpectedTTSAudioResponseDuration < 0)
+            if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0 && turn.ExpectedTTSAudioResponseDuration != null)
             {
-                exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
+                if (turn.ExpectedTTSAudioResponseDuration.Count != turn.ExpectedResponses.Count)
+                {
+                    exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
+                }
+
+                var expectedTTSAudioDurationObjectValid = CheckValidExpectedTTSAudioDuration(turn.ExpectedTTSAudioResponseDuration);
+                if (!expectedTTSAudioDurationObjectValid)
+                {
+                    exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_VALUES_INVALID);
+                }
             }
 
-            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration > 0)
+            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration != null)
             {
                 exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_PRESENT);
             }

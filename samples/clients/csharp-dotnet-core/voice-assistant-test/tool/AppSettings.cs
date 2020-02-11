@@ -20,16 +20,19 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets test configuration of each Input File.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public TestSettings[] Tests { get; set; }
 
         /// <summary>
         /// Gets or sets Speech Subscription Key.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string SubscriptionKey { get; set; }
 
         /// <summary>
         /// Gets or sets Speech Subscription Region.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string Region { get; set; }
 
         /// <summary>
@@ -85,12 +88,14 @@ namespace VoiceAssistantTest
         /// Gets or sets the root input folder. This root folder will be added
         /// to all file names listed in the InputFiles array.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string InputFolder { get; set; }
 
         /// <summary>
         /// Gets or sets the output folder. Test result and application
         /// log file will be written to this folder.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string OutputFolder { get; set; }
 
         /// <summary>

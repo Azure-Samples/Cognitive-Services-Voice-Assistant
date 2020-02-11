@@ -58,7 +58,7 @@ namespace VoiceAssistantTest
         /// Gets or sets the Actual TTS Audio Reponse Duratio (in milliseconds).
         /// </summary>
         [JsonProperty(Order = 7, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int ActualTTSAudioReponseDuration { get; set; }
+        public List<int> ActualTTSAudioReponseDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.
