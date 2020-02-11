@@ -1,5 +1,6 @@
 @echo off
 setlocal
+cd ..
 
 set imageId=74a75a0a9a27
 set dockerRunEnv=--rm --workdir /nf --volume %cd%:/nf %imageId%
@@ -27,7 +28,7 @@ set commonTargets=-std=c++14 %inc% %incDir% %lib%
 
 set src=src/AudioPlayerEntry.cpp %src%
 set src=src/LinuxAudioPlayer.cpp %src%
-set src=src/mainAudioFromFile.cpp %src%
+set src=src/mainAudio.cpp %src%
 set src=src/AgentConfiguration.cpp %src%
 set tgt=out/sample.exe
 

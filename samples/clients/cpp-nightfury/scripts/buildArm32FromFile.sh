@@ -1,7 +1,8 @@
 #!/bin/bash
 clear
+cd ..
 echo "Building Raspberry Pi arm32 from file sample"
-g++ -Wno-psabi src/mainAudioFromFile.cpp src/LinuxAudioPlayer.cpp src/AudioPlayerEntry.cpp -o sample.exe \
+g++ -Wno-psabi src/mainAudioFromFile.cpp src/LinuxAudioPlayer.cpp src/AudioPlayerEntry.cpp -o ./out/sample.exe \
 -std=c++14 \
 -I./include/cxx_api \
 -I./include/c_api \
