@@ -2,8 +2,8 @@
 clear
 cd ..
 mkdir out
-echo "Building Raspberry Pi x64 sample"
-g++ src/main.cpp src/LinuxAudioPlayer.cpp src/AudioPlayerEntry.cpp src/AgentConfiguration.cpp -o ./out/sample.exe \
+echo "Building x64 sample"
+g++ src/mainAudio.cpp src/LinuxAudioPlayer.cpp src/AudioPlayerEntry.cpp src/AgentConfiguration.cpp -o ./out/sample.exe \
 -std=c++14 \
 -L./lib/arm32 \
 -I./include/cxx_api \
