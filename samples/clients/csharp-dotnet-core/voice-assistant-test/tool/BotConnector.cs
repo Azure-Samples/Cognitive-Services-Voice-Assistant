@@ -598,7 +598,7 @@ namespace VoiceAssistantTest
             string wAVFolderPath = Path.Combine(testFileOutputFolder, ProgramConstants.WAVFileFolderName);
             int durationInMS = 0;
 
-            if (indexActivityWithAudio == 0)
+            if (indexActivityWithAudio == 1)
             {
                 // First TTS WAV file to be written, create the WAV File Folder
                 Directory.CreateDirectory(wAVFolderPath);
