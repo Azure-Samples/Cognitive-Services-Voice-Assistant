@@ -2,6 +2,8 @@
 setlocal
 cd ..
 
+mkdir out
+
 set imageId=74a75a0a9a27
 set dockerRunEnv=--rm --workdir /nf --volume %cd%:/nf %imageId%
 set buildCmd=docker run %dockerRunEnv% g++
@@ -22,17 +24,16 @@ set lib=-lpthread %lib%
 set lib=-lasound %lib%
 REM set lib=-l:libcutils.so.0 %lib%
 
-set defines=-D NIGHTFURY
-
 set commonTargets=-std=c++14 %inc% %incDir% %lib%
 
 set src=src/AudioPlayerEntry.cpp %src%
-set src=src/LinuxAudioPlayer.cpp %src%
-set src=src/mainAudio.cpp %src%
+set src=src/nightfury/LinuxAudioPlayer.cpp %src%
+set src=src/nightfury/mainAudio.cpp %src%
+set src=src/nightfury/DeviceStatusIndicators.cpp %src%
 set src=src/AgentConfiguration.cpp %src%
 set tgt=out/sample.exe
 
 
 echo Building (this is slow): %tgt%
-echo build command = %buildCmd% -o %tgt% %src% %commonTargets% %defines%
-%buildCmd% -o %tgt% %src% %commonTargets% %defines%
+echo build command = %buildCmd% -o %tgt% %src% %commonTargets%
+%buildCmd% -o %tgt% %src% %commonTargets%

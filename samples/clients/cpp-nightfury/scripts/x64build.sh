@@ -1,5 +1,7 @@
 #!/bin/bash
 clear
+cd ..
+mkdir out
 echo "Building Raspberry Pi x64 sample"
 g++ src/main.cpp src/LinuxAudioPlayer.cpp src/AudioPlayerEntry.cpp src/AgentConfiguration.cpp -o ./out/sample.exe \
 -std=c++14 \

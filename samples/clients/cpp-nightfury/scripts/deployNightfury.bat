@@ -1,5 +1,6 @@
 @echo off
 setlocal
+cd ..
 
 set progName=sample.exe
 set outDir=/data/cppSample/
