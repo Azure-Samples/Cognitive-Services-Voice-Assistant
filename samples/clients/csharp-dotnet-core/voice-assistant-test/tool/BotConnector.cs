@@ -220,7 +220,7 @@ namespace VoiceAssistantTest
             }
 
             byte[] dataBuffer = new byte[MaxSizeOfTtsAudioInBytes];
-            WaveFileReader waveFileReader = new WaveFileReader(this.appsettings.InputFolder + wavFile);
+            WaveFileReader waveFileReader = new WaveFileReader(Path.Combine(this.appsettings.InputFolder, wavFile));
 
             // Reading header bytes
             int headerBytes = waveFileReader.Read(dataBuffer, 0, WavHeaderSizeInBytes);
@@ -550,7 +550,7 @@ namespace VoiceAssistantTest
             {
                 this.ttsStreamDownloadCount++;
                 this.indexActivityWithAudio++;
-                ttsDuration = this.WriteAudioToWAVfile(e.Audio, this.baseFileName, this.dialogID, this.turnID, this.indexActivityWithAudio);
+                ttsDuration = this.WriteAudioToWAVfile(e.Audio, this.baseFileName, this.dialogID, this.turnID, this.indexActivityWithAudio - 1);
                 this.ttsStreamDownloadCount--;
                 lock (this.BotReplyList)
                 {
