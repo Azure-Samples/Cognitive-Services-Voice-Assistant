@@ -1,8 +1,43 @@
+# Microsoft Cognitive Services - Voice Assistant Sample Code C++ console
+
+## Overview
+
+This sample is intended to be a starting point for any application coded in c++. It has some generic files that implement an IAudioPlayer interface for audio playback. This interface will be specific to the target OS and/or device. A sample player for linux devices is included.
+
+## Prerequisites
+
+The [Microsoft Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) will need to be downloaded.
+
+For Windows you should use the nuget package.
+
+For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo. Headers and their folders should be copied into the include folder.
 
 
-download the qemu-arm-static.tar.gz file from this link https://github.com/multiarch/qemu-user-static/releases/ and place it in the docker folder.
+## Building for Arm32 with Docker
+
+For ARM32 devices you can compile binaries on a windows machine using docker.
+Install docker for windows from the [docker website](https://docs.docker.com/docker-for-windows/).
+
+Download the qemu-arm-static.tar.gz file from this [open source](https://github.com/multiarch/qemu-user-static/releases/) and place it in the docker folder.
 
 For linux machines you will also need to run "sudo apt-get install --yes binfmt-support qemu-user-static"
 
-from the docker folder run "docker build -t dev_ubuntu_arm32 ."
+Open a cmd prompt and cd into the docker folder and 
+run "docker build -t dev_ubuntu_arm32 ."
+
 This will create an image and name it "dev_ubuntu_arm32" which is used inside the build scripts.
+
+cd into the scripts directory.
+
+Then run the buildArm32Linux.bat
+
+This should spin up the docker container and run the build command. The output executable will be placed in the out folder along with the binaries you included.
+
+If you deploy those files from the out dir and copy an existing or create a config file you should now be able to run it.
+
+## Running the sample
+
+### usage: sample.exe config-file [volume on/off]
+example:
+
+    sample.exe config.json on

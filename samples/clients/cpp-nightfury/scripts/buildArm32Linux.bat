@@ -4,6 +4,8 @@ cd ..
 
 mkdir out
 
+set outDir=out
+
 set imageId=dev_ubuntu_arm32
 set dockerRunEnv=--rm --workdir /nf --volume %cd%:/nf %imageId%
 set buildCmd=docker run %dockerRunEnv% g++
@@ -22,9 +24,9 @@ REM set lib=-l:libcutils.so.0 %lib%
 set commonTargets=-std=c++14 %inc% %incDir% %lib%
 
 set src=src/AudioPlayerEntry.cpp %src%
-set src=src/nightfury/LinuxAudioPlayer.cpp %src%
-set src=src/nightfury/mainAudio.cpp %src%
-set src=src/nightfury/DeviceStatusIndicators.cpp %src%
+set src=src/LinuxAudioPlayer.cpp %src%
+set src=src/mainAudio.cpp %src%
+set src=src/DeviceStatusIndicators.cpp %src%
 set src=src/AgentConfiguration.cpp %src%
 set tgt=out/sample.exe
 
@@ -32,3 +34,5 @@ set tgt=out/sample.exe
 echo Building (this is slow): %tgt%
 echo build command = %buildCmd% -o %tgt% %src% %commonTargets%
 %buildCmd% -o %tgt% %src% %commonTargets%
+
+COPY lib\arm32\* out\
