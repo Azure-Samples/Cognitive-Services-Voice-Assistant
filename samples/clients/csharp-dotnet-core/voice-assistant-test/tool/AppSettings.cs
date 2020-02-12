@@ -9,7 +9,7 @@ namespace VoiceAssistantTest
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using Microsoft.Extensions.Configuration;
+    using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
 
     /// <summary>
@@ -17,21 +17,22 @@ namespace VoiceAssistantTest
     /// </summary>
     internal class AppSettings
     {
-        private static AppSettings instance;
-
         /// <summary>
         /// Gets or sets test configuration of each Input File.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public TestSettings[] Tests { get; set; }
 
         /// <summary>
         /// Gets or sets Speech Subscription Key.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string SubscriptionKey { get; set; }
 
         /// <summary>
         /// Gets or sets Speech Subscription Region.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string Region { get; set; }
 
         /// <summary>
@@ -117,19 +118,14 @@ namespace VoiceAssistantTest
         /// <returns>An AppSettings instance.</returns>
         public static AppSettings Load(string configFile)
         {
-            if (instance != null)
-            {
-                return instance;
-            }
-
             Trace.TraceInformation($"Parsing {configFile}");
 
-            IConfigurationRoot config = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile(configFile)
-                .Build();
-            instance = config.Get<AppSettings>();
+            StreamReader file = new StreamReader(configFile);
+            string config = file.ReadToEnd();
+            file.Close();
+            AppSettings instance = JsonConvert.DeserializeObject<AppSettings>(config);
             ValidateAppSettings(instance);
+
             return instance;
         }
 
@@ -234,6 +230,13 @@ namespace VoiceAssistantTest
                 throw new MissingFieldException(ErrorStrings.INPUT_FILE_MISSING);
             }
 
+            string inputDirectory = instance.InputFolder;
+
+            if (string.IsNullOrEmpty(instance.InputFolder))
+            {
+                inputDirectory = Directory.GetCurrentDirectory();
+            }
+
             string outputDirectory = string.Empty;
 
             if (!string.IsNullOrWhiteSpace(instance.OutputFolder))
@@ -250,6 +253,11 @@ namespace VoiceAssistantTest
                         throw new Exception($"{ErrorStrings.FAILED_CREATING_OUPUT_FOLDER} - {outputDirectory}");
                     }
                 }
+            }
+
+            if (string.IsNullOrEmpty(instance.OutputFolder))
+            {
+                outputDirectory = Directory.GetCurrentDirectory();
             }
 
             if (!Directory.Exists(outputDirectory))
