@@ -19,6 +19,7 @@ namespace VoiceAssistantTest
     using Microsoft.CognitiveServices.Speech.Dialog;
     using NAudio.Wave;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Activity = Microsoft.Bot.Schema.Activity;
     using IMessageActivity = Microsoft.Bot.Schema.IMessageActivity;
 
@@ -379,9 +380,16 @@ namespace VoiceAssistantTest
 
             if (this.ignoreActivitiesList != null)
             {
+                DialogResultUtility.Verbose = true;
                 foreach (Activity activityToIgnore in this.ignoreActivitiesList)
                 {
-                    if (DialogResultUtility.ActivitiesMatch(activityToIgnore, activity))
+                    var activityToIgnoreSerializedJson = JsonConvert.SerializeObject(activityToIgnore, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    var activitySerializedJson = JsonConvert.SerializeObject(activity, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    JObject activityToIgnoreJObject = JsonConvert.DeserializeObject<JObject>(activityToIgnoreSerializedJson);
+                    JObject activityJObject = JsonConvert.DeserializeObject<JObject>(activitySerializedJson);
+
+                    DialogResultUtility.ActivityMismatchCount = 0;
+                    if (DialogResultUtility.CompareJObjects(activityToIgnoreJObject, activityJObject) == 0)
                     {
                         Trace.TraceInformation($"Bot-reply activity matched IgnoringActivities[{this.ignoreActivitiesList.IndexOf(activityToIgnore)}]. Ignore it.");
                         ignore = true;

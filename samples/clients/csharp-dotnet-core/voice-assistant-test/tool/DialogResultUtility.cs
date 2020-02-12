@@ -9,8 +9,10 @@ namespace VoiceAssistantTest
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
     using Microsoft.Bot.Schema;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Activity = Microsoft.Bot.Schema.Activity;
 
     /// <summary>
@@ -32,6 +34,16 @@ namespace VoiceAssistantTest
             this.DialogID = dialogID;
             this.Description = description;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the trace has to be shown or not.
+        /// </summary>
+        public static bool Verbose { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a ActivityMismatchCount.
+        /// </summary>
+        public static int ActivityMismatchCount { get; set; } = 0;
 
         /// <summary>
         /// Gets the DialogID.
@@ -87,9 +99,14 @@ namespace VoiceAssistantTest
             {
                 for (int index = 0; index < expected.Count; index++)
                 {
-                    if (!ActivitiesMatch(expected[index], actual[index], true))
+                    ActivityMismatchCount = 0;
+                    var expectedSerializedJson = JsonConvert.SerializeObject(expected[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    var actualSerializedJson = JsonConvert.SerializeObject(actual[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    JObject expectedJObject = JsonConvert.DeserializeObject<JObject>(expectedSerializedJson);
+                    JObject actualJObject = JsonConvert.DeserializeObject<JObject>(actualSerializedJson);
+                    CompareJObjects(expectedJObject, actualJObject);
+                    if (ActivityMismatchCount > 0)
                     {
-                        Trace.TraceInformation($"Expected activity at index {index} does not match actual activity");
                         match = false;
                         break;
                     }
@@ -138,51 +155,96 @@ namespace VoiceAssistantTest
         /// Activity must appear in the "actual" activity and have identical values. String
         /// comparison is done while ignoring case, white spaces and punctuation marks.
         /// </summary>
-        /// <param name="expected">Expected activity.</param>
-        /// <param name="actual">Actual activity.</param>
-        /// <param name="verbose">Set to true for verbose tracing.</param>
-        /// <returns>Bool value indicating if actual activity matches the expected activity.</returns>
-        public static bool ActivitiesMatch(Activity expected, Activity actual, bool verbose = false)
+        /// <param name="expected"> Expected Bot response activity. </param>
+        /// <param name="actual"> Bot response activity. </param>
+        /// <returns>The count of mismatchs in an activity.</returns>
+        public static int CompareJObjects(JObject expected, JObject actual)
         {
-            if (actual == null && expected == null)
+            foreach (KeyValuePair<string, JToken> expectedPair in expected)
             {
-                return true;
-            }
-
-            if (actual == null || expected == null)
-            {
-                return false;
-            }
-
-            var propertyMap = NotNullUtility(expected);
-
-            foreach (var notNullField in propertyMap.Keys)
-            {
-                var value = propertyMap.TryGetValue(notNullField, out string expectedResult);
-                var actualResultObject = actual.GetType().GetProperty(notNullField).GetValue(actual);
-
-                if (actualResultObject == null)
+                if (expectedPair.Value.Type == JTokenType.Object)
                 {
-                    return false;
-                }
-
-                var actualResult = actualResultObject.ToString();
-
-                var normalizedActualResult = new string(actualResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
-                var normalizedExpectedResult = new string(expectedResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
-
-                if (!normalizedExpectedResult.Equals(normalizedActualResult, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (verbose)
+                    if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase) == null)
                     {
-                        Trace.TraceInformation($"Activity field mismatch: \"{expectedResult}\" does not match \"{actualResult}\"");
+                        ActivityMismatchCount++;
+                        if (Verbose)
+                        {
+                            Trace.TraceInformation($"Activity field {expectedPair.Key} not found in Bot response activity.");
+                        }
                     }
+                    else if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).Type != JTokenType.Object)
+                    {
+                        ActivityMismatchCount++;
+                        if (Verbose)
+                        {
+                            Trace.TraceInformation($"Activity field {expectedPair.Key} is not an object in Bot response activity.");
+                        }
+                    }
+                    else
+                    {
+                        CompareJObjects(
+                            expectedPair.Value.ToObject<JObject>(),
+                            actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).ToObject<JObject>());
+                    }
+                }
+                else if (expectedPair.Value.Type == JTokenType.Array)
+                {
+                    if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase) == null)
+                    {
+                        ActivityMismatchCount++;
+                        if (Verbose)
+                        {
+                            Trace.TraceInformation($"Activity field {expectedPair.Key} not found in Bot response activity.");
+                        }
+                    }
+                    else if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).Type != JTokenType.Array)
+                    {
+                        ActivityMismatchCount++;
+                        if (Verbose)
+                        {
+                            Trace.TraceInformation($"Activity field {expectedPair.Key} is not an array in Bot response activity.");
+                        }
+                    }
+                    else
+                    {
+                        CompareJArrays(
+                            expectedPair.Value.ToObject<JArray>(),
+                            actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).ToObject<JArray>());
+                    }
+                }
+                else
+                {
+                    JToken expectedValue = expectedPair.Value;
+                    JToken actualValue = actual.SelectToken(expectedPair.Key);
+                    if (actualValue == null)
+                    {
+                        ActivityMismatchCount++;
+                        if (Verbose)
+                        {
+                            Trace.TraceInformation($"Activity field {expectedPair.Key} not found in Bot response activity.");
+                        }
+                    }
+                    else
+                    {
+                        var actualResult = actualValue.ToString();
+                        var expectedResult = expectedValue.ToString();
 
-                    return false;
+                        var normalizedActualResult = new string(actualResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+                        var normalizedExpectedResult = new string(expectedResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+
+                        if (!normalizedExpectedResult.Equals(normalizedActualResult, StringComparison.OrdinalIgnoreCase))
+                        {
+                            ActivityMismatchCount++;
+                            if (Verbose)
+                            {
+                                Trace.TraceInformation($"Activity field: \" {expectedPair.Key} \", has mismatching values. \"{actualValue}\",\"{expectedValue}\".");
+                            }
+                        }
+                    }
                 }
             }
 
-            return true;
+            return ActivityMismatchCount;
         }
 
         /// <summary>
@@ -296,10 +358,7 @@ namespace VoiceAssistantTest
 
                 if (turns.ExpectedResponses.Count == turnsOutput.ActualResponses.Count)
                 {
-                    if (ActivitiesMatch(turns.ExpectedResponses[activityIndex], turnsOutput.ActualResponses[activityIndex]))
-                    {
-                        turnsOutput.ActualResponseLatency = this.FinalResponses[activityIndex].Latency;
-                    }
+                    turnsOutput.ActualResponseLatency = this.FinalResponses[activityIndex].Latency;
                 }
             }
 
@@ -395,6 +454,28 @@ namespace VoiceAssistantTest
             this.DisplayTestResultMessage(turnResult);
 
             return turnResult.Pass;
+        }
+
+        /// <summary>
+        /// Method to compare Actual Responses JArray with Expected Responses JArray.
+        /// </summary>
+        /// <param name="expected">Expected Bot response activity.</param>
+        /// <param name="actual">Bot response activity.</param>
+        private static void CompareJArrays(JArray expected, JArray actual)
+        {
+            for (var index = 0; index < expected.Count; index++)
+            {
+                var expectedItem = expected[index];
+                if (expectedItem.Type == JTokenType.Object)
+                {
+                    var actualItem = (index >= actual.Count) ? new JObject() : actual[index];
+                    CompareJObjects(
+                        expectedItem.ToObject<JObject>(),
+                        actualItem.ToObject<JObject>());
+                }
+            }
+
+            return;
         }
 
         /// <summary>
