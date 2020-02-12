@@ -79,6 +79,10 @@ namespace VoiceAssistantTest
                     noTestFilesForProcessing = false;
                 }
 
+                if (string.IsNullOrEmpty(appSettings.InputFolder))
+                {
+                    appSettings.InputFolder = Directory.GetCurrentDirectory();
+                }
                 string inputFileName = Path.Combine(appSettings.InputFolder, tests.FileName);
 
                 if (Path.IsPathRooted(tests.FileName))
@@ -173,6 +177,11 @@ namespace VoiceAssistantTest
 
                 string inputFileName = Path.Combine(appSettings.InputFolder, tests.FileName);
                 string testName = Path.GetFileNameWithoutExtension(inputFileName);
+
+                if (string.IsNullOrEmpty(appSettings.OutputFolder))
+                {
+                    appSettings.OutputFolder = Directory.GetCurrentDirectory();
+                }
 
                 string outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output");
                 DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);

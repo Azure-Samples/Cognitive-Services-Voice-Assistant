@@ -88,14 +88,12 @@ namespace VoiceAssistantTest
         /// Gets or sets the root input folder. This root folder will be added
         /// to all file names listed in the InputFiles array.
         /// </summary>
-        [JsonProperty(Required = Required.Always)]
         public string InputFolder { get; set; }
 
         /// <summary>
         /// Gets or sets the output folder. Test result and application
         /// log file will be written to this folder.
         /// </summary>
-        [JsonProperty(Required = Required.Always)]
         public string OutputFolder { get; set; }
 
         /// <summary>

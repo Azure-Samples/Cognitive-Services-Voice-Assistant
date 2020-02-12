@@ -220,7 +220,7 @@ namespace VoiceAssistantTest
             }
 
             byte[] dataBuffer = new byte[MaxSizeOfTtsAudioInBytes];
-            WaveFileReader waveFileReader = new WaveFileReader(this.appsettings.InputFolder + wavFile);
+            WaveFileReader waveFileReader = new WaveFileReader(Path.Combine(this.appsettings.InputFolder, wavFile));
 
             // Reading header bytes
             int headerBytes = waveFileReader.Read(dataBuffer, 0, WavHeaderSizeInBytes);
