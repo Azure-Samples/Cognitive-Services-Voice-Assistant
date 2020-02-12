@@ -1,7 +1,7 @@
 # Getting Started Guide
 
 ## Overview
-This is a step-by-step guide for first time users of the tool, showing how to write configuration files for the most common end-to-end tests, and how to run the tool. The guide uses Bot-Framework's "Echo Bot" and "Core Bot" as the example bot to be tested.
+This is a step-by-step guide for first time users of the tool, showing how to write configuration files for the most common end-to-end tests, and how to run the tool. The guide uses Bot-Framework's "core bot" as the example bot to be tested.
 
 ## Step 1: Clone the repo and build the tool
 
@@ -32,16 +32,22 @@ VoiceAssistantTest Error: 0 : System.ArgumentException: Configuration file is no
 ```
 This is good. The tool works. You are now ready to author your first application and test configuration files. The application configuration file is needed as the single run-time argument when running the tool. But before we write the test, we need to make sure we have a bot web service hosted to test against.
 
-## Step 2: Deploy the Echo Bot
+## Step 2: Deploy the Core Bot
 
-In order to write and execute your first test, you will need to deploy Bot Framework's "echo bot" into your own Azure subscription. The echo bot has to then be voiced enabled and registered with Direct Line Speech channel. This is all covered in details in the ["Voice-enable your bot using the Speech SDK"](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) tutorial. Go ahead to spend some time doing the tutorial. At the end, and before proceeding with this guide, you should have:
+In order to write and execute your first test, you will need to deploy Bot Framework's "core bot" into your own Azure subscription. The core bot has to then be voiced enabled and registered with Direct Line Speech channel.
+
+Before you do that, it is recommended you take the time and do the tutorial called ["Voice-enable your bot using the Speech SDK"](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk). This tutorial shows how to deploy the simpler "echo bot" and configure it to work with Direct Line Speech channel. Once you've deployed the echo bot, you will need to do a couple of additional easy steps to replace it with core bot.
+
+The C# version of the core bot can be [found here](https://github.com/microsoft/BotBuilder-Samples/tree/master/samples/csharp_dotnetcore/13.core-bot). The same repo include javascript and python versions, if you prefer those. Clone the repo, build and publish the core bot to your Azure subscription. Note that this will require you to Create a LUIS Application, per [the instruction here](https://github.com/microsoft/BotBuilder-Samples/tree/master/samples/csharp_dotnetcore/13.core-bot#create-a-luis-application-to-enable-language-understanding).
+
+When you are done you will have the following:
 * A Cognitive Services speech key. 
 * An Azure region associated with the speech key.
-* An Echo Bot hosted in your Azure subscription, registered with Direct Line Speech channel, and verified to be working end-to-end using the [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf) application.
+* A core bot hosted in your Azure subscription, registered with Direct Line Speech channel, and verified to be working end-to-end with voice input using the [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf).
 
 ## Step 3: Write your first test!
 
-As you have noticed when you tested the echo bot, it supports a "greeting". This is when the bot automatically sends a message (or messages) to the client application as soon as a connection is made with the bot. Let's write a simple test to verify that the bot sends the correct greeting message.
+As you have noticed when you tested the core bot with [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf), it supports a "greeting". This is when the bot automatically sends a message (or messages) to the client application as soon as a connection is made with the bot. Let's write a simple test to verify that the bot sends the correct greeting message.
 
 First, we will write the Application configuration. Copy and paste the following to your text editor: 
 ```json
@@ -62,7 +68,7 @@ Replace "SubscriptionKey" and "Region" fields with your own speech key and regio
 
 The application configuration file instructs the tool to execute the dialogs listed in a single test file "GreetingTest.json". We will create that file shortly. 
 
-All needed input files (just "GreetingTest.json" in this case) and output files will be written to the current folder since the "InputFolder" and "OutputFolder" are blank. 
+All input test files (or just one in this case -- "GreetingTest.json") and output files will be read written to the current folder, where you run the executable. You can change these defaults by adding the fields "InputFolder" and "OutputFolder" (not shown here).
 
 "BotGreeting" field needs to be specified and set to true for echo bot tests, since by default it is false. A "true" value instructs the tool to verify that the test configuration is written correctly and the test is executed expecting a bot greeting after connection is established with the bot.
 
@@ -71,21 +77,29 @@ Now, write the test configuration. Copy and paste the following to your text edi
 ```json
 [
   {
-    "DialogID": 0,
-    "Description": "test echo bot greeting",
+    "DialogID": "0",
+    "Description": "Testing core bot greeting",
     "Turns": [
       {
         "TurnID": 0,
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Hello and welcome!",
-            "speak": "Hello and welcome!",
+            "speak": "Welcome to Bot Framework!",
             "inputHint": "acceptingInput",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "inputHint": "expectingInput"
           }
         ],
-        "ExpectedTTSAudioResponseDuration": 1800,
-        "ExpectedResponseLatency": "2000"
       }
     ]
   }
@@ -96,8 +110,14 @@ Now, write the test configuration. Copy and paste the following to your text edi
 !! *TODO: Make these work:*
 * *"VoiceAssistantTest.exe AppSetting.json" (no need to specify full path to app settings file)*
 * *app settings files should have a working default where "InputFolder" and "OutputFolder" are not specified.*
+* *We need to be able to compare JSON fields inside the "attachments". Right now if I change anything in the "contentType" field the test still passes
 
-
+The test includes one dialog to verify the bot's greeting. It has the following fields:
+* DialogId - A unique identifier string for the dialog. You can use an integer counter (as we do here, starting with the value "0"), a random GUID or any unique string. The test logs will use this identifier.
+* Description - A free-form string describing what this dialog does.
+* Turns - A dialog with the bot may contain several turns (user request followed by bot reply). Here we list one turn, and it is a greeting turn in the sense that we only specify the expect bot reply. We do not specify a preceding user request.
+    * TurnId - A non-negative integer that enumerates the turns, starting from 0.
+    * ExpectedResponses - This is an array that lists the bot reply activities in the order you expect the client to receive them. Each activity is JSON string that follows the [Bot-Framework Activity schema](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md). 
 
 ## Getting Started with Sample
 

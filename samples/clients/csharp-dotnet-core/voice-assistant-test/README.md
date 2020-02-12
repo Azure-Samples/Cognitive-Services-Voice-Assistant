@@ -40,8 +40,8 @@ First time users, please follow the [Getting Started Guide](docs\GETTING-STARTED
 
 The tests are set up by authoring two types of [JSON files](https://tools.ietf.org/html/rfc7159):
 
-- [**Application Configuration**](#Application-Configuration-JSON-File) JSON file - Configuration settings that apply globally to all dialogs in all tests. This JSON file is the only input argument to the application.
-- [**Test Configuration**](#Test-Configuration-JSON-File) JSON file - Settings that are unique to this test, including specifications of all the dialogs and their turns for this test.
+- [**Application Configuration**](#application-configuration-file) JSON file - Configuration settings that apply globally to all dialogs in all tests. This JSON file is the only input argument to the application.
+- [**Test Configuration**](#test-configuration-file) JSON file - Settings that are unique to this test, including specifications of all the dialogs and their turns for this test.
 
 The Application Configuration JSON file will list one or more Test Configuration JSON files.
 
