@@ -251,7 +251,7 @@ namespace VoiceAssistantClient
             {
                 // For prototyping new Direct Line Speech channel service feature, a custom service URL may be
                 // provided by Microsoft and entered in this tool.
-                // config.EndpointId = this.settings.Settings.UrlOverride;
+                config.SetProperty("SPEECH-Endpoint", this.settings.RuntimeSettings.UrlOverride);
             }
 
             if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.ProxyHostName) &&
