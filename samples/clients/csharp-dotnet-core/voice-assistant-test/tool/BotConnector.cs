@@ -550,7 +550,7 @@ namespace VoiceAssistantTest
             {
                 this.ttsStreamDownloadCount++;
                 this.indexActivityWithAudio++;
-                ttsDuration = this.WriteAudioToWAVfile(e.Audio, this.baseFileName, this.dialogID, this.turnID, this.indexActivityWithAudio);
+                ttsDuration = this.WriteAudioToWAVfile(e.Audio, this.baseFileName, this.dialogID, this.turnID, this.indexActivityWithAudio - 1);
                 this.ttsStreamDownloadCount--;
                 lock (this.BotReplyList)
                 {
@@ -598,7 +598,7 @@ namespace VoiceAssistantTest
             string wAVFolderPath = Path.Combine(testFileOutputFolder, ProgramConstants.WAVFileFolderName);
             int durationInMS = 0;
 
-            if (indexActivityWithAudio == 1)
+            if (indexActivityWithAudio == 0)
             {
                 // First TTS WAV file to be written, create the WAV File Folder
                 Directory.CreateDirectory(wAVFolderPath);
