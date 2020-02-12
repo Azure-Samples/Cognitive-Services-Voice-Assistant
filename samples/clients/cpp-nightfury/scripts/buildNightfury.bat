@@ -4,7 +4,7 @@ cd ..
 
 mkdir out
 
-set imageId=74a75a0a9a27
+set imageId=dev_ubuntu_arm32
 set dockerRunEnv=--rm --workdir /nf --volume %cd%:/nf %imageId%
 set buildCmd=docker run %dockerRunEnv% g++
 set incDir=-L lib/arm32
