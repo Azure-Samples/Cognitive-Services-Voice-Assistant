@@ -380,7 +380,7 @@ namespace VoiceAssistantTest
 
             if (this.ignoreActivitiesList != null)
             {
-                DialogResultUtility.Verbose = true;
+                DialogResultUtility.Verbose = false;
                 foreach (Activity activityToIgnore in this.ignoreActivitiesList)
                 {
                     var activityToIgnoreSerializedJson = JsonConvert.SerializeObject(activityToIgnore, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
