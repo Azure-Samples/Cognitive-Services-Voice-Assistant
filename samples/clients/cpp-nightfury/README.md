@@ -13,17 +13,21 @@ For Windows you should use the nuget package.
 For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo. Headers and their folders should be copied into the include folder.
 
 
-## Building for Arm32 with Docker
+## Building for Linux Arm32 with Docker
 
 For ARM32 devices you can compile binaries on a windows machine using docker.
 Install docker for windows from the [docker website](https://docs.docker.com/docker-for-windows/).
 
 Download the qemu-arm-static.tar.gz file from this [open source](https://github.com/multiarch/qemu-user-static/releases/) and place it in the docker folder.
 
-For linux machines you will also need to run "sudo apt-get install --yes binfmt-support qemu-user-static"
+For linux machines you will also need to run 
+
+    sudo apt-get install --yes binfmt-support qemu-user-static
 
 Open a cmd prompt and cd into the docker folder and 
-run "docker build -t dev_ubuntu_arm32 ."
+run 
+
+    docker build -t dev_ubuntu_arm32 .
 
 This will create an image and name it "dev_ubuntu_arm32" which is used inside the build scripts.
 
