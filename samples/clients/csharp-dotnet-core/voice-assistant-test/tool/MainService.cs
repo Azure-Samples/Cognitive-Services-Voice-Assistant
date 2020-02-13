@@ -83,6 +83,7 @@ namespace VoiceAssistantTest
                 {
                     appSettings.InputFolder = Directory.GetCurrentDirectory();
                 }
+
                 string inputFileName = Path.Combine(appSettings.InputFolder, tests.FileName);
 
                 if (Path.IsPathRooted(tests.FileName))
