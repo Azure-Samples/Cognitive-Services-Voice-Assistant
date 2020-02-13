@@ -1,6 +1,5 @@
-﻿// <copyright file="TestSettings.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {

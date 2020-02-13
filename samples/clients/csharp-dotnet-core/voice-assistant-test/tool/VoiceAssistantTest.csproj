@@ -23,6 +23,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AdaptiveCards" Version="1.2.4" />
     <PackageReference Include="Microsoft.Bot.Configuration" Version="4.7.2" />
     <PackageReference Include="Microsoft.Bot.Schema" Version="4.7.2" />
@@ -57,6 +65,6 @@
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet publish -c $(Configuration) -r win-x64 /p:PublishSingleFile=true /p:NoBuild=true"/>
+    <Exec Command="dotnet publish -c $(Configuration) -r win-x64 /p:PublishSingleFile=true /p:NoBuild=true" />
   </Target>
 </Project>
