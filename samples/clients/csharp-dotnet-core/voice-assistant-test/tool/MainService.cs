@@ -92,7 +92,7 @@ namespace VoiceAssistantTest
 
                 if (!File.Exists(inputFileName))
                 {
-                    allExceptions.Add($"[{inputFileName}] : {ErrorStrings.FILE_DOES_NOT_EXIST}");
+                    allExceptions.Add($"{ErrorStrings.FILE_DOES_NOT_EXIST} - {inputFileName}");
                     continue;
                 }
 
