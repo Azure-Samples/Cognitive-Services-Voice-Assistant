@@ -14,6 +14,11 @@ namespace VoiceAssistantTest
         public const string TestReportFileName = "VoiceAssistantTestReport.json";
 
         /// <summary>
+        /// Name of the logging text file that will be written if application logging is enabled.
+        /// </summary>
+        public const string TestLogFileName = "VoiceAssistantTest.log";
+
+        /// <summary>
         /// Default TTS Duration margin to use (in milliseconds).
         /// </summary>
         public const int DefaultTTSAudioDurationMargin = 200;

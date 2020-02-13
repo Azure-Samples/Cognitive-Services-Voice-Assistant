@@ -331,8 +331,8 @@ namespace VoiceAssistantTest
         /// <returns>True if the directory has write access, false otherwise.</returns>
         private static bool CheckDirectoryAccess(string directory)
         {
-            bool success = false;
-            string fullPath = directory + ProgramConstants.TestReportFileName;
+            bool hasWriteAccess = false;
+            string fullPath = Path.Combine(directory, ProgramConstants.TestReportFileName);
 
             try
             {
@@ -340,15 +340,15 @@ namespace VoiceAssistantTest
 
                 if (File.Exists(fullPath))
                 {
-                    success = true;
+                    hasWriteAccess = true;
                 }
             }
             catch (Exception)
             {
-                success = false;
+                hasWriteAccess = false;
             }
 
-            return success;
+            return hasWriteAccess;
         }
     }
 }
