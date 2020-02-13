@@ -99,7 +99,6 @@ namespace VoiceAssistantTest
             {
                 for (int index = 0; index < expected.Count; index++)
                 {
-
                     ActivityMismatchCount = 0;
                     string expectedSerializedJson = JsonConvert.SerializeObject(expected[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                     string actualSerializedJson = JsonConvert.SerializeObject(actual[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
