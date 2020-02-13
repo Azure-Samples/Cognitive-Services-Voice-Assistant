@@ -23,6 +23,7 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the sleep duration (in msec) before the turn begins.
         /// </summary>
+        [JsonProperty(Order = -2, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Sleep { get; set; }
 
         /// <summary>
