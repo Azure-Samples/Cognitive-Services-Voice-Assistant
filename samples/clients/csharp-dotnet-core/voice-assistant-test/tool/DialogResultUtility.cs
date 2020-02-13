@@ -101,8 +101,8 @@ namespace VoiceAssistantTest
                 {
 
                     ActivityMismatchCount = 0;
-                    var expectedSerializedJson = JsonConvert.SerializeObject(expected[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                    var actualSerializedJson = JsonConvert.SerializeObject(actual[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    string expectedSerializedJson = JsonConvert.SerializeObject(expected[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    string actualSerializedJson = JsonConvert.SerializeObject(actual[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                     JObject expectedJObject = JsonConvert.DeserializeObject<JObject>(expectedSerializedJson);
                     JObject actualJObject = JsonConvert.DeserializeObject<JObject>(actualSerializedJson);
                     CompareJObjects(expectedJObject, actualJObject);
@@ -120,35 +120,6 @@ namespace VoiceAssistantTest
             }
 
             return match;
-        }
-
-        /// <summary>
-        /// Finds all properties that are not null in the input object.
-        /// </summary>
-        /// <param name="obj">Activity.</param>
-        /// <returns>Not Null Properties in Activity object.</returns>
-        public static Dictionary<string, string> NotNullUtility(object obj)
-        {
-            var properties = new Dictionary<string, string>();
-            if (obj == null)
-            {
-                return null;
-            }
-
-            foreach (var prop in obj.GetType().GetProperties())
-            {
-                var val = prop.GetValue(obj);
-
-                if (val != null)
-                {
-                    if (!string.IsNullOrWhiteSpace(val.ToString()))
-                    {
-                        properties.Add(prop.Name, val.ToString());
-                    }
-                }
-            }
-
-            return properties;
         }
 
         /// <summary>
@@ -227,11 +198,11 @@ namespace VoiceAssistantTest
                     }
                     else
                     {
-                        var actualResult = actualValue.ToString();
-                        var expectedResult = expectedValue.ToString();
+                        string actualResult = actualValue.ToString();
+                        string expectedResult = expectedValue.ToString();
 
-                        var normalizedActualResult = new string(actualResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
-                        var normalizedExpectedResult = new string(expectedResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+                        string normalizedActualResult = new string(actualResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+                        string normalizedExpectedResult = new string(expectedResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
 
                         if (!normalizedExpectedResult.Equals(normalizedActualResult, StringComparison.OrdinalIgnoreCase))
                         {
@@ -261,7 +232,7 @@ namespace VoiceAssistantTest
             this.Entities = new Dictionary<string, string>();
             this.FinalResponses = new List<BotReply>();
 
-            foreach (var item in allActivities)
+            foreach (BotReply item in allActivities)
             {
                 if (item?.Activity != null)
                 {
@@ -272,18 +243,18 @@ namespace VoiceAssistantTest
                         string traceResult = item.Activity.Value.ToString();
                         Dictionary<string, object> recognizerResult = JsonConvert.DeserializeObject<Dictionary<string, object>>(traceResult);
                         Dictionary<string, object> lUISResult = JsonConvert.DeserializeObject<Dictionary<string, object>>(recognizerResult["luisResult"].ToString());
-                        var topScoringIntent = JsonConvert.DeserializeObject<Dictionary<string, object>>(lUISResult["topScoringIntent"].ToString())["intent"].ToString();
-                        var entityString = lUISResult["entities"]?.ToString();
+                        string topScoringIntent = JsonConvert.DeserializeObject<Dictionary<string, object>>(lUISResult["topScoringIntent"].ToString())["intent"].ToString();
+                        string entityString = lUISResult["entities"]?.ToString();
                         if (entityString == "[]")
                         {
                             entityString = string.Empty;
                         }
 
-                        var entities = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(entityString);
+                        List<Dictionary<string, object>> entities = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(entityString);
 
                         if (entities != null)
                         {
-                            foreach (var entityDict in entities)
+                            foreach (Dictionary<string, object> entityDict in entities)
                             {
                                 if (entityDict.TryGetValue("type", out object typeKey))
                                 {
@@ -403,8 +374,8 @@ namespace VoiceAssistantTest
 
                 if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
                 {
-                    var normalizedActualRecognizedText = new string(turnResult.ActualRecognizedText.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
-                    var normalizedExpectedRecognizedText = new string(turnResult.Utterance.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+                    string normalizedActualRecognizedText = new string(turnResult.ActualRecognizedText.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+                    string normalizedExpectedRecognizedText = new string(turnResult.Utterance.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
 
                     if (!normalizedExpectedRecognizedText.Equals(normalizedActualRecognizedText, StringComparison.OrdinalIgnoreCase))
                     {
@@ -442,7 +413,7 @@ namespace VoiceAssistantTest
                                 }
                             }
                         }
-                    }                  
+                    }
                 }
 
                 if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency))
