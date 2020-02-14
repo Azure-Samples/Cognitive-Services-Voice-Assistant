@@ -113,12 +113,20 @@ namespace VoiceAssistantTest
         public string KeywordRecognitionModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the SetProperty.
+        /// Gets or sets the SetPropertyID.
+        /// This will result in SetPropery method call on DialogServiceConfig that takes a PropertyId argument.
         /// </summary>
-        public JObject SetProperty { get; set; }
+        public JObject SetPropertyId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SetPropertyString.
+        /// This will result in SetPropery method call on DialogServiceConfig that takes a string argument.
+        /// </summary>
+        public JObject SetPropertyString { get; set; }
 
         /// <summary>
         /// Gets or sets the SetServiceProperty.
+        /// This will result in SetServiceProperty method call on DialogServiceConfig.
         /// </summary>
         public JObject SetServiceProperty { get; set; }
 
@@ -227,12 +235,13 @@ namespace VoiceAssistantTest
                 throw new ArgumentException(ErrorStrings.SUBSCRIPTION_KEY_INVALID);
             }
 
-            if (!string.IsNullOrWhiteSpace(instance.Region))
+            if (string.IsNullOrWhiteSpace(instance.Region) && instance.SetPropertyString == null)
             {
-                if (ValidateRegion(instance.Region) == false)
-                {
-                    throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
-                }
+                throw new MissingFieldException(ErrorStrings.AZURE_REGION_MISSING);
+            }
+            else if (ValidateRegion(instance.Region) == false && !string.IsNullOrWhiteSpace(instance.Region))
+            {
+                throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
             }
 
             if (instance.Tests == null || instance.Tests.Length == 0)
