@@ -239,7 +239,7 @@ namespace VoiceAssistantTest
             {
                 throw new MissingFieldException(ErrorStrings.AZURE_REGION_MISSING);
             }
-            else if (ValidateRegion(instance.Region) == false && !string.IsNullOrWhiteSpace(instance.Region))
+            else if (!string.IsNullOrWhiteSpace(instance.Region) && ValidateRegion(instance.Region) == false)
             {
                 throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
             }
