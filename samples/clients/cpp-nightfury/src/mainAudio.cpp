@@ -253,7 +253,7 @@ int main(int argc, char** argv)
                      bytes_read = audio->Read(buffer, bufferSize);
                      int play_result = 0;
                      if(volumeOn){
-                        //play_result = player->Play(buffer, bytes_read);
+                        play_result = player->Play(buffer, bytes_read);
                      }
                      total_bytes_read += bytes_read;
                     
@@ -337,7 +337,7 @@ int main(int argc, char** argv)
     cout << "Closing down and freeing variables" << endl;
     
     if(volumeOn){
-        //player->Close();
+        player->Close();
     }
     free(buffer);
     
