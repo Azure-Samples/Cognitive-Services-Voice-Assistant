@@ -264,7 +264,7 @@ namespace VoiceAssistantTest
                 throw new DirectoryNotFoundException($"{ErrorStrings.FOLDER_NOT_FOUND} - {outputDirectory}");
             }
 
-            if (!CheckDirectoryAccess(outputDirectory))
+            if (!HasWriteAccessToDirectory(outputDirectory))
             {
                 // If output folder is set, check if it has write permissions
                 throw new UnauthorizedAccessException($"{ErrorStrings.NO_WRITE_ACCESS_FOLDER} - {outputDirectory}");
@@ -329,10 +329,10 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="directory">A string representing the full path of the directory.</param>
         /// <returns>True if the directory has write access, false otherwise.</returns>
-        private static bool CheckDirectoryAccess(string directory)
+        private static bool HasWriteAccessToDirectory(string directory)
         {
-            bool success = false;
-            string fullPath = directory + ProgramConstants.TestReportFileName;
+            bool hasWriteAccess = false;
+            string fullPath = Path.Combine(directory, ProgramConstants.TestReportFileName);
 
             try
             {
@@ -340,15 +340,15 @@ namespace VoiceAssistantTest
 
                 if (File.Exists(fullPath))
                 {
-                    success = true;
+                    hasWriteAccess = true;
                 }
             }
             catch (Exception)
             {
-                success = false;
+                hasWriteAccess = false;
             }
 
-            return success;
+            return hasWriteAccess;
         }
     }
 }

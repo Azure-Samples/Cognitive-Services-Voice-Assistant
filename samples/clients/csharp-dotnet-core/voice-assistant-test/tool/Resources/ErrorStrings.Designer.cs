@@ -88,7 +88,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to All the test files are marked to skip.
+        ///   Looks up a localized string similar to All the test files are marked to skip..
         /// </summary>
         public static string ALL_TESTFILES_SKIPPED {
             get {
@@ -187,7 +187,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not create Output Folder.
+        ///   Looks up a localized string similar to Could not create Output Folder..
         /// </summary>
         public static string FAILED_CREATING_OUPUT_FOLDER {
             get {
@@ -205,7 +205,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test file names may include relative path, not full paths.
+        ///   Looks up a localized string similar to Test file names may include relative path, not full paths..
         /// </summary>
         public static string FILENAME_PATH_NOT_RELATIVE {
             get {
@@ -250,7 +250,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expected Latency string is malformed - not a valid expected latency.
+        ///   Looks up a localized string similar to Expected Latency string is malformed - not a valid expected latency..
         /// </summary>
         public static string LATENCY_STRING_MALFORMED {
             get {
@@ -259,7 +259,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedResponseLatency.
+        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedResponseLatency..
         /// </summary>
         public static string LATENCY_STRING_PRESENT {
             get {
@@ -331,7 +331,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A negative number is not a valid value for Timeout.
+        ///   Looks up a localized string similar to A negative number is not a valid value for Timeout..
         /// </summary>
         public static string TIMEOUT_INVALID {
             get {
@@ -340,7 +340,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Size of ExpectedTTSAudioDuration does not match the size of ExpectedResponses.
+        ///   Looks up a localized string similar to Size of ExpectedTTSAudioDuration does not match the size of ExpectedResponses..
         /// </summary>
         public static string TTS_AUDIO_DURATION_INVALID {
             get {
@@ -349,7 +349,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A negative number is not a valid value for TTSAudioDurationMargin.
+        ///   Looks up a localized string similar to A negative number is not a valid value for TTSAudioDurationMargin..
         /// </summary>
         public static string TTS_AUDIO_DURATION_MARGIN_INVALID {
             get {
@@ -358,7 +358,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedTTSAudioDuration.
+        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedTTSAudioDuration..
         /// </summary>
         public static string TTS_AUDIO_DURATION_PRESENT {
             get {
@@ -367,7 +367,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid.
+        ///   Looks up a localized string similar to ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid..
         /// </summary>
         public static string TTS_AUDIO_DURATION_VALUES_INVALID {
             get {

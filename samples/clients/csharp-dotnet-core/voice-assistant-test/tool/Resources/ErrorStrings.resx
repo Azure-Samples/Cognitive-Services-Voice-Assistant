@@ -127,7 +127,7 @@
     <value>All 3 inputs - text utterance, activity and WAVFile are present. </value>
   </data>
   <data name="ALL_TESTFILES_SKIPPED" xml:space="preserve">
-    <value>All the test files are marked to skip</value>
+    <value>All the test files are marked to skip.</value>
   </data>
   <data name="AMBIGUOUS_TURN_INPUT" xml:space="preserve">
     <value>Input turn is ambiguous. Not a valid combination.</value>
@@ -160,10 +160,10 @@
     <value>Dialog ID's in Test File are not unique.</value>
   </data>
   <data name="FAILED_CREATING_OUPUT_FOLDER" xml:space="preserve">
-    <value>Could not create Output Folder</value>
+    <value>Could not create Output Folder.</value>
   </data>
   <data name="FILENAME_PATH_NOT_RELATIVE" xml:space="preserve">
-    <value>Test file names may include relative path, not full paths</value>
+    <value>Test file names may include relative path, not full paths.</value>
   </data>
   <data name="FILE_DOES_NOT_EXIST" xml:space="preserve">
     <value>File with this name and path does not exist.</value>
@@ -181,10 +181,10 @@
     <value>Keyword Recognition Model File not found. </value>
   </data>
   <data name="LATENCY_STRING_MALFORMED" xml:space="preserve">
-    <value>Expected Latency string is malformed - not a valid expected latency</value>
+    <value>Expected Latency string is malformed - not a valid expected latency.</value>
   </data>
   <data name="LATENCY_STRING_PRESENT" xml:space="preserve">
-    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedResponseLatency</value>
+    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedResponseLatency.</value>
   </data>
   <data name="NEGATIVE_SLEEP_DURATION" xml:space="preserve">
     <value>Sleep duration cannot be a negative number.</value>
@@ -208,19 +208,19 @@
     <value>Subscription Key is missing. Needed to make bot connections.</value>
   </data>
   <data name="TIMEOUT_INVALID" xml:space="preserve">
-    <value>A negative number is not a valid value for Timeout</value>
+    <value>A negative number is not a valid value for Timeout.</value>
   </data>
   <data name="TTS_AUDIO_DURATION_INVALID" xml:space="preserve">
-    <value>Size of ExpectedTTSAudioDuration does not match the size of ExpectedResponses</value>
+    <value>Size of ExpectedTTSAudioDuration does not match the size of ExpectedResponses.</value>
   </data>
   <data name="TTS_AUDIO_DURATION_MARGIN_INVALID" xml:space="preserve">
-    <value>A negative number is not a valid value for TTSAudioDurationMargin</value>
+    <value>A negative number is not a valid value for TTSAudioDurationMargin.</value>
   </data>
   <data name="TTS_AUDIO_DURATION_PRESENT" xml:space="preserve">
-    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedTTSAudioDuration</value>
+    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedTTSAudioDuration.</value>
   </data>
   <data name="TTS_AUDIO_DURATION_VALUES_INVALID" xml:space="preserve">
-    <value>ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid</value>
+    <value>ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid.</value>
   </data>
   <data name="UTTERANCE_ACTIVITY_PRESENT" xml:space="preserve">
     <value>Both Utterance and Activity field present. </value>

@@ -60,8 +60,6 @@ First, we will write the Application configuration. Copy and paste the following
   "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
   "Region": "westus2",
   "BotGreeting": true,
-  "InputFolder": "c:\\test\\",
-  "OutputFolder": "c:\\test\\"
 }
 ```
 Replace "SubscriptionKey" and "Region" fields with your own speech key and region, and save it as file "AppConfig.json" in your test folder (e.g. c:\test).
@@ -108,16 +106,18 @@ Now, write the test configuration. Copy and paste the following to your text edi
 
 
 !! *TODO: Make these work:*
-* *"VoiceAssistantTest.exe AppSetting.json" (no need to specify full path to app settings file)*
-* *app settings files should have a working default where "InputFolder" and "OutputFolder" are not specified.*
-* *We need to be able to compare JSON fields inside the "attachments". Right now if I change anything in the "contentType" field the test still passes
+* *We need to be able to compare JSON fields inside the "attachments". Right now if I change anything in the "contentType" field the test still passes.*
 
 The test includes one dialog to verify the bot's greeting. It has the following fields:
 * DialogId - A unique identifier string for the dialog. You can use an integer counter (as we do here, starting with the value "0"), a random GUID or any unique string. The test logs will use this identifier.
 * Description - A free-form string describing what this dialog does.
 * Turns - A dialog with the bot may contain several turns (user request followed by bot reply). Here we list one turn, and it is a greeting turn in the sense that we only specify the expect bot reply. We do not specify a preceding user request.
     * TurnId - A non-negative integer that enumerates the turns, starting from 0.
-    * ExpectedResponses - This is an array that lists the bot reply activities in the order you expect the client to receive them. Each activity is JSON string that follows the [Bot-Framework Activity schema](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md). 
+    * ExpectedResponses - This is an array that lists the bot reply activities in the order you expect the client to receive them. Each activity is JSON string that follows the [Bot-Framework Activity schema](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md). You only need to list the activity fields that you care about. In the example above, we expect the bot greeting to include two activities of type "message". We list values for "text", "speak", "inputHint" and "attachments". If the actual activities received have different values for these fields, the test will fail.
+
+
+
+END OF REVISED DOCUMENT - DO NOT READ BEYOND THIS POINT.    
 
 ## Getting Started with Sample
 
