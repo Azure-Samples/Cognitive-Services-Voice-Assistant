@@ -1,4 +1,7 @@
 
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 /// <summary>
 /// Abstract object used to define the interface to an AudioPlayer
 /// </summary>

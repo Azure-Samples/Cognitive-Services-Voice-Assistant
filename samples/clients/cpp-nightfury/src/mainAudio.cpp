@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 #include <iostream>
 #include <string> 
 #include <fstream>
@@ -7,7 +10,15 @@
 #include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
 #include "json.hpp"
+
+#ifdef LINUX
 #include "LinuxAudioPlayer.h"
+#endif
+
+#ifdef WINDOWS
+#include <Windows.h>
+#include "WindowsAudioPlayer.h"
+#endif
 
 using namespace std; 
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
@@ -66,7 +77,7 @@ void add_config_tls_workaround(shared_ptr<DialogServiceConfig> dialog_config)
     log_t("TLS workaround completed");
 }
 
-int main (int argc, char** argv) 
+int main(int argc, char** argv)
 {
     
     if(argc < 2){
@@ -92,11 +103,14 @@ int main (int argc, char** argv)
     shared_ptr<AgentConfiguration> agentConfig;
     shared_ptr<DialogServiceConnector> dialogServiceConnector;
     
-    IAudioPlayer* player;
+    //IAudioPlayer* player;
     if(volumeOn){
-        //TODO switch to IAudioPlayer once volume is handled
-        //IAudioPlayer* player = new LinuxAudioPlayer();
+#ifdef LINUX
         player = new LinuxAudioPlayer();
+#endif
+#ifdef WINDOWS
+        //player = new WindowsAudioPlayer();
+#endif
     }
     int bufferSize = 1024;
     unsigned char * buffer = (unsigned char *)malloc(bufferSize);
@@ -239,7 +253,7 @@ int main (int argc, char** argv)
                      bytes_read = audio->Read(buffer, bufferSize);
                      int play_result = 0;
                      if(volumeOn){
-                        play_result = player->Play(buffer, bytes_read);
+                        //play_result = player->Play(buffer, bytes_read);
                      }
                      total_bytes_read += bytes_read;
                     
@@ -323,7 +337,7 @@ int main (int argc, char** argv)
     cout << "Closing down and freeing variables" << endl;
     
     if(volumeOn){
-        player->Close();
+        //player->Close();
     }
     free(buffer);
     

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 #include <iostream>
 #include <string> 
 #include <fstream>
@@ -7,7 +10,14 @@
 #include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
 #include "json.hpp"
+
+#ifdef LINUX
 #include "LinuxAudioPlayer.h"
+#endif
+
+#ifdef WINDOWS
+#include "WindowsAudioPlayer.h"
+#endif
 
 using namespace std; 
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
@@ -165,9 +175,12 @@ int main (int argc, char** argv)
     
     IAudioPlayer* player;
     if(volumeOn){
-        //TODO switch to IAudioPlayer once volume is handled
-        //IAudioPlayer* player = new LinuxAudioPlayer();
+#ifdef LINUX
         player = new LinuxAudioPlayer();
+#endif
+#ifdef WINDOWS
+        player = new WindowsAudioPlayer();
+#endif
     }
     int bufferSize = 1024;
     unsigned char * buffer = (unsigned char *)malloc(bufferSize);

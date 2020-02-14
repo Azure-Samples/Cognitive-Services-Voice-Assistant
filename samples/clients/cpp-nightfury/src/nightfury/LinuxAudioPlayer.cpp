@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 #include <cstring>
 #include <chrono>
 #include <condition_variable>

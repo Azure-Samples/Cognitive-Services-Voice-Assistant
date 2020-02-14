@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 #include <alsa/asoundlib.h>
 #include <condition_variable>
 #include <list>
@@ -107,7 +110,7 @@ namespace AudioPlayer
             /// int bufferSize = audioPlayer->GetBufferSize();
             /// unsigned char * buffer = (unsigned char *)malloc(bufferSize);
             /// // fill buffer with audio from somewhere
-            /// audioPLayer->Play(buffer, bufferSize);
+            /// audioPlayer->Play(buffer, bufferSize);
             /// </code>
             /// </example>
             /// <remarks>
@@ -140,7 +143,6 @@ namespace AudioPlayer
             /// In our implementation we assume Open is called before playing.
             /// </remarks>
             int Play(uint8_t* buffer, size_t bufferSize, AudioPlayerFormat format);
-            int PlaySynchronous(uint8_t* buffer, size_t bufferSize);
             
             /// <summary>
             /// This function is used to clean up the audio players resources.
