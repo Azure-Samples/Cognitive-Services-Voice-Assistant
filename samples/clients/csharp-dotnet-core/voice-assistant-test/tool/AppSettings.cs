@@ -10,6 +10,7 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using VoiceAssistantTest.Resources;
 
     /// <summary>
@@ -110,6 +111,16 @@ namespace VoiceAssistantTest
         /// Gets or sets the Keyword Recognition Model File.
         /// </summary>
         public string KeywordRecognitionModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SetProperty.
+        /// </summary>
+        public JObject SetProperty { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SetServiceProperty.
+        /// </summary>
+        public JObject SetServiceProperty { get; set; }
 
         /// <summary>
         /// Obtain values from AppSettings.json and populate an instance with associated values.
@@ -216,13 +227,12 @@ namespace VoiceAssistantTest
                 throw new ArgumentException(ErrorStrings.SUBSCRIPTION_KEY_INVALID);
             }
 
-            if (string.IsNullOrWhiteSpace(instance.Region))
+            if (!string.IsNullOrWhiteSpace(instance.Region))
             {
-                throw new MissingFieldException(ErrorStrings.AZURE_REGION_MISSING);
-            }
-            else if (ValidateRegion(instance.Region) == false)
-            {
-                throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
+                if (ValidateRegion(instance.Region) == false)
+                {
+                    throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
+                }
             }
 
             if (instance.Tests == null || instance.Tests.Length == 0)
