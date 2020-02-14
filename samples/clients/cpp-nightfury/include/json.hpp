@@ -1,4 +1,6 @@
+#ifdef LINUX
 #pragma GCC system_header
+#endif
 /*
     __ _____ _____ _____
  __|  |   __|     |   | |  JSON for Modern C++

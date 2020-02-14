@@ -28,7 +28,9 @@ set src=src/nightfury/DeviceStatusIndicators.cpp %src%
 set src=src/AgentConfiguration.cpp %src%
 set tgt=out/sample.exe
 
+set defines=-D LINUX
 
 echo Building (this is slow): %tgt%
-echo build command = %buildCmd% -o %tgt% %src% %commonTargets%
-%buildCmd% -o %tgt% %src% %commonTargets%
+set finalCommand=%buildCmd% -o %tgt% %src% %commonTargets% %defines%
+echo build command = %finalCommand%
+%finalCommand%

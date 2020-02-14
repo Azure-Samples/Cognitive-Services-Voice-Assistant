@@ -103,7 +103,7 @@ int main(int argc, char** argv)
     shared_ptr<AgentConfiguration> agentConfig;
     shared_ptr<DialogServiceConnector> dialogServiceConnector;
     
-    //IAudioPlayer* player;
+    IAudioPlayer* player;
     if(volumeOn){
 #ifdef LINUX
         player = new LinuxAudioPlayer();
