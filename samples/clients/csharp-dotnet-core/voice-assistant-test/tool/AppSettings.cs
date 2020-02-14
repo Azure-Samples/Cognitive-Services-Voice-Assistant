@@ -87,13 +87,13 @@ namespace VoiceAssistantTest
         /// Gets or sets the root input folder. This root folder will be added
         /// to all file names listed in the InputFiles array.
         /// </summary>
-        public string InputFolder { get; set; }
+        public string InputFolder { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the output folder. Test result and application
         /// log file will be written to this folder.
         /// </summary>
-        public string OutputFolder { get; set; }
+        public string OutputFolder { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether a Bot has a Greeting.
