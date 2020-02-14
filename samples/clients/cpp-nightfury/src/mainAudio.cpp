@@ -227,16 +227,6 @@ int main(int argc, char** argv)
             {
                 log_t("Activity has audio, playing synchronously");
 
-                //log_t("Resetting audio...");
-                
-                //auto closeResult = player.Close();
-                //auto openResult = player.Open();
-                //cout << "Attempted reset complete: "
-                   // << closeResult
-                    //<< " "
-                    //<< openResult
-                    //<< endl << flush;
-
                 // TODO: AEC + Barge-in
                 // For now: no KWS during playback
                 log_t("stopping KWS for playback");
@@ -256,17 +246,9 @@ int main(int argc, char** argv)
                      }
                      total_bytes_read += bytes_read;
                     
-
-                    //cout << "Read " << bytes_read << " bytes. Play result: " << play_result << endl;
-                    //cout << "Read " << bytes_read << endl;
                     
                     cout << " ." << flush;
 
-                    //if (play_result)
-                    //{
-                    //    log_t("Play didn't return expected: ", play_result);
-                    //    break;
-                    //}
                 } while (bytes_read > 0);
 
                 cout << endl;
