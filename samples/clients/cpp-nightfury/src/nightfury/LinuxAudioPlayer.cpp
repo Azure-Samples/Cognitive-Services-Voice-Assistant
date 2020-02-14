@@ -144,11 +144,11 @@ void LinuxAudioPlayer::PlayerThreadMain(){
         m_conditionVariable.wait(lk);
         lk.unlock();
         
-        unsigned int playBufferSize = GetBufferSize();
+        size_t playBufferSize = GetBufferSize();
         while(m_audioQueue.size() > 0){
             m_isPlaying = true;
             AudioPlayerEntry entry = m_audioQueue.front();
-            int bufferLeft = entry.m_size;
+            size_t bufferLeft = entry.m_size;
             std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
             while(bufferLeft > 0){
                 if(bufferLeft >= playBufferSize){

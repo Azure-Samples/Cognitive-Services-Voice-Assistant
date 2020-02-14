@@ -96,7 +96,6 @@ int main(int argc, char** argv)
     
     string configFilePath = argv[1];
     string s;
-    int rc;
     const char * device = "default";
     bool keywordListeningEnabled = false;
     
@@ -260,7 +259,6 @@ int main(int argc, char** argv)
 
                     //cout << "Read " << bytes_read << " bytes. Play result: " << play_result << endl;
                     //cout << "Read " << bytes_read << endl;
-                    //rc = player->play(buffer, bytes_read);
                     
                     cout << " ." << flush;
 

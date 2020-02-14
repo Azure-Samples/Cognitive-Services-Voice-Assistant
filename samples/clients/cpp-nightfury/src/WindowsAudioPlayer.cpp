@@ -44,11 +44,11 @@ void WindowsAudioPlayer::PlayerThreadMain() {
         m_conditionVariable.wait(lk);
         lk.unlock();
 
-        unsigned int playBufferSize = 1024;
+        size_t playBufferSize = 1024;
         while (m_audioQueue.size() > 0) {
             m_isPlaying = true;
             AudioPlayerEntry entry = m_audioQueue.front();
-            unsigned int bufferLeft = entry.m_size;
+            size_t bufferLeft = entry.m_size;
             std::unique_ptr<unsigned char[]> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
             while (bufferLeft > 0) {
                 if (bufferLeft >= playBufferSize) {
