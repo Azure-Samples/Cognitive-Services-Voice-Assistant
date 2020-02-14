@@ -1,6 +1,5 @@
-﻿// <copyright file="AppSettings.cs" company="Microsoft Corporation">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {
@@ -89,13 +88,13 @@ namespace VoiceAssistantTest
         /// Gets or sets the root input folder. This root folder will be added
         /// to all file names listed in the InputFiles array.
         /// </summary>
-        public string InputFolder { get; set; }
+        public string InputFolder { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the output folder. Test result and application
         /// log file will be written to this folder.
         /// </summary>
-        public string OutputFolder { get; set; }
+        public string OutputFolder { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether a Bot has a Greeting.
@@ -284,7 +283,7 @@ namespace VoiceAssistantTest
                 throw new DirectoryNotFoundException($"{ErrorStrings.FOLDER_NOT_FOUND} - {outputDirectory}");
             }
 
-            if (!CheckDirectoryAccess(outputDirectory))
+            if (!HasWriteAccessToDirectory(outputDirectory))
             {
                 // If output folder is set, check if it has write permissions
                 throw new UnauthorizedAccessException($"{ErrorStrings.NO_WRITE_ACCESS_FOLDER} - {outputDirectory}");
@@ -349,10 +348,10 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="directory">A string representing the full path of the directory.</param>
         /// <returns>True if the directory has write access, false otherwise.</returns>
-        private static bool CheckDirectoryAccess(string directory)
+        private static bool HasWriteAccessToDirectory(string directory)
         {
-            bool success = false;
-            string fullPath = directory + ProgramConstants.TestReportFileName;
+            bool hasWriteAccess = false;
+            string fullPath = Path.Combine(directory, ProgramConstants.TestReportFileName);
 
             try
             {
@@ -360,15 +359,15 @@ namespace VoiceAssistantTest
 
                 if (File.Exists(fullPath))
                 {
-                    success = true;
+                    hasWriteAccess = true;
                 }
             }
             catch (Exception)
             {
-                success = false;
+                hasWriteAccess = false;
             }
 
-            return success;
+            return hasWriteAccess;
         }
     }
 }

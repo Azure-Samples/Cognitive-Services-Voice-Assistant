@@ -1,6 +1,5 @@
-﻿// <copyright file="MainService.cs" company="Microsoft Corporation">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {
@@ -88,12 +87,12 @@ namespace VoiceAssistantTest
 
                 if (Path.IsPathRooted(tests.FileName))
                 {
-                    throw new ArgumentException($"{ErrorStrings.FILENAME_PATH_NOT_RELATIVE}");
+                    throw new ArgumentException($"{ErrorStrings.FILENAME_PATH_NOT_RELATIVE} - {tests.FileName}");
                 }
 
                 if (!File.Exists(inputFileName))
                 {
-                    allExceptions.Add($"[{inputFileName}] : {ErrorStrings.FILE_DOES_NOT_EXIST}");
+                    allExceptions.Add($"{ErrorStrings.FILE_DOES_NOT_EXIST} - {inputFileName}");
                     continue;
                 }
 
@@ -354,7 +353,7 @@ namespace VoiceAssistantTest
                 }
             } // End of inputFiles loop
 
-            File.WriteAllText(appSettings.OutputFolder + ProgramConstants.TestReportFileName, JsonConvert.SerializeObject(allInputFilesTestReport, Formatting.Indented));
+            File.WriteAllText(Path.Combine(appSettings.OutputFolder, ProgramConstants.TestReportFileName), JsonConvert.SerializeObject(allInputFilesTestReport, Formatting.Indented));
 
             Trace.IndentLevel = 0;
             if (testPass)
@@ -389,7 +388,7 @@ namespace VoiceAssistantTest
             if (appLogEnabled)
             {
                 // Create a text writer with the given file name to trace the application
-                Stream logFileStream = File.Create($"{outputFolder}VoiceAssistantTest.log");
+                Stream logFileStream = File.Create(Path.Combine(outputFolder, ProgramConstants.TestLogFileName));
                 TextWriterTraceListener textWriterTraceListener = new TextWriterTraceListener(logFileStream);
                 Trace.Listeners.Add(textWriterTraceListener);
             }
