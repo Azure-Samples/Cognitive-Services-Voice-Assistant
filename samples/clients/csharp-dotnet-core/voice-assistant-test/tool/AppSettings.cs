@@ -9,6 +9,7 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using VoiceAssistantTest.Resources;
 
     /// <summary>
@@ -109,6 +110,24 @@ namespace VoiceAssistantTest
         /// Gets or sets the Keyword Recognition Model File.
         /// </summary>
         public string KeywordRecognitionModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SetPropertyID.
+        /// This will result in SetPropery method call on DialogServiceConfig that takes a PropertyId argument.
+        /// </summary>
+        public JObject SetPropertyId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SetPropertyString.
+        /// This will result in SetPropery method call on DialogServiceConfig that takes a string argument.
+        /// </summary>
+        public JObject SetPropertyString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SetServiceProperty.
+        /// This will result in SetServiceProperty method call on DialogServiceConfig.
+        /// </summary>
+        public JObject SetServiceProperty { get; set; }
 
         /// <summary>
         /// Obtain values from AppSettings.json and populate an instance with associated values.
@@ -215,11 +234,11 @@ namespace VoiceAssistantTest
                 throw new ArgumentException(ErrorStrings.SUBSCRIPTION_KEY_INVALID);
             }
 
-            if (string.IsNullOrWhiteSpace(instance.Region))
+            if (string.IsNullOrWhiteSpace(instance.Region) && instance.SetPropertyString == null)
             {
                 throw new MissingFieldException(ErrorStrings.AZURE_REGION_MISSING);
             }
-            else if (ValidateRegion(instance.Region) == false)
+            else if (!string.IsNullOrWhiteSpace(instance.Region) && ValidateRegion(instance.Region) == false)
             {
                 throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
             }

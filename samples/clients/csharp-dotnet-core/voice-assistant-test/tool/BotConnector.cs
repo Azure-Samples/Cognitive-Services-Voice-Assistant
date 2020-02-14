@@ -128,6 +128,30 @@ namespace VoiceAssistantTest
                 this.kwsTable = KeywordRecognitionModel.FromFile(this.appsettings.KeywordRecognitionModel);
             }
 
+            if (this.appsettings.SetPropertyId != null)
+            {
+                foreach (KeyValuePair<string, JToken> setPropertyIdPair in this.appsettings.SetPropertyId)
+                {
+                    config.SetProperty(setPropertyIdPair.Key, setPropertyIdPair.Value.ToString());
+                }
+            }
+
+            if (this.appsettings.SetPropertyString != null)
+            {
+                foreach (KeyValuePair<string, JToken> setPropertyStringPair in this.appsettings.SetPropertyString)
+                {
+                    config.SetProperty(setPropertyStringPair.Key.ToString(CultureInfo.CurrentCulture), setPropertyStringPair.Value.ToString());
+                }
+            }
+
+            if (this.appsettings.SetServiceProperty != null)
+            {
+                foreach (KeyValuePair<string, JToken> setServicePropertyPair in this.appsettings.SetServiceProperty)
+                {
+                    config.SetServiceProperty(setServicePropertyPair.Key.ToString(CultureInfo.CurrentCulture), setServicePropertyPair.Value.ToString(), ServicePropertyChannel.UriQueryParameter);
+                }
+            }
+
             if (this.connector != null)
             {
                 // Then dispose the object
