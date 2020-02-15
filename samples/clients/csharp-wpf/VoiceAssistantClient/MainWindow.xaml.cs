@@ -185,8 +185,11 @@ namespace VoiceAssistantClient
         {
             DialogServiceConfig config = null;
 
-            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKey) &&
-                !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKeyRegion))
+            var hasSubscription = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKey);
+            var hasRegion = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKeyRegion);
+            var hasUrlOverride = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.UrlOverride);
+
+            if (hasSubscription && (hasRegion || hasUrlOverride))
             {
                 if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.CustomCommandsAppId))
                 {
@@ -247,7 +250,7 @@ namespace VoiceAssistantClient
                 config.SetProperty(PropertyId.Speech_LogFilename, this.settings.RuntimeSettings.LogFilePath);
             }
 
-            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.UrlOverride))
+            if (hasUrlOverride)
             {
                 // For prototyping new Direct Line Speech channel service feature, a custom service URL may be
                 // provided by Microsoft and entered in this tool.

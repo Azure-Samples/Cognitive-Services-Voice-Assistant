@@ -231,8 +231,30 @@ namespace VoiceAssistantClient
         private void UpdateOkButtonState()
         {
             // BUGBUG: The transfer into variables does not seem to be done consistently with these events so we read straight from the controls
-            bool enableOkButton = !string.IsNullOrWhiteSpace(this.SubscriptionKeyComboBox.Text) &&
-                            (!string.IsNullOrWhiteSpace(this.SubscriptionRegionComboBox.Text) || !string.IsNullOrWhiteSpace(this.UrlOverrideTextBox.Text));
+            var hasSubscription = !string.IsNullOrWhiteSpace(this.SubscriptionKeyComboBox.Text);
+            var hasRegion = !string.IsNullOrWhiteSpace(this.SubscriptionRegionComboBox.Text);
+            var hasUrlOverride = !string.IsNullOrWhiteSpace(this.UrlOverrideTextBox.Text);
+
+            var enableOkButton = false;
+
+            if (!hasSubscription)
+            {
+                this.OkButtonInfoBlock.Text = "You must provide a speech subscription key.";
+            }
+            else if (!hasRegion && !hasUrlOverride)
+            {
+                this.OkButtonInfoBlock.Text = "You must provide a region or URL override.";
+            }
+            else if (hasRegion && hasUrlOverride)
+            {
+                this.OkButtonInfoBlock.Text = "You must specify only region OR URL override, not both.";
+            }
+            else
+            {
+                this.OkButtonInfoBlock.Text = string.Empty;
+                enableOkButton = true;
+            }
+
             this.OkButton.IsEnabled = enableOkButton;
         }
 
@@ -252,12 +274,12 @@ namespace VoiceAssistantClient
             {
                 if (updateLabelOnInvalidContent)
                 {
-                    this.CustomSpeechStatusLabel.Content = "Invalid endpoint ID format";
+                    this.CustomSpeechEnabledBox.Content = "Invalid endpoint ID format";
                     Debug.WriteLine("Invalid endpoint ID format. It needs to be a GUID in the format ########-####-####-####-############");
                 }
                 else
                 {
-                    this.CustomSpeechStatusLabel.Content = "Click to enable";
+                    this.CustomSpeechEnabledBox.Content = "Click to enable";
                 }
 
                 this.CustomSpeechEnabled = false;
@@ -265,11 +287,11 @@ namespace VoiceAssistantClient
             }
             else if (this.CustomSpeechEnabled)
             {
-                this.CustomSpeechStatusLabel.Content = "Custom speech will be used upon next connection";
+                this.CustomSpeechEnabledBox.Content = "Custom speech will be used upon next connection";
             }
             else
             {
-                this.CustomSpeechStatusLabel.Content = "Click to enable";
+                this.CustomSpeechEnabledBox.Content = "Click to enable";
             }
         }
 
@@ -281,7 +303,7 @@ namespace VoiceAssistantClient
                 this.CustomSpeechEnabledBox.IsChecked = false;
             }
 
-            this.CustomSpeechStatusLabel.Content = "Click to enable";
+            this.CustomSpeechEnabledBox.Content = "Click to enable";
         }
 
         private void VoiceDeploymentEnabledBox_Checked(object sender, RoutedEventArgs e)
@@ -300,12 +322,12 @@ namespace VoiceAssistantClient
             {
                 if (updateLabelOnInvalidContent)
                 {
-                    this.VoiceDeploymentStatusLabel.Content = "Invalid voice deployment IDs format";
+                    this.VoiceDeploymentEnabledBox.Content = "Invalid voice deployment IDs format";
                     Debug.WriteLine("Invalid voice deployment IDs format. It needs to be a GUID in the format ########-####-####-####-############");
                 }
                 else
                 {
-                    this.VoiceDeploymentStatusLabel.Content = "Click to enable";
+                    this.VoiceDeploymentEnabledBox.Content = "Click to enable";
                 }
 
                 this.VoiceDeploymentEnabled = false;
@@ -313,11 +335,11 @@ namespace VoiceAssistantClient
             }
             else if (this.VoiceDeploymentEnabled)
             {
-                this.VoiceDeploymentStatusLabel.Content = "Voice deployment IDs will be used upon next connection";
+                this.VoiceDeploymentEnabledBox.Content = "Voice deployment IDs will be used upon next connection";
             }
             else
             {
-                this.VoiceDeploymentStatusLabel.Content = "Click to enable";
+                this.VoiceDeploymentEnabledBox.Content = "Click to enable";
             }
         }
 
@@ -329,7 +351,7 @@ namespace VoiceAssistantClient
                 this.VoiceDeploymentEnabledBox.IsChecked = false;
             }
 
-            this.VoiceDeploymentStatusLabel.Content = "Click to enable";
+            this.VoiceDeploymentEnabledBox.Content = "Click to enable";
         }
 
         private void UpdateWakeWordStatus()
@@ -338,17 +360,17 @@ namespace VoiceAssistantClient
 
             if (!this.WakeWordConfig.IsValid)
             {
-                this.WakeWordStatusLabel.Content = "Invalid wake word model file or location";
+                this.WakeWordEnabledBox.Content = "Invalid wake word model file or location";
                 this.WakeWordEnabled = false;
                 this.WakeWordEnabledBox.IsChecked = false;
             }
             else if (this.WakeWordEnabled)
             {
-                this.WakeWordStatusLabel.Content = $"Will listen for the wake word upon next connection";
+                this.WakeWordEnabledBox.Content = $"Will listen for the wake word upon next connection";
             }
             else
             {
-                this.WakeWordStatusLabel.Content = "Click to enable";
+                this.WakeWordEnabledBox.Content = "Click to enable";
             }
         }
 
@@ -375,7 +397,12 @@ namespace VoiceAssistantClient
                 this.WakeWordEnabledBox.IsChecked = false;
             }
 
-            this.WakeWordStatusLabel.Content = "Check to enable";
+            this.WakeWordEnabledBox.Content = "Check to enable";
+        }
+
+        private void UrlOverrideTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.UpdateOkButtonState();
         }
     }
 }

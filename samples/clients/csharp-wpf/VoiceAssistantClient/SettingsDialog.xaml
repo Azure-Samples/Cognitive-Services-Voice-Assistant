@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VoiceAssistantClient"
         mc:Ignorable="d"
         Title="Settings" MinHeight="630" Height="630" Width="600" MinWidth="500" >
     <Window.Resources>
@@ -75,8 +74,7 @@
                 <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="CustomSpeechEndpointIdTextBox" Text="{Binding CustomSpeechEndpointId}" TextChanged="CustomSpeechEndpointIdTextBox_TextChanged"/>
 
                 <Label  Grid.Row="2" Grid.Column="0" Content="Enabled:"/>
-                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Name="CustomSpeechEnabledBox" IsChecked="{Binding CustomSpeechEnabled}" Checked="CustomSpeechEnabledBox_Checked" Unchecked="CustomSpeechEnabledBox_Checked"/>
-                <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Name="CustomSpeechStatusLabel" Content="Placeholder"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Name="CustomSpeechEnabledBox" Content="Placeholder" IsChecked="{Binding CustomSpeechEnabled}" Checked="CustomSpeechEnabledBox_Checked" Unchecked="CustomSpeechEnabledBox_Checked"/>
             </Grid>
 
             <Grid Margin="0,5,5,0">
@@ -97,8 +95,7 @@
                 <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="VoiceDeploymentIdsTextBox" Text="{Binding VoiceDeploymentIds}" TextChanged="VoiceDeploymentIdsTextBox_TextChanged"/>
 
                 <Label  Grid.Row="2" Grid.Column="0" Content="Enabled:"/>
-                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Name="VoiceDeploymentEnabledBox" IsChecked="{Binding VoiceDeploymentEnabled}" Checked="VoiceDeploymentEnabledBox_Checked" Unchecked="VoiceDeploymentEnabledBox_Checked"/>
-                <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Name="VoiceDeploymentStatusLabel" Content="Placeholder"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Name="VoiceDeploymentEnabledBox" Content="Placeholder" IsChecked="{Binding VoiceDeploymentEnabled}" Checked="VoiceDeploymentEnabledBox_Checked" Unchecked="VoiceDeploymentEnabledBox_Checked"/>
             </Grid>
 
             <Grid Margin="0,5,5,0">
@@ -113,18 +110,17 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                
+
                 <Label  Grid.Row="0" Grid.Column="0" Content="Wake word settings:    " FontWeight="Bold" />
 
                 <Label  Grid.Row="1" Grid.Column="0" Content="Model file path:"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="WakeWordPathTextBox" TextChanged="WakeWordPathTextBox_TextChanged"/>
                 <Button Grid.Row="1" Grid.Column="3" Content="..." Padding="5,0,5,0" Click="WakeWordBrowseButton_Click" />
-                
+
                 <Label  Grid.Row="2" Grid.Column="0" Content="Enabled:"/>
-                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Name="WakeWordEnabledBox" IsChecked="{Binding WakeWordEnabled}" Checked="WakeWordEnabledBox_Checked" Unchecked="WakeWordEnabledBox_Checked"/>
-                <Label Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Name="WakeWordStatusLabel" Content="Placeholder"/>
+                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Name="WakeWordEnabledBox" Content="Placeholder" IsChecked="{Binding WakeWordEnabled}" Checked="WakeWordEnabledBox_Checked" Unchecked="WakeWordEnabledBox_Checked"/>
             </Grid>
-            
+
             <Grid Margin="0,5,5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
@@ -140,7 +136,7 @@
                 <Label  Grid.Row="0" Grid.Column="0" Content="Advanced settings:" FontWeight="Bold" />
 
                 <Label  Grid.Row="1" Grid.Column="0" Content="Url override:"/>
-                <TextBox  Grid.Row="1" Grid.Column="1"  Name="UrlOverrideTextBox" Text="{Binding UrlOverride}"/>
+                <TextBox  Grid.Row="1" Grid.Column="1"  Name="UrlOverrideTextBox" Text="{Binding UrlOverride}" TextChanged="UrlOverrideTextBox_TextChanged"/>
 
                 <Label Grid.Row="2" Grid.Column="0" Content="Proxy host:"/>
                 <TextBox Grid.Row="2" Grid.Column="1" Name="ProxyHost" Text="{Binding ProxyHostName}"/>
@@ -149,7 +145,8 @@
                 <TextBox Grid.Row="3" Grid.Column="1" Name="ProxyPort" Text="{Binding ProxyPortNumber}"/>
             </Grid>
         </StackPanel>
-        <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock Name="OkButtonInfoBlock" Text="" Foreground="Red" Margin="0,0,10,0"/>
             <Button Name="OkButton"     Content="Ok" Width="75" Margin="5,0" Click="OkButton_Click"/>
             <Button Name="CancelButton" Content="Cancel" IsCancel="True" Width="75" Margin="5,0" Click="CancelButton_Click"/>
         </StackPanel>
