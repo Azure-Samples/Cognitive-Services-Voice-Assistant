@@ -121,9 +121,16 @@ namespace VoiceAssistantClient
         protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
-            if (string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKey)
-                ||
-                string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKeyRegion))
+
+            // Connecting and using the client requires providing a speech subscription key along
+            // with the region for that subscription or, for development against a specific custom
+            // URL, a URL override. If the client doesn't meet these requirements (e.g. on first
+            // run), pop up the settings dialog to prompt for it.
+            var hasSubscriptionKey = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKey);
+            var hasSubscriptionRegion = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKeyRegion);
+            var hasUrlOverride = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.UrlOverride);
+
+            if (!hasSubscriptionKey || (!hasSubscriptionRegion && !hasUrlOverride))
             {
                 var settingsDialog = new SettingsDialog(this.settings.RuntimeSettings);
                 bool succeeded;
@@ -185,8 +192,11 @@ namespace VoiceAssistantClient
         {
             DialogServiceConfig config = null;
 
-            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKey) &&
-                !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKeyRegion))
+            var hasSubscription = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKey);
+            var hasRegion = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKeyRegion);
+            var hasUrlOverride = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.UrlOverride);
+
+            if (hasSubscription && (hasRegion || hasUrlOverride))
             {
                 if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.CustomCommandsAppId))
                 {
@@ -247,7 +257,7 @@ namespace VoiceAssistantClient
                 config.SetProperty(PropertyId.Speech_LogFilename, this.settings.RuntimeSettings.LogFilePath);
             }
 
-            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.UrlOverride))
+            if (hasUrlOverride)
             {
                 // For prototyping new Direct Line Speech channel service feature, a custom service URL may be
                 // provided by Microsoft and entered in this tool.
