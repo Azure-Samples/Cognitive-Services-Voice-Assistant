@@ -76,7 +76,9 @@ The following are the fields in Configuration file:
 | SingleConnection         | boolean          |     Optional      | false        | true                                                       | Boolean which defines whether each Dialog in the input file is processed with the same connection with the Bot or a new connection for each Dialog. [ For more info click on this link](#single-connection-and-Multiple-connection-tests) |
 | Skip                     | boolean          |     Optional      | false        | true                                                       | Boolean which defines whether a input file is to be skipped or not                                                                                                                                                                        |
 | KeywordRecognitionModel  | string           |     Optional      |              | C:\\\LUAccuracytool\\\SydneyAssistant\\\test.table         | Path that contains table files for Keyword recognition. Make sure to specify the entire path along with the table file name. [ For more info click on this link](#writing-tests-with-keyword-spotting)                                    |
-
+| SetPropertyId            | JObject          |     Optional      |              |      | JObject that holds the parameters for URL override which takes PropertyIDargument.  
+| SetPropertyString        | JObject          |     Optional      |              |      | JObject that holds the parameters for URL override which takes string argument. 
+| SetServiceProperty       | JObject          |     Optional      |              |      | JObject that holds the parameters for overriding query string to enable dgi. 
 #### Test configuration file
 
 The following are the fields in Input File:

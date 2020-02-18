@@ -28,5 +28,8 @@
   "BotGreeting": true,
   "SpeechSDKLogEnabled": false,
   "Timeout":  5000,
-  "KeywordRecognitionModel" : ""
+  "KeywordRecognitionModel" : "",
+  "SetPropertyId": {},
+  "SetPropertyString": {},
+  "SetServiceProperty":{}
 }
