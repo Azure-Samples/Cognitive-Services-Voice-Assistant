@@ -28,11 +28,13 @@ namespace VoiceAssistantTest
                 }
                 else
                 {
+                    Console.Error.WriteLine("Test failed");
                     return 1;
                 }
             }
             catch (Exception e)
             {
+                Console.Error.WriteLine("Test encountered exception");
                 System.Diagnostics.Trace.TraceError(e.ToString());
                 return 1;
             }
