@@ -1,7 +1,9 @@
 {
     "keyword_model": "/data/cppSample/computer.table",
     "keyword_display": "Computer",
-    "speech_subscription_key": "c29bbe9dad89459dbaa31e47caa11f60",
-    "speech_region": "westus",
-    "volume": "25"
+    "speech_subscription_key": "YOUR_SUBSCRIPTION_KEY",
+    "speech_region": "YOUR_SUBSCRIPTION_REGION",
+    "volume": "25",
+    "commands_app_id": "",
+    "custom_voice_deployment_ids": ""
 }
