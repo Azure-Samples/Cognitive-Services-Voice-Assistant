@@ -13,6 +13,10 @@ For Windows you should use the nuget package.
 
 For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo. Headers and their folders should be copied into the include folder so that you have a structure like this (for ARM32): ./lib/arm32
 
+## Setup
+
+Replace the text in the configs/config.json file with your subscription key and key region.
+
 ### For the Nightfury device you will need the speech devices SDK
 TODO:
 This should be updated once the nightfury build is public
