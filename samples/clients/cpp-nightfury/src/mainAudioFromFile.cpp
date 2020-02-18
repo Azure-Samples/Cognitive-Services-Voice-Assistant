@@ -245,20 +245,24 @@ int main (int argc, char** argv)
             keywordListeningEnabled = true;
         }
         
+        // Signals that indicates the start of a listening session.
         dialogServiceConnector->SessionStarted += [&](const SessionEventArgs& event) {
             printf("SESSION STARTED: %s ...\n", event.SessionId.c_str());
         };
 
+        // Signals that indicates the end of a listening session.
         dialogServiceConnector->SessionStopped += [&](const SessionEventArgs& event) {
             printf("SESSION STOPPED: %s ...\n", event.SessionId.c_str());
             printf("Press ENTER to acknowledge...\n");
         };
 
+        // Signal for events containing intermediate recognition results.
         dialogServiceConnector->Recognizing += [&](const SpeechRecognitionEventArgs& event) {
             printf("INTERMEDIATE: %s ...\n", event.Result->Text.c_str());
             DeviceStatusIndicators::SetStatus(DeviceStatus::Detecting);
         };
 
+        // Signal for events containing speech recognition results.
         dialogServiceConnector->Recognized += [&](const SpeechRecognitionEventArgs& event) {
             printf("FINAL RESULT: '%s'\n", event.Result->Text.c_str());
             auto&& reason = event.Result->Reason;
@@ -270,6 +274,7 @@ int main (int argc, char** argv)
                 DeviceStatusIndicators::SetStatus(newStatus);
         };
 
+        // Signal for events relating to the cancellation of an interaction. The event indicates if the reason is a direct cancellation or an error.
         dialogServiceConnector->Canceled += [&](const SpeechRecognitionCanceledEventArgs& event) {
 
             printf("CANCELED: Reason=%d\n", (int)event.Reason);
@@ -282,6 +287,7 @@ int main (int argc, char** argv)
             }
         };
 
+        // Signals that an activity was received from the service
         dialogServiceConnector->ActivityReceived += [&](const ActivityReceivedEventArgs& event) {
             auto activity = nlohmann::json::parse(event.GetActivity());
 
