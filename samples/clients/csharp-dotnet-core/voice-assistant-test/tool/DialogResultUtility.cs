@@ -8,8 +8,6 @@ namespace VoiceAssistantTest
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
-    using Microsoft.Bot.Schema;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using Activity = Microsoft.Bot.Schema.Activity;
@@ -60,28 +58,10 @@ namespace VoiceAssistantTest
         public List<TurnResult> Turns { get; set; }
 
         /// <summary>
-        /// Gets or sets the count of LUIS Traces received.
+        /// Gets or sets the list of all activities received from the Bot.
         /// </summary>
         [JsonIgnore]
-        public int LUISTraceCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Intents recognized by LUIS.
-        /// </summary>
-        [JsonIgnore]
-        public List<Tuple<string, int>> IntentHierarchy { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Entities recognized by LUIS.
-        /// </summary>
-        [JsonIgnore]
-        public Dictionary<string, string> Entities { get; set; }
-
-        /// <summary>
-        /// Gets or sets the list of all non-LUIS trace activities received from the Bot.
-        /// </summary>
-        [JsonIgnore]
-        public List<BotReply> FinalResponses { get; set; }
+        public List<BotReply> BotResponses { get; set; }
 
         /// <summary>
         /// Iterates over the List of expected response and actual response Activities.
@@ -127,7 +107,7 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="expected"> Expected Bot response activity. </param>
         /// <param name="actual"> Bot response activity. </param>
-        /// <returns>The count of mismatchs in an activity.</returns>
+        /// <returns>The count of mismatches in an activity.</returns>
         public static int CompareJObjects(JObject expected, JObject actual)
         {
             foreach (KeyValuePair<string, JToken> expectedPair in expected)
@@ -218,67 +198,6 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
-        /// Organizes Activities received from the Bot.
-        /// Luis Traces containing Entities and Intents are added to the IntentHeirarchy and Entities Data Structures.
-        /// All other activities are added to the list of FinalResponses.
-        /// </summary>
-        /// <param name="allActivities">Activities received from Bot.</param>
-        public void OrganizeActivities(List<BotReply> allActivities)
-        {
-            this.LUISTraceCount = 0;
-            this.IntentHierarchy = new List<Tuple<string, int>>();
-            this.Entities = new Dictionary<string, string>();
-            this.FinalResponses = new List<BotReply>();
-
-            foreach (BotReply item in allActivities)
-            {
-                if (item?.Activity != null)
-                {
-                    // Strip LUIS Trace Activities to validate intents and slots
-                    if (item?.Activity.Label == "Luis Trace")
-                    {
-                        // The Value Field has a Recognizer Result Summary
-                        string traceResult = item.Activity.Value.ToString();
-                        Dictionary<string, object> recognizerResult = JsonConvert.DeserializeObject<Dictionary<string, object>>(traceResult);
-                        Dictionary<string, object> lUISResult = JsonConvert.DeserializeObject<Dictionary<string, object>>(recognizerResult["luisResult"].ToString());
-                        string topScoringIntent = JsonConvert.DeserializeObject<Dictionary<string, object>>(lUISResult["topScoringIntent"].ToString())["intent"].ToString();
-                        string entityString = lUISResult["entities"]?.ToString();
-                        if (entityString == "[]")
-                        {
-                            entityString = string.Empty;
-                        }
-
-                        List<Dictionary<string, object>> entities = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(entityString);
-
-                        if (entities != null)
-                        {
-                            foreach (Dictionary<string, object> entityDict in entities)
-                            {
-                                if (entityDict.TryGetValue("type", out object typeKey))
-                                {
-                                    string key = typeKey.ToString().ToUpperInvariant();
-                                    if (entityDict.TryGetValue("entity", out object entityKey))
-                                    {
-                                        string value = entityKey.ToString().ToUpperInvariant();
-                                        this.Entities.TryAdd(key, value);
-                                    }
-                                }
-                            }
-                        }
-
-                        this.LUISTraceCount += 1;
-                        this.IntentHierarchy.Add(new Tuple<string, int>(topScoringIntent.ToUpperInvariant(), this.LUISTraceCount));
-                    }
-                    else
-                    {
-                        // Populate other bot responses to measure task completion rates
-                        this.FinalResponses.Add(item);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Builds the output.
         /// </summary>
         /// <param name="turns"> Input Turns.</param>
@@ -289,7 +208,6 @@ namespace VoiceAssistantTest
         {
             TurnResult turnsOutput = new TurnResult(turns)
             {
-                ExpectedSlots = new Dictionary<string, string>(),
                 ActualResponses = new List<Activity>(),
                 ActualTTSAudioReponseDuration = new List<int>(),
             };
@@ -302,16 +220,12 @@ namespace VoiceAssistantTest
                 activityIndex = turns.ExpectedResponses.Count - 1;
             }
 
-            // Actual values
-            turnsOutput.ActualIntents = this.IntentHierarchy;
-            turnsOutput.ActualSlots = this.Entities;
-
             if (recognizedKeyword != null)
             {
                 turnsOutput.KeywordVerified = recognizedKeyword;
             }
 
-            foreach (BotReply botReply in this.FinalResponses)
+            foreach (BotReply botReply in this.BotResponses)
             {
                 turnsOutput.ActualResponses.Add(botReply.Activity);
                 turnsOutput.ActualTTSAudioReponseDuration.Add(botReply.TTSAudioDuration);
@@ -328,7 +242,7 @@ namespace VoiceAssistantTest
 
                 if (turns.ExpectedResponses.Count == turnsOutput.ActualResponses.Count)
                 {
-                    turnsOutput.ActualResponseLatency = this.FinalResponses[activityIndex].Latency;
+                    turnsOutput.ActualResponseLatency = this.BotResponses[activityIndex].Latency;
                 }
             }
 
@@ -344,30 +258,16 @@ namespace VoiceAssistantTest
         /// <returns>true if the all turn tests pass, false if any of the test failed.</returns>
         public bool ValidateTurn(TurnResult turnResult, bool bootstrapMode)
         {
-            turnResult.IntentMatch = true;
-            turnResult.SlotMatch = true;
             turnResult.ResponseMatch = true;
             turnResult.UtteranceMatch = true;
             turnResult.TTSAudioResponseDurationMatch = true;
             turnResult.ResponseLatencyMatch = true;
             turnResult.Pass = true;
-            turnResult.TaskCompleted = true;
 
             int margin = this.appSettings.TTSAudioDurationMargin;
 
             if (!bootstrapMode)
             {
-                if (turnResult.ExpectedIntents == null)
-                {
-                    // Expected intents were not specified for this dialog in the JSON file. Ignore intents validation by marking them as matched, regardless of actual intents
-                    turnResult.IntentMatch = true;
-                }
-                else
-                {
-                    turnResult.IntentMatch = !turnResult.ExpectedIntents.Except(turnResult.ActualIntents).Any();
-                }
-
-                turnResult.SlotMatch = (turnResult.ActualSlots.Count == turnResult.ExpectedSlots.Count) && (!turnResult.ActualSlots.Except(turnResult.ExpectedSlots).Any());
                 turnResult.ResponseMatch = DialogResultUtility.ActivityListsMatch(turnResult.ExpectedResponses, turnResult.ActualResponses);
 
                 if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
@@ -425,8 +325,7 @@ namespace VoiceAssistantTest
                 }
             }
 
-            turnResult.Pass = turnResult.IntentMatch && turnResult.SlotMatch && turnResult.ResponseMatch && turnResult.UtteranceMatch && turnResult.TTSAudioResponseDurationMatch && turnResult.ResponseLatencyMatch;
-            turnResult.TaskCompleted = turnResult.ResponseMatch && turnResult.UtteranceMatch;
+            turnResult.Pass = turnResult.ResponseMatch && turnResult.UtteranceMatch && turnResult.TTSAudioResponseDurationMatch && turnResult.ResponseLatencyMatch;
 
             this.DisplayTestResultMessage(turnResult);
 
@@ -469,31 +368,10 @@ namespace VoiceAssistantTest
             {
                 string failMessage = $"Turn failed (DialogId {this.DialogID}, TurnID {turnResult.TurnID}) due to: ";
                 bool commaNeeded = false;
-                if (!turnResult.IntentMatch)
-                {
-                    failMessage += "intent mismatch";
-                    commaNeeded = true;
-                }
 
                 if (!turnResult.ResponseLatencyMatch)
                 {
-                    if (commaNeeded)
-                    {
-                        failMessage += ", ";
-                    }
-
                     failMessage += "latency mismatch";
-                    commaNeeded = true;
-                }
-
-                if (!turnResult.SlotMatch)
-                {
-                    if (commaNeeded)
-                    {
-                        failMessage += ", ";
-                    }
-
-                    failMessage += "slot mismatch";
                     commaNeeded = true;
                 }
 

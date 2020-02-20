@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Voice Assistant Test (VST) tool is a configurable .NET core C# console application for end-to-end regression tests and intent scoring for your Microsoft [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants). It uses the [Microsoft.CognitiveServices.Speech.Dialog](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog?view=azure-dotnet) APIs in the [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to execute a set of single or multi-turn dialogs against your bot or Custom Commands web application. JSON files are authored to specify what the client sends to the bot and the expected bot response, for every turn in the dialog. The tool can run manually as a console command or automated as part of Azure DevOps CI/CD pipeline to prevent regressions in your bot. The tool can also aggregate test results for the purpose of creating an intent (task execution) scoring report.
+The Voice Assistant Test (VST) tool is a configurable .NET core C# console application for end-to-end functional regression tests for your Microsoft [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants). It uses the [Microsoft.CognitiveServices.Speech.Dialog](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog?view=azure-dotnet) APIs in the [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to execute a set of single or multi-turn dialogs against your bot or Custom Commands web application. JSON files are authored to specify what the client sends to the bot and the expected bot response, for every turn in the dialog. The tool can run manually as a console command or automated as part of Azure DevOps CI/CD pipeline to prevent regressions in your bot.
 
 Voice Assistant Test supports the following:
 
@@ -94,9 +94,7 @@ The following are the fields in Input File:
 | Activity                         | string           |     required      |                                                          | "{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}" | Input Activity. Activity that is send up to Bot.                                                                                                       |
 | WavFile                          | string           |     required      |                                                          | "test1.WAV"                                                           | Input WAV file. Audio that is streamed to Bot                                                                                                          |
 | Keyword                          | boolean          |     Optional      | false                                                    | true                                                                  | Boolean which defines if input WAV file has a keyword or not. [ For more info click on this link](#writing-tests-with-keyword-spotting)                |
-| ExpectedResponses                | Array of JObject |     required      |                                                          |                                                                       | List of Expected responses from Bot.                                                                                                                   |
-| ExpectedIntents                  | Array of JObject |     Optional      |                                                          | [{"Item1": "NONE","Item2": 1},{"Item1":"L_DEVICECONTROL","Item2": 2}] | List of expected Intents                                                                                                                               |
-| ExpectedSlots                    | Array of JObject |     Optional      |                                                          |                                                                       | List of expected Slots.                                                                                                                                |
+| ExpectedResponses                | Array of JObject |     required      |                                                          |                                                                       | List of Expected responses from Bot.                                                                                                                   |                                   |
 | ExpectedTTSAudioResponseDuration | int              |     Optional      | 2000                                                     | 1500                                                                  | Expected duration of Bot response TTS audio. [ For more info click on this link](#testing-bot-response-tts-audio-duration)                             |
 | ExpectedResponseLatency          | string           |     Optional      | Expectedresponse index to check for is defaulted to Zero | "500,1"                                                               | This is a combination of expected latency and Index of the expected response from the list of expected responses that we care for calculating latency. |
 
@@ -240,8 +238,6 @@ In this mode,tool captures all the bot responses ,doesnt perform any validations
 #### Custom Speech Recognition
 
 #### Custom TTS voices
-
-#### Intent Scoring
 
 ```
 

@@ -9,18 +9,14 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Net;
-    using System.Runtime.CompilerServices;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
-    using NAudio.MediaFoundation;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
     using Activity = Microsoft.Bot.Schema.Activity;
 
     /// <summary>
-    /// Entry Point of LUIS Accuracy Score Application.
+    /// Entry point of Voice Assistant regression tests.
     /// </summary>
     internal class MainService
     {
@@ -214,13 +210,13 @@ namespace VoiceAssistantTest
                     }
 
                     // Capture and compute the output for this dialog in this variable.
-                    DialogResultUtility dialogOutput = new DialogResultUtility(appSettings, dialog.DialogID, dialog.Description);
+                    DialogResultUtility dialogResultUtility = new DialogResultUtility(appSettings, dialog.DialogID, dialog.Description);
 
                     // Capture outputs of all turns in this dialog in this list.
                     List<TurnResult> turnResults = new List<TurnResult>();
 
                     // Keep track of turn pass/fail : per turn.
-                    List<bool> turnCompletionStatuses = new List<bool>();
+                    List<bool> turnPassResults = new List<bool>();
 
                     if (isFirstDialog || tests.SingleConnection == false)
                     {
@@ -293,14 +289,11 @@ namespace VoiceAssistantTest
                         }
 
                         // All bot reply activities are captured in this variable.
-                        List<BotReply> responseActivities = botConnector.WaitAndProcessBotReplies(bootstrapMode);
-
-                        // Separate LUIS traces and other response activities.
-                        dialogOutput.OrganizeActivities(responseActivities);
+                        dialogResultUtility.BotResponses = botConnector.WaitAndProcessBotReplies(bootstrapMode);
 
                         // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogOutput.BuildOutput(turn, botConnector.RecognizedText, botConnector.RecognizedKeyword);
-                        if (!dialogOutput.ValidateTurn(turnResult, bootstrapMode))
+                        TurnResult turnResult = dialogResultUtility.BuildOutput(turn, botConnector.RecognizedText, botConnector.RecognizedKeyword);
+                        if (!dialogResultUtility.ValidateTurn(turnResult, bootstrapMode))
                         {
                             testPass = false;
                         }
@@ -309,7 +302,7 @@ namespace VoiceAssistantTest
                         turnResults.Add(turnResult);
 
                         // Add the turn completion status to the list of turn completions.
-                        turnCompletionStatuses.Add(turnResult.TaskCompleted);
+                        turnPassResults.Add(turnResult.Pass);
 
                         if (turn.Keyword)
                         {
@@ -317,15 +310,15 @@ namespace VoiceAssistantTest
                         }
                     } // End of turns loop
 
-                    dialogOutput.Turns = turnResults;
-                    testFileResults.Add(dialogOutput);
+                    dialogResultUtility.Turns = turnResults;
+                    testFileResults.Add(dialogResultUtility);
 
-                    DialogResult dialogResult = new DialogResult(dialogOutput.DialogID, turnCompletionStatuses);
+                    DialogResult dialogResult = new DialogResult(dialogResultUtility.DialogID, turnPassResults);
                     dialogResults.Add(dialogResult);
-                    turnCompletionStatuses = new List<bool>();
+                    turnPassResults = new List<bool>();
 
                     Trace.IndentLevel = 1;
-                    if (dialogResult.DialogCompletionStatus)
+                    if (dialogResult.DialogPass)
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
                     }
@@ -339,9 +332,9 @@ namespace VoiceAssistantTest
                 {
                     FileName = inputFileName,
                     DialogResults = dialogResults,
-                    TotalNumDialog = dialogResults.Count,
+                    DialogCount = dialogResults.Count,
                 };
-                fileTestReport.ComputeTaskCompletionRate();
+                fileTestReport.ComputeDialogPassRate();
                 allInputFilesTestReport.Add(fileTestReport);
 
                 File.WriteAllText(outputFileName, JsonConvert.SerializeObject(testFileResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
