@@ -10,7 +10,6 @@ namespace VoiceAssistantTest
     /// </summary>
     internal class TestReport
     {
-
         /// <summary>
         /// Gets or sets the name of the test file.
         /// </summary>
