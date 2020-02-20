@@ -10,25 +10,26 @@ namespace VoiceAssistantTest
     /// </summary>
     internal class TestReport
     {
-        /// <summary>
-        /// Gets or sets the number of dialogs completed over the total number of dialogs in an Input File.
-        /// </summary>
-        public float DialogCompletionRate { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the corresponding input file.
+        /// Gets or sets the name of the test file.
         /// </summary>
         public string FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the total the number of Dialogs marked completed in <see cref="FileName"/>.
+        /// Gets or sets the total number of dialogs in <see cref="FileName"/>.
         /// </summary>
-        public int NumDialogCompleted { get; set; }
+        public int DialogCount { get; set; }
 
         /// <summary>
-        /// Gets or sets the Total Number of Dialogs in <see cref="FileName"/>.
+        /// Gets or sets the total the number of dialogs test that have passed in <see cref="FileName"/>.
         /// </summary>
-        public int TotalNumDialog { get; set; }
+        public int DialogPassCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the dialogs pass rate, which is the number of dialog tests that passed divided by the total number of dialogs in <see cref="FileName"/>.
+        /// </summary>
+        public float DialogPassRate { get; set; }
 
         /// <summary>
         /// Gets or sets the Dialog Results for each Dialog in the file.
@@ -36,21 +37,21 @@ namespace VoiceAssistantTest
         public List<DialogResult> DialogResults { get; set; }
 
         /// <summary>
-        /// Computation of DialogCompletionRate. Dialogs compeleted divided by Total Number of Dialogs.
+        /// Computation of DialogPassRate - The number of dialog tests that passed divided by the total number of dialogs in the test.
         /// </summary>
-        public void ComputeTaskCompletionRate()
+        public void ComputeDialogPassRate()
         {
-            float pos = 0;
-            foreach (var item in this.DialogResults)
+            int pos = 0;
+            foreach (DialogResult item in this.DialogResults)
             {
-                if (item.DialogCompletionStatus)
+                if (item.DialogPass)
                 {
                     pos += 1;
                 }
             }
 
-            this.NumDialogCompleted = (int)pos;
-            this.DialogCompletionRate = pos / this.TotalNumDialog;
+            this.DialogPassCount = pos;
+            this.DialogPassRate = (float)pos / this.DialogCount;
         }
     }
 }

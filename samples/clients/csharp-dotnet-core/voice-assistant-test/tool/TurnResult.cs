@@ -3,7 +3,6 @@
 
 namespace VoiceAssistantTest
 {
-    using System;
     using System.Collections.Generic;
     using Microsoft.Bot.Schema;
     using Newtonsoft.Json;
@@ -24,22 +23,9 @@ namespace VoiceAssistantTest
             this.Activity = turns.Activity;
             this.WAVFile = turns.WAVFile;
             this.Keyword = turns.Keyword;
-            this.ExpectedIntents = turns.ExpectedIntents;
             this.ExpectedTTSAudioResponseDuration = turns.ExpectedTTSAudioResponseDuration;
             this.ExpectedResponseLatency = turns.ExpectedResponseLatency;
         }
-
-        /// <summary>
-        /// Gets or sets the actual intents obtained from LUIS traces.
-        /// </summary>
-        [JsonProperty(Order = 0, NullValueHandling = NullValueHandling.Ignore)]
-        public List<Tuple<string, int>> ActualIntents { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual slots obtained from LUIS traces.
-        /// </summary>
-        [JsonProperty(Order = 2, NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> ActualSlots { get; set; }
 
         /// <summary>
         /// Gets or sets the list of actual responses received from the bot.
@@ -66,18 +52,6 @@ namespace VoiceAssistantTest
         public int ActualResponseLatency { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether Actual Intents match Expected Intents.
-        /// </summary>
-        [JsonProperty(Order = 11)]
-        public bool IntentMatch { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Actual Slots match Expected Slots.
-        /// </summary>
-        [JsonProperty(Order = 11)]
-        public bool SlotMatch { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether Actual Responses match Expected Responses.
         /// </summary>
         [JsonProperty(Order = 11)]
@@ -102,7 +76,7 @@ namespace VoiceAssistantTest
         public bool ResponseLatencyMatch { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether Keyword was verfied by Speech Service.
+        /// Gets or sets a value indicating whether Keyword was verified by Speech Service.
         /// </summary>
         [JsonProperty(Order = 11)]
         public string KeywordVerified { get; set; }
@@ -112,11 +86,5 @@ namespace VoiceAssistantTest
         /// </summary>
         [JsonProperty(Order = 11)]
         public bool Pass { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether Task is completed. True if ResponseMatch is true.
-        /// </summary>
-        [JsonProperty(Order = 11)]
-        public bool TaskCompleted { get; set; }
     }
 }
