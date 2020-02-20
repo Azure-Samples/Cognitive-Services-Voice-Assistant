@@ -5,6 +5,9 @@
 #include <list>
 #include <thread>
 #include <mutex>
+#include <atlcore.h>
+#include <mmdeviceapi.h>
+#include <Audioclient.h>
 #include <Windows.h>
 #include "AudioPlayer.h"
 #include "AudioPlayerEntry.h"
@@ -172,9 +175,6 @@ namespace AudioPlayer
             int Close();
         
         private:
-            unsigned int            m_numChannels;
-            unsigned int            m_bytesPerSample;
-            unsigned int            m_bitsPerSecond;
             bool                    m_isPlaying = false;
             bool                    m_canceled = false;
             bool                    m_opened = false;
@@ -185,13 +185,53 @@ namespace AudioPlayer
             
             std::list<AudioPlayerEntry> m_audioQueue;
 
-            const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);
-            const IID IID_IMMDeviceEnumerator = __uuidof(IMMDeviceEnumerator);
-            const IID IID_IAudioClient = __uuidof(IAudioClient);
-            const IID IID_IAudioRenderClient = __uuidof(IAudioRenderClient);
+            ATL::CComAutoCriticalSection m_cs;
+
+            // Do not use CComPtr< > for these two because we need to control the order in which these interfaces are released
+            IAudioClient* m_pAudioClient;
+            IAudioRenderClient* m_pRenderClient;
+
+            HANDLE m_hAudioClientEvent;  // WASAPI signals more data is needed for playback
+            HANDLE m_hRenderThread; // Worker thread
+            HANDLE m_hStartEvent; // Set by Start() to unblock worker thread
+            HANDLE m_hStopEvent; // Set by Stop() to kill worker thread
+            HANDLE m_hRenderingDoneEvent; // To signal the caller that rendering is done
+
+            WAVEFORMATEX m_pwf; // Format of audio buffer
+
+            INT16* m_renderBuffer;  // Points to audio buffer holding the calibration playback tone
+            DWORD m_renderBufferOffsetInFrames; // Points to the next frame that has not yet been read
+            DWORD m_renderBufferSizeInFrames; // Total number of frames in the render buffer
+
+            BOOL m_loopRenderBufferFlag; // Playback data keeps looping same buffer when on
+
+            DWORD m_muteChannelMask; // By defualt 0 (do not mute any channels), unless otherwise set by MuteChannels()
+
+            /// <summary>
+            /// Call this to stop playback in progress. You can call this method anytime.
+            /// </summary>
+            HRESULT Stop();
+
+            HRESULT Initialize(
+                _Inout_opt_ HANDLE hRenderingDoneEvent,
+                _In_ WAVEFORMATEX* pwf,
+                _In_count_(renderBufferSizeInSamples) INT16* pRenderBuffer,
+                _In_ DWORD renderBufferSizeInSamples,
+                _In_ bool loopOnFlag);
+
+            HRESULT GetFramesRendered(
+                _Inout_opt_ DWORD* pFrames,
+                _Inout_opt_ DWORD* pTotalFrames);
+
+            static DWORD WINAPI DoRenderThread(_In_  LPVOID lpParameter);
+            HRESULT DoRenderThread();
+
+            static inline bool IsValidHandle(const HANDLE& h) {
+                return ((h != INVALID_HANDLE_VALUE) && (h != 0));
+            }
 
             std::thread m_playerThread;
             void PlayerThreadMain();
-            int WriteToDriver(uint8_t* buffer);
+            int WriteToDriver(uint8_t* buffer, size_t bufferSize);
     };
 }

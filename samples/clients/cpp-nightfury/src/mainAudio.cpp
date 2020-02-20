@@ -108,7 +108,7 @@ int main(int argc, char** argv)
         player = new LinuxAudioPlayer();
 #endif
 #ifdef WINDOWS
-        //player = new WindowsAudioPlayer();
+        player = new WindowsAudioPlayer();
 #endif
     }
     int bufferSize = 1024;
@@ -247,13 +247,13 @@ int main(int argc, char** argv)
                     
                      bytes_read = audio->Read(buffer, bufferSize);
                      int play_result = 0;
-                     if(volumeOn){
+                     if(volumeOn && player != nullptr){
                         play_result = player->Play(buffer, bytes_read);
                      }
                      total_bytes_read += bytes_read;
                     
                     
-                    cout << " ." << flush;
+                    fprintf(stdout," .");
 
                 } while (bytes_read > 0);
 
