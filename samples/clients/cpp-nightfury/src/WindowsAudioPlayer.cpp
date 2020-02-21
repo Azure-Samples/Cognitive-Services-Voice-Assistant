@@ -132,6 +132,7 @@ int WindowsAudioPlayer::Open(const std::string& device, AudioPlayerFormat format
     if (hr != S_OK) {
         goto exit;
     }
+    hr = m_pAudioClient->Start();
 
 exit:
 
@@ -139,32 +140,71 @@ exit:
 }
 
 void WindowsAudioPlayer::PlayerThreadMain() {
+    HRESULT hr = S_OK;
     m_canceled = false;
+
     while (m_canceled == false) {
         // here we will wait to be woken up since there is no audio left to play
         std::unique_lock<std::mutex> lk{ m_threadMutex };
         m_conditionVariable.wait(lk);
         lk.unlock();
+
         UINT32 maxBufferSizeInFrames = 0;
-        m_pAudioClient->GetBufferSize(&maxBufferSizeInFrames);
-        size_t playBufferSize = m_pwf.nChannels * m_pwf.nBlockAlign * maxBufferSizeInFrames / 2;
+        UINT32 paddingFrames;
+        UINT32 framesAvailable;
+        UINT32 framesToWrite;
+        BYTE* pData;
+
         while (m_audioQueue.size() > 0) {
             m_isPlaying = true;
             AudioPlayerEntry entry = m_audioQueue.front();
             size_t bufferLeft = entry.m_size;
-            std::unique_ptr<unsigned char[]> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+
+            hr = m_pAudioClient->GetBufferSize(&maxBufferSizeInFrames);
+            if (FAILED(hr)) {
+                fprintf(stderr, "Error. Failed to GetBufferSize. Error: 0x%08x\n", hr);
+                continue;
+            }
+
             while (bufferLeft > 0) {
-                if (bufferLeft >= playBufferSize) {
-                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], playBufferSize);
-                    bufferLeft -= playBufferSize;
+                
+
+                //
+                //  We want to find out how much of the buffer *isn't* available (is padding).
+                //
+
+                hr = m_pAudioClient->GetCurrentPadding(&paddingFrames);
+                if(FAILED(hr)){
+                    fprintf(stderr, "Error. Failed to GetCurrentPadding. Error: 0x%08x\n", hr);
+                    continue;
                 }
-                else { //there is a smaller amount to play so we will pad with silence
-                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], bufferLeft);
-                    memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
-                    bufferLeft = 0;
+
+                framesAvailable = maxBufferSizeInFrames - paddingFrames;
+                UINT32 sizeToWrite = framesAvailable * m_pwf.nBlockAlign;
+
+                if (sizeToWrite > bufferLeft) {
+                    sizeToWrite = (UINT32)bufferLeft;
                 }
-                WriteToDriver(playBuffer.get(), playBufferSize);
-                std::this_thread::sleep_for(std::chrono::seconds(1));
+
+                framesToWrite = sizeToWrite / m_pwf.nBlockAlign;
+                hr = m_pRenderClient->GetBuffer(framesToWrite, &pData);
+                if (FAILED(hr)) {
+                    fprintf(stderr, "Error. Failed to GetBuffer. Error: 0x%08x\n", hr);
+                    continue;
+                }
+
+                memcpy_s(pData, sizeToWrite, &entry.m_data[entry.m_size - bufferLeft], sizeToWrite);
+
+                bufferLeft -= sizeToWrite;
+
+                hr = m_pRenderClient->ReleaseBuffer(framesToWrite, 0);
+                if (FAILED(hr))
+                {
+                    printf("Error. Failed to ReleaseBuffer. Error: 0x%08x\n", hr);
+                    continue;
+                }
+
+
             }
             m_queueMutex.lock();
             m_audioQueue.pop_front();
@@ -188,46 +228,6 @@ int WindowsAudioPlayer::Play(uint8_t* buffer, size_t bufferSize) {
     }
 
     return rc;
-}
-
-int WindowsAudioPlayer::WriteToDriver(uint8_t* buffer, size_t bufferSize) {
-    int hr = S_OK;
-    BYTE* pData = NULL;
-    size_t bufferSizeInFrames = bufferSize / m_pwf.nBlockAlign;
-    //size_t bufferSizeInFrames = 32;
-    UINT32 maxBufferSize = 0;
-    if (bufferSize == 0) {
-        goto exit;
-    }
-    
-    m_pAudioClient->GetBufferSize(&maxBufferSize);
-
-    // Grab all the available space in the shared buffer.
-    hr = m_pRenderClient->GetBuffer(bufferSizeInFrames, &pData);
-    if (hr != S_OK) {
-        fprintf(stderr, "GetBuffer failed with HR = %d\n", hr);
-        goto exit;
-    }
-
-    // Copy next chunk of audio data
-    if (0 != memcpy_s(pData,
-        bufferSize,
-        (BYTE*)buffer,
-        bufferSize)) {
-        hr = E_FAIL;
-        fprintf(stderr, "memcpy failed\n");
-        goto exit;
-    }
-
-    hr = m_pRenderClient->ReleaseBuffer(bufferSizeInFrames, 0);
-    if (hr != S_OK) {
-        fprintf(stderr, "ReleaseBuffer failed\n");
-        goto exit;
-    }
-
-exit:
-
-    return hr;
 }
 
 int WindowsAudioPlayer::Close() {

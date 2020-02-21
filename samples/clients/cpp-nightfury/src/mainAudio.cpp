@@ -111,7 +111,7 @@ int main(int argc, char** argv)
         player = new WindowsAudioPlayer();
 #endif
     }
-    int bufferSize = 1024;
+    int bufferSize = 4096;
     unsigned char * buffer = (unsigned char *)malloc(bufferSize);
     
     auto startKwsIfApplicable = [&]()
