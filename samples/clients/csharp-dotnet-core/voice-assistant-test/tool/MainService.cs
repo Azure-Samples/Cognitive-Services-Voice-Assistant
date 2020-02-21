@@ -313,7 +313,7 @@ namespace VoiceAssistantTest
                     dialogResultUtility.Turns = turnResults;
                     testFileResults.Add(dialogResultUtility);
 
-                    DialogResult dialogResult = new DialogResult(dialogResultUtility.DialogID, turnPassResults);
+                    DialogResult dialogResult = new DialogResult(dialogResultUtility.DialogID, dialog.Description, turnPassResults);
                     dialogResults.Add(dialogResult);
                     turnPassResults = new List<bool>();
 
