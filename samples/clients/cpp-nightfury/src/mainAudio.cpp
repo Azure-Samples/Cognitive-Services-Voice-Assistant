@@ -122,7 +122,7 @@ int main(int argc, char** argv)
             auto modelPath = agentConfig->KeywordModel();
             log_t("Initializing keyword recognition with: ", modelPath);
             auto model = KeywordRecognitionModel::FromFile(modelPath);
-            dialogServiceConnector->StartKeywordRecognitionAsync(model);
+            auto _ = dialogServiceConnector->StartKeywordRecognitionAsync(model);
             log_t("KWS initialized");
         }
         else {
@@ -154,7 +154,7 @@ int main(int argc, char** argv)
 
     dialogServiceConnector = DialogServiceConnector::FromConfig(config);
     log_t("Connector created");
-    dialogServiceConnector->ConnectAsync();
+    auto future = dialogServiceConnector->ConnectAsync();
     
     log_t("Creating prime activity");
     nlohmann::json keywordPrimingActivity =
@@ -165,7 +165,7 @@ int main(int argc, char** argv)
     };
     auto keywordPrimingActivityText = keywordPrimingActivity.dump();
     log_t("Sending inform-of-keyword activity: ", keywordPrimingActivityText);
-    dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
+    auto stringFuture = dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
 
     log_t("Connector successfully initialized!");
     
@@ -236,7 +236,7 @@ int main(int argc, char** argv)
                 // TODO: AEC + Barge-in
                 // For now: no KWS during playback
                 log_t("stopping KWS for playback");
-                dialogServiceConnector->StopKeywordRecognitionAsync();
+                auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
                 log_t("KWS stopped");
 
                 auto audio = event.GetAudio();
@@ -270,7 +270,7 @@ int main(int argc, char** argv)
             {
                 log_t("Activity requested a continuation (ExpectingInput) -- listening again");
                 DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
-                dialogServiceConnector->ListenOnceAsync();
+                auto future = dialogServiceConnector->ListenOnceAsync();
             }
             else
             {
@@ -300,7 +300,7 @@ int main(int argc, char** argv)
         cin >> s;
         if(s == "1"){
             log_t("Now listening...");
-            dialogServiceConnector->ListenOnceAsync();
+            auto future = dialogServiceConnector->ListenOnceAsync();
         }
         if(s == "2"){
             startKwsIfApplicable();
@@ -308,7 +308,7 @@ int main(int argc, char** argv)
         if(s == "3"){
             if(keywordListeningEnabled){
                 log_t("Stopping keyword recognition");
-                dialogServiceConnector->StopKeywordRecognitionAsync();
+                auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
             }
             else{
                 cout << "No model path specified. Cannot stop keyword listening.\n";
