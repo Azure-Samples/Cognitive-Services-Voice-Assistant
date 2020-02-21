@@ -33,9 +33,9 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the trace has to be shown or not.
+        /// Gets or sets a value indicating whether the trace logging should be active in the CompareJObjects method.
         /// </summary>
-        public static bool Verbose { get; set; } = false;
+        public static bool LogCompareJObjects { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a ActivityMismatchCount.
@@ -83,6 +83,7 @@ namespace VoiceAssistantTest
                     string actualSerializedJson = JsonConvert.SerializeObject(actual[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                     JObject expectedJObject = JsonConvert.DeserializeObject<JObject>(expectedSerializedJson);
                     JObject actualJObject = JsonConvert.DeserializeObject<JObject>(actualSerializedJson);
+                    DialogResultUtility.LogCompareJObjects = true;
                     CompareJObjects(expectedJObject, actualJObject);
                     if (ActivityMismatchCount > 0)
                     {
@@ -117,7 +118,7 @@ namespace VoiceAssistantTest
                     if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase) == null)
                     {
                         ActivityMismatchCount++;
-                        if (Verbose)
+                        if (LogCompareJObjects)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" not found in bot response activity.");
                         }
@@ -125,7 +126,7 @@ namespace VoiceAssistantTest
                     else if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).Type != JTokenType.Object)
                     {
                         ActivityMismatchCount++;
-                        if (Verbose)
+                        if (LogCompareJObjects)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" is not an object in bot response activity.");
                         }
@@ -142,7 +143,7 @@ namespace VoiceAssistantTest
                     if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase) == null)
                     {
                         ActivityMismatchCount++;
-                        if (Verbose)
+                        if (LogCompareJObjects)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" not found in bot response activity.");
                         }
@@ -150,7 +151,7 @@ namespace VoiceAssistantTest
                     else if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).Type != JTokenType.Array)
                     {
                         ActivityMismatchCount++;
-                        if (Verbose)
+                        if (LogCompareJObjects)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" is not an array in bot response activity.");
                         }
@@ -169,7 +170,7 @@ namespace VoiceAssistantTest
                     if (actualValue == null)
                     {
                         ActivityMismatchCount++;
-                        if (Verbose)
+                        if (LogCompareJObjects)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" not found in bot response activity.");
                         }
@@ -185,9 +186,9 @@ namespace VoiceAssistantTest
                         if (!normalizedExpectedResult.Equals(normalizedActualResult, StringComparison.OrdinalIgnoreCase))
                         {
                             ActivityMismatchCount++;
-                            if (Verbose)
+                            if (LogCompareJObjects)
                             {
-                                Trace.TraceInformation($"Activity field: \" {expectedPair.Key} \", has mismatching values. \"{actualValue}\",\"{expectedValue}\".");
+                                Trace.TraceInformation($"Activity field: \"{expectedPair.Key}\" has mismatching values: \"{actualValue}\" does not equal \"{expectedValue}\".");
                             }
                         }
                     }
@@ -209,7 +210,7 @@ namespace VoiceAssistantTest
             TurnResult turnsOutput = new TurnResult(turns)
             {
                 ActualResponses = new List<Activity>(),
-                ActualTTSAudioReponseDuration = new List<int>(),
+                ActualTTSAudioResponseDuration = new List<int>(),
             };
 
             int activityIndex = 0;
@@ -228,7 +229,7 @@ namespace VoiceAssistantTest
             foreach (BotReply botReply in this.BotResponses)
             {
                 turnsOutput.ActualResponses.Add(botReply.Activity);
-                turnsOutput.ActualTTSAudioReponseDuration.Add(botReply.TTSAudioDuration);
+                turnsOutput.ActualTTSAudioResponseDuration.Add(botReply.TTSAudioDuration);
             }
 
             turnsOutput.ActualRecognizedText = recognizedText;
@@ -284,9 +285,9 @@ namespace VoiceAssistantTest
 
                 bool durationMatch = true;
 
-                if (turnResult.ExpectedTTSAudioResponseDuration != null && turnResult.ExpectedTTSAudioResponseDuration.Count != 0 && turnResult.ActualTTSAudioReponseDuration != null && turnResult.ActualTTSAudioReponseDuration.Count != 0)
+                if (turnResult.ExpectedTTSAudioResponseDuration != null && turnResult.ExpectedTTSAudioResponseDuration.Count != 0 && turnResult.ActualTTSAudioResponseDuration != null && turnResult.ActualTTSAudioResponseDuration.Count != 0)
                 {
-                    if (turnResult.ExpectedTTSAudioResponseDuration.Count > turnResult.ActualTTSAudioReponseDuration.Count)
+                    if (turnResult.ExpectedTTSAudioResponseDuration.Count > turnResult.ActualTTSAudioResponseDuration.Count)
                     {
                         turnResult.TTSAudioResponseDurationMatch = false;
                     }
@@ -296,7 +297,7 @@ namespace VoiceAssistantTest
                         {
                             if (turnResult.ExpectedTTSAudioResponseDuration[i] > 0)
                             {
-                                if (turnResult.ActualTTSAudioReponseDuration[i] >= (turnResult.ExpectedTTSAudioResponseDuration[i] - margin) && turnResult.ActualTTSAudioReponseDuration[i] <= (turnResult.ExpectedTTSAudioResponseDuration[i] + margin))
+                                if (turnResult.ActualTTSAudioResponseDuration[i] >= (turnResult.ExpectedTTSAudioResponseDuration[i] - margin) && turnResult.ActualTTSAudioResponseDuration[i] <= (turnResult.ExpectedTTSAudioResponseDuration[i] + margin))
                                 {
                                     if (durationMatch)
                                     {
@@ -305,7 +306,7 @@ namespace VoiceAssistantTest
                                 }
                                 else
                                 {
-                                    Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioReponseDuration[i]} is outside the expected range {turnResult.ExpectedTTSAudioResponseDuration[i]}+/-{margin}");
+                                    Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioResponseDuration[i]} is outside the expected range {turnResult.ExpectedTTSAudioResponseDuration[i]}+/-{margin}");
                                     durationMatch = false;
                                     turnResult.TTSAudioResponseDurationMatch = false;
                                 }

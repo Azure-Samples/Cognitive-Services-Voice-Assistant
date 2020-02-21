@@ -54,7 +54,7 @@ First, we will write the Application configuration. Copy and paste the following
 {
   "Tests": [
     {
-      "FileName": "GreetingTest.json",
+      "FileName": "TestConfig.json",
     }
   ],
   "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
@@ -70,7 +70,7 @@ All input test files (or just one in this case -- "GreetingTest.json") and outpu
 
 "BotGreeting" field needs to be specified and set to true for echo bot tests, since by default it is false. A "true" value instructs the tool to verify that the test configuration is written correctly and the test is executed expecting a bot greeting after connection is established with the bot.
 
-Now, write the test configuration. Copy and paste the following to your text editor and save the file as "AppConfig.json" in your test folder (e.g. c:\test):
+Now, write the test configuration. Copy and paste the following to your text editor and save the file as "TestConfig.json" in your test folder (e.g. c:\test):
 
 ```json
 [
@@ -98,102 +98,80 @@ Now, write the test configuration. Copy and paste the following to your text edi
             "inputHint": "expectingInput"
           }
         ],
+        "ExpectedTTSAudioResponseDuration": [2300, 8200],
+        "ExpectedResponseLatency": 3000
       }
     ]
   }
 ]
 ```
 
-
-!! *TODO: Make these work:*
-* *We need to be able to compare JSON fields inside the "attachments". Right now if I change anything in the "contentType" field the test still passes.*
-
 The test includes one dialog to verify the bot's greeting. It has the following fields:
 * DialogId - A unique identifier string for the dialog. You can use an integer counter (as we do here, starting with the value "0"), a random GUID or any unique string. The test logs will use this identifier.
 * Description - A free-form string describing what this dialog does.
 * Turns - A dialog with the bot may contain several turns (user request followed by bot reply). Here we list one turn, and it is a greeting turn in the sense that we only specify the expect bot reply. We do not specify a preceding user request.
     * TurnId - A non-negative integer that enumerates the turns, starting from 0.
-    * ExpectedResponses - This is an array that lists the bot reply activities in the order you expect the client to receive them. Each activity is JSON string that follows the [Bot-Framework Activity schema](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md). You only need to list the activity fields that you care about. In the example above, we expect the bot greeting to include two activities of type "message". We list values for "text", "speak", "inputHint" and "attachments". If the actual activities received have different values for these fields, the test will fail.
+    * ExpectedResponses - This is an array that lists the bot reply activities in the order you expect the client to receive them. Each activity is JSON string that follows the [Bot-Framework Activity schema](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md). You only need to list the activity fields that you care about. In the example above, we expect the bot greeting to include two activities of type "message". We list values for "text", "speak", "inputHint" and "attachments". If the actual activities received have different values for these fields, the test will fail. Note that the tool first orders the bot responses based on the [activity timestamp](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp) field, before comparing to the expected bot responses.
+    * ExpectedTTSAudioResponseDuration - An optional array of integers, specifying the expected duration in msec of the resulting Text-to-Speech (TTS) audio stream associated with each bot-reply activity. The length of this array must equal the length of the ExpectedResponses array. If there is no TTS audio associated with any of the bot-reply activities, you can enter a value of -1. The duration does not need to be exact. When the tool compares expected duration to actual duration, there is a tolerance defined by the application configuration setting TTSAudioDurationMargin. Its default value is 200 msec.
+    * ExpectedResponseLatency - Specifies the maximum expected duration to receive all the bot responses, in msec. If the actual duration is larger than the value specified here, the test will fail.
 
+## Step 4: Run your test
 
+Now that you created both the AppConfig.json and the TestConfig.json files, it's time to run the tool. Do this:
 
-END OF REVISED DOCUMENT - DO NOT READ BEYOND THIS POINT.    
-
-## Getting Started with Sample
-
-1. > Follow the [Voice-enable your bot using the Speed SDK Tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) to enable the your bot to use the Direct Line Speech Channel.
-2. > Copy the Cognitive Services Speech API Key by clicking on the Azure Speech resource created in the above listed tutorial
-3. > [Set up the Configuration file and Input files](###Sample-Configurations-and-Tests)
-
-### Sample Configurations and Tests
-
-Navigate to [docs/examples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/examples) to find Core Bot and Echo Bot folder with sample configurations and tests. Paste the appropriate Bot Speech Key and Region in the Config.json files in each example folder.
-
-Please see [Configuration File Structure](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/sajjadp/VAReadmeUpdateFeb42020/samples/clients/csharp-dotnet-core/voice-assistant-test/README.md#Application-Configuration-file) for reference and modify the sample configurations appropriately
-
-For examples of configuration and test files, please see the templates in [docs/json-templates/](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test/docs/json-templates)
-
-| Examples  |                                   Echo Bot                                    |                                              Core Bot                                               |
-| :-------- | :---------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: |
-| Example 1 |                         Greeting upon Bot Connection                          |                              Greeting and Message upon Bot Connection                               |
-| Example 2 |           Mutiple tests containing multi-turn dialog Text as Input            | Multiple tests containing multi-turn dialog one with text as input and other with wav file as input |
-| Example 3 | Multiple tests containing multi-turn dialogs with text and wav files as input |                                                                                                     |
-
-### Modifying Core Bot Configuration File
-
-1. > cd to docs/examples/corebot/example1
-2. > Open CoreBotConfig.json
-3. > Populate the InputFolder, and OuputFolder fields with the full path to this folder
-4. > Enter the Speech Key and Region associated with your Voice Enabled Core Bot in the SubscriptionKey and Region fields respectively.
-5. > [Run Voice Assistant Test](###Run-Voice-Assistant-Test)
-6. > Open the folder specified in the OutputFolder to find the OutputFiles generated for the Test.
-7. > cd to docs/examples/corebot/example2 and repeat steps 2 - 6
-
-### Modifying Core Bot Test File
-
-After running corebot/example2, take a look at VoiceAssistantTest.log. You will notice that Dialog 0 for SingleDialogTest1.json failed. Now take a look at SingleDialogTest1Ouput/SingleDialogTest1Output.txt, you will see that the text and speak fields in ExpectedResponses for Dialog 0 Turn 2 do not match the text and speak fields in ActualResponses.
-To Fix this,
-Paste the following for Dialog 0 Turn 2 in SingleDialogTest1.json
-
-```
-      {
-        "TurnID": 2,
-        "Utterance": "Yes",
-        "Activity": "",
-        "WavFile": "",
-        "ExpectedResponses": [
-          {
-            "type": "message",
-            "text": "I have you booked to New York from Seattle on 10th February 2025",
-            "speak": "I have you booked to New York from Seattle on 10th February 2025",
-            "inputHint": "ignoringInput"
-          },
-          {
-            "type": "message",
-            "text": "What else can I do for you?",
-            "speak": "What else can I do for you?",
-            "inputHint": "expectingInput"
-          }
-        ]
-      }
+```cmd
+VoiceAssistantTest.exe AppConfig.json
 ```
 
-Looking at the VoiceAssistantTest.log, you will see that Dialog 0 has now passed. The tool checks Expected with Actual to determine if a dialog and turn passes or fails.
+If your core bot is reachable, the test should pass and you should see the following logged on the console:
 
-### Run Voice Assistant Test
-
-1. ```
-   Open Command prompt
-
-   cd to Cognitive-Services-Voice-Assistant/samples/clients/csharp-dotnet-core/voice-assistant-test/tool/
-   dotnet build -c Release
-   cd to bin/Release/netcoreapp3.1/
-   dotnet.exe VoiceAssistantTest.dll {Full path of configuration file to run}
-   ```
-
-2. In the path specified in the OutputFolder of the configuration file, you will find the VoiceAssistantTest logs, report, and test output for each Test File.
-
+```cmd
+VoiceAssistantTest Information: 0 : Parsing AppConfig.json
+VoiceAssistantTest Information: 0 : Validating file TestConfig.json
+VoiceAssistantTest Information: 0 : Processing file TestConfig.json
+    VoiceAssistantTest Information: 0 : [6:56:37 PM] Running DialogId 0, description "Testing core bot greeting"
+        VoiceAssistantTest Information: 0 : [6:56:37 PM] Running Turn 0
+            VoiceAssistantTest Information: 0 : Task status RanToCompletion. Received 2 activities, as expected (configured to wait for 2):
+            VoiceAssistantTest Information: 0 : [0]: Latency 570 msec
+            VoiceAssistantTest Information: 0 : [1]: Latency 604 msec
+            VoiceAssistantTest Information: 0 : Turn passed (DialogId 0, TurnID 0)
+    VoiceAssistantTest Information: 0 : DialogId 0 passed
+VoiceAssistantTest Information: 0 : ********** TEST PASS **********
 ```
-Note : If you want to run the application through a Visual Studio debugger add the configuration file path to application arguments.
-Click on Solution > Properties > Debug > Enter the configuration file path to application arguments
+Notice that these files and folder were crated by the tool:
+
+```cmd
+VoiceAssistantTest.log
+VoiceAssistantTestReport.json
+TestConfigOutput\TestConfigOutput.txt
+TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-0.WAV
+TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-1.WAV
 ```
+These are:
+* VoiceAssistantTest.log - A capture of the same logs you see on the console
+* VoiceAssistantTestReport.json - A short summary report of the test. For each one of the test files specified in AppConfig.json (here we only have one: TestConfig.json) it lists the pass rate (how many dialogs succeeded), and enumerates all the dialogs with their pass/fail result.
+* TestConfigOutput.txt - A detailed result of executing the dialogs specified in the TestConfig.txt file (here we only have on bot-greeting dialog). It lists all the expected values and the actual values observed when executing the dialog. At the end it also lists the pass/fail result for each validation step:
+    * ResponseMatch - True if ActualResponses matched ExpectedResponses
+    * UtteranceMatch - True if expected speech recognition matched actual speech recognition result. This is only relevant for turns with WAV file input (to be discussed further down)
+    * TTSAudioResponseDurationMatch - True if ActualTTSAudioResponseDuration values are all within the tolerance range of ExpectedTTSAudioResponseDuration.
+    * ResponseLatencyMatch - True if ActualResponseLatency is less or equal ExpectedResponseLatency.
+    * Pass - True if all of the above are true.
+* TestConfig-BotResponse-0-0-0.WAV - This is the TTS audio stream associated with the first bot response ("welcome to Bot Framework"). The WAV file name is a concatenation of 
+    - test configuration name ("TestConfig" here), followed by 
+    - the fixed string "BotResponse", then
+    - "Dialog ID" string ("0" here), then
+    - Turn ID ("0" here), then
+    - The bot reply index 
+* TestConfig-BotResponse-0-0-1.WAV - TTS audio stream associates with the second bot response ("What can I help you with today? ...")
+
+## Step 5: Make your test fail
+
+TODO
+
+## Step 6: Add a second turn to your test
+
+TODO
+
+
+
+

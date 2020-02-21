@@ -18,9 +18,10 @@ namespace VoiceAssistantTest
         /// <param name="dialogID">DialogID.</param>
         /// <param name="description">Dialog description.</param>
         /// <param name="turnPassResults">A list of bool values indicating turn pass (true) or failed (false) for each turn in the dialog.</param>
-        public DialogResult(string dialogID, List<bool> turnPassResults)
+        public DialogResult(string dialogID, string description, List<bool> turnPassResults)
         {
             this.DialogID = dialogID;
+            this.Description = description;
             this.TurnCount = turnPassResults.Count;
             this.TurnPassResults = turnPassResults;
             this.DialogPass = !turnPassResults.Contains(false);
@@ -37,6 +38,11 @@ namespace VoiceAssistantTest
         /// Gets or sets get or sets the Dialog ID.
         /// </summary>
         public string DialogID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Description. Optional text to describe what this dialog does.
+        /// </summary>
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the number of turns in this dialog.

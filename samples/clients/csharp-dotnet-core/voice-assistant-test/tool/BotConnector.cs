@@ -403,7 +403,7 @@ namespace VoiceAssistantTest
 
             if (this.ignoreActivitiesList != null)
             {
-                DialogResultUtility.Verbose = false;
+                DialogResultUtility.LogCompareJObjects = false;
                 foreach (Activity activityToIgnore in this.ignoreActivitiesList)
                 {
                     string activityToIgnoreSerializedJson = JsonConvert.SerializeObject(activityToIgnore, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
