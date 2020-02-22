@@ -8,11 +8,9 @@ namespace VoiceAssistantTest
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Bot.Schema;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
@@ -403,7 +401,6 @@ namespace VoiceAssistantTest
 
             if (this.ignoreActivitiesList != null)
             {
-                DialogResultUtility.LogCompareJObjects = false;
                 foreach (Activity activityToIgnore in this.ignoreActivitiesList)
                 {
                     string activityToIgnoreSerializedJson = JsonConvert.SerializeObject(activityToIgnore, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });

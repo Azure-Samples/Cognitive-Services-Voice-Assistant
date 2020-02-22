@@ -182,7 +182,7 @@ namespace VoiceAssistantTest
                 string outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output");
                 DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
 
-                string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.txt");
+                string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.json");
 
                 StreamReader file = new StreamReader(inputFileName, Encoding.UTF8);
                 string txt = file.ReadToEnd();
