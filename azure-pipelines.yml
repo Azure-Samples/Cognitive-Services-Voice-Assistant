@@ -88,6 +88,11 @@ steps:
     artifact: $(dotNetCorePublishArtifactName)
     
 # Build cpp console application
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(sample3Solution)'
+    
 - task: VSBuild@1
   displayName: 'VSCPPBuild - $(sample3Name)'
   inputs:
