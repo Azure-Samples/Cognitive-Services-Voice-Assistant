@@ -9,7 +9,11 @@
 #include "AgentConfiguration.h"
 #include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
+
+//the pragma here suppresses warnings from the 3rd party header
+#pragma warning(push, 0)
 #include "json.hpp"
+#pragma warning(pop)
 
 #ifdef LINUX
 #include "LinuxAudioPlayer.h"

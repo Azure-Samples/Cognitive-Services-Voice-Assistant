@@ -4,7 +4,14 @@
 #include "AgentConfiguration.h"
 #include <cstdio>
 #include <fstream>
+//the pragma here suppresses warnings from the 3rd party header
+#pragma warning(push, 0)
+#pragma warning (disable : 26451)
+#pragma warning (disable : 26444)
+#pragma warning (disable : 28020)
+#pragma warning (disable : 26495)
 #include "json.hpp"
+#pragma warning(pop)
 
 using namespace Microsoft::CognitiveServices::Speech;
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
