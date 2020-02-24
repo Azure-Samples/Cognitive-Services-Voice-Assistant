@@ -328,8 +328,3 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-samples/clients/cpp-console/.vscode/
-samples/clients/cpp-console/out/
-samples/clients/cpp-console/lib/
-samples/clients/cpp-console/include/c_api/
-samples/clients/cpp-console/include/cxx_api/

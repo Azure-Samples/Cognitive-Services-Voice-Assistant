@@ -38,13 +38,6 @@ variables:
   sample2Name: VoiceAssistantTest
   sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\$(sample2Name).sln'
-  
-  # Sample 3: Windows console Voice Assistant Client, C++ (\samples\clients\cpp-console)
-  sample3Name: VoiceAssistantCPPClient
-  sample3Folder: 'samples\clients\cpp-console'
-  sample3Solution: '$(sample3Folder)\cppSample.sln'
-  sample3PublishedArtifactPath: '$(sample3Folder)\out'
-  sample3PublishedArtifactName: 'CppSample'
 
 steps:
 
@@ -86,20 +79,6 @@ steps:
   inputs:
     path: $(dotNetCorePublishArtifactPath)
     artifact: $(dotNetCorePublishArtifactName)
-    
-# Build cpp console application
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(sample3Solution)'
-    
-- task: VSBuild@1
-  displayName: 'VSCPPBuild - $(sample3Name)'
-  inputs:
-    solution: '$(sample3Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
 
 #- task: VSTest@2
 #  inputs:
