@@ -40,6 +40,7 @@ variables:
   sample2Solution: '$(sample2Folder)\$(sample2Name).sln'
   
   # Sample 3: Windows console Voice Assistant Client, C++ (\samples\clients\cpp-console)
+  sample3Name: VoiceAssistantCPPClient
   sample3Folder: 'samples\clients\cpp-console'
   sample3Solution: '$(sample3Folder)\cppSample.sln'
   sample3PublishedArtifactPath: '$(sample3Folder)\out'
