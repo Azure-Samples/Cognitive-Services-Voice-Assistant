@@ -86,7 +86,7 @@ steps:
     path: $(dotNetCorePublishArtifactPath)
     artifact: $(dotNetCorePublishArtifactName)
     
-    # Build .Net Standard applications
+# Build cpp console application
 - task: VSBuild@2
   displayName: 'VSBuild - $(sample3Name)'
   inputs:
