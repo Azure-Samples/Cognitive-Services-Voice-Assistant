@@ -33,11 +33,6 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the trace logging should be active in the CompareJObjects method.
-        /// </summary>
-        public static bool LogCompareJObjects { get; set; } = false;
-
-        /// <summary>
         /// Gets or sets a ActivityMismatchCount.
         /// </summary>
         public static int ActivityMismatchCount { get; set; } = 0;
@@ -53,7 +48,7 @@ namespace VoiceAssistantTest
         public string Description { get; private set; }
 
         /// <summary>
-        /// Gets or sets the List of Turns.
+        /// Gets or sets the List of turn results.
         /// </summary>
         public List<TurnResult> Turns { get; set; }
 
@@ -83,8 +78,7 @@ namespace VoiceAssistantTest
                     string actualSerializedJson = JsonConvert.SerializeObject(actual[index], new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                     JObject expectedJObject = JsonConvert.DeserializeObject<JObject>(expectedSerializedJson);
                     JObject actualJObject = JsonConvert.DeserializeObject<JObject>(actualSerializedJson);
-                    DialogResultUtility.LogCompareJObjects = true;
-                    CompareJObjects(expectedJObject, actualJObject);
+                    CompareJObjects(expectedJObject, actualJObject, true);
                     if (ActivityMismatchCount > 0)
                     {
                         match = false;
@@ -108,8 +102,9 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="expected"> Expected Bot response activity. </param>
         /// <param name="actual"> Bot response activity. </param>
+        /// <param name="enableLogging"> Set to true to trace differences between expected and actual JObjects.</param>
         /// <returns>The count of mismatches in an activity.</returns>
-        public static int CompareJObjects(JObject expected, JObject actual)
+        public static int CompareJObjects(JObject expected, JObject actual, bool enableLogging = false)
         {
             foreach (KeyValuePair<string, JToken> expectedPair in expected)
             {
@@ -118,7 +113,7 @@ namespace VoiceAssistantTest
                     if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase) == null)
                     {
                         ActivityMismatchCount++;
-                        if (LogCompareJObjects)
+                        if (enableLogging)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" not found in bot response activity.");
                         }
@@ -126,7 +121,7 @@ namespace VoiceAssistantTest
                     else if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).Type != JTokenType.Object)
                     {
                         ActivityMismatchCount++;
-                        if (LogCompareJObjects)
+                        if (enableLogging)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" is not an object in bot response activity.");
                         }
@@ -135,7 +130,8 @@ namespace VoiceAssistantTest
                     {
                         CompareJObjects(
                             expectedPair.Value.ToObject<JObject>(),
-                            actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).ToObject<JObject>());
+                            actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).ToObject<JObject>(),
+                            enableLogging);
                     }
                 }
                 else if (expectedPair.Value.Type == JTokenType.Array)
@@ -143,7 +139,7 @@ namespace VoiceAssistantTest
                     if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase) == null)
                     {
                         ActivityMismatchCount++;
-                        if (LogCompareJObjects)
+                        if (enableLogging)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" not found in bot response activity.");
                         }
@@ -151,7 +147,7 @@ namespace VoiceAssistantTest
                     else if (actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).Type != JTokenType.Array)
                     {
                         ActivityMismatchCount++;
-                        if (LogCompareJObjects)
+                        if (enableLogging)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" is not an array in bot response activity.");
                         }
@@ -160,7 +156,8 @@ namespace VoiceAssistantTest
                     {
                         CompareJArrays(
                             expectedPair.Value.ToObject<JArray>(),
-                            actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).ToObject<JArray>());
+                            actual.GetValue(expectedPair.Key, StringComparison.OrdinalIgnoreCase).ToObject<JArray>(),
+                            enableLogging);
                     }
                 }
                 else
@@ -170,7 +167,7 @@ namespace VoiceAssistantTest
                     if (actualValue == null)
                     {
                         ActivityMismatchCount++;
-                        if (LogCompareJObjects)
+                        if (enableLogging)
                         {
                             Trace.TraceInformation($"Activity field \"{expectedPair.Key}\" not found in bot response activity.");
                         }
@@ -186,7 +183,7 @@ namespace VoiceAssistantTest
                         if (!normalizedExpectedResult.Equals(normalizedActualResult, StringComparison.OrdinalIgnoreCase))
                         {
                             ActivityMismatchCount++;
-                            if (LogCompareJObjects)
+                            if (enableLogging)
                             {
                                 Trace.TraceInformation($"Activity field: \"{expectedPair.Key}\" has mismatching values: \"{actualValue}\" does not equal \"{expectedValue}\".");
                             }
@@ -338,7 +335,8 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="expected">Expected Bot response activity.</param>
         /// <param name="actual">Bot response activity.</param>
-        private static void CompareJArrays(JArray expected, JArray actual)
+        /// <param name="enableLogging"> Set to true to trace differences between expected and actual JArrays.</param>
+        private static void CompareJArrays(JArray expected, JArray actual, bool enableLogging = false)
         {
             for (int index = 0; index < expected.Count; index++)
             {
@@ -348,7 +346,8 @@ namespace VoiceAssistantTest
                     JToken actualItem = (index >= actual.Count) ? new JObject() : actual[index];
                     CompareJObjects(
                         expectedItem.ToObject<JObject>(),
-                        actualItem.ToObject<JObject>());
+                        actualItem.ToObject<JObject>(),
+                        enableLogging);
                 }
             }
 
