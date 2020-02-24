@@ -1,6 +1,5 @@
-﻿// <copyright file="Program.cs" company="Microsoft Corporation">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {
@@ -21,11 +20,21 @@ namespace VoiceAssistantTest
         {
             try
             {
-                await MainService.StartUp(configFile).ConfigureAwait(false);
-                return 0;
+                bool testPass = await MainService.StartUp(configFile).ConfigureAwait(false);
+
+                if (testPass)
+                {
+                    return 0;
+                }
+                else
+                {
+                    Console.Error.WriteLine("Test failed");
+                    return 1;
+                }
             }
             catch (Exception e)
             {
+                Console.Error.WriteLine("Test encountered exception");
                 System.Diagnostics.Trace.TraceError(e.ToString());
                 return 1;
             }

@@ -1,6 +1,5 @@
-﻿// <copyright file="DialogResult.cs" company="Microsoft Corporation">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {
@@ -18,13 +17,14 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="dialogID">DialogID.</param>
         /// <param name="description">Dialog description.</param>
-        /// <param name="turnCompletionStatus">Bool indicates if test has completed a Dialog/Turn.</param>
-        public DialogResult(string dialogID, List<bool> turnCompletionStatus)
+        /// <param name="turnPassResults">A list of bool values indicating turn pass (true) or failed (false) for each turn in the dialog.</param>
+        public DialogResult(string dialogID, string description, List<bool> turnPassResults)
         {
             this.DialogID = dialogID;
-            this.NumOfTurns = turnCompletionStatus.Count;
-            this.TurnCompletionResult = turnCompletionStatus;
-            this.DialogCompletionStatus = !turnCompletionStatus.Contains(false);
+            this.Description = description;
+            this.TurnCount = turnPassResults.Count;
+            this.TurnPassResults = turnPassResults;
+            this.DialogPass = !turnPassResults.Contains(false);
         }
 
         /// <summary>
@@ -40,18 +40,23 @@ namespace VoiceAssistantTest
         public string DialogID { get; set; }
 
         /// <summary>
-        /// Gets or sets the Number of turns in this Dialog.
+        /// Gets or sets the Description. Optional text to describe what this dialog does.
         /// </summary>
-        public int NumOfTurns { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of Bool values indicating if the corresponding turns in the dialog has completed successfully.
+        /// Gets or sets the number of turns in this dialog.
         /// </summary>
-        public List<bool> TurnCompletionResult { get; set; }
+        public int TurnCount { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the Dialog has completed.
+        /// Gets or sets a list of bool values indicating turn pass (true) or failed (false) for each turn in the dialog.
         /// </summary>
-        public bool DialogCompletionStatus { get; set; }
+        public List<bool> TurnPassResults { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the Dialog test has passed.
+        /// </summary>
+        public bool DialogPass { get; set; }
     }
 }

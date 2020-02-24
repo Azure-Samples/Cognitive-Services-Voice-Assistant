@@ -11,13 +11,6 @@
         "Activity": "",
         "WavFile": "",
         "Keyword" : false,
-        "ExpectedIntents": [
-          {
-            "Item1": "NONE",
-            "Item2": 1
-          }
-        ],
-        "ExpectedSlots": "",
         "ExpectedResponses": [
           {
             "entities": [
@@ -45,13 +38,6 @@
         "Activity": "",
         "WavFile": "test1.WAV",
         "Keyword" : false,
-        "ExpectedIntents": [
-          {
-            "Item1": "NONE",
-            "Item2": 1
-          }
-        ],
-        "ExpectedSlots": "",
         "ExpectedResponses": [
           {
             "text": "testing turn 1"
@@ -74,13 +60,6 @@
         "Activity": "",
         "WavFile": "test2.WAV",
         "Keyword" : false,
-        "ExpectedIntents": [
-          {
-            "Item1": "NONE",
-            "Item2": 1
-          }
-        ],
-        "ExpectedSlots": "",
         "ExpectedResponses": [
           {
             "text": "testing turn 1"

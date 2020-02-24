@@ -22,25 +22,22 @@ variables:
   buildPlatformNative: x64
   buildPlatformManaged: 'Any CPU'
   buildConfiguration: Release
+  dotNetCoreRuntimeIdentifier: win-x64 
   dotNetCoreVersion: '3.1'
+  dotNetCorePublishArtifactPath: 'DotNetCorePublish'
+  dotNetCorePublishArtifactName: 'DotNetCoreExecutables'
 
   # Sample 1: Windows Voice Assistant Client, C# WPF (\samples\clients\csharp-wpf)
+  sample1Name: VoiceAssistantClient
   sample1Folder: 'samples\clients\csharp-wpf'
-  sample1Solution: '$(sample1Folder)\VoiceAssistantClient.sln'
-  sample1PublishedArtifactPath: '$(sample1Folder)\VoiceAssistantClient\bin\$(buildPlatformNative)\$(buildConfiguration)'
+  sample1Solution: '$(sample1Folder)\$(sample1Name).sln'
+  sample1PublishedArtifactPath: '$(sample1Folder)\$(sample1Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
   sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
 
   # Sample 2: Voice Assistant Test, .NET core (\samples\clients\csharp-dotnet-core\voice-assistant-test)
-  sample2Folder: 'samples\clients\cpp-console'
-  sample2Solution: '$(sample2Folder)\cppSample.sln'
-  sample2PublishedArtifactPath: '$(sample2Folder)\out'
-  sample2PublishedArtifactName: 'CppSample'
-  
-  # Sample 3: Windows console Voice Assistant Client, C++ (\samples\clients\cpp-console)
-  sample1Folder: 'samples\clients\csharp-wpf'
-  sample1Solution: '$(sample1Folder)\VoiceAssistantClient.sln'
-  sample1PublishedArtifactPath: '$(sample1Folder)\VoiceAssistantClient\bin\$(buildPlatformNative)\$(buildConfiguration)'
-  sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
+  sample2Name: VoiceAssistantTest
+  sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
+  sample2Solution: '$(sample2Folder)\$(sample2Name).sln'
 
 steps:
 
@@ -52,6 +49,7 @@ steps:
 
 # Build .Net Standard applications
 - task: VSBuild@1
+  displayName: 'VSBuild - $(sample1Name)'
   inputs:
     solution: '$(sample1Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -59,29 +57,28 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: PublishPipelineArtifact@1
+  displayName: 'PublishPipelineArtifact - Publish artifacts for $(sample1Name)'
   inputs:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
 
-# Build cpp console application
-- task: VSBuild@2
-  inputs:
-    solution: '$(sample2Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
-
-# Build .Net Core applications
+# Build .NET Core applications and publish self-contained executables   
 - task: DotNetCoreCLI@2
+  displayName: 'DotNetCoreCLI - .NET Core build and publish $(sample2Name)'
   inputs:
-    Command: 'build'
+    Command: 'publish'
     Projects: $(sample2Solution)
-    Arguments: '-c $(buildConfiguration)'
+    publishWebProjects: false
+    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(dotNetCorePublishArtifactPath)  /p:PublishSingleFile=true'
+    zipAfterPublish: false
+    modifyOutputPath: true    
 
+# Include all .NET Core executables in the resulting artifacts 
 - task: PublishPipelineArtifact@1
+  displayName: 'PublishPipelineArtifact - Publish artifacts for .NET core executables'
   inputs:
-    path: $(sample2PublishedArtifactPath)
-    artifact: $(sample2PublishedArtifactName)
+    path: $(dotNetCorePublishArtifactPath)
+    artifact: $(dotNetCorePublishArtifactName)
 
 #- task: VSTest@2
 #  inputs:

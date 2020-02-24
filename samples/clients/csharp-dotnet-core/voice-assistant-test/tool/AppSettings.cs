@@ -1,6 +1,5 @@
-﻿// <copyright file="AppSettings.cs" company="Microsoft Corporation">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {
@@ -9,7 +8,8 @@ namespace VoiceAssistantTest
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using Microsoft.Extensions.Configuration;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using VoiceAssistantTest.Resources;
 
     /// <summary>
@@ -17,21 +17,22 @@ namespace VoiceAssistantTest
     /// </summary>
     internal class AppSettings
     {
-        private static AppSettings instance;
-
         /// <summary>
         /// Gets or sets test configuration of each Input File.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public TestSettings[] Tests { get; set; }
 
         /// <summary>
         /// Gets or sets Speech Subscription Key.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string SubscriptionKey { get; set; }
 
         /// <summary>
         /// Gets or sets Speech Subscription Region.
         /// </summary>
+        [JsonProperty(Required = Required.Always)]
         public string Region { get; set; }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace VoiceAssistantTest
         /// The text file name is VoiceAssistantTest.log and it will be written to the folder
         /// specified by the OutputFolder property.
         /// </summary>
-        public bool AppLogEnabled { get; set; }
+        public bool AppLogEnabled { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether a Speech SDK log should be written when the test is run.
@@ -54,13 +55,12 @@ namespace VoiceAssistantTest
         /// The file name will have the time-stamped format SpeechSDKLog-yyyy-MM-dd-HH-mm-ss.txt,
         /// and it will be written to the folder specified by the OutputFolder property.
         /// </summary>
-        public bool SpeechSDKLogEnabled { get; set; }
+        public bool SpeechSDKLogEnabled { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets the speech recognition language. If this value is not set,
-        /// the default is en-us.
+        /// Gets or sets the speech recognition language.
         /// </summary>
-        public string SRLanguage { get; set; }
+        public string SRLanguage { get; set; } = "en-us";
 
         /// <summary>
         /// Gets or sets the Custom Commands Application ID. If this value is not set,
@@ -88,13 +88,13 @@ namespace VoiceAssistantTest
         /// Gets or sets the root input folder. This root folder will be added
         /// to all file names listed in the InputFiles array.
         /// </summary>
-        public string InputFolder { get; set; }
+        public string InputFolder { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the output folder. Test result and application
         /// log file will be written to this folder.
         /// </summary>
-        public string OutputFolder { get; set; }
+        public string OutputFolder { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether a Bot has a Greeting.
@@ -112,25 +112,38 @@ namespace VoiceAssistantTest
         public string KeywordRecognitionModel { get; set; }
 
         /// <summary>
+        /// Gets or sets the SetPropertyID.
+        /// This will result in SetPropery method call on DialogServiceConfig that takes a PropertyId argument.
+        /// </summary>
+        public JObject SetPropertyId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SetPropertyString.
+        /// This will result in SetPropery method call on DialogServiceConfig that takes a string argument.
+        /// </summary>
+        public JObject SetPropertyString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SetServiceProperty.
+        /// This will result in SetServiceProperty method call on DialogServiceConfig.
+        /// </summary>
+        public JObject SetServiceProperty { get; set; }
+
+        /// <summary>
         /// Obtain values from AppSettings.json and populate an instance with associated values.
         /// </summary>
         /// <param name="configFile">Input JSON configuration file.</param>
         /// <returns>An AppSettings instance.</returns>
         public static AppSettings Load(string configFile)
         {
-            if (instance != null)
-            {
-                return instance;
-            }
-
             Trace.TraceInformation($"Parsing {configFile}");
 
-            var config = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile(configFile)
-                .Build();
-            instance = config.Get<AppSettings>();
+            StreamReader file = new StreamReader(configFile);
+            string config = file.ReadToEnd();
+            file.Close();
+            AppSettings instance = JsonConvert.DeserializeObject<AppSettings>(config);
             ValidateAppSettings(instance);
+
             return instance;
         }
 
@@ -221,11 +234,11 @@ namespace VoiceAssistantTest
                 throw new ArgumentException(ErrorStrings.SUBSCRIPTION_KEY_INVALID);
             }
 
-            if (string.IsNullOrWhiteSpace(instance.Region))
+            if (string.IsNullOrWhiteSpace(instance.Region) && instance.SetPropertyString == null)
             {
                 throw new MissingFieldException(ErrorStrings.AZURE_REGION_MISSING);
             }
-            else if (ValidateRegion(instance.Region) == false)
+            else if (!string.IsNullOrWhiteSpace(instance.Region) && ValidateRegion(instance.Region) == false)
             {
                 throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
             }
@@ -233,6 +246,13 @@ namespace VoiceAssistantTest
             if (instance.Tests == null || instance.Tests.Length == 0)
             {
                 throw new MissingFieldException(ErrorStrings.INPUT_FILE_MISSING);
+            }
+
+            string inputDirectory = instance.InputFolder;
+
+            if (string.IsNullOrEmpty(instance.InputFolder))
+            {
+                inputDirectory = Directory.GetCurrentDirectory();
             }
 
             string outputDirectory = string.Empty;
@@ -253,12 +273,17 @@ namespace VoiceAssistantTest
                 }
             }
 
+            if (string.IsNullOrEmpty(instance.OutputFolder))
+            {
+                outputDirectory = Directory.GetCurrentDirectory();
+            }
+
             if (!Directory.Exists(outputDirectory))
             {
                 throw new DirectoryNotFoundException($"{ErrorStrings.FOLDER_NOT_FOUND} - {outputDirectory}");
             }
 
-            if (!CheckDirectoryAccess(outputDirectory))
+            if (!HasWriteAccessToDirectory(outputDirectory))
             {
                 // If output folder is set, check if it has write permissions
                 throw new UnauthorizedAccessException($"{ErrorStrings.NO_WRITE_ACCESS_FOLDER} - {outputDirectory}");
@@ -323,26 +348,26 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="directory">A string representing the full path of the directory.</param>
         /// <returns>True if the directory has write access, false otherwise.</returns>
-        private static bool CheckDirectoryAccess(string directory)
+        private static bool HasWriteAccessToDirectory(string directory)
         {
-            bool success = false;
-            string fullPath = directory + ProgramConstants.TestReportFileName;
+            bool hasWriteAccess = false;
+            string fullPath = Path.Combine(directory, ProgramConstants.TestReportFileName);
 
             try
             {
-               File.WriteAllText(fullPath, "\n");
+                File.WriteAllText(fullPath, "\n");
 
-               if (File.Exists(fullPath))
-               {
-                   success = true;
-               }
+                if (File.Exists(fullPath))
+                {
+                    hasWriteAccess = true;
+                }
             }
             catch (Exception)
             {
-               success = false;
+                hasWriteAccess = false;
             }
 
-            return success;
+            return hasWriteAccess;
         }
     }
 }

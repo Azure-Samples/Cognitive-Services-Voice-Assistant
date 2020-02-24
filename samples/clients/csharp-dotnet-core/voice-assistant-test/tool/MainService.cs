@@ -1,6 +1,5 @@
-﻿// <copyright file="MainService.cs" company="Microsoft Corporation">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {
@@ -17,7 +16,7 @@ namespace VoiceAssistantTest
     using Activity = Microsoft.Bot.Schema.Activity;
 
     /// <summary>
-    /// Entry Point of LUIS Accuracy Score Application.
+    /// Entry point of Voice Assistant regression tests.
     /// </summary>
     internal class MainService
     {
@@ -26,8 +25,8 @@ namespace VoiceAssistantTest
         /// Obtains the appsettings to connect to a Bot. Sends the inputs specified in each row of an Input File to the bot. Aggregates the responses from the bot and writes to an output file.
         /// </summary>
         /// <param name="configFile">App level config file.</param>
-        /// <returns>Returns 0 if all tests executed successfully.</returns>
-        public static async Task<int> StartUp(string configFile)
+        /// <returns>Returns ture if all tests executed successfully.</returns>
+        public static async Task<bool> StartUp(string configFile)
         {
             // Set default configuration for application tracing
             InitializeTracing();
@@ -38,12 +37,24 @@ namespace VoiceAssistantTest
                 throw new ArgumentException(ErrorStrings.CONFIG_FILE_MISSING);
             }
 
-            var appSettings = AppSettings.Load(configFile);
-            List<TestReport> allInputFilesTestReport = new List<TestReport>();
+            AppSettings appSettings = AppSettings.Load(configFile);
 
             // Adjust application tracing based on loaded settings
             ConfigureTracing(appSettings.AppLogEnabled, appSettings.OutputFolder);
 
+            // Validating the test files
+            ValidateTestFiles(appSettings);
+
+            // Processing the test files
+            return await ProcessTestFiles(appSettings).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Validating each test file specified in the App Configuration file.
+        /// </summary>
+        /// <param name="appSettings"> Application settings.</param>
+        private static void ValidateTestFiles(AppSettings appSettings)
+        {
             // Validation loop running separately
             List<string> allExceptions = new List<string>
             {
@@ -51,6 +62,7 @@ namespace VoiceAssistantTest
             };
 
             bool noTestFilesForProcessing = true;
+
             foreach (TestSettings tests in appSettings.Tests)
             {
                 if (tests.Skip)
@@ -59,14 +71,24 @@ namespace VoiceAssistantTest
                 }
                 else
                 {
-                   noTestFilesForProcessing = false;
+                    noTestFilesForProcessing = false;
                 }
 
-                string inputFileName = appSettings.InputFolder + tests.FileName;
+                if (string.IsNullOrEmpty(appSettings.InputFolder))
+                {
+                    appSettings.InputFolder = Directory.GetCurrentDirectory();
+                }
+
+                string inputFileName = Path.Combine(appSettings.InputFolder, tests.FileName);
+
+                if (Path.IsPathRooted(tests.FileName))
+                {
+                    throw new ArgumentException($"{ErrorStrings.FILENAME_PATH_NOT_RELATIVE} - {tests.FileName}");
+                }
 
                 if (!File.Exists(inputFileName))
                 {
-                    allExceptions.Add($"[{inputFileName}] : {ErrorStrings.FILE_DOES_NOT_EXIST}");
+                    allExceptions.Add($"{ErrorStrings.FILE_DOES_NOT_EXIST} - {inputFileName}");
                     continue;
                 }
 
@@ -79,6 +101,8 @@ namespace VoiceAssistantTest
                 try
                 {
                     fileContents = JsonConvert.DeserializeObject<List<Dialog>>(txt);
+
+                    ValidateUniqueDialogID(fileContents);
                 }
                 catch (Exception e)
                 {
@@ -93,9 +117,11 @@ namespace VoiceAssistantTest
                 foreach (Dialog dialog in fileContents)
                 {
                     bool firstTurn = true;
+                    int turnIndex = 0;
 
                     foreach (Turn turn in dialog.Turns)
                     {
+                        ValidateTurnID(turn, turnIndex);
                         (bool valid, List<string> turnExceptionMessages) = ValidateTurnInput(turn, appSettings.BotGreeting, tests.SingleConnection, firstDialog, firstTurn);
 
                         if (!valid)
@@ -106,6 +132,7 @@ namespace VoiceAssistantTest
 
                         firstDialog = false;
                         firstTurn = false;
+                        turnIndex++;
                     }
                 }
             }
@@ -121,6 +148,12 @@ namespace VoiceAssistantTest
                 string msg = string.Join("\n", allExceptions);
                 throw new ArgumentException(msg);
             }
+        }
+
+        private static async Task<bool> ProcessTestFiles(AppSettings appSettings)
+        {
+            List<TestReport> allInputFilesTestReport = new List<TestReport>();
+            bool testPass = true;
 
             foreach (TestSettings tests in appSettings.Tests)
             {
@@ -138,12 +171,18 @@ namespace VoiceAssistantTest
                     Trace.TraceInformation($"Processing file {tests.FileName}");
                 }
 
-                string inputFileName = appSettings.InputFolder + tests.FileName;
+                string inputFileName = Path.Combine(appSettings.InputFolder, tests.FileName);
                 string testName = Path.GetFileNameWithoutExtension(inputFileName);
-                string outputPath = appSettings.OutputFolder + testName + "Output";
+
+                if (string.IsNullOrEmpty(appSettings.OutputFolder))
+                {
+                    appSettings.OutputFolder = Directory.GetCurrentDirectory();
+                }
+
+                string outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output");
                 DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
 
-                string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.txt");
+                string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.json");
 
                 StreamReader file = new StreamReader(inputFileName, Encoding.UTF8);
                 string txt = file.ReadToEnd();
@@ -171,13 +210,13 @@ namespace VoiceAssistantTest
                     }
 
                     // Capture and compute the output for this dialog in this variable.
-                    DialogResultUtility dialogOutput = new DialogResultUtility(appSettings, dialog.DialogID, dialog.Description);
+                    DialogResultUtility dialogResultUtility = new DialogResultUtility(appSettings, dialog.DialogID, dialog.Description);
 
                     // Capture outputs of all turns in this dialog in this list.
                     List<TurnResult> turnResults = new List<TurnResult>();
 
                     // Keep track of turn pass/fail : per turn.
-                    List<bool> turnCompletionStatuses = new List<bool>();
+                    List<bool> turnPassResults = new List<bool>();
 
                     if (isFirstDialog || tests.SingleConnection == false)
                     {
@@ -199,9 +238,15 @@ namespace VoiceAssistantTest
 
                     foreach (Turn turn in dialog.Turns)
                     {
+                        // Application crashes in a multi-turn dialog with Keyword in each Turn
+                        // Crash occurs when calling StartKeywordRecognitionAsync after calling StopKeywordRecognitionAsync in the previous Turn.
+                        // In order to avoid this crash, only have Keyword in Turn 0 of a multi-turn Keyword containing Dialog.
+                        // This is being investigated.
+                        // MS-Internal bug number: 2300634.
+                        // https://msasg.visualstudio.com/Skyman/_workitems/edit/2300634/
                         if (turn.Keyword)
                         {
-                            await botConnector.StartKeywordRecognition().ConfigureAwait(false);
+                            await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
                         }
 
                         Trace.IndentLevel = 2;
@@ -244,43 +289,36 @@ namespace VoiceAssistantTest
                         }
 
                         // All bot reply activities are captured in this variable.
-                        List<BotReply> responseActivities = botConnector.WaitAndProcessBotReplies(bootstrapMode);
-
-                        // Separate LUIS traces and other response activities.
-                        ActivityUtility activityUtility = new ActivityUtility();
-                        activityUtility = activityUtility.OrganizeActivities(responseActivities);
+                        dialogResultUtility.BotResponses = botConnector.WaitAndProcessBotReplies(bootstrapMode);
 
                         // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogOutput.BuildOutput(turn, activityUtility.IntentHierarchy, activityUtility.Entities, activityUtility.FinalResponses, botConnector.DurationInMs, botConnector.RecognizedText, botConnector.RecognizedKeyword);
-                        dialogOutput.ValidateTurn(turnResult, bootstrapMode);
+                        TurnResult turnResult = dialogResultUtility.BuildOutput(turn, botConnector.RecognizedText, botConnector.RecognizedKeyword);
+                        if (!dialogResultUtility.ValidateTurn(turnResult, bootstrapMode))
+                        {
+                            testPass = false;
+                        }
 
                         // Add the turn result to the list of turn results.
                         turnResults.Add(turnResult);
 
                         // Add the turn completion status to the list of turn completions.
-                        turnCompletionStatuses.Add(turnResult.TaskCompleted);
+                        turnPassResults.Add(turnResult.Pass);
 
-                        // Application crashes in a multi-turn dialog when calling StopKeywordRecognitionAsync.
-                        // This is being investigated.
-
-                        // if (turn.Keyword)
-                        // {
-                        //    Task.Run(() =>
-                        //    {
-                        //        botConnector.StopKeywordRecognition();
-                        //    }).Wait();
-                        // }
+                        if (turn.Keyword)
+                        {
+                            await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);
+                        }
                     } // End of turns loop
 
-                    dialogOutput.Turns = turnResults;
-                    testFileResults.Add(dialogOutput);
+                    dialogResultUtility.Turns = turnResults;
+                    testFileResults.Add(dialogResultUtility);
 
-                    DialogResult dialogResult = new DialogResult(dialogOutput.DialogID, turnCompletionStatuses);
+                    DialogResult dialogResult = new DialogResult(dialogResultUtility.DialogID, dialog.Description, turnPassResults);
                     dialogResults.Add(dialogResult);
-                    turnCompletionStatuses = new List<bool>();
+                    turnPassResults = new List<bool>();
 
                     Trace.IndentLevel = 1;
-                    if (dialogResult.DialogCompletionStatus)
+                    if (dialogResult.DialogPass)
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
                     }
@@ -294,9 +332,9 @@ namespace VoiceAssistantTest
                 {
                     FileName = inputFileName,
                     DialogResults = dialogResults,
-                    TotalNumDialog = dialogResults.Count,
+                    DialogCount = dialogResults.Count,
                 };
-                fileTestReport.ComputeTaskCompletionRate();
+                fileTestReport.ComputeDialogPassRate();
                 allInputFilesTestReport.Add(fileTestReport);
 
                 File.WriteAllText(outputFileName, JsonConvert.SerializeObject(testFileResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
@@ -308,8 +346,19 @@ namespace VoiceAssistantTest
                 }
             } // End of inputFiles loop
 
-            File.WriteAllText(appSettings.OutputFolder + ProgramConstants.TestReportFileName, JsonConvert.SerializeObject(allInputFilesTestReport, Formatting.Indented));
-            return 0;
+            File.WriteAllText(Path.Combine(appSettings.OutputFolder, ProgramConstants.TestReportFileName), JsonConvert.SerializeObject(allInputFilesTestReport, Formatting.Indented));
+
+            Trace.IndentLevel = 0;
+            if (testPass)
+            {
+                Trace.TraceInformation("********** TEST PASS **********");
+            }
+            else
+            {
+                Trace.TraceInformation("********** TEST FAILED **********");
+            }
+
+            return testPass;
         }
 
         /// <summary>
@@ -332,7 +381,7 @@ namespace VoiceAssistantTest
             if (appLogEnabled)
             {
                 // Create a text writer with the given file name to trace the application
-                Stream logFileStream = File.Create($"{outputFolder}VoiceAssistantTest.log");
+                Stream logFileStream = File.Create(Path.Combine(outputFolder, ProgramConstants.TestLogFileName));
                 TextWriterTraceListener textWriterTraceListener = new TextWriterTraceListener(logFileStream);
                 Trace.Listeners.Add(textWriterTraceListener);
             }
@@ -353,7 +402,7 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="activity">String serialization of an Activity.</param>
         /// <returns>True if the string represents a valid activity.</returns>
-        private static (bool, string) CheckValidActivity(string activity)
+        private static (bool ValidActivity, string ErrorString) CheckValidActivity(string activity)
         {
             Activity activityObject;
             try
@@ -404,6 +453,27 @@ namespace VoiceAssistantTest
         }
 
         /// <summary>
+        /// Checks if the Expected TTS Duration has valid values.
+        /// </summary>
+        /// <param name="expectedTTSAudioDuration"> ExpectedTTSAudioDuration.</param>
+        /// <returns>True if the ListExpected TTS Duration has valid values else false.</returns>
+        private static bool CheckValidExpectedTTSAudioDuration(List<int> expectedTTSAudioDuration)
+        {
+            for (int i = 0; i < expectedTTSAudioDuration.Count; i++)
+            {
+                if (expectedTTSAudioDuration[i] != -1)
+                {
+                    if (expectedTTSAudioDuration[i] <= 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Checks for proper, valid input combination of the dialog turns.
         /// </summary>
         /// <param name="turn">A turn object.</param>
@@ -412,7 +482,7 @@ namespace VoiceAssistantTest
         /// <param name="firstDialog">true if this is the first dialog in the test file.</param>
         /// <param name="firstTurn">true if this is the first turn in the dialog.</param>
         /// <returns>A tuple of a boolean and a list of strings. The boolean is set to true if the string is valid and the list of strings captures the error messages if the turn is not valid.</returns>
-        private static (bool, List<string>) ValidateTurnInput(Turn turn, bool botGreeting, bool singleConnection, bool firstDialog, bool firstTurn)
+        private static (bool ValidTurn, List<string> ExceptionMesssage) ValidateTurnInput(Turn turn, bool botGreeting, bool singleConnection, bool firstDialog, bool firstTurn)
         {
             bool utterancePresentValid = CheckNotNullNotEmptyString(turn.Utterance);
             bool activityPresentValid = CheckNotNullNotEmptyString(turn.Activity);
@@ -446,7 +516,21 @@ namespace VoiceAssistantTest
                 }
             }
 
-            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration > 0)
+            if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0 && turn.ExpectedTTSAudioResponseDuration != null)
+            {
+                if (turn.ExpectedTTSAudioResponseDuration.Count != turn.ExpectedResponses.Count)
+                {
+                    exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
+                }
+
+                var expectedTTSAudioDurationObjectValid = CheckValidExpectedTTSAudioDuration(turn.ExpectedTTSAudioResponseDuration);
+                if (!expectedTTSAudioDurationObjectValid)
+                {
+                    exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_VALUES_INVALID);
+                }
+            }
+
+            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration != null)
             {
                 exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_PRESENT);
             }
@@ -502,6 +586,38 @@ namespace VoiceAssistantTest
             }
 
             return (true, exceptionMessage);
+        }
+
+        private static void ValidateUniqueDialogID(List<Dialog> testValues)
+        {
+            List<string> uniqueDialog = new List<string>();
+            foreach (var item in testValues)
+            {
+                uniqueDialog.Add(item.DialogID);
+            }
+
+            uniqueDialog.Sort();
+
+            for (int i = 0; i < uniqueDialog.Count - 1; i++)
+            {
+                if (uniqueDialog[i] == uniqueDialog[i + 1])
+                {
+                    throw new ArgumentException($"{ErrorStrings.DUPLICATE_DIALOGID} - {uniqueDialog[i]}");
+                }
+            }
+        }
+
+        private static void ValidateTurnID(Turn turn, int turnIndex)
+        {
+            if (turn.TurnID < 0)
+            {
+                throw new ArgumentException($"{ErrorStrings.NEGATIVE_TURNID} - {turn.TurnID}");
+            }
+
+            if (turn.TurnID != turnIndex)
+            {
+                throw new ArgumentException($"{ErrorStrings.INVALID_TURNID_SEQUENCE} - {turn.TurnID}");
+            }
         }
     }
 }

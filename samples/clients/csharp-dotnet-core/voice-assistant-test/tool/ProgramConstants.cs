@@ -1,6 +1,5 @@
-﻿// <copyright file="ProgramConstants.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {
@@ -13,6 +12,11 @@ namespace VoiceAssistantTest
         /// Name of the final report generated at the end of a test run.
         /// </summary>
         public const string TestReportFileName = "VoiceAssistantTestReport.json";
+
+        /// <summary>
+        /// Name of the logging text file that will be written if application logging is enabled.
+        /// </summary>
+        public const string TestLogFileName = "VoiceAssistantTest.log";
 
         /// <summary>
         /// Default TTS Duration margin to use (in milliseconds).

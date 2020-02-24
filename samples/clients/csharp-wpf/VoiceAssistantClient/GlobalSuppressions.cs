@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 // This file is used by Code Analysis to maintain SuppressMessage
@@ -12,3 +12,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1316:TupleElementNamesShouldUseCorrectCasing", Justification = "Approved")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "Approved", Scope = "member", Target = "~P:VoiceAssistantClient.SettingsDialog.UrlOverride")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "Approved", Scope = "member", Target = "~P:VoiceAssistantClient.Settings.RuntimeSettings.UrlOverride")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Approved", Scope = "member", Target = "~M:VoiceAssistantClient.SettingsDialog.UpdateOkButtonState")]

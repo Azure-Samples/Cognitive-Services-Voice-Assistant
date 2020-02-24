@@ -1,10 +1,8 @@
-﻿// <copyright file="Turn.cs" company="Microsoft Corporation">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace VoiceAssistantTest
 {
-    using System;
     using System.Collections.Generic;
     using Microsoft.Bot.Schema;
     using Newtonsoft.Json;
@@ -23,6 +21,7 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the sleep duration (in msec) before the turn begins.
         /// </summary>
+        [JsonProperty(Order = -2, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int Sleep { get; set; }
 
         /// <summary>
@@ -50,23 +49,11 @@ namespace VoiceAssistantTest
         public bool Keyword { get; set; }
 
         /// <summary>
-        /// Gets or sets the Intents.
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<Tuple<string, int>> ExpectedIntents { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Slots.
-        /// </summary>
-        [JsonProperty(Order = 1, NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, string> ExpectedSlots { get; set; }
-
-        /// <summary>
         /// Gets or sets the expected TTS Audio duration for audio responses from the bot.
         /// A margin defined by <see cref="AppSettings.TTSAudioDurationMargin"/> is applied to this value while validating if the actual TTS audio received matched the expected duration.
         /// </summary>
         [JsonProperty(Order = 6)]
-        public int ExpectedTTSAudioResponseDuration { get; set; }
+        public List<int> ExpectedTTSAudioResponseDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the List of Expected Bot Responses.
