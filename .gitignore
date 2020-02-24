@@ -330,3 +330,4 @@ ASALocalRun/
 .mfractor/
 samples/clients/cpp-nightfury/docker/qemu-arm-static.tar.gz
 samples/clients/cpp-nightfury/out/
+samples/clients/cpp-console/.vscode/
