@@ -88,8 +88,8 @@ steps:
     artifact: $(dotNetCorePublishArtifactName)
     
 # Build cpp console application
-- task: VSBuild@2
-  displayName: 'VSBuild - $(sample3Name)'
+- task: VSBuild@1
+  displayName: 'VSCPPBuild - $(sample3Name)'
   inputs:
     solution: '$(sample3Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
