@@ -1,0 +1,9 @@
+{
+  "keyword_model": "/data/ignite_nightfury/yo_heiko.table",
+  "keyword_display": "Yo Heiko",
+  "commands_app_id": "80c787bf-806b-402c-9493-79154c08a67d",
+  "speech_subscription_key": "09e1fc0a617746ce83c17dd8d47a35b7",
+  "speech_region": "westus2",
+  "custom_voice_deployment_ids": "07a139b4-a727-47c2-b19d-37e98a0a71c0",
+  "volume": "25"
+}
