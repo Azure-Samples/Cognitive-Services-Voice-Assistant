@@ -31,10 +31,16 @@ variables:
   sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
 
   # Sample 2: Voice Assistant Test, .NET core (\samples\clients\csharp-dotnet-core\voice-assistant-test)
-  sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
-  sample2Solution: '$(sample2Folder)\VoiceAssistantTest.sln'
-  sample2PublishedArtifactPath: '$(sample2Folder)\bin\$(buildConfiguration)\netcoreapp$(dotNetCoreVersion)'
-  sample2PublishedArtifactName: 'VoiceAssistantTestBuild'
+  sample2Folder: 'samples\clients\cpp-console'
+  sample2Solution: '$(sample2Folder)\cppSample.sln'
+  sample2PublishedArtifactPath: '$(sample2Folder)\out'
+  sample2PublishedArtifactName: 'CppSample'
+  
+  # Sample 3: Windows console Voice Assistant Client, C++ (\samples\clients\cpp-console)
+  sample1Folder: 'samples\clients\csharp-wpf'
+  sample1Solution: '$(sample1Folder)\VoiceAssistantClient.sln'
+  sample1PublishedArtifactPath: '$(sample1Folder)\VoiceAssistantClient\bin\$(buildPlatformNative)\$(buildConfiguration)'
+  sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
 
 steps:
 
@@ -56,6 +62,14 @@ steps:
   inputs:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
+
+# Build cpp console application
+- task: VSBuild@2
+  inputs:
+    solution: '$(sample2Solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatformNative)'
+    configuration: '$(buildConfiguration)'
 
 # Build .Net Core applications
 - task: DotNetCoreCLI@2
