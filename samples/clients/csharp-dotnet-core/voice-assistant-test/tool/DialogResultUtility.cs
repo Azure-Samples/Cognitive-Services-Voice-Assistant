@@ -210,12 +210,12 @@ namespace VoiceAssistantTest
                 ActualTTSAudioResponseDuration = new List<int>(),
             };
 
-            int activityIndex = 0;
+            int activityIndexForLatency = 0;
 
             if (turns.ExpectedResponses != null)
             {
                 turnsOutput.ExpectedResponses = turns.ExpectedResponses;
-                activityIndex = turns.ExpectedResponses.Count - 1;
+                activityIndexForLatency = turns.ExpectedResponses.Count - 1;
             }
 
             if (recognizedKeyword != null)
@@ -235,12 +235,12 @@ namespace VoiceAssistantTest
             {
                 if (turnsOutput.ExpectedResponseLatency.Split(",").Length == 2)
                 {
-                    activityIndex = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
+                    activityIndexForLatency = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
                 }
 
                 if (turns.ExpectedResponses.Count == turnsOutput.ActualResponses.Count)
                 {
-                    turnsOutput.ActualResponseLatency = this.BotResponses[activityIndex].Latency;
+                    turnsOutput.ActualResponseLatency = this.BotResponses[activityIndexForLatency].Latency;
                 }
             }
 
@@ -312,12 +312,12 @@ namespace VoiceAssistantTest
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency))
+                if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency) && turnResult.ActualResponseLatency > 0)
                 {
                     int expectedResponseLatency = int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture);
-                    if ((turnResult.ActualResponseLatency > expectedResponseLatency) || (turnResult.ExpectedResponses.Count != turnResult.ActualResponses.Count))
+                    if (turnResult.ActualResponseLatency > expectedResponseLatency)
                     {
-                        Trace.TraceInformation($"Actual bot response latency {turnResult.ActualResponseLatency} exceeds expected latency {expectedResponseLatency}");
+                        Trace.TraceInformation($"Actual bot response latency {turnResult.ActualResponseLatency} msec exceeds expected latency {expectedResponseLatency} msec");
                         turnResult.ResponseLatencyMatch = false;
                     }
                 }

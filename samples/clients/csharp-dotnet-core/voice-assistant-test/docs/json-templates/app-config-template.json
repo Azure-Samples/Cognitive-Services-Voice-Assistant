@@ -17,7 +17,7 @@
   ],
   "InputFolder": "testing\\input\\",
   "OutputFolder": "testing\\output\\",
-  "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
+  "SubscriptionKey": "0123456789abcdef0123456789abcdef",
   "Region": "westus2",
   "SRLanguage": "en-US",
   "CustomCommandsAppId": "75tm7ma78sr32eiyp8w345u57989etg9",
