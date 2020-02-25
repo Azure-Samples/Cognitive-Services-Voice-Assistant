@@ -162,7 +162,6 @@ Experiment with changing test configurations to see an example of test failure a
 * **Bot-response activity mismatch**. Change the "speak" field of the first expected bot-response in TestConfig.json from "Welcome to Bot Framework!" to just "Welcome". Re-run the test and see the "activity field mismatching values" failure message.
 * **Latency failure**. Update the "ExpectedResponseLatency" field in TestConfig.json to a very small, unrealistic value (e.g. 10 msec), re-run the test and see the "latency mismatch" failure message.
 
-
 ## Step 6: Add turns with WAV input
 
 Now that you've verified the expected bot greeting, update your test configuration file to specify a particular dialog you want to have with the bot following the greeting. Open your TestConfig.json file, replace its entire content with the one given below and save the result:
@@ -243,7 +242,7 @@ The two WAV files are provided in the repository, so you do not need to record t
 * VoiceAssistantTest.exe
 * [AppConfig.json](core-bot-examples/multi-turn/AppConfig.json)
 * [TestConfig.json](core-bot-examples/multi-turn/TestConfig.json)
-* [BookFlight.wav](core-bot-examples/multi-turn/BookFlight.wav)
+* [BookFlight.wav](core-bot-examples/multi-turn/BookFlight.wav) ("Book a flight from Seattle to New York on January 2nd, 2020")
 * [Yes.wav](core-bot-examples/multi-turn/Yes.wav)
 
 Run the tool:
@@ -281,9 +280,40 @@ VoiceAssistantTest Information: 0 : Processing file TestConfig.json
     VoiceAssistantTest Information: 0 : DialogId 0 passed
 VoiceAssistantTest Information: 0 : ********** TEST PASS **********
 ```
-The following files wil be created:
-* [VoiceAssistantTest.log](core-bot-examples/greeting/VoiceAssistantTest.log)
-* [VoiceAssistantTestReport.json](core-bot-examples/greeting/VoiceAssistantTestReport.json)
-* [TestConfigOutput\TestConfigOutput.json](core-bot-examples/greeting/TestConfigOutput/TestConfigOutput.json) 
-* [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-0.WAV](core-bot-examples/greeting/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-0.WAV)
-* [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-1.WAV](core-bot-examples/greeting/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-1.WAV) - TTS audio stream associates with the second bot response ("What can I help you with today? ...")
+The following files wil be created, with results similar to the ones linked here:
+* [VoiceAssistantTest.log](core-bot-examples/multi-turn/VoiceAssistantTest.log)
+* [VoiceAssistantTestReport.json](core-bot-examples/multi-turn/VoiceAssistantTestReport.json)
+* [TestConfigOutput\TestConfigOutput.json](core-bot-examples/multi-turn/TestConfigOutput/TestConfigOutput.json) 
+* TTS audio streams from Turn 0 (bot greeting):
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-0.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-0.WAV) (1st bot reply activity - "welcome to Bot Framework")
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-1.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-1.WAV) (2nd bot reply activity - "What can I help you with today? ...")
+* TTS audio stream from Turn 1:
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-1-0.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-1-0.WAV) ("Please confirm, I have you traveling to...")
+* TTS audio streams from Turn 2:
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-2-0.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-2-0.WAV) ("I have you booked to New York from Seattle ...")
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-2-1.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-2-1.WAV) ("What else can I do for you?")
+
+## Step 7: Try text input instead of WAV input
+
+There are three ways to specify user input in each turn:
+1. Audio stream read from WAV file (as if the user was speaking to a microphone), per the example above. In this case you will need to populate these fields:
+    * WavFile (required)
+    * Utterance (optional) - To validate speech recognition result
+    
+    Specifying Activity input is now allowed in this case.
+2. Text input (as if the user were typing in a chat box)
+    * Utterance (required) - Text to be sent to the bot as a Bot-Framework activity of type "message".
+
+    Specifying WavFile or Activity fields are not allowed in this case.
+3. Sending a Bot-Framework Activity as a JSON string. This is used for send any other data to the bot.
+    * Activity - A JSON string containing a valid Bot-Framework Activity. 
+
+    Specifying WavFile or Utterance fields is not allowed in this case.
+
+To test text input instead of WAV file input, delete the WavFile field in Turn 1 and/or Turn 2 in TestConfig.json. Leave the Utterance field as is, as it will now indicate the test to sent up to the bot. Rerun the test. Notice in the logs that instead of "Start listening" (associated with audio stream input) you now see "Activity sent to channel" (associated with the text input). Otherwise the test is identical.
+
+## Step 7: Next steps
+* Look at the [application configuration template](json-templates/app-config-template.json), for a complete list of fields you can use in your application configuration (AppConfig.json file in the above examples).
+* Look at the [test configuration template](json-templates/test-config-template.json), for a complete list of fields you can use in your test configuration file (TestConfig.json in the above examples) 
+* Review the reference tables in the main [README.md](../README.md) file for a description of all those fields
+* Read the additional topics at the bottom of the main [README.md](../README.md) for more into.
