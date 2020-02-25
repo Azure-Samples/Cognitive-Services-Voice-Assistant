@@ -207,31 +207,11 @@ namespace AudioPlayer
 
             DWORD m_muteChannelMask; // By defualt 0 (do not mute any channels), unless otherwise set by MuteChannels()
 
-            /// <summary>
-            /// Call this to stop playback in progress. You can call this method anytime.
-            /// </summary>
-            HRESULT Stop();
-
-            HRESULT Initialize(
-                _Inout_opt_ HANDLE hRenderingDoneEvent,
-                _In_ WAVEFORMATEX* pwf,
-                _In_count_(renderBufferSizeInSamples) INT16* pRenderBuffer,
-                _In_ DWORD renderBufferSizeInSamples,
-                _In_ bool loopOnFlag);
-
-            HRESULT GetFramesRendered(
-                _Inout_opt_ DWORD* pFrames,
-                _Inout_opt_ DWORD* pTotalFrames);
-
-            static DWORD WINAPI DoRenderThread(_In_  LPVOID lpParameter);
-            HRESULT DoRenderThread();
-
             static inline bool IsValidHandle(const HANDLE& h) {
                 return ((h != INVALID_HANDLE_VALUE) && (h != 0));
             }
 
             std::thread m_playerThread;
             void PlayerThreadMain();
-            int WriteToDriver(uint8_t* buffer, size_t bufferSize);
     };
 }
