@@ -49,8 +49,8 @@ The Application Configuration JSON file will list one or more Test Configuration
 
 When creating new tests, you may find it useful to start from these templates and modify them, as they contain all the supported JSON fields. Fields that are optional are present and set to their default value.
 
-- [Example of an Application Configuration file](docs\json-templates\app-config-template.json)
-- [Example of a Test Configuration file](docs\json-templates\test-config-template.json)
+- [Example of an Application Configuration file](docs/json-templates/app-config-template.json)
+- [Example of a Test Configuration file](docs/json-templates/test-config-template.json)
 
 #### Application configuration file
 
