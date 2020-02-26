@@ -15,11 +15,21 @@ For Linux or ARM devices the target version and the native binaries should be co
 
 ## Setup
 
-Replace the text in the configs/config.json file with your subscription key and key region.
+Replace the text in the configs/config.json file with your subscription key and key region. If you are using a custom speech commands application or custom speech font you can insert those GUID's there as well.
 
 ### For the Nightfury device you will need the speech devices SDK
 TODO:
 This should be updated once the nightfury build is public
+
+## Build directly on Linux arm32
+
+You will need to install some packages.
+
+    sudo apt-get install g++ libasound2-dev
+    
+cd into the scripts directory
+
+run ./buildArm32.sh
 
 ## Building for Linux Arm32 with Docker
 
