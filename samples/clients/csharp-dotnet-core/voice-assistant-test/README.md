@@ -7,9 +7,9 @@ The Voice Assistant Test (VST) tool is a configurable .NET core C# console appli
 Voice Assistant Test supports the following:
 
 - Any Bot-Framework bot or Custom Commands web application
-- Sending a text message, full [Bot-Framework Activity](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md) or audio from a WAV file up to the bot
-- Specifying the expected bot reply Activities
-- Ability to filter out (ignore) bot reply Activities as needed
+- Sending a text message, full [Bot-Framework Activity](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md) or audio from a WAV file up to Direct Line Speech channel
+- Specifying the expected bot-reply activities
+- Ability to filter out (ignore) bot-reply activities as needed
 - Verifying the duration of the Text-to-Speech (TTS) audio response from the bot
 - Verifying a bot greeting (automatic Activities sent from the bot after initial connection)
 - Measuring the duration it took for the bot to reply
@@ -43,18 +43,51 @@ The tests are set up by authoring two types of [JSON files](https://tools.ietf.o
 - [**Application Configuration**](#application-configuration-file) JSON file - Configuration settings that apply globally to all dialogs in all tests. This JSON file is the only input argument to the application.
 - [**Test Configuration**](#test-configuration-file) JSON file - Settings that are unique to this test, including specifications of all the dialogs and their turns for this test.
 
-The Application Configuration JSON file will list one or more Test Configuration JSON files.
+The Application Configuration file lists one or more Test Configuration files.
 
 ### JSON templates
 
-When creating new tests, you may find it useful to start from these templates and modify them, as they contain all the supported JSON fields. Fields that are optional are present and set to their default value.
+When creating new tests, you may find it useful to start from these templates and modify them, as they contain all the supported JSON fields. Fields that are optional are present and set to their default value. You can delete optional fields if they are not needed.
 
 - [Example of an Application Configuration file](docs/json-templates/app-config-template.json)
 - [Example of a Test Configuration file](docs/json-templates/test-config-template.json)
 
-#### Application configuration file
+### Application configuration file
 
-The following are the fields in Configuration file:
+The following are the fields supported by the Application Configuration file. Each field is specified using the following format:
+
+#### FieldName
+`field type (string or integer), optional or required field, default value (for optional fields only), example field value`. Followed by some notes on how to use this field.
+
+Here is the full list:
+
+#### InputFolder
+`string, optional, empty string, "C:\\Tests\\TestInputFolder\\"`. Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.  
+
+#### OutputFolder
+`string, optional, empty string, "C:\\Tests\\TestOutputFolder\\"`. Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
+
+#### SubscriptionKey
+`string, required, “01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
+
+#### Region
+`string, required, "westus"`. Azure region associated with your [SubscriptionKey](#subscriptionkey).
+
+#### SRLanguage
+`string, optional, "en-US", "es-MX"`. Speech Recognition Language. It is the source language of your audio. Must be one of the Locale values mentioned in this [Speech-to-text table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).
+
+#### CustomCommandsAppId
+`string, optional, null, "01234567-89ab-cdef-0123-456789abcdef"`. Custom Commands App ID. Should be a GUID with dashes.
+
+#### CustomSREndpointId
+`string, optional, null, "01234567-89ab-cdef-0123-456789abcdef"`. Custom SR Endpoint ID. Should be a GUID with dashes. Sets the endpoint ID of a customized speech model that is used for speech recognition.
+
+#### CustomVoiceDeploymentIds
+`string, optional, null, "01234567-89ab-cdef-0123-456789abcdef"`. Custom Voice Deployment ID. Should be a GUID with dashes.
+
+ #### TTSAudioDurationMargin
+ `int, optional, 200, 100`. Margin to verify the duration of bot-response TTS audio. Units are msec. The test will succeed if the actual TTS audio duration is within TTSAudioDurationMargin msec of the value specified by [ExpectedTTSAudioResponseDuration](#expectedttsaudioresponseduration).  
+
 
 | Field Name               | Type             | Required/Optional | Default      | Example                                                    | Description                                                                                                                                                                                                                               |
 | :----------------------- | :--------------- | :---------------: | :----------- | :--------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -79,9 +112,11 @@ The following are the fields in Configuration file:
 | SetPropertyId            | JObject          |     Optional      |              |      | JObject that holds the parameters for URL override which takes PropertyIDargument.  
 | SetPropertyString        | JObject          |     Optional      |              |      | JObject that holds the parameters for URL override which takes string argument. 
 | SetServiceProperty       | JObject          |     Optional      |              |      | JObject that holds the parameters for overriding query string to enable dgi. 
+
+
 #### Test configuration file
 
-The following are the fields in Input File:
+The following are the fields supported by the Test Configuration file:
 
 | Field Name                       | Type             | Required/Optional | Default                                                  | Example                                                               | Description                                                                                                                                            |
 | :------------------------------- | :--------------- | :---------------: | :------------------------------------------------------- | :-------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
