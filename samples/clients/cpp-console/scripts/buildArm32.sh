@@ -3,7 +3,13 @@ clear
 cd ..
 mkdir out
 echo "Building Raspberry Pi sample"
-g++ -Wno-psabi src/mainAudio.cpp src/LinuxAudioPlayer.cpp src/AudioPlayerEntry.cpp src/AgentConfiguration.cpp -o ./out/sample.exe \
+g++ -Wno-psabi \
+src/mainAudio.cpp \
+src/LinuxAudioPlayer.cpp \
+src/AudioPlayerEntry.cpp \
+src/AgentConfiguration.cpp \
+src/DeviceStatusIndicators.cpp \
+-o ./out/sample.exe \
 -std=c++14 \
 -D LINUX \
 -L./lib/arm32 \
@@ -13,4 +19,3 @@ g++ -Wno-psabi src/mainAudio.cpp src/LinuxAudioPlayer.cpp src/AudioPlayerEntry.c
 -pthread \
 -lasound \
 -lMicrosoft.CognitiveServices.Speech.core
-

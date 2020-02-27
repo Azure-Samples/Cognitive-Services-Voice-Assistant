@@ -11,7 +11,9 @@ This sample is intended to be a starting point for any application coded in c++.
 
 For Windows you should use the nuget package.
 
-For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo. Headers and their folders should be copied into the include folder so that you have a structure like this (for ARM32): ./lib/arm32
+For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo so that you have a structure like this (for ARM32): ./lib/arm32. 
+
+Headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api
 
 ## Setup
 
