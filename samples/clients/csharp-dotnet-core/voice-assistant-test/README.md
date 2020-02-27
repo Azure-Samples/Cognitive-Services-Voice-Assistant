@@ -57,36 +57,36 @@ When creating new tests, you may find it useful to start from these templates an
 The following are the fields supported by the Application Configuration file. Each field is specified using the following format:
 
 #### FieldName
-`field type (string or integer), optional or required field, default value (for optional fields only), example field value`. Followed by some notes on how to use this field.
+`field type (string, integer, array of integers,) | optional or required field |  default value (for optional fields only) | example field value`. Followed by some notes on how to use this field.
 
 Here is the full list:
 
 #### InputFolder
-`string, optional, empty string, "C:\\Tests\\TestInputFolder\\"`. Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.  
+`string | optional | empty string | "C:\\Tests\\TestInputFolder\\"`. Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.  
 
 #### OutputFolder
-`string, optional, empty string, "C:\\Tests\\TestOutputFolder\\"`. Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
+`string | optional | empty string | "C:\\Tests\\TestOutputFolder\\"`. Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
 
 #### SubscriptionKey
-`string, required, “01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
+`string | required | “01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
 
 #### Region
-`string, required, "westus"`. Azure region associated with your [SubscriptionKey](#subscriptionkey).
+`string | required | "westus"`. Azure region associated with your [SubscriptionKey](#subscriptionkey).
 
 #### SRLanguage
-`string, optional, "en-US", "es-MX"`. Speech Recognition Language. It is the source language of your audio. Must be one of the Locale values mentioned in this [Speech-to-text table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).
+`string | optional | "en-US" | "es-MX"`. Speech Recognition Language. It is the source language of your audio. Must be one of the Locale values mentioned in this [Speech-to-text table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).
 
 #### CustomCommandsAppId
-`string, optional, null, "01234567-89ab-cdef-0123-456789abcdef"`. Custom Commands App ID. Should be a GUID with dashes.
+`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom Commands App ID. Should be a GUID with dashes.
 
 #### CustomSREndpointId
-`string, optional, null, "01234567-89ab-cdef-0123-456789abcdef"`. Custom SR Endpoint ID. Should be a GUID with dashes. Sets the endpoint ID of a customized speech model that is used for speech recognition.
+`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom SR Endpoint ID. Should be a GUID with dashes. Sets the endpoint ID of a customized speech model that is used for speech recognition.
 
 #### CustomVoiceDeploymentIds
-`string, optional, null, "01234567-89ab-cdef-0123-456789abcdef"`. Custom Voice Deployment ID. Should be a GUID with dashes.
+`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom Voice Deployment ID. Should be a GUID with dashes.
 
  #### TTSAudioDurationMargin
- `int, optional, 200, 100`. Margin to verify the duration of bot-response TTS audio. Units are msec. The test will succeed if the actual TTS audio duration is within TTSAudioDurationMargin msec of the value specified by [ExpectedTTSAudioResponseDuration](#expectedttsaudioresponseduration).  
+ `int | optional | 200 | 100`. Margin to verify the duration of bot-response TTS audio. Units are msec. The test will succeed if the actual TTS audio duration is within TTSAudioDurationMargin msec of the value specified by [ExpectedTTSAudioResponseDuration](#expectedttsaudioresponseduration).  
 
 
 | Field Name               | Type             | Required/Optional | Default      | Example                                                    | Description                                                                                                                                                                                                                               |
