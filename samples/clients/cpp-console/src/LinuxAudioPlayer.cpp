@@ -15,10 +15,6 @@ using namespace AudioPlayer;
 LinuxAudioPlayer::LinuxAudioPlayer(){
     
     Open();
-    //TODO remove once nightfury volume is handled better
-    #ifdef NIGHTFURY
-    SetAlsaMasterVolume(25);
-    #endif
     m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
     
 }
@@ -50,8 +46,8 @@ int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
     
     /* Open PCM device for playback. */
     if ((err = snd_pcm_open(&m_playback_handle, device.c_str(), SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
-    fprintf(stderr, "cannot open output audio device %s: %s\n", device.c_str(), snd_strerror(err));
-    exit(1);
+        fprintf(stderr, "cannot open output audio device %s: %s\n", device.c_str(), snd_strerror(err));
+        exit(1);
     }
     
     /* Allocate a hardware parameters object. */

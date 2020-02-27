@@ -23,6 +23,8 @@ This should be updated once the nightfury build is public
 
 ## Build directly on Linux arm32
 
+This assumes you have the repo's files on your device and you have the prerequisites in the proper folders. (see above)
+
 You will need to install some packages.
 
     sudo apt-get install g++ libasound2-dev
