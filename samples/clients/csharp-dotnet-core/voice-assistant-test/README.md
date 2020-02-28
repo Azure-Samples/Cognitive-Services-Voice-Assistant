@@ -169,7 +169,7 @@ Here is the full list:
 >>` bool | optional | false | true`. If true, the audio in the supplied [WavFile](#wavfile) starts with a keyword, and the [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConnector_StartKeywordRecognitionAsync_Microsoft_CognitiveServices_Speech_KeywordRecognitionModel_) will be called to detect the keyword and stream audio to Direct Line Speech channel if the keyword was recognized. The field has meaning only if both [WavFile](#wavfile) and [KeywordRecognitionModel](#KeywordRecognitionModel) were defined.
 >>
 >>##### ExpectedResponses 
->>`JSON string | required`. An array of Bot-Framework JSON activities. These are the expected bot responses. You only need to specify the activity fields you care about. If the number of bot responses is less than what you specify here, the test will fail. If the number is the same, but some of the fields you specify do not match the fields in the bot reply, the test will fail. Note that the tool orders the bot responses based on their activity [Timestamp](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp), before comparing the actual bot response to the expected response. If the number of bot responses is greater than the expected number, and there is a match to all expected activities, the test will pass.
+>>`JSON string | optional`. An array of Bot-Framework JSON activities. These are the expected bot responses. You only need to specify the activity fields you care about. If the number of bot responses is less than what you specify here, the test will fail. If the number is the same, but some of the fields you specify do not match the fields in the bot reply, the test will fail. Note that the tool orders the bot responses based on their activity [Timestamp](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp), before comparing the actual bot response to the expected response. If the number of bot responses is greater than the expected number, and there is a match to all expected activities, the test will pass. If ExpectedResponses is null or missing, the turn will run in bootstrapping mode, which is useful to do when writing the tests for the first time. See the [bootstrapping mode](#bootstrapping-mode) section for more details.
 >>
 >>##### ExpectedTTSAudioResponseDuration 
 >>`array of integers | optional | null | [1500, -1, 2000]`. Expected duration (in msec) of bot response TTS audio stream. This allows you to validate that the right audio stream duration was downloaded by the tool. Otherwise the test will fail. The length of this array (if exists) must match the length of the [ExpectedResponses](#expectedresponses) array. Not every bot-response will have a TTS audio stream associated with it. In that case, specify a value of -1 in the array cell. The expected duration does not have to exactly match the actual duration for the test to succeed. This is controlled by the field [TTSAudioDurationMargin](#ttsaudiodurationmargin). Only if the different between expected duration and actual duration is outside this margin, the test will fail.
@@ -179,7 +179,15 @@ Here is the full list:
 
 ## Topics
 
-#### Keyword Activation Tests
+### Bootstrapping mode
+
+While creating your own test configuration file, bootstrapping mode is useful in order to capture all the bot responses 
+
+In order to set a turn to bootstrapping mode,in Test Configuration file set the ExpectedResponses field to either null or empty or dont specify it in the
+
+In this mode,tool captures all the bot responses ,doesnt perform any validations and sets the test to pass.
+
+### Keyword Activation Tests
 
 To test a Bot with an audio input with a keyword, populate "KeywordRecognitionModel" in Application Configuration file with the full path of the table file and set the boolean "Keyword" in the test configuration file to "true" if the WAV file used for testing has a keyword.
 
@@ -187,7 +195,7 @@ The keyword that has been recognized will be populated in the output file.
 
 A dialog can only have a Keyword in Turn 0.
 
-#### Ignoring certain bot-reply activities
+### Ignoring certain bot-reply activities
 
 Tool waits for certain amount of time or until it hits timeout and captures all the Bot-reply activities received for each turn. This time is equal to the length of the ExpectedResponses array that is set in the test configuration file. Tool perfoms validations on these captured Bot-reply activities to check if the turn is passed or failed.
 
@@ -198,13 +206,13 @@ Example : [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]
 
 In the above example tool ignores all activities which are of type : "typing"and name : "trace" and all activities which have "name" : "QnAMaker".
 
-#### Testing bot response TTS Audio duration
+### Testing bot response TTS Audio duration
 
 A Bot-reply activity with speak field populated, will have a TTS audio.
 Tool stores this TTS audio in a WAV file. The duration of TTS audio is calculated and is verified if it falls within the range of ExpectedTTSAudioResponseDuration +/- AudioDurationMargin.
 if the test is passed TTSAudioResponseDurationMatch is set to true otherwise false.
 
-#### Testing bot-greetings
+### Testing bot-greetings
 
 Bot-Greeting - It is an automatic Bot response that happens when client connect to the Bot with no input from the client.
 Application Configuration file holds a field called "Bot Greeting" that should be set to true when a Bot has a greeting.
@@ -213,8 +221,7 @@ For testing the Bot Greeting when,
 -SingleConnection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied
 -SingleConnection = "false",test configuration file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) specified
 
-
-#### Skipping tests
+### Skipping tests or dialogs
 
 Tests can be skipped either at the Test Configuration file level or at the Dialog level.
 
@@ -294,26 +301,14 @@ Example:
 
 In the above example Dialog 0 will be skipped from testing.
 
-#### Pausing between dailogs or turns
+### Pausing between dialogs or turns
 
-#### Creating new tests ("bootstrapping")
+### Running tests in an Azure DevOps pipeline
 
-While creating your own Test configuration file,bootstrapping mode is useful in order to capture all the bot responses
+### Custom Commands
 
-In order to set a turn to bootstrapping mode,in Test Configuration file set the ExpectedResponses field to either null or empty or dont specify it in the
+### Custom speech recognition
 
-In this mode,tool captures all the bot responses ,doesnt perform any validations and sets the test to pass.
+### Custom TTS voices
 
-#### Running tests in an Azure DevOps pipeline
-
-#### Custom Commands
-
-#### Custom speech recognition
-
-#### Custom TTS voices
-
-#### Custom settings
-
-```
-
-```
+### Custom settings
