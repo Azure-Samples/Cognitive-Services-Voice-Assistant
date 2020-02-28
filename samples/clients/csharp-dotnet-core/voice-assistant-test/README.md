@@ -88,31 +88,46 @@ Here is the full list:
  #### TTSAudioDurationMargin
  `int | optional | 200 | 100`. Margin to verify the duration of bot-response TTS audio. Units are msec. The test will succeed if the actual TTS audio duration is within TTSAudioDurationMargin msec of the value specified by [ExpectedTTSAudioResponseDuration](#expectedttsaudioresponseduration).  
 
+#### AppLogEnabled
+`bool | optional | true | false`. When true, application (console) logs will also be written to a text file named VoiceAssistantTest.
 
-| Field Name               | Type             | Required/Optional | Default      | Example                                                    | Description                                                                                                                                                                                                                               |
-| :----------------------- | :--------------- | :---------------: | :----------- | :--------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| InputFolder              | string           |     required      | Empty string | "C:\\\LUAccuracytool\\\SydneyAssistant\\\\"                | Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.                                   |
-| OutputFolder             | string           |     required      | Empty string | "C:\\\LUAccuracytool\\\SydneyAssistant\\\"                 | Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
-| SubscriptionKey          | string           |     required      |              | “9814793187f7486787898p35f26e9247”                         | Cognitive Services Speech API Key. Should be a GUID without dashes                                                                                                                                                                        |
-| Region                   | string           |     required      |              | "westus"                                                   | Azure region of your key in the format specified by the "Speech SDK Parameter"                                                                                                                                                            |
-| SRLanguage               | string           |     Optional      | "en-us"             |                                                     | Speech Recognition Language. It is the source language of your audio. [Checkout the list of languages supported](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support)                               |
-| CustomCommandsAppId      | string           |     Optional      |              | "80c787bf-806b-402c-9493-79154c08a67d"                     | Custom Commands App ID. Should be a GUID.                                                                                                                                                                                                 |
-| CustomSREndpointId       | string           |     Optional      |              |                                                            | Custom SR Endpoint ID. Sets the endpoint ID of a customized speech model that is used for speech recognition                                                                                                                              |
-| CustomVoiceDeploymentIds | string           |     Optional      |              | "07a189pb4-U734-47b2-q89l-56e12g0a71h0"                    | Custom Voice Deployment ID.                                                                                                                                                                                                               |
-| TTSAudioDurationMargin   | string           |     Optional      | 200          | 100                                                        | Margin to verify the duration of Bot response TTS audio.                                                                                                                                                                                  |
-| AppLogEnabled            | boolean          |     Optional      | true         |                                                        | A boolean that enables Application Logging.                                                                                                                                                                                               |
-| SpeechSDKLogEnabled      | string           |     Optional      | false        |                                                        | A boolean that enables generating a Speech SDK Logging.                                                                                                                                                                                   |
-| BotGreeting              | boolean          |     Optional      | false        |                                                        | A boolean which defines if a Bot has a automatic greeting activity response upon conection. [ For more info click on this link](#testing-bot-greetings)                                                                                   |
-| Timeout                  | int              |     Optional      | 5000         |                                                        | A global timeout that waits for each bot response.                                                                                                                                                                                        |
-| FileName                 | string           |     required      |              | Start.json                                                 | Name of the input file                                                                                                                                                                                                                    |
-| IgnoreActivities         | Array of JObject |     Optional      |              | [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}] | List of activities that are ignored by tool. [ For more info click on this link](#ignoring-certain-bot-reply-activities)                                                                                                                  |
-| SingleConnection         | boolean          |     Optional      | false        | true                                                       | Boolean which defines whether each Dialog in the input file is processed with the same connection with the Bot or a new connection for each Dialog. [ For more info click on this link](#single-connection-and-Multiple-connection-tests) |
-| Skip                     | boolean          |     Optional      | false        | true                                                       | Boolean which defines whether a input file is to be skipped or not                                                                                                                                                                        |
-| KeywordRecognitionModel  | string           |     Optional      |              | C:\\\LUAccuracytool\\\SydneyAssistant\\\test.table         | Path that contains table files for Keyword recognition. Make sure to specify the entire path along with the table file name. [ For more info click on this link](#writing-tests-with-keyword-spotting)                                    |
-| SetPropertyId            | JObject          |     Optional      |              |      | JObject that holds the parameters for URL override which takes PropertyIDargument.  
-| SetPropertyString        | JObject          |     Optional      |              |      | JObject that holds the parameters for URL override which takes string argument. 
-| SetServiceProperty       | JObject          |     Optional      |              |      | JObject that holds the parameters for overriding query string to enable dgi. 
+#### SpeechSDKLogEnabled
+`bool | optional | false | true`. When true Speech SDK logs will be written to a text file, with a name that incorporates the date and time the log was created: SpeechSDKLog-yyyy-MM-dd-HH-mm-ss.txt. Note that these logs are extremely verbose. Enable them only per request from Microsoft to assist Microsoft in investigating a report issue.
+                                                                 |
+#### BotGreeting
+`bool | optional | false | true`. A boolean which defines if your bot or custom command application has an automatic greeting upon connection. This implies that the first turn of the first dialog after connection should verify the bot response activity without providing any client application input in the form of WAV file, text or activity. For an example, see the [getting started guide](#getting-started-guide)
 
+#### Timeout  
+`int | optional | 5000 | 1234`. A timeout in msec to wait for all bot responses in each turn. If by this time the bot has not sent the expected number of activities, the test will fail.
+
+ #### KeywordRecognitionModel
+ `string | optional | null | "C:\\Test\\test.table"`. A full-path name of the keyword model file. For more info, see the section [Keyword Activation Tests](#keyword-activation-tests).
+
+<font color="red">TODO: Make the above relative path to InputFolder?</font>
+
+#### SetPropertyId
+`JSON string | optional | null | [{12345, "PropertyValue"}]`. A JSON string that is an array of pairs of integer and string values, used for custom settings of the client Speech SDK. Each pair results in a call to [DialogServiceConfig.SetProperty(PropertyId, string)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetProperty_Microsoft_CognitiveServices_Speech_PropertyId_System_String_). For more detail, see the section [Custom Settings](#custom-settings)
+
+#### SetPropertyString 
+`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the client Speech SDK. Each pair results in a call to [DialogServiceConfig.SetProperty(string, string)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetProperty_System_String_System_String_). For more detail, see the section [Custom Settings](#custom-settings)
+
+#### SetServiceProperty
+`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the Speech Service. Each pair results in a call to [DialogServiceConfig.SetServiceProperty(String, String, ServicePropertyChannel)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setserviceproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetServiceProperty_System_String_System_String_Microsoft_CognitiveServices_Speech_ServicePropertyChannel_), where ServicePropertyChannel is set to ServicePropertyChannel.UriQueryParameter. For more detail, see the section [Custom Settings](#custom-settings)
+
+#### Tests
+`JSON string | required | [{"FileName":"MyTestFile.json", "SingleConnection": true}]`. An array of JSON objects, each related to a single test configuration. Each of these JSON objects includes:
+
+#### FileName
+`string | required | "Test1\\MyTestFile.json"`. The test configuration file name. It can be a file name without path or with a relative path. See the section [Test configuration file](#test-configuration-file) for details on the JSON format of this file.
+
+#### IgnoreActivities
+`JSON string | optional | null | [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]`. List of bot-response activities that are ignored by tool. For more information see the section [Ignoring certain bot response activities](#ignoring-certain-bot-reply-activities)
+
+#### SingleConnection
+`bool | optional | false | true`. If true, connection with the bot (or custom command application) will be re-established before each dialog test. If false, the connection will be established before the first dialog in the test is run, and it will be kep open while all dialog tests in the file are run.
+
+#### Skip
+`bool | optional | false | true`. If true, the test file will be skipped while executing tests. This is useful when the application configuration file specifies multiple test files, but you only want to run one (or a few) of them. Use Skip to temporary disable tests.
 
 #### Test configuration file
 
@@ -135,7 +150,7 @@ The following are the fields supported by the Test Configuration file:
 
 ## Topics
 
-#### Writing tests with keyword spotting
+#### Keyword Activation Tests
 
 To test a Bot with an audio input with a keyword, populate "KeywordRecognitionModel" in Application Configuration file with the full path of the table file and set the boolean "Keyword" in the test configuration file to "true" if the WAV file used for testing has a keyword.
 
@@ -169,12 +184,6 @@ For testing the Bot Greeting when,
 -SingleConnection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied
 -SingleConnection = "false",test configuration file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) specified
 
-#### Single connection and Multiple connection tests
-
-Single Connection tests:
-When the "SingleConnection" in the Application Configuration file is set to true, a new connection is established with Bot for each Test Configuration file.
-Multiple Connection tests:
-When "SingleConnection" in the Application Configuration file is set to false,a new connection is established with Bot for each Dialog in a Test Configuration file.
 
 #### Skipping tests
 
@@ -273,6 +282,8 @@ In this mode,tool captures all the bot responses ,doesnt perform any validations
 #### Custom Speech Recognition
 
 #### Custom TTS voices
+
+#### Custom Settings
 
 ```
 
