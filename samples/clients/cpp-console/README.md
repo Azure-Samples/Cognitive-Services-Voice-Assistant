@@ -29,8 +29,10 @@ This assumes you have the repo's files on your device and you have the prerequis
 
 You will need to install some packages.
 
-    sudo apt-get install g++ libasound2-dev
+    sudo apt-get install g++5 libasound2-dev
     
+NOTE: g++5 required. NOT the latest.
+
 cd into the scripts directory
 
 run ./buildArm32.sh
