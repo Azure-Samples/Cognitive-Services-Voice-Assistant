@@ -57,96 +57,125 @@ When creating new tests, you may find it useful to start from these templates an
 The following are the fields supported by the Application Configuration file. Each field is specified using the following format:
 
 #### FieldName
-`field type (string, integer, array of integers,) | optional or required field |  default value (for optional fields only) | example field value`. Followed by some notes on how to use this field.
+`field type (e.g. string, integer) | optional or required field |  default value (for optional fields only) | example field value`. Followed by some notes on how to use this field.
 
 Here is the full list:
 
-#### InputFolder
-`string | optional | empty string | "C:\\Tests\\TestInputFolder\\"`. Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.  
+>#### InputFolder
+>`string | optional | empty string | "C:\\Tests\\TestInputFolder\\"`. Full or relative path to the folder that contains all the input JSON test files and WAV files. You will likely want the string to end with "\\\\" since input file names will be appended to this path.  
 
-#### OutputFolder
-`string | optional | empty string | "C:\\Tests\\TestOutputFolder\\"`. Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
+>#### OutputFolder
+>`string | optional | empty string | "C:\\Tests\\TestOutputFolder\\"`. Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
 
-#### SubscriptionKey
-`string | required | “01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
+>#### SubscriptionKey
+>`string | required | “01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
 
-#### Region
-`string | required | "westus"`. Azure region associated with your [SubscriptionKey](#subscriptionkey).
+>#### Region
+>`string | required | "westus"`. Azure region associated with your [SubscriptionKey](#subscriptionkey).
 
-#### SRLanguage
-`string | optional | "en-US" | "es-MX"`. Speech Recognition Language. It is the source language of your audio. Must be one of the Locale values mentioned in this [Speech-to-text table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).
+>#### SRLanguage
+>`string | optional | "en-US" | "es-MX"`. Speech Recognition Language. It is the source language of your audio. Must be one of the Locale values mentioned in this [Speech-to-text table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).
 
-#### CustomCommandsAppId
-`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom Commands App ID. Should be a GUID with dashes.
+>#### CustomCommandsAppId
+>`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom Commands App ID. Should be a GUID with dashes.
 
-#### CustomSREndpointId
-`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom SR Endpoint ID. Should be a GUID with dashes. Sets the endpoint ID of a customized speech model that is used for speech recognition.
+>#### CustomSREndpointId
+>`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom SR Endpoint ID. Should be a GUID with dashes. Sets the endpoint ID of a customized speech model that is used for speech recognition.
 
-#### CustomVoiceDeploymentIds
-`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom Voice Deployment ID. Should be a GUID with dashes.
+>#### CustomVoiceDeploymentIds
+>`string | optional | null | "01234567-89ab-cdef-0123-456789abcdef"`. Custom Voice Deployment ID. Should be a GUID with dashes.
 
- #### TTSAudioDurationMargin
- `int | optional | 200 | 100`. Margin to verify the duration of bot-response TTS audio. Units are msec. The test will succeed if the actual TTS audio duration is within TTSAudioDurationMargin msec of the value specified by [ExpectedTTSAudioResponseDuration](#expectedttsaudioresponseduration).  
+>#### TTSAudioDurationMargin
+> `int | optional | 200 | 100`. Margin to verify the duration of bot-response TTS audio. Units are msec. The test will succeed if the actual TTS audio duration is within TTSAudioDurationMargin msec of the value specified by [ExpectedTTSAudioResponseDuration](#expectedttsaudioresponseduration).  
 
-#### AppLogEnabled
-`bool | optional | true | false`. When true, application (console) logs will also be written to a text file named VoiceAssistantTest.
+>#### AppLogEnabled
+>`bool | optional | true | false`. When true, application (console) logs will also be written to a text file named VoiceAssistantTest.
 
-#### SpeechSDKLogEnabled
-`bool | optional | false | true`. When true Speech SDK logs will be written to a text file, with a name that incorporates the date and time the log was created: SpeechSDKLog-yyyy-MM-dd-HH-mm-ss.txt. Note that these logs are extremely verbose. Enable them only per request from Microsoft to assist Microsoft in investigating a report issue.
-                                                                 |
-#### BotGreeting
-`bool | optional | false | true`. A boolean which defines if your bot or custom command application has an automatic greeting upon connection. This implies that the first turn of the first dialog after connection should verify the bot response activity without providing any client application input in the form of WAV file, text or activity. For an example, see the [getting started guide](#getting-started-guide)
+>#### SpeechSDKLogEnabled
+>`bool | optional | false | true`. When true Speech SDK logs will be written to a text file, with a name that incorporates the date and time the log was created: SpeechSDKLog-yyyy-MM-dd-HH-mm-ss.txt. Note that these logs are extremely verbose. Enable them only per request from Microsoft to assist Microsoft in investigating a report issue.
 
-#### Timeout  
-`int | optional | 5000 | 1234`. A timeout in msec to wait for all bot responses in each turn. If by this time the bot has not sent the expected number of activities, the test will fail.
+>#### BotGreeting
+>`bool | optional | false | true`. A boolean which defines if your bot or custom command application has an automatic greeting upon connection. This implies that the first turn of the first dialog after connection should verify the bot response activity without providing any client application input in the form of WAV file, text or activity. For an example, see the [getting started guide](#getting-started-guide)
 
- #### KeywordRecognitionModel
- `string | optional | null | "C:\\Test\\test.table"`. A full-path name of the keyword model file. For more info, see the section [Keyword Activation Tests](#keyword-activation-tests).
+>#### Timeout  
+>`int | optional | 5000 | 1234`. A timeout in msec to wait for all bot responses in each turn. If by this time the bot has not sent the expected number of activities, the test will fail.
+
+>#### KeywordRecognitionModel
+>`string | optional | null | "C:\\Test\\test.table"`. A full-path name of the keyword model file. For more info, see the section [Keyword Activation Tests](#keyword-activation-tests).
 
 <font color="red">TODO: Make the above relative path to InputFolder?</font>
 
-#### SetPropertyId
-`JSON string | optional | null | [{12345, "PropertyValue"}]`. A JSON string that is an array of pairs of integer and string values, used for custom settings of the client Speech SDK. Each pair results in a call to [DialogServiceConfig.SetProperty(PropertyId, string)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetProperty_Microsoft_CognitiveServices_Speech_PropertyId_System_String_). For more detail, see the section [Custom Settings](#custom-settings)
+>#### SetPropertyId
+>`JSON string | optional | null | [{12345, "PropertyValue"}]`. A JSON string that is an array of pairs of integer and string values, used for custom settings of the client Speech SDK. Each pair results in a call to [DialogServiceConfig.SetProperty(PropertyId, string)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetProperty_Microsoft_CognitiveServices_Speech_PropertyId_System_String_) or the equivalent method on CustomCommandsConfig for custom command applications. For more detail, see the section [Custom Settings](#custom-settings)
 
-#### SetPropertyString 
-`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the client Speech SDK. Each pair results in a call to [DialogServiceConfig.SetProperty(string, string)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetProperty_System_String_System_String_). For more detail, see the section [Custom Settings](#custom-settings)
+>#### SetPropertyString 
+>`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the client Speech SDK. Each pair results in a call to [DialogServiceConfig.SetProperty(string, string)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetProperty_System_String_System_String_) or the equivalent method on CustomCommandsConfig for custom command applications. For more detail, see the section [Custom Settings](#custom-settings)
 
-#### SetServiceProperty
-`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the Speech Service. Each pair results in a call to [DialogServiceConfig.SetServiceProperty(String, String, ServicePropertyChannel)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setserviceproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetServiceProperty_System_String_System_String_Microsoft_CognitiveServices_Speech_ServicePropertyChannel_), where ServicePropertyChannel is set to ServicePropertyChannel.UriQueryParameter. For more detail, see the section [Custom Settings](#custom-settings)
+>#### SetServiceProperty
+>`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the Speech Service. Each pair results in a call to [DialogServiceConfig.SetServiceProperty(String, String, ServicePropertyChannel)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setserviceproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetServiceProperty_System_String_System_String_Microsoft_CognitiveServices_Speech_ServicePropertyChannel_), where ServicePropertyChannel is set to ServicePropertyChannel.UriQueryParameter. Or the equivalent method on CustomCommandsConfig for custom command applications. For more detail, see the section [Custom Settings](#custom-settings)
 
-#### Tests
-`JSON string | required | [{"FileName":"MyTestFile.json", "SingleConnection": true}]`. An array of JSON objects, each related to a single test configuration. Each of these JSON objects includes:
+>#### Tests
+>`JSON string | required | [{"FileName":"MyTestFile.json", "SingleConnection": true}]`. An array of JSON objects, each related to a single test configuration. Each of these JSON objects includes:
+>
+>>##### FileName
+>>`string | required | "Test1\\MyTestFile.json"`. The test configuration file name. It can be a file name without path or with a relative path. See the section [Test configuration file](#test-configuration-file) for details on the JSON format of this file.
+>>
+>>#### IgnoreActivities
+>>`JSON string | optional | null | [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]`. List of bot-response activities that are ignored by tool. For more information see the section [Ignoring certain bot response activities](#ignoring-certain-bot-reply-activities)
+>>
+>>#### SingleConnection
+>>`bool | optional | false | true`. If true, connection with the bot (or custom command application) will be re-established before each dialog test. If false, the connection will be established before the first dialog in the test is run, and it will be kep open while all dialog tests in the file are run.
+>>
+>>#### Skip
+>>`bool | optional | false | true`. If true, the test file will be skipped while executing tests. This is useful when the application configuration file specifies multiple test files, but you only want to run one (or a few) of them. Use Skip to temporary disable tests.
 
-#### FileName
-`string | required | "Test1\\MyTestFile.json"`. The test configuration file name. It can be a file name without path or with a relative path. See the section [Test configuration file](#test-configuration-file) for details on the JSON format of this file.
+### Test configuration file
 
-#### IgnoreActivities
-`JSON string | optional | null | [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]`. List of bot-response activities that are ignored by tool. For more information see the section [Ignoring certain bot response activities](#ignoring-certain-bot-reply-activities)
+The following are the fields supported by the Test Configuration file. Each field is specified using the following format:
 
-#### SingleConnection
-`bool | optional | false | true`. If true, connection with the bot (or custom command application) will be re-established before each dialog test. If false, the connection will be established before the first dialog in the test is run, and it will be kep open while all dialog tests in the file are run.
+#### FieldName
+`field type (e.g. string, integer) | optional or required field |  default value (for optional fields only) | example field value`. Followed by some notes on how to use this field.
 
-#### Skip
-`bool | optional | false | true`. If true, the test file will be skipped while executing tests. This is useful when the application configuration file specifies multiple test files, but you only want to run one (or a few) of them. Use Skip to temporary disable tests.
+Here is the full list:
 
-#### Test configuration file
+>#### DialogId  
+>`string | required | "0"`. A unique value within the test file that identifies this dialog. You can identify a dialog by giving each one a random GUID value, an integer counter, or anything else. Intended to be short.
 
-The following are the fields supported by the Test Configuration file:
+>#### Description
+>`string | optional | null | "Dialog for reserving airline ticket"`. Free-form text description of what this dialog does, to help you remember. Does not have to be unique.
 
-| Field Name                       | Type             | Required/Optional | Default                                                  | Example                                                               | Description                                                                                                                                            |
-| :------------------------------- | :--------------- | :---------------: | :------------------------------------------------------- | :-------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DialogId                         | string           |     required      |                                                          | "0"                                                                   | A unique value that identifies each dialog                                                                                                             |
-| Description                      | string           |     Optional      |                                                          | "Testing a Dialog"                                                    | Describes the what the test does                                                                                                                       |
-| Skip                             | boolean          |     Optional      | false                                                    | true                                                                  | Boolean which defines whether a Dialog is to be skipped or not                                                                                         |
-| Sleep                            | int              |     Optional      | 0                                                        | 10                                                                    |                                                                                                                                                        |
-| TurnId                           | int              |     required      |                                                          | 1                                                                     | A unique value that identifies each turn in a specific Dialog.                                                                                         |
-| Utterance                        | string           |     required      |                                                          | “Open Start Menu”                                                     | Text that is send up to communicate with the Bot.                                                                                                      |
-| Activity                         | string           |     required      |                                                          | "{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}" | Input Activity. Activity that is send up to Bot.                                                                                                       |
-| WavFile                          | string           |     required      |                                                          | "test1.WAV"                                                           | Input WAV file. Audio that is streamed to Bot                                                                                                          |
-| Keyword                          | boolean          |     Optional      | false                                                    | true                                                                  | Boolean which defines if input WAV file has a keyword or not. [ For more info click on this link](#writing-tests-with-keyword-spotting)                |
-| ExpectedResponses                | Array of JObject |     required      |                                                          |                                                                       | List of Expected responses from Bot.                                                                                                                   |                                   |
-| ExpectedTTSAudioResponseDuration | int              |     Optional      | 2000                                                     | 1500                                                                  | Expected duration of Bot response TTS audio. [ For more info click on this link](#testing-bot-response-tts-audio-duration)                             |
-| ExpectedResponseLatency          | string           |     Optional      | Expectedresponse index to check for is defaulted to Zero | "500,1"                                                               | This is a combination of expected latency and Index of the expected response from the list of expected responses that we care for calculating latency. |
+>#### Turns
+>`JSON string | required`. An array of JSON objects, each defines a single turn in the dialog to execute. Each of these JSON objects includes:
+>
+>>##### TurnId
+>>`integer | required | 0`. A zero-based count of the turn in the dialog. The first turn in the dialog must have a TurnId value of 0, the second one 1, etc.
+>>
+>>##### Skip
+>>`bool | optional | false | true`. If true, this dialog will not be executed. It will be skipped. This is useful when the test file includes multiple dialogs, but you only want to run one (or a few) of them. Use Skip to temporary disable dialogs in your test file.
+>>
+>>##### Sleep
+>>`int | optional | 0 | 1234`. If set to a positive value, the tread executing the dialog will pause by this amount of duration (in msec units) before executing the turn.
+>>
+>>##### Utterance
+>>`string | optional | null | "what is the weather tomorrow?"`. The field has two usages. If [WavFile](#wavfile) is not specified, this is the text that will be sent up to the bot as a Bot-Framework activity of type "message". Representing a user typed-text input. If [WavFile](#wavfile) is defined, this is the expected recognition result of the audio in the WAV file. If the recognition result does not match what is specified in this field, the test will fail. Note that the text comparison in this case is done while ignoring punctuation marks, upper/lower case differences and white space.
+>>
+>>##### WavFile
+>>` string | optional | null | "test1.WAV"`. Audio from this WAV file is streaming to Direct Line Speech as the input in the turn, by calling the [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet) method (or [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet) method if [Keyword](#keyword) is true). This represents a user speaking to a microphone. It's good practice to have at least one second of silence (non speech) at the end of the WAV file to make sure the speech service properly detects end-of-speech, as it would with a live audio stream from a microphone. When this field is present, you can specify the expected recognition result in the [Utterance](#utterance) field.
+>>
+>>##### Activity
+>>`JSON string | optional | null | "{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}"`. A bot-framework JSON activity string. If this field is specified, you cannot specify the [WavFile](#wavfile) or [Utterance](#utterance) fields. Use this to send any custom activity to your bot using the [SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet) method.
+>>
+>>##### Keyword
+>>` bool | optional | false | true`. If true, the audio in the supplied [WavFile](#wavfile) starts with a keyword, and the [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConnector_StartKeywordRecognitionAsync_Microsoft_CognitiveServices_Speech_KeywordRecognitionModel_) will be called to detect the keyword and stream audio to Direct Line Speech channel if the keyword was recognized. The field has meaning only if both [WavFile](#wavfile) and [KeywordRecognitionModel](#KeywordRecognitionModel) were defined.
+>>
+>>##### ExpectedResponses 
+>>`JSON string | required`. An array of Bot-Framework JSON activities. These are the expected bot responses. You only need to specify the activity fields you care about. If the number of bot responses is less than what you specify here, the test will fail. If the number is the same, but some of the fields you specify do not match the fields in the bot reply, the test will fail. Note that the tool orders the bot responses based on their activity [Timestamp](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp), before comparing the actual bot response to the expected response. If the number of bot responses is greater than the expected number, and there is a match to all expected activities, the test will pass.
+>>
+>>##### ExpectedTTSAudioResponseDuration 
+>>`array of integers | optional | null | [1500, -1, 2000]`. Expected duration (in msec) of bot response TTS audio stream. This allows you to validate that the right audio stream duration was downloaded by the tool. Otherwise the test will fail. The length of this array (if exists) must match the length of the [ExpectedResponses](#expectedresponses) array. Not every bot-response will have a TTS audio stream associated with it. In that case, specify a value of -1 in the array cell. The expected duration does not have to exactly match the actual duration for the test to succeed. This is controlled by the field [TTSAudioDurationMargin](#ttsaudiodurationmargin). Only if the different between expected duration and actual duration is outside this margin, the test will fail.
+>>
+>>##### ExpectedResponseLatency 
+>>`string | optional | null | "500", or "500,0" or "500,1"'. The expected time the tool should have received a particular bot-response activity. If the tool did not receive that activity by this latency value, the test will fail. There are two formats for the string. The first one just includes a positive integer. In this case the bot-response that is timed is the last one expected to arrive (based on the length of the [ExpectedResponses](#ExpectedResponses) array]). So for example of the length of ExpectedResponses is 3, it means the tool will wait until it receives three bot response activities. If the 3rd one was not received by the time specified by  Expectedresponse, the test will fail. The second format of the string is a positive integer (the duration), followed by a comma, followed by a zero-based index. The index specifies which of the bot-response activities should be time-measured, which 0 being the first one specified in the ExpectedResponses array. This second format allows you to put an upper limit on either one of the bot responses, not just the last one.
 
 ## Topics
 
@@ -279,11 +308,11 @@ In this mode,tool captures all the bot responses ,doesnt perform any validations
 
 #### Custom Commands
 
-#### Custom Speech Recognition
+#### Custom speech recognition
 
 #### Custom TTS voices
 
-#### Custom Settings
+#### Custom settings
 
 ```
 
