@@ -1,5 +1,5 @@
 {
-  "InputFiles": [
+  "Tests": [
     {
       "FileName": "test-config-template.json",
       "SingleConnection": true,
