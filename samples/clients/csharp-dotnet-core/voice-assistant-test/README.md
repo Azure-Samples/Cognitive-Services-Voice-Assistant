@@ -181,11 +181,34 @@ Here is the full list:
 
 ### Bootstrapping mode
 
-While creating your own test configuration file, bootstrapping mode is useful in order to capture all the bot responses 
+Creating the test configuration files for the first time is hard, if your intention is to author the expected bot responses manually ([ExpectedResponses](#ExpectedResponses) field). For that reason we created the bootstrapping mode. This is where you run the test tool such that a particular turn in a dialog is run for the purpose of discovering the current bot responses, not for the purpose of failing or passing the test based on some expected bot responses. After running in bootstrapping mode, you can look at the detailed test result and find the bot responses as a array of JSON activities. You can then copy the array, filter out what you don't need then paste them as the [ExpectedResponses](#ExpectedResponses) ready for the next time your tun the tool.
 
-In order to set a turn to bootstrapping mode,in Test Configuration file set the ExpectedResponses field to either null or empty or dont specify it in the
+Here is the recipe to creating a new regression test from scratch:
 
-In this mode,tool captures all the bot responses ,doesnt perform any validations and sets the test to pass.
+1. Do manual tests of your bot (or custom commands application) and make sure it behaves as expected. You can use the [Windows Voice Assistant Client](../../csharp-wpf/README.md) for this purpose. Your goal is now to write regression tests to make sure the bot behavior does not change.
+1. Author your [application configuration file](#application-configuration-file). You can start [from the template](docs/json-templates/app-config-template.json), modify and delete what you don't need. Define one test configuration file. Here we will assume it is named TestConfig.json.
+1. Create your [test configuration file](#test-configuration-file) TestConfig.json with one dialog, one turn, by only specifying the required fields. For example, if your bot supports greeting, you do not need to specify any input in Turn 0, so this is all you need:
+    ```json
+    [
+      {
+        "DialogID": "0",
+        "Turns": [
+          {
+            "TurnID": 0
+          }
+        ]
+      }
+    ]
+    ```
+    If your bot does not have a greeting, you do need to specify something to send up to the bot. It can be audio ([WavFile](#wavfile)), text ([Utternace](#utternace)) or a bot-framework activity ([Activity](#activity)). Add one of those fields under the TurnID field (e.g. "Utterance" : "Some text").
+1. Run your test. As [ExpectedResponses](#ExpectedResponses) is not specified, in means Turn 0 will run in bootstrapping mode. The test should pass if the connection with your bot was successful and bot response was received within the [Timeout](#timeout) duration. 
+1. Open the detailed test result file. If your test file is named TestConfig.json, the detailed test result will be named TestConfigOutput.json. 
+1. Copy the ActualResponses field, and optionally the ActualTTSAudioResponseDuration and ActualResponseLatency fields, and paste them into TestConfig.json, in the Turn 0 scope.
+1. Renamed those fields to ExpectedResponses, ExpectedTTSAudioResponseDuration and ExpectedResponseLatency.
+1. Now edit ExpectedResponses and remove bot-framework activity fields, such that only a few are left -- the ones that you care about when it comes to evaluating bot response regressions. This includes removing fields such as [ID](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#id) and [Timesamp](#https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp) that are not fixed.
+1. If you want your test to fail when the duration of the TTS audio changes (with [TTSAudioDurationMargin](#ttsaudiodurationmargin)), leave the ExpectedTTSAudioResponseDuration field. Otherwise don't include it. If you want the test to fail when the bot response latency exceeds a certain value, edit the ExpectedResponseLatency field to include the upper limit of the latency.
+1. Run the test again and make sure it succeeds. 
+1. If your bot supports additional turns, you can continue the process described above to populate the test for the next turn. That is, edit your TestConfig.json by adding { "TurnID": 1 } in your Turns array and run the test. This means Turn 0 runs normally, and Turn 1 is in bootstrapping mode.
 
 ### Keyword Activation Tests
 

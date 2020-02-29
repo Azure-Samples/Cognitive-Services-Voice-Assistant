@@ -292,7 +292,7 @@ namespace VoiceAssistantTest
                         dialogResultUtility.BotResponses = botConnector.WaitAndProcessBotReplies(bootstrapMode);
 
                         // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogResultUtility.BuildOutput(turn, botConnector.RecognizedText, botConnector.RecognizedKeyword);
+                        TurnResult turnResult = dialogResultUtility.BuildOutput(turn, bootstrapMode, botConnector.RecognizedText, botConnector.RecognizedKeyword);
                         if (!dialogResultUtility.ValidateTurn(turnResult, bootstrapMode))
                         {
                             testPass = false;
@@ -438,7 +438,7 @@ namespace VoiceAssistantTest
             }
             else if (latency.Length == 2)
             {
-                if (!int.TryParse(latency[1], out int parsedIndex) || (parsedIndex > expectedResponseSize) || parsedIndex < 0)
+                if (!int.TryParse(latency[1], out int parsedIndex) || (parsedIndex >= expectedResponseSize) || parsedIndex < 0)
                 {
                     return false;
                 }
