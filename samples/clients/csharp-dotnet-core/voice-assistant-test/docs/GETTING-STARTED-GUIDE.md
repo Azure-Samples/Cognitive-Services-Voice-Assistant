@@ -313,7 +313,6 @@ There are three ways to specify user input in each turn:
 To test text input instead of WAV file input, delete the WavFile field in Turn 1 and/or Turn 2 in TestConfig.json. Leave the Utterance field as is, as it will now indicate the test to sent up to the bot. Rerun the test. Notice in the logs that instead of "Start listening" (associated with audio stream input) you now see "Activity sent to channel" (associated with the text input). Otherwise the test is identical.
 
 ## Step 7: Next steps
-* Look at the [application configuration template](json-templates/app-config-template.json), for a complete list of fields you can use in your application configuration (AppConfig.json file in the above examples).
-* Look at the [test configuration template](json-templates/test-config-template.json), for a complete list of fields you can use in your test configuration file (TestConfig.json in the above examples) 
-* Review the reference tables in the main [README.md](../README.md) file for a description of all those fields
-* Read the additional topics at the bottom of the main [README.md](../README.md) for more into.
+* Review all supported fields in the [application configuration file](../README.md#application-configuration-file), and the [application configuration template](json-templates/app-config-template.json)
+* Review all supported fields in the [test configuration file](../README.md#test-configuration-file), and the [test configuration template](json-templates/test-config-template.json)
+* Read the [topics section](../README.md#topics)
