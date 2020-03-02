@@ -34,7 +34,7 @@ Taxonomies for products and languages: https://review.docs.microsoft.com/new-hop
 
 ## Overview
 
-This repository includes samples of [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes client sample code for regression testing and language understanding intent scoring. Voice Assistant clients use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Alternatively, Voice Assistant clients can use Speech SDK to connect to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application.
+This repository includes samples of [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes a client tool for end-to-end regression testing of a Voice Assistant system. Voice Assistant clients use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Alternatively, Voice Assistant clients can use Speech SDK to connect to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application.
 
 <!--
 Sample code for building Voice Assistant clients, using Microsoft's Speech SDK and Direct Line Speech channel, including Custom Command
@@ -42,18 +42,19 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 
 ## Samples List
 
-To build any of the samples below, clone this GitHub repository using Git:
+To build any of the samples below, clone this GitHub repository and look at the projects in the samples folder:
 
 ```bash
     git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
     cd samples
 ```
-The following table describes the sample folders and root files in this repository
+
+The following table describes the samples and root files in this repository:
 
 | File/folder | Description | Language/Platform |
 |-------------|-------------|-------------------|
 | [`samples\clients\csharp-wpf`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf) |  Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application | C#, Windows Presentation Foundation (WPF) |
-| [`samples\clients\csharp-dotnet-core\voice-assistant-test`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test) | Automated, multi-turn regression test and intent scoring tool. Supports WAV file input, text or Bot-Framework activities | C#, .NET Core |
+| [`samples\clients\csharp-dotnet-core\voice-assistant-test`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test) | Automated, multi-turn, end-to-end regression test for your bot or Custom Commands application. Supports WAV file input, text or Bot-Framework activities | C#, .NET Core |
 | `.gitignore`         | Define what to ignore at commit time
 | `CODE_OF_CONDUCT.md` | Code of Conduct for all Microsoft repositories
 | `CONTRIBUTING.md`    | Guidelines for contributing to these samples

@@ -19,11 +19,13 @@ namespace VoiceAssistantTest
         public TurnResult(Turn turns)
         {
             this.TurnID = turns.TurnID;
+            this.Sleep = turns.Sleep;
             this.Utterance = turns.Utterance;
             this.Activity = turns.Activity;
             this.WAVFile = turns.WAVFile;
             this.Keyword = turns.Keyword;
             this.ExpectedTTSAudioResponseDuration = turns.ExpectedTTSAudioResponseDuration;
+            this.ExpectedResponses = turns.ExpectedResponses;
             this.ExpectedResponseLatency = turns.ExpectedResponseLatency;
         }
 
