@@ -25,17 +25,8 @@ This should be updated once the nightfury build is public
 
 ## Build directly on Linux arm32
 
-This assumes you have the repo's files on your device and you have the prerequisites in the proper folders. (see above)
-
-You will need to install some packages.
-
-    sudo apt-get install g++5 libasound2-dev
-    
-NOTE: g++5 required. NOT the latest.
-
-cd into the scripts directory
-
-run ./buildArm32.sh
+TODO: Convert to link once files are in master
+Check out the README_RaspberryPi.md
 
 ## Building for Linux Arm32 with Docker
 
@@ -66,6 +57,7 @@ If you deploy those files from the out dir and copy an existing or create a conf
 ## Running the sample
 
 ### usage: sample.exe config-file [volume on/off]
-example:
-
+example running from the out folder:
+    
+    export LD_LIBRARY_PATH="../lib/arm32"
     sample.exe config.json on

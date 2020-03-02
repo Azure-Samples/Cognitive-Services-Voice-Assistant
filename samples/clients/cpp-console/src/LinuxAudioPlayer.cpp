@@ -82,11 +82,11 @@ int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
                                     &m_bitsPerSecond, &dir);
 
     /* Set buffer size */
-    unsigned int bufferSize = 8192;
+    unsigned int bufferSize = 1024;
     snd_pcm_hw_params_set_buffer_size_near(m_playback_handle, m_params, (snd_pcm_uframes_t *)&bufferSize);
 
     /* Set period size to 32 frames. */
-    m_frames = 32;
+    m_frames = 512;
     snd_pcm_hw_params_set_period_size_near(m_playback_handle,
                                 m_params, &m_frames, &dir);
 
