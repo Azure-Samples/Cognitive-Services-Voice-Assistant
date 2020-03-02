@@ -121,10 +121,10 @@ Here is the full list:
 >>`string | required | "Test1\\MyTestFile.json"`. The test configuration file name. It can be a file name without path or with a relative path. See the section [Test configuration file](#test-configuration-file) for details on the JSON format of this file.
 >>
 >>#### IgnoreActivities
->>`JSON string | optional | null | [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]`. List of bot-response activities that are ignored by tool. For more information see the section [Ignoring certain bot response activities](#ignoring-certain-bot-reply-activities)
+>>`JSON string | optional | null | [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]`. List of bot-response activities that are ignored by tool. For more information see the section [Ignoring certain bot response activities](#ignoring-certain-bot-response-activities)
 >>
 >>#### SingleConnection
->>`bool | optional | false | true`. If true, connection with the bot (or custom command application) will be re-established before each dialog test. If false, the connection will be established before the first dialog in the test is run, and it will be kep open while all dialog tests in the file are run.
+>>`bool | optional | false | true`. If false, connection with the bot (or custom command application) will be re-established before each dialog is run, and it will close after the dialog is done. If true, the connection will be established before the first dialog in a test file, and it will remain open while executing all dialogs in that test file. Note that if your application configuration file includes multiple test configuration files and SingleConnection is true, a new connection will be established before running the first dialog in each test file.
 >>
 >>#### Skip
 >>`bool | optional | false | true`. If true, the test file will be skipped while executing tests. This is useful when the application configuration file specifies multiple test files, but you only want to run one (or a few) of them. Use Skip to temporary disable tests.
@@ -166,13 +166,13 @@ Here is the full list:
 >>`JSON string | optional | null | "{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}"`. A bot-framework JSON activity string. If this field is specified, you cannot specify the [WavFile](#wavfile) or [Utterance](#utterance) fields. Use this to send any custom activity to your bot using the [SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet) method.
 >>
 >>##### Keyword
->>` bool | optional | false | true`. If true, the audio in the supplied [WavFile](#wavfile) starts with a keyword, and the [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConnector_StartKeywordRecognitionAsync_Microsoft_CognitiveServices_Speech_KeywordRecognitionModel_) will be called to detect the keyword and stream audio to Direct Line Speech channel if the keyword was recognized. The field has meaning only if both [WavFile](#wavfile) and [KeywordRecognitionModel](#KeywordRecognitionModel) were defined.
+>>` bool | optional | false | true`. If true, the audio in the supplied [WavFile](#wavfile) starts with a keyword, and the [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConnector_StartKeywordRecognitionAsync_Microsoft_CognitiveServices_Speech_KeywordRecognitionModel_) will be called to detect the keyword and stream audio to Direct Line Speech channel if the keyword was recognized. The field has meaning only if both [WavFile](#wavfile) and [KeywordRecognitionModel](#KeywordRecognitionModel) were defined. For more info, see the section [Keyword Activation Tests](#keyword-activation-tests).
 >>
 >>##### ExpectedResponses 
 >>`JSON string | optional`. An array of Bot-Framework JSON activities. These are the expected bot responses. You only need to specify the activity fields you care about. If the number of bot responses is less than what you specify here, the test will fail. If the number is the same, but some of the fields you specify do not match the fields in the bot reply, the test will fail. Note that the tool orders the bot responses based on their activity [Timestamp](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp), before comparing the actual bot response to the expected response. If the number of bot responses is greater than the expected number, and there is a match to all expected activities, the test will pass. If ExpectedResponses is null or missing, the turn will run in bootstrapping mode, which is useful to do when writing the tests for the first time. See the [bootstrapping mode](#bootstrapping-mode) section for more details.
 >>
 >>##### ExpectedTTSAudioResponseDuration 
->>`array of integers | optional | null | [1500, -1, 2000]`. Expected duration (in msec) of bot response TTS audio stream. This allows you to validate that the right audio stream duration was downloaded by the tool. Otherwise the test will fail. The length of this array (if exists) must match the length of the [ExpectedResponses](#expectedresponses) array. Not every bot-response will have a TTS audio stream associated with it. In that case, specify a value of -1 in the array cell. The expected duration does not have to exactly match the actual duration for the test to succeed. This is controlled by the field [TTSAudioDurationMargin](#ttsaudiodurationmargin). Only if the different between expected duration and actual duration is outside this margin, the test will fail.
+>>`array of integers | optional | null | [1500, -1, 2000]`. Expected duration (in msec) of bot response TTS audio stream. This allows you to validate that the right audio stream duration was downloaded by the tool. Otherwise the test will fail. The length of this array (if exists) must match the length of the [ExpectedResponses](#expectedresponses) array. Not every bot-response will have a TTS audio stream associated with it. In that case, specify a value of -1 in the array cell. The expected duration does not have to exactly match the actual duration for the test to succeed. This is controlled by the field [TTSAudioDurationMargin](#ttsaudiodurationmargin). Only if the different between expected duration and actual duration is outside this margin, the test will fail. See the [Getting Started Guide](docs/GETTING-STARTED-GUIDE.md) for an example of using ExpectedTTSAudioResponseDuration.
 >>
 >>##### ExpectedResponseLatency 
 >>`string | optional | null | "500", or "500,0" or "500,1"'. The expected time the tool should have received a particular bot-response activity. If the tool did not receive that activity by this latency value, the test will fail. There are two formats for the string. The first one just includes a positive integer. In this case the bot-response that is timed is the last one expected to arrive (based on the length of the [ExpectedResponses](#ExpectedResponses) array]). So for example of the length of ExpectedResponses is 3, it means the tool will wait until it receives three bot response activities. If the 3rd one was not received by the time specified by  Expectedresponse, the test will fail. The second format of the string is a positive integer (the duration), followed by a comma, followed by a zero-based index. The index specifies which of the bot-response activities should be time-measured, which 0 being the first one specified in the ExpectedResponses array. This second format allows you to put an upper limit on either one of the bot responses, not just the last one.
@@ -187,7 +187,7 @@ Here is the recipe to creating a new regression test from scratch:
 
 1. Do manual tests of your bot (or custom commands application) and make sure it behaves as expected. You can use the [Windows Voice Assistant Client](../../csharp-wpf/README.md) for this purpose. Your goal is now to write regression tests to make sure the bot behavior does not change.
 1. Author your [application configuration file](#application-configuration-file). You can start [from the template](docs/json-templates/app-config-template.json), modify and delete what you don't need. Define one test configuration file. Here we will assume it is named TestConfig.json.
-1. Create your [test configuration file](#test-configuration-file) TestConfig.json with one dialog, one turn, by only specifying the required fields. For example, if your bot supports greeting, you do not need to specify any input in Turn 0, so this is all you need:
+1. Create your [test configuration file](#test-configuration-file) named TestConfig.json with one dialog, one turn, by only specifying the required fields. For example, if your bot supports greeting, you do not need to specify any input in Turn 0, so this is all you need:
     ```json
     [
       {
@@ -201,7 +201,7 @@ Here is the recipe to creating a new regression test from scratch:
     ]
     ```
     If your bot does not have a greeting, you do need to specify something to send up to the bot. It can be audio ([WavFile](#wavfile)), text ([Utternace](#utternace)) or a bot-framework activity ([Activity](#activity)). Add one of those fields under the TurnID field (e.g. "Utterance" : "Some text").
-1. Run your test. As [ExpectedResponses](#ExpectedResponses) is not specified, in means Turn 0 will run in bootstrapping mode. The test should pass if the connection with your bot was successful and bot response was received within the [Timeout](#timeout) duration. 
+1. Run your test. As [ExpectedResponses](#ExpectedResponses) is not specified, in means Turn 0 will run in bootstrapping mode. The tool will wait for a period specified by  [Timeout](#timeout) to collect all bot-responses. Note the default value of Timeout. As long as connection to your bot succeeded, the test should be marked as passed after the Timeout duration.
 1. Open the detailed test result file. If your test file is named TestConfig.json, the detailed test result will be named TestConfigOutput.json. 
 1. Copy the ActualResponses field, and optionally the ActualTTSAudioResponseDuration and ActualResponseLatency fields, and paste them into TestConfig.json, in the Turn 0 scope.
 1. Renamed those fields to ExpectedResponses, ExpectedTTSAudioResponseDuration and ExpectedResponseLatency.
@@ -210,128 +210,75 @@ Here is the recipe to creating a new regression test from scratch:
 1. Run the test again and make sure it succeeds. 
 1. If your bot supports additional turns, you can continue the process described above to populate the test for the next turn. That is, edit your TestConfig.json by adding { "TurnID": 1 } in your Turns array and run the test. This means Turn 0 runs normally, and Turn 1 is in bootstrapping mode.
 
-### Keyword Activation Tests
+### Ignoring certain bot-response activities
 
-To test a Bot with an audio input with a keyword, populate "KeywordRecognitionModel" in Application Configuration file with the full path of the table file and set the boolean "Keyword" in the test configuration file to "true" if the WAV file used for testing has a keyword.
+When a dialog turn is run, the test sends up information and waits for bot responses. It waits until the bot responds with a number of activities equal to the number of activities in the [ExpectedResponses](#expectedresponses) field, or until in the elapsed [Timeout](#timeout) has passed. If it timeout, the test fails. If it got the number of expected responses, it compares the actual responses with the expected responses. However, sometimes the bot sends responses that are not important for the purpose of determining test pass/fail. For example, if your bot is using [LUIS](https://www.luis.ai/) or [QnA Maker](https://www.qnamaker.ai/), the tool may get traces from these back-end services if your bot is configured to send them. Or, your bot may send a "typing" message, indicating it is working on a response.
 
-The keyword that has been recognized will be populated in the output file.
-
-A dialog can only have a Keyword in Turn 0.
-
-### Ignoring certain bot-reply activities
-
-Tool waits for certain amount of time or until it hits timeout and captures all the Bot-reply activities received for each turn. This time is equal to the length of the ExpectedResponses array that is set in the test configuration file. Tool perfoms validations on these captured Bot-reply activities to check if the turn is passed or failed.
-
-In order to ignore any one of the Bot-reply activities received for each turn by the tool, "IgnoreActivities" field is to be set in the Application Configuration file.
-"IgnoreActivities" is an Array that holds the list of activities that are ignored by the tool. The amount of time for which tool waits to capture the Bot-reply activities does not include the Bot-reply activities that were marked ignore.
-
-Example : [{"type": "typing","name": "trace"}, {"name": "QnAMaker"}]
-
-In the above example tool ignores all activities which are of type : "typing"and name : "trace" and all activities which have "name" : "QnAMaker".
-
-### Testing bot response TTS Audio duration
-
-A Bot-reply activity with speak field populated, will have a TTS audio.
-Tool stores this TTS audio in a WAV file. The duration of TTS audio is calculated and is verified if it falls within the range of ExpectedTTSAudioResponseDuration +/- AudioDurationMargin.
-if the test is passed TTSAudioResponseDurationMatch is set to true otherwise false.
+The tool can be configured to ignore these or any other bot-response activity, when waiting for the expected number of bot responses. This is done by defining the [IgnoreActivities](#ignoreactivities) field in the application configuration tile. Create an array of JSON strings that specify the bot-framework activities you want to ignore. You only need to specify a few activity fields to filter out bot responses. For example, if you specify this:
+```json
+[{"type": "typing", "name": "trace"}, {"name": "QnAMaker"}]
+```
+All bot-response activities which are of [type](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#type) "typing" and [name](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#name) "trace" will be ignored. Also, all bot-response activities with name "QnAMaker" will be ignored.
 
 ### Testing bot-greetings
 
-Bot-Greeting - It is an automatic Bot response that happens when client connect to the Bot with no input from the client.
-Application Configuration file holds a field called "Bot Greeting" that should be set to true when a Bot has a greeting.
+Bot-greeting is an automatic bot-response that happens when the client first connects to the bot, without the client sending anything up to the bot first. The application configuration file has an optional field called [BotGreeting](#botgreeting) that should be set to true when a bot has a greeting.
 
-For testing the Bot Greeting when,
--SingleConnection = "true", test configuration file should include a Dialog 0, Turn 0 entry with no input fields(Utterance, Activity and WavFile) speciied
--SingleConnection = "false",test configuration file should include a Turn 0 entry on every Dialog with no input fields(Utterance, Activity and WavFile) specified
+It's important to understand how to configure your test correctly to support bot-greeting, and how that depends on the [SingleConnection](#singleconnection) setting.
 
-### Skipping tests or dialogs
+If SingleConnection is false, each dialog will start with a boot greeting. Therefore Turn 0 cannot include any of the fields that send information up to the bot ([Utterance](#utterance), [Activity](#activity) and [WavFile](#wafile)).
 
-Tests can be skipped either at the Test Configuration file level or at the Dialog level.
+If SingleConnection is true, only the first dialog in every test file will see a bot greeting. Therefore Turn 0 of the first dialog in every test file should include a fields that sends information up to the bot.
 
-In order to skip a file from the test suite, set the skip field for that file to true in the Application Configuration file.
+### Keyword activation tests
 
-Example:
+Speech SDK supports keyword activation using the [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConnector_StartKeywordRecognitionAsync_Microsoft_CognitiveServices_Speech_KeywordRecognitionModel_) method. To test with keyword activation:
+1. [Create a custom keyword using Speech Studio](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws) and save the model file
+1. Populate the [KeywordRecognitionModel](#keywordrecognitionmodel) field in the application settings file to point to this model file
+1. Record WAV files that include the keyword at the beginning, following by the sentence you want your bot to receive
+1. For every [WavFile](#wavfile) field that points to a WAV file with keyword, add the [Keyword](#keyword) field with a value of "true". This will tell the test tool to call StartKeywordRecognitionAsync instead of ListenOnceAsync. 
+1. Run your test
 
-```
+Therefore if [Keyword](#keyword) is true in a dialog turn, the test configuration file will be valid if:
+* [WavFile](#wavfile) is defined for the same turn where [Keyword](#keyword) is defined and set to true
+* [KeywordRecognitionModel](#keywordrecognitionmodel) is defined in the application configuration.
 
-"InputFiles":[
-  {
-    "FileName": "test-config-template1.json",
-    "SingleConnection": true,
-    "Skip": true
-    "IgnoreActivities": []
-  },
-  {
-    "FileName": "test-config-template2.json",
-    "SingleConnection": true,
-    "Skip": true
-    "IgnoreActivities": []
-  }
-]
+If the keyword has been recognized successfully, the identified keyword will be listed in the string field named "KeywordVerified" in the output JSON test result file.
 
-```
-
-In the above example test configuration file "test-config-template1.json" will be skipped from testing.
-
-In order to skip a Dialog from testing, set the skip field to true for that Dialog in the test configuration file
-
-Example:
-
-```
-
-[
-  {
-    "DialogID": 0,
-    "Description": "Dialog - 0",
-    "Skip": true,
-    "Turns": [
-      {
-        "TurnID": 0,
-        "Sleep": 10,
-        "Utterance": "Testing Dialog 0",
-        "Activity": "",
-        "WavFile": "",
-        "ExpectedResponses": [
-          {
-            "text": "Testing turn 0."
-          }
-        ],
-      },
-    ]
-  },
-  {
-    "DialogID": 1,
-    "Description": "Dialog - 1",
-    "Skip": false,
-    "Turns": [
-      {
-        "TurnID": 0,
-        "Sleep": 0,
-        "Utterance": "Testing Dialog 1",
-        "Activity": "",
-        "WavFile": "",
-        "ExpectedResponses": [
-          {
-            "text": "testing turn 1"
-          }
-        ],
-      }
-    ]
-  }
-]
-
-```
-
-In the above example Dialog 0 will be skipped from testing.
-
-### Pausing between dialogs or turns
+Note that due to a bug in the way Speech SDK consumes audio from an input stream, keyword activation is limited to the first turn of the dialog. Therefore [Keyword](#keyword) can only be set to true when [TurnID](#turnid) is 0.
 
 ### Running tests in an Azure DevOps pipeline
 
-### Custom Commands
+The Visual Studio Project is configured to published a self-contained Windows console executable that includes the .NET Core run-time and all NuGet dependencies. This means you only need to copy one file, VoiceAssistantText.exe, to the target Windows 10 PC or VM, together with your test configuration files and WAV files to run your test. The publishing is done by these lines at the end of [VoiceAssistantTest.csproj](tool/VoiceAssistantTest.csproj):
+```xml
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet publish -c $(Configuration) -r win-x64 /p:PublishSingleFile=true /p:NoBuild=true" />
+  </Target>
+```
+For example, for the DEBUG build, the self-contained executable will be found under:
+\bin\Debug\netcoreapp3.1\win-x64\publish\VoiceAssistantTest.exe.
+
+To deploy the test as an Azure DevOps (ADO) Task, simply create a [Command Line Task](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/command-line?view=azure-devops&tabs=yaml) in your ADO pipeline.
+
+Here is an example YAML script:
+```yml
+TBD (+ show populating the artifacts folder)
+```
+
+<!---
+TBD
+
+### Custom commands
+
+TBD
 
 ### Custom speech recognition
 
+TBD
+
 ### Custom TTS voices
 
-### Custom settings
+TBD
+
+### Other custom settings
+-->
