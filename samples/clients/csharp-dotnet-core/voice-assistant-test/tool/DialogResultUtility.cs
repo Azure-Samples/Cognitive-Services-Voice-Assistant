@@ -199,10 +199,11 @@ namespace VoiceAssistantTest
         /// Builds the output.
         /// </summary>
         /// <param name="turns"> Input Turns.</param>
+        /// <param name="bootstrapMode">Boolean which defines if turn is in bootstrapping mode or not.</param>
         /// <param name="recognizedText">Recognized text from Speech Recongition.</param>
         /// <param name="recognizedKeyword">Recogized Keyword from Keyword Recognition.</param>
         /// <returns>TurnsOutput.</returns>
-        public TurnResult BuildOutput(Turn turns, string recognizedText, string recognizedKeyword)
+        public TurnResult BuildOutput(Turn turns, bool bootstrapMode, string recognizedText, string recognizedKeyword)
         {
             TurnResult turnsOutput = new TurnResult(turns)
             {
@@ -210,13 +211,7 @@ namespace VoiceAssistantTest
                 ActualTTSAudioResponseDuration = new List<int>(),
             };
 
-            int activityIndex = 0;
-
-            if (turns.ExpectedResponses != null)
-            {
-                turnsOutput.ExpectedResponses = turns.ExpectedResponses;
-                activityIndex = turns.ExpectedResponses.Count - 1;
-            }
+            turnsOutput.ActualRecognizedText = recognizedText;
 
             if (recognizedKeyword != null)
             {
@@ -229,18 +224,42 @@ namespace VoiceAssistantTest
                 turnsOutput.ActualTTSAudioResponseDuration.Add(botReply.TTSAudioDuration);
             }
 
-            turnsOutput.ActualRecognizedText = recognizedText;
-
-            if (!string.IsNullOrWhiteSpace(turnsOutput.ExpectedResponseLatency))
+            if (bootstrapMode)
             {
-                if (turnsOutput.ExpectedResponseLatency.Split(",").Length == 2)
+                // In bootstrapping mode, ExpectedResponses field does not exist (or is null), and ExpectedResponseLatency does not exist
+                if (this.BotResponses.Count > 0)
                 {
-                    activityIndex = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
+                    // Report the latency of the last bot response
+                    turnsOutput.ActualResponseLatency = this.BotResponses[this.BotResponses.Count - 1].Latency;
+                }
+            }
+            else
+            {
+                // In normal mode, ExpectedResponses exists with one or more activities. ExpectedResponseLatency may or may not exist
+                int activityIndexForLatency = 0;
+
+                if (string.IsNullOrWhiteSpace(turnsOutput.ExpectedResponseLatency))
+                {
+                    activityIndexForLatency = turns.ExpectedResponses.Count - 1;
+                }
+                else
+                {
+                    if (turnsOutput.ExpectedResponseLatency.Split(",").Length == 2)
+                    {
+                        // The user has specified an expected response latency in the two-integer string format "latency,index". Extract the index
+                        // Note: the index has already been verified to be in the range [0, turns.ExpectedResponses.Count - 1]
+                        activityIndexForLatency = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
+                    }
+                    else
+                    {
+                        // The user has specified an expected response latency in the single integer string format, without an index
+                        activityIndexForLatency = turns.ExpectedResponses.Count - 1;
+                    }
                 }
 
-                if (turns.ExpectedResponses.Count == turnsOutput.ActualResponses.Count)
+                if (activityIndexForLatency < this.BotResponses.Count)
                 {
-                    turnsOutput.ActualResponseLatency = this.BotResponses[activityIndex].Latency;
+                    turnsOutput.ActualResponseLatency = this.BotResponses[activityIndexForLatency].Latency;
                 }
             }
 
@@ -312,12 +331,12 @@ namespace VoiceAssistantTest
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency))
+                if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency) && turnResult.ActualResponseLatency > 0)
                 {
                     int expectedResponseLatency = int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture);
-                    if ((turnResult.ActualResponseLatency > expectedResponseLatency) || (turnResult.ExpectedResponses.Count != turnResult.ActualResponses.Count))
+                    if (turnResult.ActualResponseLatency > expectedResponseLatency)
                     {
-                        Trace.TraceInformation($"Actual bot response latency {turnResult.ActualResponseLatency} exceeds expected latency {expectedResponseLatency}");
+                        Trace.TraceInformation($"Actual bot response latency {turnResult.ActualResponseLatency} msec exceeds expected latency {expectedResponseLatency} msec");
                         turnResult.ResponseLatencyMatch = false;
                     }
                 }

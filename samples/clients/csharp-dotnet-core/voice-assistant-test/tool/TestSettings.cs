@@ -17,7 +17,7 @@ namespace VoiceAssistantTest
         public string FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether all the turns in file should be run in a single Bot Connection or a new, separate connection per turn.
+        /// Gets or sets a value indicating whether all the dialogs in test file should be run in a single Bot Connection or a new, separate connection per dialog.
         /// </summary>
         public bool SingleConnection { get; set; } = false;
 

@@ -1,7 +1,7 @@
 [
   {
-    "DialogID": 0,
-    "Description": "Dialog with a Greeting turn and voice input turns",
+    "DialogID": "0",
+    "Description": "Testing core bot greeting",
     "Turns": [
       {
         "TurnID": 0,
@@ -9,45 +9,47 @@
           {
             "type": "message",
             "speak": "Welcome to Bot Framework!",
-            "inputHint": "acceptingInput"
+            "inputHint": "acceptingInput",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive"
+              }
+            ]
           },
           {
             "type": "message",
-            "serviceUrl": "urn:botframework:websocket:directlinespeech",
-            "channelId": "directlinespeech",
             "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
             "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
             "inputHint": "expectingInput"
           }
         ],
-        "ExpectedTTSAudioResponseDuration": 8197,
-        "ExpectedResponseLatency": "200"
+        "ExpectedTTSAudioResponseDuration": [2300, 8200],
+        "ExpectedResponseLatency": 3000
       },
       {
         "TurnID": 1,
-        "Utterance": "Book a flight from Seattle to New York on March 1st ,2020",
-        "Activity": "",
-        "WavFile": "WavFiles\\BookFlight.WAV",
+        "WavFile": "BookFlight.wav",
+        "Utterance": "Book a flight from Seattle to New York on January 2nd, 2020",
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-03-01. Is this correct? (1) Yes or (2) No",
-            "speak": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-03-01. Is this correct?",
+            "text": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-01-02. Is this correct? (1) Yes or (2) No",
+            "speak": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-01-02. Is this correct?",
             "inputHint": "expectingInput"
           }
         ],
-        "ExpectedTTSAudioResponseDuration": 9221
+        "ExpectedTTSAudioResponseDuration": [9221],
+        "ExpectedResponseLatency": 1000,
       },
       {
         "TurnID": 2,
+        "WavFile": "Yes.wav",
         "Utterance": "Yes",
-        "Activity": "",
-        "WavFile": "WavFiles\\Yes.WAV",
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "I have you booked to New York from Seattle on 1st March 2020",
-            "speak": "I have you booked to New York from Seattle on 1st March 2020",
+            "text": "I have you booked to New York from Seattle on 2nd January 2020",
+            "speak": "I have you booked to New York from Seattle on 2nd January 2020",
             "inputHint": "ignoringInput"
           },
           {
@@ -56,7 +58,9 @@
             "speak": "What else can I do for you?",
             "inputHint": "expectingInput"
           }
-        ]
+        ],
+        "ExpectedTTSAudioResponseDuration": [5100, 2200],
+        "ExpectedResponseLatency": 1000,
       }
     ]
   }

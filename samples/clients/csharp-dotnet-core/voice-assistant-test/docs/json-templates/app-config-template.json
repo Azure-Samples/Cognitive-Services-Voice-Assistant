@@ -1,5 +1,5 @@
 {
-  "InputFiles": [
+  "Tests": [
     {
       "FileName": "test-config-template.json",
       "SingleConnection": true,
@@ -17,12 +17,12 @@
   ],
   "InputFolder": "testing\\input\\",
   "OutputFolder": "testing\\output\\",
-  "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
+  "SubscriptionKey": "0123456789abcdef0123456789abcdef",
   "Region": "westus2",
   "SRLanguage": "en-US",
-  "CustomCommandsAppId": "75tm7ma78sr32eiyp8w345u57989etg9",
-  "CustomSREndpointId": "676tnv86ut097y9j908w34578cb89dgk",
-  "CustomVoiceDeploymentIds": "6w5tnv8anv84mkv834m578cb9ac93vb9",
+  "CustomCommandsAppId": "abcdef0123456789abcdef0123456789",
+  "CustomSREndpointId": "456789abcdef0123456789abcdef0123",
+  "CustomVoiceDeploymentIds": "89abcdef0123456789abcdef01234567",
   "TTSAudioDurationMargin": "200",
   "AppLogEnabled": true,
   "BotGreeting": true,

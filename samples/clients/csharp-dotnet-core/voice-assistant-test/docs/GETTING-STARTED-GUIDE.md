@@ -57,12 +57,12 @@ First, we will write the Application configuration. Copy and paste the following
       "FileName": "TestConfig.json",
     }
   ],
-  "SubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
+  "SubscriptionKey": "0123456789abcdef0123456789abcdef",
   "Region": "westus2",
   "BotGreeting": true,
 }
 ```
-Replace "SubscriptionKey" and "Region" fields with your own speech key and region, and save it as file "AppConfig.json" in your test folder (e.g. c:\test).
+Replace "SubscriptionKey" and "Region" fields with your own speech key and region, and save it as file "[AppConfig.json](core-bot-examples/greeting/AppConfig.json)" in your test folder (e.g. c:\test).
 
 The application configuration file instructs the tool to execute the dialogs listed in a single test file "GreetingTest.json". We will create that file shortly. 
 
@@ -70,7 +70,7 @@ All input test files (or just one in this case -- "GreetingTest.json") and outpu
 
 "BotGreeting" field needs to be specified and set to true for echo bot tests, since by default it is false. A "true" value instructs the tool to verify that the test configuration is written correctly and the test is executed expecting a bot greeting after connection is established with the bot.
 
-Now, write the test configuration. Copy and paste the following to your text editor and save the file as "TestConfig.json" in your test folder (e.g. c:\test):
+Now, write the test configuration. Copy and paste the following to your text editor and save the file as "[TestConfig.json](core-bot-examples/greeting/TestConfig.json)" in your test folder (e.g. c:\test):
 
 ```json
 [
@@ -123,7 +123,7 @@ Now that you created both the AppConfig.json and the TestConfig.json files, it's
 VoiceAssistantTest.exe AppConfig.json
 ```
 
-If your core bot is reachable, the test should pass and you should see the following logged on the console:
+If your core bot is reachable, the test should pass and you should logs on the console similar to the following:
 
 ```cmd
 VoiceAssistantTest Information: 0 : Parsing AppConfig.json
@@ -139,39 +139,180 @@ VoiceAssistantTest Information: 0 : Processing file TestConfig.json
 VoiceAssistantTest Information: 0 : ********** TEST PASS **********
 ```
 Notice that these files and folder were crated by the tool:
-
-```cmd
-VoiceAssistantTest.log
-VoiceAssistantTestReport.json
-TestConfigOutput\TestConfigOutput.txt
-TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-0.WAV
-TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-1.WAV
-```
-These are:
-* VoiceAssistantTest.log - A capture of the same logs you see on the console
-* VoiceAssistantTestReport.json - A short summary report of the test. For each one of the test files specified in AppConfig.json (here we only have one: TestConfig.json) it lists the pass rate (how many dialogs succeeded), and enumerates all the dialogs with their pass/fail result.
-* TestConfigOutput.txt - A detailed result of executing the dialogs specified in the TestConfig.txt file (here we only have on bot-greeting dialog). It lists all the expected values and the actual values observed when executing the dialog. At the end it also lists the pass/fail result for each validation step:
+* [VoiceAssistantTest.log](core-bot-examples/greeting/VoiceAssistantTest.log) - A capture of the same logs you see on the console
+* [VoiceAssistantTestReport.json](core-bot-examples/greeting/VoiceAssistantTestReport.json) - A short summary report of the test. For each one of the test files specified in AppConfig.json (here we only have one: TestConfig.json) it lists the pass rate (how many dialogs succeeded), and enumerates all the dialogs with their pass/fail result.
+* [TestConfigOutput\TestConfigOutput.json](core-bot-examples/greeting/TestConfigOutput/TestConfigOutput.json) - A detailed result of executing the dialogs specified in the TestConfig.txt file (here we only have on bot-greeting dialog). It lists all the expected values and the actual values observed when executing the dialog. At the end it also lists the pass/fail result for each validation step:
     * ResponseMatch - True if ActualResponses matched ExpectedResponses
     * UtteranceMatch - True if expected speech recognition matched actual speech recognition result. This is only relevant for turns with WAV file input (to be discussed further down)
     * TTSAudioResponseDurationMatch - True if ActualTTSAudioResponseDuration values are all within the tolerance range of ExpectedTTSAudioResponseDuration.
     * ResponseLatencyMatch - True if ActualResponseLatency is less or equal ExpectedResponseLatency.
     * Pass - True if all of the above are true.
-* TestConfig-BotResponse-0-0-0.WAV - This is the TTS audio stream associated with the first bot response ("welcome to Bot Framework"). The WAV file name is a concatenation of 
+* [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-0.WAV](core-bot-examples/greeting/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-0.WAV) - This is the TTS audio stream associated with the first bot response ("welcome to Bot Framework"). The WAV file name is a concatenation of 
     - test configuration name ("TestConfig" here), followed by 
     - the fixed string "BotResponse", then
     - "Dialog ID" string ("0" here), then
     - Turn ID ("0" here), then
     - The bot reply index 
-* TestConfig-BotResponse-0-0-1.WAV - TTS audio stream associates with the second bot response ("What can I help you with today? ...")
+* [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-1.WAV](core-bot-examples/greeting/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-1.WAV) - TTS audio stream associates with the second bot response ("What can I help you with today? ...")
 
 ## Step 5: Make your test fail
 
-TODO
+Experiment with changing test configurations to see an example of test failure and the corresponding error message. Here are some suggestions:
+* **Missing required field**. Remove the "Region" field in AppConfig.json, or the "DialogID" in TestConfig.json, re-run the test and see the "required property not found" failure message.
+* **Bot-response activity mismatch**. Change the "speak" field of the first expected bot-response in TestConfig.json from "Welcome to Bot Framework!" to just "Welcome". Re-run the test and see the "activity field mismatching values" failure message.
+* **Latency failure**. Update the "ExpectedResponseLatency" field in TestConfig.json to a very small, unrealistic value (e.g. 10 msec), re-run the test and see the "latency mismatch" failure message.
 
-## Step 6: Add a second turn to your test
+## Step 6: Add turns with WAV input
 
-TODO
+Now that you've verified the expected bot greeting, update your test configuration file to specify a particular dialog you want to have with the bot following the greeting. Open your TestConfig.json file, replace its entire content with the one given below and save the result:
+```json
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing core bot greeting",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "speak": "Welcome to Bot Framework!",
+            "inputHint": "acceptingInput",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": [2300, 8200],
+        "ExpectedResponseLatency": 3000
+      },
+      {
+        "TurnID": 1,
+        "WavFile": "BookFlight.wav",
+        "Utterance": "Book a flight from Seattle to New York on January 2nd, 2020",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-01-02. Is this correct? (1) Yes or (2) No",
+            "speak": "Please confirm, I have you traveling to: New York from: Seattle on: 2020-01-02. Is this correct?",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": [9221],
+        "ExpectedResponseLatency": 1000,
+      },
+      {
+        "TurnID": 2,
+        "WavFile": "Yes.wav",
+        "Utterance": "Yes",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "I have you booked to New York from Seattle on 2nd January 2020",
+            "speak": "I have you booked to New York from Seattle on 2nd January 2020",
+            "inputHint": "ignoringInput"
+          },
+          {
+            "type": "message",
+            "text": "What else can I do for you?",
+            "speak": "What else can I do for you?",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": [5100, 2200],
+        "ExpectedResponseLatency": 1000,
+      }
+    ]
+  }
+]
+```
+The first turn (TurnID 0 -- bot greeting verification) has not changed. Turns 1 and 2 were added and in each one audio is streamed up to Direct Line Speech channel from pre-recorded WAV files on disk, followed by verification of the bot response. Turns 1 & 2 have these additional fields set, compared to turn 0:
+* WavFile - The name of the WAV file. A single format is supported: Raw PCM, 16khz sample rate, mono, 16 bit per sample, signed integer
+* Utterance - This is an optional field when WavFile is specified. It should include the expected speech recognition result on the audio stream in the WAV file. The test will fail if Direct Line Speech channel does not return this recognized text.
 
+The two WAV files are provided in the repository, so you do not need to record them. Copy "BookFlight.wav" and "Yes.wav" from the docs\core-bot-examples\multi-turn folder into your test folder. Once you are done, you should have the following in your test folder:
+* VoiceAssistantTest.exe
+* [AppConfig.json](core-bot-examples/multi-turn/AppConfig.json)
+* [TestConfig.json](core-bot-examples/multi-turn/TestConfig.json)
+* [BookFlight.wav](core-bot-examples/multi-turn/BookFlight.wav) ("Book a flight from Seattle to New York on January 2nd, 2020")
+* [Yes.wav](core-bot-examples/multi-turn/Yes.wav)
 
+Run the tool:
+```cmd
+VoiceAssistantTest.exe AppConfig.json
+```
+If everything is configured correctly, the test should succeed and you should see logs on screen similar to the following:
 
+```cmd
+VoiceAssistantTest Information: 0 : Parsing AppConfig.json
+VoiceAssistantTest Information: 0 : Validating file TestConfig.json
+VoiceAssistantTest Information: 0 : Processing file TestConfig.json
+    VoiceAssistantTest Information: 0 : [5:21:29 PM] Running DialogId 0, description "Testing core bot greeting"
+        VoiceAssistantTest Information: 0 : [5:21:29 PM] Running Turn 0
+            VoiceAssistantTest Information: 0 : Task status RanToCompletion. Received 2 activities, as expected (configured to wait for 2):
+            VoiceAssistantTest Information: 0 : [0]: Latency 465 msec
+            VoiceAssistantTest Information: 0 : [1]: Latency 465 msec
+            VoiceAssistantTest Information: 0 : Turn passed (DialogId 0, TurnID 0)
+        VoiceAssistantTest Information: 0 : [5:21:30 PM] Running Turn 1
+            VoiceAssistantTest Information: 0 : [5:21:30 PM] Start listening
+            VoiceAssistantTest Information: 0 : [5:21:30 PM] Session Started event received. SessionId = 164e9ccd-f4e8-422b-80c6-2ea8f28fc5e3
+            VoiceAssistantTest Information: 0 : [5:21:33 PM] Recognized event received. SessionId = 6bd60a10e3cf499d8ce8a515ea24bdde
+            VoiceAssistantTest Information: 0 : Task status RanToCompletion. Received 1 activities, as expected (configured to wait for 1):
+            VoiceAssistantTest Information: 0 : [0]: Latency 199 msec
+            VoiceAssistantTest Information: 0 : Turn passed (DialogId 0, TurnID 1)
+        VoiceAssistantTest Information: 0 : [5:21:33 PM] Running Turn 2
+            VoiceAssistantTest Information: 0 : [5:21:33 PM] Start listening
+            VoiceAssistantTest Information: 0 : [5:21:33 PM] Session Stopped event received. SessionId = 6bd60a10e3cf499d8ce8a515ea24bdde
+            VoiceAssistantTest Information: 0 : [5:21:33 PM] Session Started event received. SessionId = f1d06296-30fb-49fb-a338-1c41e322841e
+            VoiceAssistantTest Information: 0 : [5:21:34 PM] Recognized event received. SessionId = 6bd60a10e3cf499d8ce8a515ea24bdde
+            VoiceAssistantTest Information: 0 : Task status RanToCompletion. Received 2 activities, as expected (configured to wait for 2):
+            VoiceAssistantTest Information: 0 : [0]: Latency 201 msec
+            VoiceAssistantTest Information: 0 : [1]: Latency 686 msec
+            VoiceAssistantTest Information: 0 : Turn passed (DialogId 0, TurnID 2)
+    VoiceAssistantTest Information: 0 : DialogId 0 passed
+VoiceAssistantTest Information: 0 : ********** TEST PASS **********
+```
+The following files wil be created, with results similar to the ones linked here:
+* [VoiceAssistantTest.log](core-bot-examples/multi-turn/VoiceAssistantTest.log)
+* [VoiceAssistantTestReport.json](core-bot-examples/multi-turn/VoiceAssistantTestReport.json)
+* [TestConfigOutput\TestConfigOutput.json](core-bot-examples/multi-turn/TestConfigOutput/TestConfigOutput.json) 
+* TTS audio streams from Turn 0 (bot greeting):
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-0.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-0.WAV) (1st bot reply activity - "welcome to Bot Framework")
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-1.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-1.WAV) (2nd bot reply activity - "What can I help you with today? ...")
+* TTS audio stream from Turn 1:
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-1-0.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-1-0.WAV) ("Please confirm, I have you traveling to...")
+* TTS audio streams from Turn 2:
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-2-0.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-2-0.WAV) ("I have you booked to New York from Seattle ...")
+    * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-2-1.WAV](core-bot-examples/multi-turn/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-2-1.WAV) ("What else can I do for you?")
 
+## Step 7: Try text input instead of WAV input
+
+There are three ways to specify user input in each turn:
+1. Audio stream read from WAV file (as if the user was speaking to a microphone), per the example above. In this case you will need to populate these fields:
+    * WavFile (required)
+    * Utterance (optional) - To validate speech recognition result
+    
+    Specifying Activity input is now allowed in this case.
+2. Text input (as if the user were typing in a chat box)
+    * Utterance (required) - Text to be sent to the bot as a Bot-Framework activity of type "message".
+
+    Specifying WavFile or Activity fields are not allowed in this case.
+3. Sending a Bot-Framework Activity as a JSON string. This is used for send any other data to the bot.
+    * Activity - A JSON string containing a valid Bot-Framework Activity. 
+
+    Specifying WavFile or Utterance fields is not allowed in this case.
+
+To test text input instead of WAV file input, delete the WavFile field in Turn 1 and/or Turn 2 in TestConfig.json. Leave the Utterance field as is, as it will now indicate the test to sent up to the bot. Rerun the test. Notice in the logs that instead of "Start listening" (associated with audio stream input) you now see "Activity sent to channel" (associated with the text input). Otherwise the test is identical.
+
+## Step 7: Next steps
+* Review all supported fields in the [application configuration file](../README.md#application-configuration-file), and the [application configuration template](json-templates/app-config-template.json)
+* Review all supported fields in the [test configuration file](../README.md#test-configuration-file), and the [test configuration template](json-templates/test-config-template.json)
+* Read the [topics section](../README.md#topics)
