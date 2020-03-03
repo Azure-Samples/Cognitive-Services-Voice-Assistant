@@ -14,6 +14,8 @@ namespace VoiceAssistantTest
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
     using Activity = Microsoft.Bot.Schema.Activity;
+    using Microsoft.Applications.Events;
+    using System.Threading;
 
     /// <summary>
     /// Entry point of Voice Assistant regression tests.
@@ -154,6 +156,11 @@ namespace VoiceAssistantTest
         {
             List<TestReport> allInputFilesTestReport = new List<TestReport>();
             bool testPass = true;
+
+            AriaLogger.Start();
+            AriaLogger.Log();
+            Thread.Sleep(15 * 1000);
+            AriaLogger.Stop();
 
             foreach (TestSettings tests in appSettings.Tests)
             {
