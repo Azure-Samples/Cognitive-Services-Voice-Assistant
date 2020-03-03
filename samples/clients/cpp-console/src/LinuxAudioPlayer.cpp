@@ -86,54 +86,12 @@ int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
     snd_pcm_hw_params_set_rate_near(m_playback_handle, m_params,
                                     &m_bitsPerSecond, &dir);
 
-    /* Set buffer size */
-    unsigned int bufferSize = 1024;
-    snd_pcm_hw_params_set_buffer_size_near(m_playback_handle, m_params, (snd_pcm_uframes_t *)&bufferSize);
-
-    /* Set period size to 32 frames. */
-    m_frames = 512;
-    snd_pcm_hw_params_set_period_size_near(m_playback_handle,
-                                m_params, &m_frames, &dir);
-
-        unsigned int frames;
-        snd_pcm_format_t pcm_format;
-
-        //display tunerAudio card parameters
-        printf("audio card handler name = %s\n", snd_pcm_name(m_playback_handle));
-        printf("audio pcm state = %s\n",
-            snd_pcm_state_name(snd_pcm_state(m_playback_handle)));
-
-        snd_pcm_hw_params_get_access(m_params, (snd_pcm_access_t *) &val);
-        printf("audio access type = %s\n", snd_pcm_access_name((snd_pcm_access_t)val));
-
-        snd_pcm_hw_params_get_format(m_params, &pcm_format );
-         printf("format = '%s' (%s)\n", snd_pcm_format_name((snd_pcm_format_t)pcm_format),
-             snd_pcm_format_description((snd_pcm_format_t)pcm_format));
-
-        snd_pcm_hw_params_get_subformat(m_params, (snd_pcm_subformat_t *)&val);
-         printf("subformat = '%s' (%s)\n", snd_pcm_subformat_name((snd_pcm_subformat_t)val),
-             snd_pcm_subformat_description((snd_pcm_subformat_t)val));
-
-         snd_pcm_hw_params_get_channels(m_params, &val);
-         printf("channels = %d\n", val);
-
-         snd_pcm_hw_params_get_rate(m_params, &val, &dir);
-         printf("rate = %d bps\n", val);
-
-         snd_pcm_hw_params_get_period_time(m_params, &val, &dir);
-         printf("period time = %d us\n", val);
-
-         snd_pcm_hw_params_get_period_size(m_params, (snd_pcm_uframes_t*)&frames, &dir);
-         printf("period size = %d frames\n", (int)frames);
-
-         snd_pcm_hw_params_get_buffer_time(m_params, &val, &dir);
-         printf("buffer time = %d us\n", val);
-
-         snd_pcm_hw_params_get_buffer_size(m_params,(snd_pcm_uframes_t *) &val);
-         printf("buffer size = %d frames\n", val);
-
-         snd_pcm_hw_params_get_periods(m_params, &val, &dir);
-         printf("periods per buffer = %d\n", val);
+    // /* Set period size to 256 frames. */
+    m_frames = 256;
+    rc = snd_pcm_hw_params_set_period_size_near(m_playback_handle, m_params, &m_frames, &dir);
+    if(rc < 0){
+        fprintf(stdout, "snd_pcm_hw_params_set_period_size_near failed: %s\n", snd_strerror(rc) );
+    }
 
     /* Write the parameters to the driver */
     rc = snd_pcm_hw_params(m_playback_handle, m_params);
