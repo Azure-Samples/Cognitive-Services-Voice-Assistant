@@ -25,8 +25,7 @@ This should be updated once the nightfury build is public
 
 ## Build directly on Linux arm32
 
-TODO: Convert to link once files are in master
-Check out the README_RaspberryPi.md
+Check out the [RaspberryPi.md](RaspberryPi.md)
 
 ## Building for Linux Arm32 with Docker
 

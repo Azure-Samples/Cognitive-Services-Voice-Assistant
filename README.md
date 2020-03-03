@@ -3,6 +3,7 @@ page_type: sample
 description: "Sample code for Microsoft Cognitive Services Voice Assistant"
 languages:
 - csharp
+- c++
 products:
 - dotnet-core
 - azure-bot-service
@@ -54,6 +55,7 @@ The following table describes the sample folders and root files in this reposito
 |-------------|-------------|-------------------|
 | [`samples\clients\csharp-wpf`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf) |  Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application | C#, Windows Presentation Foundation (WPF) |
 | [`samples\clients\csharp-dotnet-core\voice-assistant-test`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test) | Automated, multi-turn regression test and intent scoring tool. Supports WAV file input, text or Bot-Framework activities | C#, .NET Core |
+| [`samples\clients\cpp-console`](.\samples\clients\cpp-console) | C plus plus client application configured via a json file. It supports microphone input and audio playback. | C++, Windows, Linux |
 | `.gitignore`         | Define what to ignore at commit time
 | `CODE_OF_CONDUCT.md` | Code of Conduct for all Microsoft repositories
 | `CONTRIBUTING.md`    | Guidelines for contributing to these samples
