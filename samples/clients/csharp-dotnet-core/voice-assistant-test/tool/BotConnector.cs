@@ -541,18 +541,21 @@ namespace VoiceAssistantTest
                 this.stopWatch.Restart();
                 this.elapsedTime = 0;
             }
-
-            if (e.Result.Reason == ResultReason.RecognizedKeyword)
+            else if (e.Result.Reason == ResultReason.RecognizedKeyword)
             {
                 this.RecognizedKeyword = e.Result.Text;
 
                 Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
                 Trace.TraceInformation($"Keyword Recognition Verified : {e.Result.Text}");
             }
-
-            if (e.Result.Reason == ResultReason.NoMatch)
+            else if (e.Result.Reason == ResultReason.NoMatch)
             {
-                Trace.TraceInformation($"Connector Error: {e.Result.Text}");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. Speech could not be recognized. SessionId = {e.SessionId}");
+                Trace.TraceInformation($"No match details = {NoMatchDetails.FromResult(e.Result)}");
+            }
+            else
+            {
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. e.Result.Reason = {e.Result.Reason}. SessionId = {e.SessionId}");
             }
         }
 
