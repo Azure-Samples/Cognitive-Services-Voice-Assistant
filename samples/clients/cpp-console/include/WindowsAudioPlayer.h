@@ -156,6 +156,22 @@ namespace AudioPlayer
             int Play(uint8_t* buffer, size_t bufferSize, AudioPlayerFormat format);
             
             /// <summary>
+            /// This function is a no-op
+            /// </summary>
+            /// <returns>A return code with < 0 as an error and any other int as success</returns>
+            /// <example>
+            /// <code>
+            /// IAudioPlayer *audioPlayer = new WindowsAudioPlayer();
+            /// audioPlayer->Open();
+            /// audioPlayer->SetVolume(50);
+            /// </code>
+            /// </example>
+            /// <remarks>
+            /// In this case volume is handled by windows and not set here
+            /// </remarks>
+            int SetVolume(unsigned int percent);
+            
+            /// <summary>
             /// This function is used to clean up the audio players resources.
             /// </summary>
             /// <returns>A return code with < 0 as an error and any other int as success</returns>

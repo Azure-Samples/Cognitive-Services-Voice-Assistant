@@ -120,29 +120,20 @@ namespace AudioPlayer
             int Play(uint8_t* buffer, size_t bufferSize);
             
             /// <summary>
-            /// This method is used to actually play the audio. The buffer passed in 
-            /// should contain the raw audio bytes. The AudioPlayerFormat is used to determine how to play it.
+            /// This function is used to programmatically set the volume of the audio player
             /// </summary>
-            /// <param name="buffer">A point to the buffer containing the audio bytes</param>
-            /// <param name="bufferSize">The size in bytes of the buffer being passed in.</param>
-            /// <param name="format">The AudioPlayerFormat enum to define the settings for the audio player</param>
-            /// <returns>A return code with < 0 as an error and any other int as success. 
-            /// Non-errors are the number of frames written.</returns>
+            /// <returns>A return code with < 0 as an error and any other int as success</returns>
             /// <example>
             /// <code>
             /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
             /// audioPlayer->Open();
-            /// int bufferSize = audioPlayer->GetBufferSize();
-            /// unsigned char * buffer = (unsigned char *)malloc(bufferSize);
-            /// // fill buffer with audio from somewhere
-            /// audioPLayer->Play(buffer, bufferSize, IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
+            /// audioPlayer->SetVolume(50);
             /// </code>
             /// </example>
             /// <remarks>
-            /// The method returns the number of frames written to ALSA.
-            /// In our implementation we assume Open is called before playing.
+            /// Here we use the LinuxAudioPlayer as an example. Though not all players will support this. See the cpp file for details.
             /// </remarks>
-            int Play(uint8_t* buffer, size_t bufferSize, AudioPlayerFormat format);
+            int SetVolume(unsigned int percent);
             
             /// <summary>
             /// This function is used to clean up the audio players resources.

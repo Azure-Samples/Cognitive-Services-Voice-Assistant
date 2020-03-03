@@ -57,7 +57,7 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_customSpeechId = j.value(FieldNames::CustomSpeechDeploymentId, "");
     config->_keywordModelPath = j.value(FieldNames::KeywordModel, "");
     config->_keywordDisplayName = j.value(FieldNames::KeywordDisplay, "");
-    config->_volume = j.value(FieldNames::Volume, "");
+    config->_volume = atoi(j.value(FieldNames::Volume, "").c_str());
 
     if (config->_speechKey.length() == 0)
     {
@@ -97,7 +97,7 @@ shared_ptr<DialogServiceConfig> AgentConfiguration::CreateDialogServiceConfig()
 {
     auto config = _commandsAppId.length() > 0
         ? dynamic_pointer_cast<DialogServiceConfig>(CustomCommandsConfig::FromSubscription(_commandsAppId, _speechKey, _speechRegion))
-        : dynamic_pointer_cast<DialogServiceConfig>(BotFrameworkConfig::FromSubscription(_speechKey, _speechRegion));
+        : dynamic_pointer_cast<DialogServiceConfig>(BotFrameworkConfig::FromSubscription(_speechKey, _speechRegion, ""));
 
     if (_customEndpoint.length() > 0)
     {

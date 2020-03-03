@@ -47,7 +47,7 @@ public:
     std::string _customEndpoint;
     std::string _keywordModelPath;
     std::string _keywordDisplayName;
-    std::string _volume;
+    unsigned int _volume;
 
     AgentConfiguration();
     static std::shared_ptr<AgentConfiguration> LoadFromFile(const std::string& path);

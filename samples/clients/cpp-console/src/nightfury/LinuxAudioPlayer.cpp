@@ -15,8 +15,7 @@ using namespace AudioPlayer;
 LinuxAudioPlayer::LinuxAudioPlayer(){
     
     Open();
-    //TODO remove once nightfury volume is handled better
-    SetAlsaMasterVolume(25);
+    SetVolume(25);
     m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
     
 }
@@ -102,7 +101,7 @@ int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
     return rc;
 }
 
-void LinuxAudioPlayer::SetAlsaMasterVolume(long volume)
+int LinuxAudioPlayer::SetVolume(unsigned int volume)
 {
     long min, max;
     snd_mixer_t *handle;

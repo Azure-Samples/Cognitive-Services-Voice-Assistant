@@ -4,6 +4,12 @@
 
 This readme should go over setting up a Linux OS. In our example we are using Ubuntu 18.04 on a raspberry pi
 
+## Useful tools
+
+There are many ways to do development on a Raspberry pi. It may be useful to take advantage of these tools:
+* [Bitvise SSH client](https://www.bitvise.com/)
+* [Visual Studio Code remote SSH plugin](https://code.visualstudio.com/docs/remote/ssh)
+
 ## Setting up the device
 
 * Install the Ubuntu server OS onto your Raspberry pi. 
@@ -14,7 +20,7 @@ This readme should go over setting up a Linux OS. In our example we are using Ub
 
 * Setup Alsa for Audio Playback and Recording (this part can be tricky)
   * [ALSA wiki](https://wiki.archlinux.org/index.php/Advanced_Linux_Sound_Architecture)
-  * keep in mind you can test it with aplay and arecord
+  * keep in mind you can test it with aplay, arecord, and speaker-test
 
 ## Setting up the code
 
@@ -46,4 +52,7 @@ run ./buildArm32.sh
 example running from the out folder:
     
     export LD_LIBRARY_PATH="../lib/arm32"
-    sample.exe config.json on
+    sample.exe ../configs/config.json on
+    
+    
+TODO: Add reference back to original readme.

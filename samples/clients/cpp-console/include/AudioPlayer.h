@@ -89,6 +89,22 @@ class IAudioPlayer{
     virtual int Play(uint8_t* buffer, size_t bufferSize) = 0;
     
     /// <summary>
+    /// This function is used to programmatically set the volume of the audio player
+    /// </summary>
+    /// <returns>A return code with < 0 as an error and any other int as success</returns>
+    /// <example>
+    /// <code>
+    /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
+    /// audioPlayer->Open();
+    /// audioPlayer->SetVolume(50);
+    /// </code>
+    /// </example>
+    /// <remarks>
+    /// Here we use the LinuxAudioPlayer as an example. Though not all players will support this. See the implementation file for details.
+    /// </remarks>
+    virtual int SetVolume(unsigned int percent) = 0;
+    
+    /// <summary>
     /// This function is used to clean up the audio players resources.
     /// </summary>
     /// <returns>A return code with < 0 as an error and any other int as success</returns>

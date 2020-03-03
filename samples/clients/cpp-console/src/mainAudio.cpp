@@ -61,34 +61,17 @@ int main(int argc, char** argv)
         return 0;
     }
     
-    bool volumeOn = false;
-    
-    if(argc >= 3)
-    {
-        if(strcmp(argv[2], "on") == 0){
-            volumeOn = true;
-        }
-    }
-    
+    int bufferSize = 1024;
+    unsigned char * buffer = (unsigned char *)malloc(bufferSize);
     string configFilePath = argv[1];
     string s;
     const char * device = "default";
     bool keywordListeningEnabled = false;
-    
-    shared_ptr<AgentConfiguration> agentConfig;
-    shared_ptr<DialogServiceConnector> dialogServiceConnector;
+    bool volumeOn = false;
     
     IAudioPlayer* player;
-    if(volumeOn){
-#ifdef LINUX
-        player = new LinuxAudioPlayer();
-#endif
-#ifdef WINDOWS
-        player = new WindowsAudioPlayer();
-#endif
-    }
-    int bufferSize = 2048;
-    unsigned char * buffer = (unsigned char *)malloc(bufferSize);
+    shared_ptr<AgentConfiguration> agentConfig;
+    shared_ptr<DialogServiceConnector> dialogServiceConnector;
     
     auto startKwsIfApplicable = [&]()
     {
@@ -106,17 +89,26 @@ int main(int argc, char** argv)
         }
     };
     
-    auto initFromPath = [&](string path)
-    {
     DeviceStatusIndicators::SetStatus(DeviceStatus::Initializing);
-    log_t("Loading configuration from file: ", path);
+    log_t("Loading configuration from file: ", configFilePath);
     
-    agentConfig = AgentConfiguration::LoadFromFile(path);
+    agentConfig = AgentConfiguration::LoadFromFile(configFilePath);
     
     if (agentConfig->LoadResult() != AgentConfigurationLoadResult::Success)
     {
         log_t("Unable to load config file.");
         return (int)agentConfig->LoadResult();
+    }
+    
+    if(agentConfig->_volume > 0){
+        volumeOn = true;
+#ifdef LINUX
+        player = new LinuxAudioPlayer();
+#endif
+#ifdef WINDOWS
+        player = new WindowsAudioPlayer();
+#endif
+        player->SetVolume(agentConfig->_volume);
     }
     
     log_t("Configuration loaded. Creating connector...");
@@ -254,10 +246,6 @@ int main(int argc, char** argv)
     
     startKwsIfApplicable();
     DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
-    return 0;
-    };
-    
-    initFromPath(configFilePath);
     
     cout << "Commands:" << endl;
     cout << "1 [listen once]" << endl;

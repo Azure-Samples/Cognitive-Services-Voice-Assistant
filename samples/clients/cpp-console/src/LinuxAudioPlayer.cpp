@@ -33,6 +33,11 @@ int LinuxAudioPlayer::Open(){
     return rc;
 }
 
+int LinuxAudioPlayer::SetVolume(unsigned int percent){
+    //stubbed out
+    return 0;
+}
+
 int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
     //PCM variables
     int rc;
