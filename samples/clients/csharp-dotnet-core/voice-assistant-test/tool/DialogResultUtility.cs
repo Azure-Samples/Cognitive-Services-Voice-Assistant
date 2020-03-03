@@ -287,7 +287,7 @@ namespace VoiceAssistantTest
             {
                 turnResult.ResponseMatch = DialogResultUtility.ActivityListsMatch(turnResult.ExpectedResponses, turnResult.ActualResponses);
 
-                if (!string.IsNullOrWhiteSpace(turnResult.WAVFile))
+                if (!string.IsNullOrWhiteSpace(turnResult.WAVFile) && !string.IsNullOrWhiteSpace(turnResult.Utterance))
                 {
                     string normalizedActualRecognizedText = new string(turnResult.ActualRecognizedText.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
                     string normalizedExpectedRecognizedText = new string(turnResult.Utterance.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
