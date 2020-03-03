@@ -55,10 +55,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="configs\config.json">
       <Filter>configs</Filter>
     </None>
     <None Include="configs\windowsConfig.json" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
