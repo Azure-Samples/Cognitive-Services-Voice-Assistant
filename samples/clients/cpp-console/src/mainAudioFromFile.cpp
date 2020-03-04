@@ -224,11 +224,6 @@ int main (int argc, char** argv)
         pushStream = AudioInputStream::CreatePushStream();
         auto audioInput = AudioConfig::FromStreamInput(pushStream);
         
-        //TODO remove once fixed
-        #ifdef NIGHTFURY
-        add_config_tls_workaround(config);
-        #endif
-        
         dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioInput);
         log_t("Connector created");
         dialogServiceConnector->ConnectAsync();

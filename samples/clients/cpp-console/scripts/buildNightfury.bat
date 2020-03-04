@@ -21,10 +21,10 @@ REM set lib=-l:libcutils.so.0 %lib%
 
 set commonTargets=-std=c++14 %inc% %incDir% %lib%
 
+set src=src/nightfury/NightFuryLinuxAudioPlayer.cpp %src%
+set src=src/nightfury/NightFuryDeviceStatusIndicators.cpp %src%
 set src=src/AudioPlayerEntry.cpp %src%
-set src=src/nightfury/LinuxAudioPlayer.cpp %src%
 set src=src/mainAudio.cpp %src%
-set src=src/nightfury/DeviceStatusIndicators.cpp %src%
 set src=src/AgentConfiguration.cpp %src%
 set tgt=out/sample.exe
 
