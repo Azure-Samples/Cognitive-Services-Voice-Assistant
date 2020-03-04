@@ -46,7 +46,7 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
     - Leave the field _Custom commands app Id_ empty (unless you plan to use [Custom Commands](#use-custom-commands))
     - The default input language is "en-us" (US English). Update the _Language_ field as needed to select a different [language code from the "Speech-to-text" list](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).
     - Press _Ok_ when you're done.
-    - Your entires will be saved and populated automatically when you launch the app again.
+    - Your entries will be saved and populated automatically when you launch the app again.
 ![Setting page](docs/media/SettingsPage.png)  
 6. Press **Reconnect**. The application will try to connect to your bot via Direct Line Speech channel.
 ![Main Page](docs/media/MainPage.png)

@@ -15,28 +15,7 @@ namespace VoiceAssistantTest
     /// </summary>
     public static class AriaLogger
     {
-        public static void Log()
-        {
-            EVTStatus status = EVTStatus.Fail;
-            ILogger mylogger = LogManager.GetLogger("e3b666a628e547c796df3d4cd72e9515-9a5412e5-dede-4018-ae6b-49a0f40e8fde-7297", out status);
-            if (status != EVTStatus.OK)
-            {
-                Trace.TraceError($"Failed getting Aria logger. EVTStatus = {status}");
-            }
-            else 
-            {
-                EventProperties props = new EventProperties();
-                props.Name = "myEvent";
-                props.SetProperty("appLaunched", 1.0, PiiKind.None);
-                mylogger.LogEvent(props);
-            }
-        }
-
-        public static void Start()
-        {
-            LogManager.Start(new LogConfiguration());
-
-            List<TransmitPolicy> REAL_TIME_FOR_ALL = new List<TransmitPolicy>
+        static List<TransmitPolicy> REAL_TIME_FOR_ALL = new List<TransmitPolicy>
             {
                 new TransmitPolicy
                 {
@@ -67,16 +46,52 @@ namespace VoiceAssistantTest
                 }
             };
 
-            LogManager.LoadTransmitProfiles(REAL_TIME_FOR_ALL);
-            LogManager.SetTransmitProfile(REAL_TIME_FOR_ALL[0].ProfileName);
-            LogManager.SetNetCost(NetCost.High);
-            LogManager.SetPowerState(PowerState.Battery);
+        public static void Log()
+        {
+            EVTStatus status = EVTStatus.Fail;
+            ILogger mylogger = LogManager.GetLogger("e3b666a628e547c796df3d4cd72e9515-9a5412e5-dede-4018-ae6b-49a0f40e8fde-7297", out status);
+            if (status != EVTStatus.OK)
+            {
+                Trace.TraceError($"Failed getting Aria logger. EVTStatus = {status}");
+            }
+            else
+            {
+
+                InitCallbacks();
+
+                       LogManager.LoadTransmitProfiles(REAL_TIME_FOR_ALL);
+                  LogManager.SetTransmitProfile(REAL_TIME_FOR_ALL[0].ProfileName);
+
+                for (int i = 0; i < 10; i++)
+                {
+                    EventProperties props = new EventProperties();
+                    props.Name = "myEvent";
+                    props.SetProperty("appLaunched", 1.0, PiiKind.None);
+                    status = mylogger.LogEvent(props);
+                    if (status != EVTStatus.OK)
+                    {
+                        Trace.TraceError($"Failed LogEvent. EVTStatus = {status}");
+                    }
+                }
+            }
+        }
+
+        public static void Start()
+        {
+            LogManager.Start(new LogConfiguration());
+
+    
+
+           // LogManager.LoadTransmitProfiles(REAL_TIME_FOR_ALL);
+          //  LogManager.SetTransmitProfile(REAL_TIME_FOR_ALL[0].ProfileName);
+          // LogManager.SetNetCost(NetCost.High);
+          //  LogManager.SetPowerState(PowerState.Battery);
         }
 
         public static void Stop()
         {
-            Trace.TraceInformation($"Aria even count: EventsSent = {EventsSent},  EventsRejected = {EventsRejected}, EventsRetry = {EventsRetry}, EventsDropped = {EventsDropped}");
             LogManager.Teardown();
+            Trace.TraceInformation($"Aria event count: EventsSent = {EventsSent},  EventsRejected = {EventsRejected}, EventsRetry = {EventsRetry}, EventsDropped = {EventsDropped}");
         }
 
         ///////////// This is useful in debug mod, it is not recommended in production  \\\\\\\\\\\\\\\\\\\\\\\
