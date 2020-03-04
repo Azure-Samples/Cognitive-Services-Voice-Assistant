@@ -22,9 +22,9 @@ set commonTargets=-std=c++14 %inc% %incDir% %lib%
 
 set src=src/nightfury/NightFuryLinuxAudioPlayer.cpp %src%
 set src=src/nightfury/NightFuryDeviceStatusIndicators.cpp %src%
-set src=src/AudioPlayerEntry.cpp %src%
-set src=src/mainAudioFromFile.cpp %src%
-set src=src/AgentConfiguration.cpp %src%
+set src=src/common/AudioPlayerEntry.cpp %src%
+set src=src/common/mainAudioFromFile.cpp %src%
+set src=src/common/AgentConfiguration.cpp %src%
 set tgt=out/sample.exe
 
 set defines=-D LINUX

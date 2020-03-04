@@ -4,15 +4,15 @@ cd ..
 mkdir out
 echo "Building Raspberry Pi arm32 from file sample"
 g++ -Wno-psabi \
-src/mainAudioFromFile.cpp \
-src/LinuxAudioPlayer.cpp \
-src/AudioPlayerEntry.cpp \
-src/AgentConfiguration.cpp \
-src/DeviceStatusIndicators.cpp \
+src/common/mainAudioFromFile.cpp \
+src/linux/LinuxAudioPlayer.cpp \
+src/common/AudioPlayerEntry.cpp \
+src/common/AgentConfiguration.cpp \
+src/common/DeviceStatusIndicators.cpp \
 -o ./out/sample.exe \
 -std=c++14 \
 -D LINUX \
--L./lib/arm32110 \
+-L./lib/arm32 \
 -I./include/cxx_api \
 -I./include/c_api \
 -I./include \
