@@ -334,3 +334,4 @@ samples/clients/cpp-console/lib/
 samples/clients/cpp-console/include/c_api/
 samples/clients/cpp-console/include/cxx_api/
 samples/clients/cpp-console/cpp-console.code-workspace
+samples/clients/cpp-console/docker/qemu-arm-static.tar.gz
