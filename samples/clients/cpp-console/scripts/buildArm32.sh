@@ -3,7 +3,7 @@ clear
 cd ..
 mkdir out
 echo "Building Raspberry Pi sample"
-g++-5 -Wno-psabi\
+g++ -Wno-psabi \
 src/mainAudio.cpp \
 src/LinuxAudioPlayer.cpp \
 src/AudioPlayerEntry.cpp \
@@ -19,3 +19,6 @@ src/DeviceStatusIndicators.cpp \
 -pthread \
 -lasound \
 -lMicrosoft.CognitiveServices.Speech.core
+
+cp ./scripts/run.sh ./out
+chmod +x ./out/run.sh

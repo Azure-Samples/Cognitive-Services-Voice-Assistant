@@ -85,9 +85,13 @@ int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
     /* set bits/second sampling rate */
     snd_pcm_hw_params_set_rate_near(m_playback_handle, m_params,
                                     &m_bitsPerSecond, &dir);
+                                    
+    /* Set buffer size */
+    unsigned int bufferSize = 1024;
+    snd_pcm_hw_params_set_buffer_size_near(m_playback_handle, m_params, (snd_pcm_uframes_t *)&bufferSize);
 
     // /* Set period size to 256 frames. */
-    m_frames = 256;
+    m_frames = 512;
     rc = snd_pcm_hw_params_set_period_size_near(m_playback_handle, m_params, &m_frames, &dir);
     if(rc < 0){
         fprintf(stdout, "snd_pcm_hw_params_set_period_size_near failed: %s\n", snd_strerror(rc) );
@@ -150,7 +154,6 @@ void LinuxAudioPlayer::PlayerThreadMain(){
         lk.unlock();
         
         size_t playBufferSize = GetBufferSize();
-        fprintf(stdout, "playBuffersize = %d", playBufferSize);
         while(m_audioQueue.size() > 0){
             m_isPlaying = true;
             AudioPlayerEntry entry = m_audioQueue.front();
