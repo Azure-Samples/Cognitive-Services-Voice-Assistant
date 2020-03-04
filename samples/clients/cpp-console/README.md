@@ -4,7 +4,7 @@
 
 This sample is intended to be a starting point for any application coded in c++. It has some generic files that implement an IAudioPlayer interface for audio playback. This interface will be specific to the target OS and/or device. A sample player for linux devices is included.
 
-## Prerequisites
+## Prerequisites and Setup
 * You will need a speech service subscription key and region. Instructions for creating one can be found on this [page](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) under "Create a resource group" and "Create resources"
 
 * The [Microsoft Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) will need to be downloaded.
@@ -15,13 +15,7 @@ For Linux or ARM devices the target version and the native binaries should be co
 
 Headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api
 
-## Setup
-
 Replace the text in the configs/config.json file with your subscription key and key region. If you are using a custom speech commands application or custom speech font you can insert those GUID's there as well.
-
-### For the Nightfury device you will need the speech devices SDK
-TODO:
-This should be updated once the nightfury build is public
 
 ## Build directly on Linux arm32
 
@@ -55,8 +49,8 @@ If you deploy those files from the out dir and copy an existing or create a conf
 
 ## Running the sample
 
-### usage: sample.exe config-file [volume on/off]
+### usage: sample.exe config-file
 example running from the out folder:
     
     export LD_LIBRARY_PATH="../lib/arm32"
-    sample.exe config.json on
+    sample.exe config.json

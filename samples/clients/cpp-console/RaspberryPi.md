@@ -48,11 +48,11 @@ run ./buildArm32.sh
 
 ## Running the sample
 
-### usage: sample.exe config-file [volume on/off]
+### usage: sample.exe config-file
 example running from the out folder:
     
     export LD_LIBRARY_PATH="../lib/arm32"
-    sample.exe ../configs/config.json on
+    sample.exe ../configs/config.json
     
     
-TODO: Add reference back to original readme.
+#### [Main Devices Readme](README.md)
