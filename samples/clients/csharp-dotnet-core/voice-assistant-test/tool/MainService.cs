@@ -33,6 +33,7 @@ namespace VoiceAssistantTest
             // Set default configuration for application tracing
             InitializeTracing();
 
+            
             if (!CheckNotNullNotEmptyString(configFile))
             {
                 // AppSettings File not specified
@@ -157,10 +158,10 @@ namespace VoiceAssistantTest
             List<TestReport> allInputFilesTestReport = new List<TestReport>();
             bool testPass = true;
 
-            AriaLogger.Start();
-            AriaLogger.Log();
-            Thread.Sleep(15 * 1000);
-            AriaLogger.Stop();
+            if (!string.IsNullOrEmpty(appSettings.AriaProjectKey))
+            {
+                AriaLogger.Start(appSettings.AriaProjectKey);
+            }
 
             foreach (TestSettings tests in appSettings.Tests)
             {
@@ -328,10 +329,12 @@ namespace VoiceAssistantTest
                     if (dialogResult.DialogPass)
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
+                        AriaLogger.Log("Dialog Succeeded", dialog.DialogID, dialog.Description);
                     }
                     else
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} failed");
+                        AriaLogger.Log("Dialog Failed", dialog.DialogID, dialog.Description);
                     }
                 } // End of dialog loop
 
@@ -364,6 +367,8 @@ namespace VoiceAssistantTest
             {
                 Trace.TraceInformation("********** TEST FAILED **********");
             }
+
+            AriaLogger.Stop();
 
             return testPass;
         }
