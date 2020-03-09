@@ -8,6 +8,7 @@
 #include <mutex>
 #include "AudioPlayer.h"
 #include "AudioPlayerEntry.h"
+#include "speechapi_cxx.h"
 
 namespace AudioPlayer
 {
@@ -78,7 +79,6 @@ namespace AudioPlayer
             /// </remarks>
             int Open(const std::string& device, AudioPlayerFormat format);
             
-            
             /// <summary>
             /// ALSA expects audio to be sent in periods defined by frames. This function will compute the
             /// buffer size based on the channels, bytes per sample, and frames per period.
@@ -119,6 +119,32 @@ namespace AudioPlayer
             /// </remarks>
             int Play(uint8_t* buffer, size_t bufferSize);
             
+            /// <summary>
+            /// This method is used to actually play the audio. The PullAudioOutputStream
+            /// passed in should be taken from the GetAudio() call on the activity received event.
+            /// </summary>
+            /// <param name="pStream">A shared pointer to the PullAudioOutputStream</param>
+            /// <returns>A return code with < 0 as an error and any other int as success</returns>
+            /// <example>
+            /// <code>
+            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
+            /// audioPlayer->Open();
+            /// ... 
+            ///
+            /// //In the Activity received callback
+            /// if (event.HasAudio()){
+            ///     std::shared_ptr<Audio::PullAudioOutputStream> stream = event.GetAudio();
+            ///     audioPLayer->Play(stream);
+            /// }
+            /// </code>
+            /// </example>
+            /// <remarks>
+            /// Here we use the LinuxAudioPlayer as an example. This is preferred to the Byte array if possible
+            /// since this will not cause copies of the buffer to be stored at runtime.
+            /// In our implementation we assume Open is called before playing.
+            /// </remarks>
+            int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream);
+
             /// <summary>
             /// This function is used to programmatically set the volume of the audio player
             /// </summary>
@@ -175,6 +201,8 @@ namespace AudioPlayer
 
             std::thread m_playerThread;
             void PlayerThreadMain();
+            void PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry);
+            void PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry);
             int WriteToALSA(uint8_t* buffer);
     };
 }
