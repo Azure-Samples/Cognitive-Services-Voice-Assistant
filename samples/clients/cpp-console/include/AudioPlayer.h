@@ -14,7 +14,7 @@ class IAudioPlayer{
     
         /// <summary>
         /// AudioPlayerFormat is an enum that can be used in the AudioPlayer
-        /// implementation. It is passed in as a parameter tot he Open and Play functions.
+        /// implementation. It is passed in as a parameter to the Open and Play functions.
         /// </summary>
         /// <example>
         /// <code>
