@@ -23,7 +23,7 @@ Check out the [RaspberryPi.md](RaspberryPi.md) for detailed instructions.
 
 ## Building for Linux Arm32 with Docker
 
-Check out the [GGECSpeaker.md](GGECSpeacker.md) for detailed instructions.
+Check out the [GGECSpeaker.md](GGECSpeaker.md) for detailed instructions.
 
 ## Running the sample
 
