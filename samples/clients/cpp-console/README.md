@@ -19,33 +19,11 @@ Replace the text in the configs/config.json file with your subscription key and 
 
 ## Build directly on Linux arm32
 
-Check out the [RaspberryPi.md](RaspberryPi.md)
+Check out the [RaspberryPi.md](RaspberryPi.md) for detailed instructions.
 
 ## Building for Linux Arm32 with Docker
 
-For ARM32 devices you can compile binaries on a windows machine using docker.
-Install docker for windows from the [docker website](https://docs.docker.com/docker-for-windows/).
-
-Download the qemu-arm-static.tar.gz file from this [open source](https://github.com/multiarch/qemu-user-static/releases/) and place it in the docker folder.
-
-For linux machines you will also need to run 
-
-    sudo apt-get install --yes binfmt-support qemu-user-static
-
-Open a cmd prompt and cd into the docker folder and 
-run 
-
-    docker build -t dev_ubuntu_arm32 .
-
-This will create an image and name it "dev_ubuntu_arm32" which is used inside the build scripts.
-
-cd into the scripts directory.
-
-Then run the buildArm32Linux.bat
-
-This should spin up the docker container and run the build command. The output executable will be placed in the out folder along with the binaries you included.
-
-If you deploy those files from the out dir and copy an existing or create a config file you should now be able to run it.
+Check out the [GGECSpeaker.md](GGECSpeaker.md) for detailed instructions.
 
 ## Running the sample
 
