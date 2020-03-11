@@ -1,0 +1,8 @@
+{
+    "keyword_model": "/data/cppSample/Speaker.table",
+    "keyword_display": "Speaker",
+    "speech_subscription_key": "fd0d3bd0b03f4e36a149e342b56d5004",
+    "speech_region": "westus2",
+    "commands_app_id": "e8ebc7b9-93ea-4d44-83ce-4960f5a7958a",
+    "volume": "25"
+}
