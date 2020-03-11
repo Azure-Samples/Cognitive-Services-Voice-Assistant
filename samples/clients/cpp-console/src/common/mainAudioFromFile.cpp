@@ -186,8 +186,6 @@ int main (int argc, char** argv)
         player = new WindowsAudioPlayer();
 #endif
     }
-    int bufferSize = 1024;
-    unsigned char * buffer = (unsigned char *)malloc(bufferSize);
     
     auto startKwsIfApplicable = [&]()
     {
@@ -312,20 +310,11 @@ int main (int argc, char** argv)
 
                     auto audio = event.GetAudio();
                     uint32_t bytes_read = 0;
+                    int play_result = 0;
                     
-                    do
-                    {   
-                        
-                        bytes_read = audio->Read(buffer, bufferSize);
-                        int play_result = 0;
-                        if(volumeOn){
-                            play_result = player->Play(buffer, bytes_read);
-                        }
-                        total_bytes_read += bytes_read;
-                        
-                        cout << " ." << flush;
-
-                    } while (bytes_read > 0);
+                    if(volumeOn && player != nullptr){
+                        play_result = player->Play(audio);
+                    }
 
                     cout << endl;
                     log_t("Playback of ", total_bytes_read, " bytes complete.");

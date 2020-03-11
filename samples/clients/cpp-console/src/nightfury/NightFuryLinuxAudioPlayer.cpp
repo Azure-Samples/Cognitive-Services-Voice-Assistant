@@ -143,22 +143,18 @@ void LinuxAudioPlayer::PlayerThreadMain(){
         m_conditionVariable.wait(lk);
         lk.unlock();
         
-        size_t playBufferSize = GetBufferSize();
-        while(m_audioQueue.size() > 0){
+        while (m_audioQueue.size() > 0) {
             m_isPlaying = true;
-            AudioPlayerEntry entry = m_audioQueue.front();
-            size_t bufferLeft = entry.m_size;
-            std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
-            while(bufferLeft > 0){
-                if(bufferLeft >= playBufferSize){
-                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], playBufferSize);
-                    bufferLeft -= playBufferSize;
-                }else { //there is a smaller amount to play so we will pad with silence
-                    memcpy(playBuffer.get(), &entry.m_data[entry.m_size - bufferLeft], bufferLeft);
-                    memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
-                    bufferLeft = 0;
-                }
-                WriteToALSA(playBuffer.get());
+            std::shared_ptr<AudioPlayerEntry> entry = std::make_shared<AudioPlayerEntry>(m_audioQueue.front());
+            switch(entry->m_entryType){
+                case PlayerEntryType::BYTE_ARRAY:
+                    PlayByteBuffer(entry);
+                    break;
+                case PlayerEntryType::PULL_AUDIO_OUTPUT_STREM:
+                    PlayPullAudioOutputStream(entry);
+                    break;
+                default:
+                    fprintf(stderr, "Unknown Audio Player Entry type\n");   
             }
             m_queueMutex.lock();
             m_audioQueue.pop_front();
@@ -169,9 +165,52 @@ void LinuxAudioPlayer::PlayerThreadMain(){
     
 }
 
+void LinuxAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry){
+    size_t playBufferSize = GetBufferSize();
+    unsigned int bytesRead = 0;
+    std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+    do{
+        bytesRead = pEntry->m_pullStream->Read(playBuffer.get(), playBufferSize);
+        WriteToALSA(playBuffer.get());
+    }while(bytesRead > 0);
+}
+
+void LinuxAudioPlayer::PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry){
+    size_t playBufferSize = GetBufferSize();
+    size_t bufferLeft = pEntry->m_size;
+    std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+    while(bufferLeft > 0){
+        if(bufferLeft >= playBufferSize){
+            memcpy(playBuffer.get(), &pEntry->m_data[pEntry->m_size - bufferLeft], playBufferSize);
+            bufferLeft -= playBufferSize;
+        }else { //there is a smaller amount to play so we will pad with silence
+            memcpy(playBuffer.get(), &pEntry->m_data[pEntry->m_size - bufferLeft], bufferLeft);
+            memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
+            bufferLeft = 0;
+        }
+        WriteToALSA(playBuffer.get());
+    }
+}
+
+
 int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
     int rc = 0;
     AudioPlayerEntry entry(buffer, bufferSize);
+    m_queueMutex.lock();
+    m_audioQueue.push_back(entry);
+    m_queueMutex.unlock();
+    
+    if(!m_isPlaying){
+        //wake up the audio thread
+        m_conditionVariable.notify_one();
+    }
+    
+    return rc;
+}
+
+int LinuxAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream){
+    int rc = 0;
+    AudioPlayerEntry entry(pStream);
     m_queueMutex.lock();
     m_audioQueue.push_back(entry);
     m_queueMutex.unlock();

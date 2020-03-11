@@ -131,29 +131,30 @@ namespace AudioPlayer
             int Play(uint8_t* buffer, size_t bufferSize);
             
             /// <summary>
-            /// This method is used to actually play the audio. The buffer passed in 
-            /// should contain the raw audio bytes. The AudioPlayerFormat is used to determine how to play it.
+            /// This method is used to actually play the audio. The PullAudioOutputStream
+            /// passed in should be taken from the GetAudio() call on the activity received event.
             /// </summary>
-            /// <param name="buffer">A point to the buffer containing the audio bytes</param>
-            /// <param name="bufferSize">The size in bytes of the buffer being passed in.</param>
-            /// <param name="format">The AudioPlayerFormat enum to define the settings for the audio player</param>
-            /// <returns>A return code with < 0 as an error and any other int as success. 
-            /// Non-errors are the number of frames written.</returns>
+            /// <param name="pStream">A shared pointer to the PullAudioOutputStream</param>
+            /// <returns>A return code with < 0 as an error and any other int as success</returns>
             /// <example>
             /// <code>
             /// IAudioPlayer *audioPlayer = new WindowsAudioPlayer();
             /// audioPlayer->Open();
-            /// int bufferSize = audioPlayer->GetBufferSize();
-            /// unsigned char * buffer = (unsigned char *)malloc(bufferSize);
-            /// // fill buffer with audio from somewhere
-            /// audioPLayer->Play(buffer, bufferSize, IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
+            /// ... 
+            ///
+            /// //In the Activity received callback
+            /// if (event.HasAudio()){
+            ///     std::shared_ptr<Audio::PullAudioOutputStream> stream = event.GetAudio();
+            ///     audioPLayer->Play(stream);
+            /// }
             /// </code>
             /// </example>
             /// <remarks>
-            /// The method returns the number of frames written to ALSA.
+            /// Here we use the WindowsAudioPlayer as an example. This is preferred to the Byte array if possible
+            /// since this will not cause copies of the buffer to be stored at runtime.
             /// In our implementation we assume Open is called before playing.
             /// </remarks>
-            int Play(uint8_t* buffer, size_t bufferSize, AudioPlayerFormat format);
+            int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream);
             
             /// <summary>
             /// This function is a no-op
@@ -229,5 +230,7 @@ namespace AudioPlayer
 
             std::thread m_playerThread;
             void PlayerThreadMain();
+            void PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry);
+            void PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry);
     };
 }
