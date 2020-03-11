@@ -2,7 +2,7 @@
 
 ## Overview
 
-This readme should go over setting up a Windows dev box to build an arm32 binary using a docker container for the GGEC speaker. You could build it on a Linux machine but the scripts provided are for windows.
+This readme should go over setting up a Windows dev box to build an arm32 binary using a docker container for the GGEC speaker. You could build it on a Linux machine but the scripts provided are for Windows.
 
 ## Setting up the device
 
@@ -46,7 +46,7 @@ run .\buildGGEC.bat
 
 This should spin up the docker container and run the build command. The output executable will be placed in the out folder.
 
-If you deploy those files from the out dir and copy an existing or create a config file you should now be able to run it. We have a script that will do it for you called "deployGGEC.bat". This will deplay all the configs, models, and binaries you will need along with the run.sh script into the /data/cppSample folder on your device.
+If you deploy those files from the out dir and copy an existing or create a config file you should now be able to run it. We have a script that will do it for you called "deployGGEC.bat". This will deploy all the configs, models, and binaries you will need along with the run.sh script into the /data/cppSample folder on your device.
 
 ## Running the sample
 
