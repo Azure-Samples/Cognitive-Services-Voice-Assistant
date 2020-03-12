@@ -17,7 +17,7 @@ namespace VoiceAssistantTest
     /// </summary>
     internal class DialogResultUtility
     {
-        private AppSettings appSettings;
+        private readonly AppSettings appSettings;
 
         /// <summary>
         ///  Initializes a new instance of the <see cref="DialogResultUtility"/> class.

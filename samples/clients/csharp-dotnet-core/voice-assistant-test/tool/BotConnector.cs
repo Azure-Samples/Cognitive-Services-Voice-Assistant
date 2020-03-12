@@ -43,8 +43,6 @@ namespace VoiceAssistantTest
         private int elapsedTime = 0;
         private List<Activity> ignoreActivitiesList;
         private Stopwatch stopWatch;
-        private string expectedRecognition;
-        private string expectedLatency;
         private bool keyword;
         private KeywordRecognitionModel kwsTable;
 
@@ -425,23 +423,19 @@ namespace VoiceAssistantTest
         /// Obtains and sets the utterance, dialogId, and turnId, and responseCount for each Dialog and Turn
         /// Obtains ad sets list of ignoringActivities and timeout value defined in the Config for each InputFile.
         /// </summary>
-        /// <param name="utterance">The text value of the Utterance field in the input test file.</param>
         /// <param name="fileName">The name of the input test file.</param>
         /// <param name="dialogID">The value of the DialogID in the input test file.</param>
         /// <param name="turnID">The value of the TurnID in the input test file.</param>
         /// <param name="responseCount">Number of bot activity responses expected for this turn (after filtering out activities marked for ignoring).</param>
         /// <param name="ignoringActivities">List of Activities to Ignore for the bot as defined in the Config File.</param>
-        /// <param name="expectedLatency">Expected Latency for the bot as defined in the Config File.</param>
         /// <param name="keyword">Bool value of keyword for each turn.</param>
-        public void SetInputValues(string utterance, string fileName, string dialogID, int turnID, int responseCount, List<Activity> ignoringActivities, string expectedLatency, bool keyword)
-        {
-            this.expectedRecognition = utterance;
+        public void SetInputValues(string fileName, string dialogID, int turnID, int responseCount, List<Activity> ignoringActivities, bool keyword)
+        { 
             this.baseFileName = Path.GetFileNameWithoutExtension(fileName);
             this.dialogID = dialogID;
             this.turnID = turnID;
             this.responseCount = responseCount;
             this.ignoreActivitiesList = ignoringActivities;
-            this.expectedLatency = expectedLatency;
             this.keyword = keyword;
         }
 

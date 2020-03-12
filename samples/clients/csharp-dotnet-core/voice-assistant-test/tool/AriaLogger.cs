@@ -2,33 +2,30 @@
 // Licensed under the MIT License.
 namespace VoiceAssistantTest
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Runtime.CompilerServices;
     using System.Threading;
     using Microsoft.Applications.Events;
-    using NAudio.Wave;
 
     /// <summary>
     /// Manages optional logging to Microsoft Aria.
-    /// See this getting started guide: https://www.aria.ms/developers/get-started/onesdk-tutorial-per-platform/dotnet-core-client-start/
+    /// See this getting started guide: https://www.aria.ms/developers/get-started/onesdk-tutorial-per-platform/dotnet-core-client-start/.
     /// </summary>
     public static class AriaLogger
     {
-        private static ILogger logger = null;
+        /// <summary>
+        /// Use this as the Aria event name for a successful dialog test.
+        /// </summary>
+        public const string EventNameDialogSucceeded = "DialogSucceeded";
 
-        private static long EventsRejected = 0;
-        private static long EventsRetry = 0;
-        private static long EventsDropped = 0;
-        private static long EventsSent = 0;
+        /// <summary>
+        /// Use this as the Aria event name for a failed dialog test.
+        /// </summary>
+        public const string EventNameDialogFailed = "DialogFailed";
 
-        public static string EventType_VoiceAssistantTestEvent = "VoiceAssistantTestEvent";
-        public static string EventName_DialogSucceeded = "DialogSucceeded";
-        public static string EventName_DialogFailed = "DialogFailed";
+        private const string EventTypeVoiceAssistantTest = "VoiceAssistantTest";
 
-
-        static List<TransmitPolicy> REAL_TIME_FOR_ALL = new List<TransmitPolicy>
+        private static readonly List<TransmitPolicy> RealTimeForAll = new List<TransmitPolicy>
         {
             new TransmitPolicy
             {
@@ -37,28 +34,37 @@ namespace VoiceAssistantTest
                 {
                     new Rules
                     {
-                        NetCost = NetCost.Unknown, PowerState = PowerState.Unknown,
-                        Timers = new Timers { Normal = -1, RealTime = -1 }
+                        NetCost = NetCost.Unknown, PowerState = PowerState.Unknown, Timers = new Timers { Normal = -1, RealTime = -1, },
                     },
                     new Rules
                     {
-                        NetCost = NetCost.Low, PowerState = PowerState.Unknown,
-                        Timers = new Timers { Normal = -1, RealTime = 10 }
+                        NetCost = NetCost.Low, PowerState = PowerState.Unknown, Timers = new Timers { Normal = -1, RealTime = 10, },
                     },
                     new Rules
                     {
-                        NetCost = NetCost.Low, PowerState = PowerState.Charging,
-                        Timers = new Timers { Normal = 10, RealTime = 1 }
+                        NetCost = NetCost.Low, PowerState = PowerState.Charging, Timers = new Timers { Normal = 10, RealTime = 1, },
                     },
                     new Rules
                     {
-                        NetCost = NetCost.Low, PowerState = PowerState.Battery,
-                        Timers = new Timers { Normal = 30, RealTime = 10 }
+                        NetCost = NetCost.Low, PowerState = PowerState.Battery, Timers = new Timers { Normal = 30, RealTime = 10, },
                     },
-                }
-            }
+                },
+            },
         };
-      
+
+        private static ILogger logger = null;
+
+        private static long eventsRejected = 0;
+        private static long eventsRetry = 0;
+        private static long eventsDropped = 0;
+        private static long eventsSent = 0;
+
+        /// <summary>
+        /// Log an event to the Aria cloud.
+        /// </summary>
+        /// <param name="name">The Aria event name.</param>
+        /// <param name="dialogID">The dialog ID.</param>
+        /// <param name="dialogDescription">the dialog description.</param>
         public static void Log(string name, string dialogID, string dialogDescription)
         {
             if (logger == null)
@@ -66,11 +72,12 @@ namespace VoiceAssistantTest
                 return;
             }
 
-            EventProperties props = new EventProperties();
-
-            // Note: for some reason Aria Explorer shows "Type" as lower case value of "Name", and ignores the following line:
-            props.Type = AriaLogger.EventType_VoiceAssistantTestEvent;
-            props.Name = name;
+            EventProperties props = new EventProperties
+            {
+                // Note: for some reason Aria Explorer shows "Type" as lower case value of "Name", and ignores the following line:
+                Type = EventTypeVoiceAssistantTest,
+                Name = name,
+            };
 
             props.SetProperty("DialogID", dialogID);
             props.SetProperty("DialogDescription", dialogDescription);
@@ -83,6 +90,10 @@ namespace VoiceAssistantTest
             }
         }
 
+        /// <summary>
+        /// Initialize the Aria logger. Call this once before any calls to Log().
+        /// </summary>
+        /// <param name="tenantToken">The Aria project key.</param>
         public static void Start(string tenantToken)
         {
             if (logger == null)
@@ -100,27 +111,33 @@ namespace VoiceAssistantTest
 
                 InitCallbacks();
 
-                LogManager.LoadTransmitProfiles(REAL_TIME_FOR_ALL);
-                LogManager.SetTransmitProfile(REAL_TIME_FOR_ALL[0].ProfileName);
+                LogManager.LoadTransmitProfiles(RealTimeForAll);
+                LogManager.SetTransmitProfile(RealTimeForAll[0].ProfileName);
 
-                /// Core is very limited so at the moment we can't detect power and networkCost
-                /// For that case we exposed this APIs:
-                /// LogManager.SetNetCost(NetCost.High);
-                /// LogManager.SetPowerState(PowerState.Battery);
+                // Core is very limited so at the moment we can't detect power and networkCost
+                // For that case we exposed this APIs:
+                // LogManager.SetNetCost(NetCost.High);
+                // LogManager.SetPowerState(PowerState.Battery);
             }
         }
 
+        /// <summary>
+        /// Close the Aria logger. Call this once when you are done logging.
+        /// </summary>
         public static void Stop()
         {
             if (logger != null)
             {
                 LogManager.UploadNow();
                 LogManager.Teardown();
-                Trace.TraceInformation($"Aria EventsSent = {EventsSent},  EventsRejected = {EventsRejected}, EventsRetry = {EventsRetry}, EventsDropped = {EventsDropped}");
+                Trace.TraceInformation($"Aria EventsSent = {eventsSent},  EventsRejected = {eventsRejected}, EventsRetry = {eventsRetry}, EventsDropped = {eventsDropped}");
                 logger = null;
             }
         }
 
+        /// <summary>
+        /// Assign event callbacks, so we can count and report at the end events rejected, dropped, sent and retried.
+        /// </summary>
         private static void InitCallbacks()
         {
             TelemetryEvents telemetryEvents = LogManager.GetTelemetryEvents(out EVTStatus status);
@@ -131,32 +148,32 @@ namespace VoiceAssistantTest
             }
             else
             {
-                EventsRejected = 0;
-                EventsRetry = 0;
-                EventsDropped = 0;
-                EventsSent = 0;
+                eventsRejected = 0;
+                eventsRetry = 0;
+                eventsDropped = 0;
+                eventsSent = 0;
 
                 telemetryEvents.EventsRetrying += (sender, args) =>
                 {
                     Trace.TraceInformation($"Aria retry event: {args.RetryReason}, {args.RetryDetails}");
-                    Interlocked.Add(ref EventsRetry, args.EventsCount);
+                    Interlocked.Add(ref eventsRetry, args.EventsCount);
                 };
 
                 telemetryEvents.EventsDropped += (sender, args) =>
                 {
                     Trace.TraceInformation($"Aria event dropped: {args.DroppedReason}, {args.DroppedDetails}");
-                    Interlocked.Add(ref EventsDropped, args.EventsCount);
+                    Interlocked.Add(ref eventsDropped, args.EventsCount);
                 };
 
-                telemetryEvents.EventsSent += (sender, args) => 
-                { 
-                    Interlocked.Add(ref EventsSent, args.EventsCount);
+                telemetryEvents.EventsSent += (sender, args) =>
+                {
+                    Interlocked.Add(ref eventsSent, args.EventsCount);
                 };
 
                 telemetryEvents.EventsRejected += (sender, args) =>
                 {
                     Trace.TraceInformation($"Aria event rejected: {args.RejectedReason}, {args.RejectedDetails}");
-                    Interlocked.Add(ref EventsRejected, args.EventsCount);
+                    Interlocked.Add(ref eventsRejected, args.EventsCount);
                 };
             }
         }

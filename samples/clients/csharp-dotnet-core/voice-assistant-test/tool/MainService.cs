@@ -14,8 +14,6 @@ namespace VoiceAssistantTest
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
     using Activity = Microsoft.Bot.Schema.Activity;
-    using Microsoft.Applications.Events;
-    using System.Threading;
 
     /// <summary>
     /// Entry point of Voice Assistant regression tests.
@@ -33,7 +31,6 @@ namespace VoiceAssistantTest
             // Set default configuration for application tracing
             InitializeTracing();
 
-            
             if (!CheckNotNullNotEmptyString(configFile))
             {
                 // AppSettings File not specified
@@ -276,7 +273,7 @@ namespace VoiceAssistantTest
                             bootstrapMode = false;
                         }
 
-                        botConnector.SetInputValues(turn.Utterance, testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.ExpectedResponseLatency, turn.Keyword);
+                        botConnector.SetInputValues(testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.Keyword);
 
                         // Send up WAV File if present
                         if (!string.IsNullOrEmpty(turn.WAVFile))
@@ -329,12 +326,12 @@ namespace VoiceAssistantTest
                     if (dialogResult.DialogPass)
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
-                        AriaLogger.Log(AriaLogger.EventName_DialogSucceeded, dialog.DialogID, dialog.Description);
+                        AriaLogger.Log(AriaLogger.EventNameDialogSucceeded, dialog.DialogID, dialog.Description);
                     }
                     else
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} failed");
-                        AriaLogger.Log(AriaLogger.EventName_DialogFailed, dialog.DialogID, dialog.Description);
+                        AriaLogger.Log(AriaLogger.EventNameDialogFailed, dialog.DialogID, dialog.Description);
                     }
                 } // End of dialog loop
 
