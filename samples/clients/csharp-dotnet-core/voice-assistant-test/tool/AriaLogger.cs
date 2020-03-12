@@ -22,7 +22,12 @@ namespace VoiceAssistantTest
         private static long EventsRetry = 0;
         private static long EventsDropped = 0;
         private static long EventsSent = 0;
-        
+
+        public static string EventType_VoiceAssistantTestEvent = "VoiceAssistantTestEvent";
+        public static string EventName_DialogSucceeded = "DialogSucceeded";
+        public static string EventName_DialogFailed = "DialogFailed";
+
+
         static List<TransmitPolicy> REAL_TIME_FOR_ALL = new List<TransmitPolicy>
         {
             new TransmitPolicy
@@ -54,7 +59,7 @@ namespace VoiceAssistantTest
             }
         };
       
-        public static void Log(string type, string dialogID, string dialogDescription)
+        public static void Log(string name, string dialogID, string dialogDescription)
         {
             if (logger == null)
             {
@@ -62,7 +67,11 @@ namespace VoiceAssistantTest
             }
 
             EventProperties props = new EventProperties();
-            props.Type = type;
+
+            // Note: for some reason Aria Explorer shows "Type" as lower case value of "Name", and ignores the following line:
+            props.Type = AriaLogger.EventType_VoiceAssistantTestEvent;
+            props.Name = name;
+
             props.SetProperty("DialogID", dialogID);
             props.SetProperty("DialogDescription", dialogDescription);
 
@@ -78,7 +87,10 @@ namespace VoiceAssistantTest
         {
             if (logger == null)
             {
-                logger = LogManager.GetLogger("e3b666a628e547c796df3d4cd72e9515-9a5412e5-dede-4018-ae6b-49a0f40e8fde-7297", out EVTStatus status);
+                LogManager.Start(new LogConfiguration());
+
+                Trace.TraceInformation($"Aria LogManager.GetLogger for tenantToken {tenantToken}");
+                logger = LogManager.GetLogger(tenantToken, out EVTStatus status);
 
                 if (status != EVTStatus.OK)
                 {
@@ -86,17 +98,17 @@ namespace VoiceAssistantTest
                     return;
                 }
 
+                InitCallbacks();
+
                 LogManager.LoadTransmitProfiles(REAL_TIME_FOR_ALL);
                 LogManager.SetTransmitProfile(REAL_TIME_FOR_ALL[0].ProfileName);
 
-                // LogManager.SetNetCost(NetCost.High);
-                // LogManager.SetPowerState(PowerState.Battery);
-
-                InitCallbacks();
+                /// Core is very limited so at the moment we can't detect power and networkCost
+                /// For that case we exposed this APIs:
+                /// LogManager.SetNetCost(NetCost.High);
+                /// LogManager.SetPowerState(PowerState.Battery);
             }
-
-            LogManager.Start(new LogConfiguration());
-            }
+        }
 
         public static void Stop()
         {

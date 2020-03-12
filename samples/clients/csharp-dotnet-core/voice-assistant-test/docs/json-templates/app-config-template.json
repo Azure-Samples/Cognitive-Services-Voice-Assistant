@@ -23,6 +23,7 @@
   "CustomCommandsAppId": "abcdef0123456789abcdef0123456789",
   "CustomSREndpointId": "456789abcdef0123456789abcdef0123",
   "CustomVoiceDeploymentIds": "89abcdef0123456789abcdef01234567",
+  "AriaProjectKey": "0123456789abcdef0123456789abcdef-01234567-890a-bcde-f012-34567890abcd-ef01",
   "TTSAudioDurationMargin": "200",
   "AppLogEnabled": true,
   "BotGreeting": true,

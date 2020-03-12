@@ -329,12 +329,12 @@ namespace VoiceAssistantTest
                     if (dialogResult.DialogPass)
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
-                        AriaLogger.Log("Dialog Succeeded", dialog.DialogID, dialog.Description);
+                        AriaLogger.Log(AriaLogger.EventName_DialogSucceeded, dialog.DialogID, dialog.Description);
                     }
                     else
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} failed");
-                        AriaLogger.Log("Dialog Failed", dialog.DialogID, dialog.Description);
+                        AriaLogger.Log(AriaLogger.EventName_DialogFailed, dialog.DialogID, dialog.Description);
                     }
                 } // End of dialog loop
 

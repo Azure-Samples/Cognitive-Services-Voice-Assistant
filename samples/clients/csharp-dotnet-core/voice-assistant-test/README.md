@@ -105,6 +105,9 @@ Here is the full list:
 
 <font color="red">TODO: Make the above relative path to InputFolder?</font>
 
+>#### AriaProjectKey
+>`sring | optional | null | "0123456789abcdef0123456789abcdef-01234567-890a-bcde-f012-34567890abcd-ef01"`. An optional Aria project key. If given, dialog success and failure events will be sent to the Aria cloud. For more information on Aria, see [https://www.aria.ms/](https://www.aria.ms/).
+
 >#### SetPropertyId
 >`JSON string | optional | null | [{12345, "PropertyValue"}]`. A JSON string that is an array of pairs of integer and string values, used for custom settings of the client Speech SDK. Each pair results in a call to [DialogServiceConfig.SetProperty(PropertyId, string)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetProperty_Microsoft_CognitiveServices_Speech_PropertyId_System_String_) or the equivalent method on CustomCommandsConfig for custom command applications. For more detail, see the section [Custom Settings](#custom-settings)
 
