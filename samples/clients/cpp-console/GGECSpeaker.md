@@ -55,5 +55,17 @@ example running from the /data/cppSample folder:
     
     ./run.sh config.json
     
-    
+## Setting up the sample to run as a service
+
+This can be useful if you want your speaker to start the sample automatically on boot and have it automatically restart if it fails.
+
+cd into the scripts/GGEC directory
+
+Change the startService.sh file to use the config.json file you would like. Then run
+
+    .\deployService.bat
+
+Then reboot your device.
+
+
 #### [Main Devices Readme](README.md)
