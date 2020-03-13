@@ -15,6 +15,9 @@ namespace VoiceAssistantTest
     using VoiceAssistantTest.Resources;
     using Activity = Microsoft.Bot.Schema.Activity;
 
+    // Define this flag to use Microsoft Aria events. It will require adding the file "AriaLogger.cs" to the project. For more info on Aria, visit http://www.aria.ms
+    // #define USE_ARIA_LOGGING
+
     /// <summary>
     /// Entry point of Voice Assistant regression tests.
     /// </summary>
@@ -157,7 +160,9 @@ namespace VoiceAssistantTest
 
             if (!string.IsNullOrEmpty(appSettings.AriaProjectKey))
             {
+#if USE_ARIA_LOGGING
                 AriaLogger.Start(appSettings.AriaProjectKey);
+#endif
             }
 
             foreach (TestSettings tests in appSettings.Tests)
@@ -326,12 +331,16 @@ namespace VoiceAssistantTest
                     if (dialogResult.DialogPass)
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
+#if USE_ARIA_LOGGING
                         AriaLogger.Log(AriaLogger.EventNameDialogSucceeded, dialog.DialogID, dialog.Description);
+#endif
                     }
                     else
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} failed");
+#if USE_ARIA_LOGGING
                         AriaLogger.Log(AriaLogger.EventNameDialogFailed, dialog.DialogID, dialog.Description);
+#endif
                     }
                 } // End of dialog loop
 
@@ -364,9 +373,9 @@ namespace VoiceAssistantTest
             {
                 Trace.TraceInformation("********** TEST FAILED **********");
             }
-
+#if USE_ARIA_LOGGING
             AriaLogger.Stop();
-
+#endif
             return testPass;
         }
 

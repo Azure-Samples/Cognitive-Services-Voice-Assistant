@@ -23,6 +23,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AriaLogger.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -32,7 +36,6 @@
 
   <ItemGroup>
     <PackageReference Include="AdaptiveCards" Version="1.2.4" />
-    <PackageReference Include="Microsoft.Applications.Events.Client.Core2" Version="0.94.1.1" />
     <PackageReference Include="Microsoft.Bot.Configuration" Version="4.7.2" />
     <PackageReference Include="Microsoft.Bot.Schema" Version="4.7.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
