@@ -68,7 +68,7 @@ Here is the full list:
 >`string | optional | empty string | "C:\\Tests\\TestOutputFolder\\"`. Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
 
 >#### SubscriptionKey
->`string | required | “01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
+>`string | required | "01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
 
 >#### Region
 >`string | required | "westus"`. Azure region associated with your [SubscriptionKey](#subscriptionkey).
@@ -104,6 +104,9 @@ Here is the full list:
 >`string | optional | null | "C:\\Test\\test.table"`. A full-path name of the keyword model file. For more info, see the section [Keyword Activation Tests](#keyword-activation-tests).
 
 <font color="red">TODO: Make the above relative path to InputFolder?</font>
+
+>#### AriaProjectKey
+>`sring | optional | null | "0123456789abcdef0123456789abcdef-01234567-890a-bcde-f012-34567890abcd-ef01"`. An optional Aria project key. If given, dialog success and failure events will be sent to the Aria cloud. For more information on Aria, see [https://www.aria.ms/](https://www.aria.ms/).
 
 >#### SetPropertyId
 >`JSON string | optional | null | [{12345, "PropertyValue"}]`. A JSON string that is an array of pairs of integer and string values, used for custom settings of the client Speech SDK. Each pair results in a call to [DialogServiceConfig.SetProperty(PropertyId, string)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetProperty_Microsoft_CognitiveServices_Speech_PropertyId_System_String_) or the equivalent method on CustomCommandsConfig for custom command applications. For more detail, see the section [Custom Settings](#custom-settings)
@@ -163,7 +166,7 @@ Here is the full list:
 >>` string | optional | null | "test1.WAV"`. Audio from this WAV file is streaming to Direct Line Speech as the input in the turn, by calling the [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet) method (or [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet) method if [Keyword](#keyword) is true). This represents a user speaking to a microphone. It's good practice to have at least one second of silence (non speech) at the end of the WAV file to make sure the speech service properly detects end-of-speech, as it would with a live audio stream from a microphone. When this field is present, you can specify the expected recognition result in the [Utterance](#utterance) field.
 >>
 >>##### Activity
->>`JSON string | optional | null | "{\"type\”: \"message\",\"text\":\"Test sending text via activity\"}"`. A bot-framework JSON activity string. If this field is specified, you cannot specify the [WavFile](#wavfile) or [Utterance](#utterance) fields. Use this to send any custom activity to your bot using the [SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet) method.
+>>`JSON string | optional | null | "{\"type\": \"message\",\"text\":\"Test sending text via activity\"}"`. A bot-framework JSON activity string. If this field is specified, you cannot specify the [WavFile](#wavfile) or [Utterance](#utterance) fields. Use this to send any custom activity to your bot using the [SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet) method.
 >>
 >>##### Keyword
 >>` bool | optional | false | true`. If true, the audio in the supplied [WavFile](#wavfile) starts with a keyword, and the [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConnector_StartKeywordRecognitionAsync_Microsoft_CognitiveServices_Speech_KeywordRecognitionModel_) will be called to detect the keyword and stream audio to Direct Line Speech channel if the keyword was recognized. The field has meaning only if both [WavFile](#wavfile) and [KeywordRecognitionModel](#KeywordRecognitionModel) were defined. For more info, see the section [Keyword Activation Tests](#keyword-activation-tests).

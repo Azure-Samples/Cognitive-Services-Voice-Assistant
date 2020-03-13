@@ -85,6 +85,14 @@ namespace VoiceAssistantTest
         public string CustomVoiceDeploymentIds { get; set; }
 
         /// <summary>
+        /// Gets or sets the Aria Project Key (also known as Ingestion Key).
+        /// If supplied, the tool will send events to your Aria project
+        /// for dialog on test pass success/failure.
+        /// See https://www.aria.ms/.
+        /// </summary>
+        public string AriaProjectKey { get; set; }
+
+        /// <summary>
         /// Gets or sets the root input folder. This root folder will be added
         /// to all file names listed in the InputFiles array.
         /// </summary>
