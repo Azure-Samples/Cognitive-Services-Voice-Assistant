@@ -52,8 +52,7 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
-    command: 'restore'
-    restoreSolution: '**/*.sln'
+    restoreSolution: '$(sample1Solution)'
 
 # Build .Net Standard applications
 - task: VSBuild@1
