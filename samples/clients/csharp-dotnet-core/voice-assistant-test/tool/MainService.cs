@@ -200,10 +200,10 @@ namespace VoiceAssistantTest
 
                 var fileContents = JsonConvert.DeserializeObject<List<Dialog>>(txt);
 
-                // Keep track of results for a single input file. This variable is written as the output of the test run for this input file.
+                // Keep track of the detailed dialog results for all dialogs in a single input test file. This list will be serialized to JSON as the output for this test file.
                 List<DialogResult> dialogResults = new List<DialogResult>();
 
-                // Keep track of dialog results : per dialog.
+                // Keep track of high-level (summary) results for all dialogs in a single input test file. This list will be serialized to JSON as part of the overall single test report.
                 List<DialogReport> dialogReports = new List<DialogReport>();
 
                 foreach (Dialog dialog in fileContents)
@@ -220,7 +220,7 @@ namespace VoiceAssistantTest
                     }
 
                     // Capture and compute the output for this dialog in this variable.
-                    DialogResult dialogResultUtility = new DialogResult(appSettings, dialog.DialogID, dialog.Description);
+                    DialogResult dialogResult = new DialogResult(appSettings, dialog.DialogID, dialog.Description);
 
                     // Capture outputs of all turns in this dialog in this list.
                     List<TurnResult> turnResults = new List<TurnResult>();
@@ -299,11 +299,11 @@ namespace VoiceAssistantTest
                         }
 
                         // All bot reply activities are captured in this variable.
-                        dialogResultUtility.BotResponses = botConnector.WaitAndProcessBotReplies(bootstrapMode);
+                        dialogResult.BotResponses = botConnector.WaitAndProcessBotReplies(bootstrapMode);
 
                         // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogResultUtility.BuildOutput(turn, bootstrapMode, botConnector.RecognizedText, botConnector.RecognizedKeyword);
-                        if (!dialogResultUtility.ValidateTurn(turnResult, bootstrapMode))
+                        TurnResult turnResult = dialogResult.BuildOutput(turn, bootstrapMode, botConnector.RecognizedText, botConnector.RecognizedKeyword);
+                        if (!dialogResult.ValidateTurn(turnResult, bootstrapMode))
                         {
                             testPass = false;
                         }
@@ -320,15 +320,15 @@ namespace VoiceAssistantTest
                         }
                     } // End of turns loop
 
-                    dialogResultUtility.Turns = turnResults;
-                    dialogResults.Add(dialogResultUtility);
+                    dialogResult.Turns = turnResults;
+                    dialogResults.Add(dialogResult);
 
-                    DialogReport dialogResult = new DialogReport(dialogResultUtility.DialogID, dialog.Description, turnPassResults);
-                    dialogReports.Add(dialogResult);
+                    DialogReport dialogReport = new DialogReport(dialogResult.DialogID, dialog.Description, turnPassResults);
+                    dialogReports.Add(dialogReport);
                     turnPassResults = new List<bool>();
 
                     Trace.IndentLevel = 1;
-                    if (dialogResult.DialogPass)
+                    if (dialogReport.DialogPass)
                     {
                         Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
 #if USE_ARIA_LOGGING
@@ -347,7 +347,7 @@ namespace VoiceAssistantTest
                 TestReport fileTestReport = new TestReport
                 {
                     FileName = inputFileName,
-                    DialogResults = dialogReports,
+                    DialogReports = dialogReports,
                     DialogCount = dialogReports.Count,
                 };
                 fileTestReport.ComputeDialogPassRate();

@@ -430,7 +430,7 @@ namespace VoiceAssistantTest
         /// <param name="ignoringActivities">List of Activities to Ignore for the bot as defined in the Config File.</param>
         /// <param name="keyword">Bool value of keyword for each turn.</param>
         public void SetInputValues(string fileName, string dialogID, int turnID, int responseCount, List<Activity> ignoringActivities, bool keyword)
-        { 
+        {
             this.baseFileName = Path.GetFileNameWithoutExtension(fileName);
             this.dialogID = dialogID;
             this.turnID = turnID;

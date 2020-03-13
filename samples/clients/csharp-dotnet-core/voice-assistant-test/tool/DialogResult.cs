@@ -13,7 +13,7 @@ namespace VoiceAssistantTest
     using Activity = Microsoft.Bot.Schema.Activity;
 
     /// <summary>
-    /// Activity received from each Utterance is serialized and populated in the corresponding txt file.
+    /// This class is used to hold the full detailed result of a single dialog test run.
     /// </summary>
     internal class DialogResult
     {

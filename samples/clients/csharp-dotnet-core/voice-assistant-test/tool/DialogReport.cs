@@ -6,8 +6,7 @@ namespace VoiceAssistantTest
     using System.Collections.Generic;
 
     /// <summary>
-    /// Captures the results of the test run for a single dialog.
-    /// This is serialized into an output file.
+    /// A short summary report of the dialog test run.
     /// </summary>
     internal class DialogReport
     {

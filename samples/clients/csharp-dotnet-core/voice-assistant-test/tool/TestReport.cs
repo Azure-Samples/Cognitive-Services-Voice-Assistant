@@ -33,7 +33,7 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the Dialog Results for each Dialog in the file.
         /// </summary>
-        public List<DialogReport> DialogResults { get; set; }
+        public List<DialogReport> DialogReports { get; set; }
 
         /// <summary>
         /// Computation of DialogPassRate - The number of dialog tests that passed divided by the total number of dialogs in the test.
@@ -41,7 +41,7 @@ namespace VoiceAssistantTest
         public void ComputeDialogPassRate()
         {
             int pos = 0;
-            foreach (DialogReport item in this.DialogResults)
+            foreach (DialogReport item in this.DialogReports)
             {
                 if (item.DialogPass)
                 {
