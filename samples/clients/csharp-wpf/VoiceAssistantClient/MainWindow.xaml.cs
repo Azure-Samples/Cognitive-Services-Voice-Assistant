@@ -332,6 +332,7 @@ namespace VoiceAssistantClient
         {
             Debug.WriteLine($"SessionStarted event, id = {e.SessionId}");
             this.UpdateStatus("Listening ...");
+            this.player.Stop();
             this.RunOnUiThread(() => this.ListeningState = ListenState.Listening);
         }
 
