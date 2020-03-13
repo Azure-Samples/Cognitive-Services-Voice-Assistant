@@ -268,6 +268,7 @@ int main(int argc, char** argv)
         cout << "3 [stop keyword listening]" << endl;
         cout << "x [exit]" << endl;
     }
+    
     cout << "Closing down and freeing variables" << endl;
     
     if(volumeOn){
