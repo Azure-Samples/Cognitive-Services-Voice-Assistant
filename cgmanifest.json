@@ -1,0 +1,13 @@
+{"Registrations":[ 
+    {
+      "component": { 
+       "type": "git", 
+       "git": { 
+         "repositoryUrl": "https://github.com/nlohmann/json", 
+         "commitHash": "456478b3c50d60100dbb1fb9bc931f370a2c1c28" 
+         }
+       }
+    }
+ ],
+ "Version": 1
+}
