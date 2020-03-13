@@ -406,8 +406,8 @@ namespace VoiceAssistantTest
                     JObject activityToIgnoreJObject = JsonConvert.DeserializeObject<JObject>(activityToIgnoreSerializedJson);
                     JObject activityJObject = JsonConvert.DeserializeObject<JObject>(activitySerializedJson);
 
-                    DialogResultUtility.ActivityMismatchCount = 0;
-                    if (DialogResultUtility.CompareJObjects(activityToIgnoreJObject, activityJObject) == 0)
+                    DialogResult.ActivityMismatchCount = 0;
+                    if (DialogResult.CompareJObjects(activityToIgnoreJObject, activityJObject) == 0)
                     {
                         Trace.TraceInformation($"Bot-reply activity matched IgnoreActivities[{this.ignoreActivitiesList.IndexOf(activityToIgnore)}]. Ignore it.");
                         ignore = true;

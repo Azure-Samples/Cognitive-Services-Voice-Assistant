@@ -201,10 +201,10 @@ namespace VoiceAssistantTest
                 var fileContents = JsonConvert.DeserializeObject<List<Dialog>>(txt);
 
                 // Keep track of results for a single input file. This variable is written as the output of the test run for this input file.
-                List<DialogResultUtility> testFileResults = new List<DialogResultUtility>();
+                List<DialogResult> dialogResults = new List<DialogResult>();
 
                 // Keep track of dialog results : per dialog.
-                List<DialogResult> dialogResults = new List<DialogResult>();
+                List<DialogReport> dialogReports = new List<DialogReport>();
 
                 foreach (Dialog dialog in fileContents)
                 {
@@ -220,7 +220,7 @@ namespace VoiceAssistantTest
                     }
 
                     // Capture and compute the output for this dialog in this variable.
-                    DialogResultUtility dialogResultUtility = new DialogResultUtility(appSettings, dialog.DialogID, dialog.Description);
+                    DialogResult dialogResultUtility = new DialogResult(appSettings, dialog.DialogID, dialog.Description);
 
                     // Capture outputs of all turns in this dialog in this list.
                     List<TurnResult> turnResults = new List<TurnResult>();
@@ -321,10 +321,10 @@ namespace VoiceAssistantTest
                     } // End of turns loop
 
                     dialogResultUtility.Turns = turnResults;
-                    testFileResults.Add(dialogResultUtility);
+                    dialogResults.Add(dialogResultUtility);
 
-                    DialogResult dialogResult = new DialogResult(dialogResultUtility.DialogID, dialog.Description, turnPassResults);
-                    dialogResults.Add(dialogResult);
+                    DialogReport dialogResult = new DialogReport(dialogResultUtility.DialogID, dialog.Description, turnPassResults);
+                    dialogReports.Add(dialogResult);
                     turnPassResults = new List<bool>();
 
                     Trace.IndentLevel = 1;
@@ -347,13 +347,13 @@ namespace VoiceAssistantTest
                 TestReport fileTestReport = new TestReport
                 {
                     FileName = inputFileName,
-                    DialogResults = dialogResults,
-                    DialogCount = dialogResults.Count,
+                    DialogResults = dialogReports,
+                    DialogCount = dialogReports.Count,
                 };
                 fileTestReport.ComputeDialogPassRate();
                 allInputFilesTestReport.Add(fileTestReport);
 
-                File.WriteAllText(outputFileName, JsonConvert.SerializeObject(testFileResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+                File.WriteAllText(outputFileName, JsonConvert.SerializeObject(dialogResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
 
                 if (connectionEstablished)
                 {
