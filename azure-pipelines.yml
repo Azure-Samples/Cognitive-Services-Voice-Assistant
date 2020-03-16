@@ -7,12 +7,16 @@
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/customize-pipeline
 
 # Specific branch build with batching
-pr:
+trigger:
   batch: true
   branches:
     include:
     - master
 
+pr:
+  branches:
+    include:
+    - master
 pool:
   vmImage: 'windows-latest'
 
