@@ -194,7 +194,7 @@ int main(int argc, char** argv)
             uint32_t total_bytes_read = 0;
             if (event.HasAudio())
             {
-                log_t("Activity has audio, playing synchronously");
+                log_t("Activity has audio, playing synchronously.");
 
                 // TODO: AEC + Barge-in
                 // For now: no KWS during playback
