@@ -7,7 +7,7 @@
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/customize-pipeline
 
 # Specific branch build with batching
-trigger:
+pr:
   batch: true
   branches:
     include:
