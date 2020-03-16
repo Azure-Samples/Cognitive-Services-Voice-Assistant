@@ -198,9 +198,9 @@ int main(int argc, char** argv)
 
                 // TODO: AEC + Barge-in
                 // For now: no KWS during playback
-                log_t("stopping KWS for playback");
+                log_t("stopping KWS for playback.");
                 auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
-                log_t("KWS stopped");
+                log_t("KWS stopped.");
 
                 auto audio = event.GetAudio();
                 int play_result = 0;
