@@ -17,6 +17,7 @@ pr:
   branches:
     include:
     - master
+    
 pool:
   vmImage: 'windows-latest'
 
