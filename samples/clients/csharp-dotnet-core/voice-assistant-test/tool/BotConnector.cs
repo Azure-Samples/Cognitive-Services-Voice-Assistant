@@ -46,6 +46,8 @@ namespace VoiceAssistantTest
         private bool keyword;
         private KeywordRecognitionModel kwsTable;
 
+        public Task<SpeechRecognitionResult> taskSpeechRecognitionResult;
+
         /// <summary>
         /// Gets or sets recognized text of the speech input.
         /// </summary>
@@ -263,11 +265,11 @@ namespace VoiceAssistantTest
 
             if (!this.keyword)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Start listening");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Call ListenOnceAsync()");
 
                 // Don't wait for this task to finish. It may take a while, even after the "Recognized" event is received. This is a known
                 // issue in Speech SDK and should be fixed in a future versions.
-                this.connector.ListenOnceAsync();
+                taskSpeechRecognitionResult = this.connector.ListenOnceAsync();
             }
         }
 

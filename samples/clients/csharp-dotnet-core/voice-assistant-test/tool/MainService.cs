@@ -318,6 +318,13 @@ namespace VoiceAssistantTest
                         {
                             await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);
                         }
+
+                        if (turn.TurnID == 1)
+                        {
+                            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Start await taskSpeechRecognitionResult");
+                            botConnector.taskSpeechRecognitionResult.Wait();
+                            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] End await taskSpeechRecognitionResult");
+                        }
                     } // End of turns loop
 
                     dialogResult.Turns = turnResults;
