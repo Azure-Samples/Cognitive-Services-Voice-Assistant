@@ -1,287 +1,241 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "siteName": {
-        "type": "string"
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "siteName": {
+      "type": "string"
+    },
+    "hostingPlanName": {
+      "type": "string",
+      "defaultValue": "[parameters('siteName')]"
+    },
+    "siteLocation": {
+      "type": "string",
+      "defaultValue": "West US 2"
+    },
+    "repoUrl": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "applicationinsights_name": "[concat(parameters('siteName'),'-appinsights')]",
+    "cognitiveservice_speech_name": "[concat(parameters('siteName'),'-speech')]",
+    "cognitiveservice_luis_name": "[concat(parameters('siteName'),'-luis')]",
+    "cognitiveservice_luis_authoringkey_name": "[concat(parameters('siteName'),'-luisauthoringkey')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2017-04-18",
+      "name": "[variables('cognitiveservice_luis_name')]",
+      "location": "westus2",
+      "sku": {
+        "name": "S0"
       },
-      "hostingPlanName": {
-        "type": "string",
-        "defaultValue": "[parameters('siteName')]"
-      },
-      "siteLocation": {
-        "type": "string",
-        "defaultValue": "West US 2"
-      },
-      "signalr_service_name": {
-        "type": "string"
-      },
-      "repoUrl": {
-        "type": "string"
-      },
-      "branch": {
-        "type": "string"
+      "kind": "LUIS",
+      "properties": {
+        "customSubDomainName": "[variables('cognitiveservice_luis_name')]"
       }
     },
-    "variables": {
-      "applicationinsights_name": "[concat(parameters('siteName'),'-appinsights')]",
-      "cognitiveservice_speech_name": "[concat(parameters('siteName'),'-speech')]",
-      "cognitiveservice_luis_name": "[concat(parameters('siteName'),'-luis')]",
-      "cognitiveservice_luis_authoringkey_name": "[concat(parameters('siteName'),'-luisauthoringkey')]"
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2017-04-18",
+      "name": "[variables('cognitiveservice_luis_authoringkey_name')]",
+      "location": "westus",
+      "sku": {
+        "name": "F0"
+      },
+      "kind": "LUIS.Authoring",
+      "properties": {
+        "customSubDomainName": "[variables('cognitiveservice_luis_authoringkey_name')]"
+      }
     },
-    "resources": [
-      {
-        "type": "Microsoft.CognitiveServices/accounts",
-        "apiVersion": "2017-04-18",
-        "name": "[variables('cognitiveservice_luis_name')]",
-        "location": "westus2",
-        "sku": {
-          "name": "S0"
-        },
-        "kind": "LUIS",
-        "properties": {
-          "customSubDomainName": "[variables('cognitiveservice_luis_name')]"
-        }
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2017-04-18",
+      "name": "[variables('cognitiveservice_speech_name')]",
+      "location": "westus2",
+      "sku": {
+        "name": "S0"
       },
-      {
-        "type": "Microsoft.CognitiveServices/accounts",
-        "apiVersion": "2017-04-18",
-        "name": "[variables('cognitiveservice_luis_authoringkey_name')]",
-        "location": "westus",
-        "sku": {
-          "name": "F0"
-        },
-        "kind": "LUIS.Authoring",
-        "properties": {
-          "customSubDomainName": "[variables('cognitiveservice_luis_authoringkey_name')]"
-        }
+      "kind": "SpeechServices",
+      "properties": {}
+    },
+    {
+      "type": "microsoft.insights/components",
+      "apiVersion": "2015-05-01",
+      "name": "[variables('applicationinsights_name')]",
+      "location": "westus2",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "Request_Source": "IbizaWebAppExtensionCreate"
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[parameters('hostingPlanName')]",
+      "location": "[parameters('siteLocation')]",
+      "sku": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 0
       },
-      {
-        "type": "Microsoft.CognitiveServices/accounts",
-        "apiVersion": "2017-04-18",
-        "name": "[variables('cognitiveservice_speech_name')]",
-        "location": "westus2",
-        "sku": {
-          "name": "S0"
-        },
-        "kind": "SpeechServices",
-        "properties": {}
-      },
-      {
-        "type": "microsoft.insights/components",
-        "apiVersion": "2015-05-01",
-        "name": "[variables('applicationinsights_name')]",
-        "location": "westus2",
-        "kind": "web",
-        "properties": {
-          "Application_Type": "web",
-          "Request_Source": "IbizaWebAppExtensionCreate"
-        }
-      },
-      {
-        "type": "Microsoft.SignalRService/SignalR",
-        "apiVersion": "2018-10-01",
-        "name": "[parameters('signalr_service_name')]",
-        "location": "westus2",
-        "sku": {
-          "name": "Free_F1",
-          "tier": "Free",
-          "size": "F1",
-          "capacity": 1
-        },
-        "properties": {
-          "hostNamePrefix": "[parameters('signalr_service_name')]",
-          "features": [
-            {
-              "flag": "ServiceMode",
-              "value": "Default",
-              "properties": {}
-            },
-            {
-              "flag": "EnableConnectivityLogs",
-              "value": "True",
-              "properties": {}
-            }
-          ]
-        }
-      },
-      {
-        "type": "Microsoft.Web/serverfarms",
-        "apiVersion": "2018-02-01",
-        "name": "[parameters('hostingPlanName')]",
-        "location": "[parameters('siteLocation')]",
-        "sku": {
-          "name": "F1",
-          "tier": "Free",
-          "size": "F1",
-          "family": "F",
-          "capacity": 0
-        },
-        "kind": "app",
-        "properties": {
-          "perSiteScaling": false,
-          "maximumElasticWorkerCount": 1,
-          "isSpot": false,
-          "reserved": false,
-          "isXenon": false,
-          "hyperV": false,
-          "targetWorkerCount": 0,
-          "targetWorkerSizeId": 0
-        }
-      },
-      {
-        "type": "Microsoft.Web/sites",
-        "apiVersion": "2018-11-01",
-        "name": "[parameters('siteName')]",
-        "location": "[parameters('siteLocation')]",
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-          "[resourceId('Microsoft.SignalRService/SignalR', parameters('signalr_service_name'))]"
-        ],
-        "kind": "app",
-        "properties": {
-          "enabled": true,
-          "hostNameSslStates": [
-            {
-              "name": "[concat(parameters('siteName'), '.azurewebsites.net')]",
-              "sslState": "Disabled",
-              "hostType": "Standard"
-            },
-            {
-              "name": "[concat(parameters('siteName'), '.scm.azurewebsites.net')]",
-              "sslState": "Disabled",
-              "hostType": "Repository"
-            }
-          ],
-          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-          "reserved": false,
-          "isXenon": false,
-          "hyperV": false,
-          "scmSiteAlsoStopped": false,
-          "clientAffinityEnabled": true,
-          "clientCertEnabled": false,
-          "hostNamesDisabled": false,
-          "containerSize": 0,
-          "dailyMemoryTimeQuota": 0,
-          "httpsOnly": false,
-          "redundancyMode": "None"
-        },
-        "resources": [
+      "kind": "app",
+      "properties": {
+        "perSiteScaling": false,
+        "maximumElasticWorkerCount": 1,
+        "isSpot": false,
+        "reserved": false,
+        "isXenon": false,
+        "hyperV": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('siteName')]",
+      "location": "[parameters('siteLocation')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+      ],
+      "kind": "app",
+      "properties": {
+        "enabled": true,
+        "hostNameSslStates": [
           {
-            "name": "appsettings",
-            "type": "config",
-            "apiVersion": "2018-11-01",
-            "dependsOn": [
-              "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
-            ],
-            "tags": {
-              "displayName": "appsettings"
-            },
-            "properties": {
-              "Azure:SignalR:ConnectionString": "[listkeys(resourceId('Microsoft.SignalRService/SignalR', parameters('signalr_service_name')), '2018-10-01').primaryConnectionString]"
-            }
+            "name": "[concat(parameters('siteName'), '.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Standard"
           },
           {
-            "apiVersion": "2014-04-01",
-            "name": "web",
-            "type": "sourcecontrols",
-            "dependsOn": [
-              "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]",
-              "[concat('Microsoft.Web/Sites/', parameters('siteName'), '/config/web')]"
-            ],
-            "properties": {
-              "RepoUrl": "[parameters('repoUrl')]",
-              "branch": "[parameters('branch')]",
-              "IsManualIntegration": true
-            }
+            "name": "[concat(parameters('siteName'), '.scm.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Repository"
           }
-        ]
-      },
-      {
-        "type": "Microsoft.Web/sites/config",
-        "apiVersion": "2018-11-01",
-        "name": "[concat(parameters('siteName'), '/web')]",
-        "location": "[parameters('siteLocation')]",
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
         ],
-        "properties": {
-          "numberOfWorkers": 1,
-          "defaultDocuments": [
-            "Default.htm",
-            "Default.html",
-            "Default.asp",
-            "index.htm",
-            "index.html",
-            "iisstart.htm",
-            "default.aspx",
-            "index.php",
-            "hostingstart.html"
-          ],
-          "netFrameworkVersion": "v4.0",
-          "phpVersion": "5.6",
-          "requestTracingEnabled": false,
-          "remoteDebuggingEnabled": false,
-          "httpLoggingEnabled": false,
-          "logsDirectorySizeLimit": 35,
-          "detailedErrorLoggingEnabled": false,
-          "publishingUsername": "$parameters('siteName')",
-          "scmType": "None",
-          "use32BitWorkerProcess": true,
-          "webSocketsEnabled": true,
-          "alwaysOn": false,
-          "managedPipelineMode": "Integrated",
-          "virtualApplications": [
-            {
-              "virtualPath": "/",
-              "physicalPath": "site\\wwwroot",
-              "preloadEnabled": false
-            }
-          ],
-          "loadBalancing": "LeastRequests",
-          "experiments": {
-            "rampUpRules": []
-          },
-          "autoHealEnabled": false,
-          "localMySqlEnabled": false,
-          "ipSecurityRestrictions": [
-            {
-              "ipAddress": "Any",
-              "action": "Allow",
-              "priority": 1,
-              "name": "Allow all",
-              "description": "Allow all access"
-            }
-          ],
-          "scmIpSecurityRestrictions": [
-            {
-              "ipAddress": "Any",
-              "action": "Allow",
-              "priority": 1,
-              "name": "Allow all",
-              "description": "Allow all access"
-            }
-          ],
-          "scmIpSecurityRestrictionsUseMain": false,
-          "http20Enabled": false,
-          "minTlsVersion": "1.2",
-          "ftpsState": "AllAllowed",
-          "reservedInstanceCount": 0
-        }
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "reserved": false,
+        "isXenon": false,
+        "hyperV": false,
+        "scmSiteAlsoStopped": false,
+        "clientAffinityEnabled": true,
+        "clientCertEnabled": false,
+        "hostNamesDisabled": false,
+        "containerSize": 0,
+        "dailyMemoryTimeQuota": 0,
+        "httpsOnly": false,
+        "redundancyMode": "None"
       },
-      {
-        "type": "Microsoft.Web/sites/hostNameBindings",
-        "apiVersion": "2018-11-01",
-        "name": "[concat(parameters('siteName'), '/', parameters('siteName'), '.azurewebsites.net')]",
-        "location": "[parameters('siteLocation')]",
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
-        ],
-        "properties": {
-          "siteName": "parameters('siteName')",
-          "hostNameType": "Verified"
+      "resources": [
+        {
+          "apiVersion": "2014-04-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]",
+            "[concat('Microsoft.Web/Sites/', parameters('siteName'), '/config/web')]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('repoUrl')]",
+            "branch": "[parameters('branch')]",
+            "IsManualIntegration": true
+          }
         }
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('siteName'), '/web')]",
+      "location": "[parameters('siteLocation')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+      ],
+      "properties": {
+        "numberOfWorkers": 1,
+        "defaultDocuments": [
+          "Default.htm",
+          "Default.html",
+          "Default.asp",
+          "index.htm",
+          "index.html",
+          "iisstart.htm",
+          "default.aspx",
+          "index.php",
+          "hostingstart.html"
+        ],
+        "netFrameworkVersion": "v4.0",
+        "phpVersion": "5.6",
+        "requestTracingEnabled": false,
+        "remoteDebuggingEnabled": false,
+        "httpLoggingEnabled": false,
+        "logsDirectorySizeLimit": 35,
+        "detailedErrorLoggingEnabled": false,
+        "publishingUsername": "$parameters('siteName')",
+        "scmType": "None",
+        "use32BitWorkerProcess": true,
+        "webSocketsEnabled": true,
+        "alwaysOn": false,
+        "managedPipelineMode": "Integrated",
+        "virtualApplications": [
+          {
+            "virtualPath": "/",
+            "physicalPath": "site\\wwwroot",
+            "preloadEnabled": false
+          }
+        ],
+        "loadBalancing": "LeastRequests",
+        "experiments": {
+          "rampUpRules": []
+        },
+        "autoHealEnabled": false,
+        "localMySqlEnabled": false,
+        "ipSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictionsUseMain": false,
+        "http20Enabled": false,
+        "minTlsVersion": "1.2",
+        "ftpsState": "AllAllowed",
+        "reservedInstanceCount": 0
       }
-    ]
-  }
-  
+    },
+    {
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('siteName'), '/', parameters('siteName'), '.azurewebsites.net')]",
+      "location": "[parameters('siteLocation')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+      ],
+      "properties": {
+        "siteName": "parameters('siteName')",
+        "hostNameType": "Verified"
+      }
+    }
+  ]
+}
