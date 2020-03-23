@@ -92,9 +92,9 @@ If you built your dialog using the [Custom Commands](https://docs.microsoft.com/
 
 ## Use adaptive cards
 
-If your bot sends down adaptive cards, the client will display them and you will be able to click on the cards and the data from the action will be displayed in a message box. If you would like to send responses back to the bot, you will have to change the code to call the SendActivityAsync() API.
+If your bot sends down adaptive cards, the client will display them and you will be able to click on the cards and the data from the action will be displayed in a message box. If you would like to send responses back to the bot, you will have to change the code to call the SendActivityAsync() API. This is done by implementing the Action.Submit feature of the adaptive cards defined here: https://adaptivecards.io/explorer/Action.Submit.html
 </br> </br>
-The code to override is in the RenderedCard_OnAction method .
+The code to override is in the RenderedCard_OnAction method.
 Here is an example of how to send a message back:
 
     var botFrameworkActivity = Activity.CreateMessageActivity();
