@@ -83,9 +83,6 @@ Outline step-by-step instructions to execute the sample and see its output. Incl
 Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
 -->
 
-## Deploying Azure Resources
-1. Click the botton blow:<br/>[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)<br> 
-
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
