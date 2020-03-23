@@ -1,0 +1,68 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "siteName": {
+        "type": "string"
+        },
+        "hostingPlanName": {
+        "type": "string",
+        "defaultValue": "[parameters('siteName')]"
+        },
+        "siteLocation": {
+        "type": "string",
+        "defaultValue": "West US 2"
+        },
+        "repoUrl": {
+        "type": "string"
+        },
+        "branch": {
+        "type": "string"
+        }
+    },
+    "variables": {
+        "applicationinsights_name": "[concat(parameters('siteName'),'-appinsights')]",
+        "cognitiveservice_speech_name": "[concat(parameters('siteName'),'-speech')]",
+        "cognitiveservice_luis_name": "[concat(parameters('siteName'),'-luis')]",
+        "cognitiveservice_luis_authoringkey_name": "[concat(parameters('siteName'),'-luisauthoringkey')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[variables('cognitiveservice_luis_name')]",
+            "location": "[parameters('siteLocation')]",
+            "sku": {
+                "name": "S0"
+            },
+            "kind": "LUIS",
+            "properties": {
+                "customSubDomainName": "[variables('cognitiveservice_luis_name')]"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[variables('cognitiveservice_luis_authoringkey_name')]",
+            "location": "westus",
+            "sku": {
+                "name": "F0"
+            },
+            "kind": "LUIS.Authoring",
+            "properties": {
+                "customSubDomainName": "[variables('cognitiveservice_luis_authoringkey_name')]"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[variables('cognitiveservice_speech_name')]",
+            "location": "[parameters('siteLocation')]",
+            "sku": {
+                "name": "S0"
+            },
+            "kind": "SpeechServices",
+            "properties": {}
+        }
+    ]
+}
