@@ -53,7 +53,7 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- Actual message -->
-                        <Grid Grid.Row="0" Grid.Column="1" Margin="5, 0">
+                        <Grid Grid.Row="0" Grid.Column="1" Margin="5, 0" Visibility="{Binding Visibility}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>

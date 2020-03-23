@@ -70,6 +70,14 @@ namespace VoiceAssistantClient
 
         public string Message { get; set; }
 
+        public string Visibility
+        {
+            get
+            {
+                return string.IsNullOrEmpty(this.Message) ? "Collapsed" : "Visible";
+            }
+        }
+
         public IEnumerable<FrameworkElement> AdaptiveCards { get; private set; }
 
         public override string ToString()
