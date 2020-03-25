@@ -5,7 +5,9 @@ This README is under development and not guaranteed to be accurate or functional
 * Powershell 6.0 or greater [Download Powershell](https://github.com/PowerShell/PowerShell/releases)
 
 ## Deploying Azure Resources
-1. Click the button below:<br/>[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)<br> 
+1. Click the button below:<br/>
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2FCognitive-Services-Voice-Assistant%2Fchschrae%2FazureDeployScripts%2Fdeployment%2Fazuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 2. A new window should pop up that prompts you to log into your Azure account. 
 
