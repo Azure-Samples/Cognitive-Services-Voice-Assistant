@@ -5,10 +5,6 @@
         "siteName": {
         "type": "string"
         },
-        "hostingPlanName": {
-        "type": "string",
-        "defaultValue": "[parameters('siteName')]"
-        },
         "siteLocation": {
         "type": "string",
         "defaultValue": "West US 2"
