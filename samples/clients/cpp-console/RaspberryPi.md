@@ -7,8 +7,9 @@ This readme should go over setting up a Linux OS. In our example we are using Ub
 ## Useful tools
 
 There are many ways to do development on a Raspberry pi. It may be useful to take advantage of these tools:
-* [Bitvise SSH client](https://www.bitvise.com/)
 * [Visual Studio Code remote SSH plugin](https://code.visualstudio.com/docs/remote/ssh)
+* [PuTTY SSH client](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
+* [Bitvise SSH client](https://www.bitvise.com/)
 
 ## Setting up the device
 
