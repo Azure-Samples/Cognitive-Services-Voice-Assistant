@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "siteName": {
+        "resourceName": {
         "type": "string"
         },
         "siteLocation": {
@@ -17,10 +17,9 @@
         }
     },
     "variables": {
-        "applicationinsights_name": "[concat(parameters('siteName'),'-appinsights')]",
-        "cognitiveservice_speech_name": "[concat(parameters('siteName'),'-speech')]",
-        "cognitiveservice_luis_name": "[concat(parameters('siteName'),'-luis')]",
-        "cognitiveservice_luis_authoringkey_name": "[concat(parameters('siteName'),'-luisauthoringkey')]"
+        "cognitiveservice_speech_name": "[concat(parameters('resourceName'),'-speech')]",
+        "cognitiveservice_luis_name": "[concat(parameters('resourceName'),'-luis')]",
+        "cognitiveservice_luis_authoringkey_name": "[concat(parameters('resourceName'),'-luisauthoringkey')]"
     },
     "resources": [
         {
