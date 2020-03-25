@@ -29,7 +29,7 @@
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2017-04-18",
             "name": "[variables('cognitiveservice_luis_authoringkey_name')]",
-            "location": "[resourceGroup().location]",
+            "location": "west us",
             "sku": {
                 "name": "F0"
             },
