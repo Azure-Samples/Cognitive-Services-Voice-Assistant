@@ -4,10 +4,6 @@
     "parameters": {
         "resourceName": {
         "type": "string"
-        },
-        "siteLocation": {
-        "type": "string",
-        "defaultValue": "West US 2"
         }
     },
     "variables": {
@@ -20,7 +16,7 @@
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2017-04-18",
             "name": "[variables('cognitiveservice_luis_name')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "S0"
             },
@@ -33,7 +29,7 @@
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2017-04-18",
             "name": "[variables('cognitiveservice_luis_authoringkey_name')]",
-            "location": "westus",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "F0"
             },
@@ -46,7 +42,7 @@
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2017-04-18",
             "name": "[variables('cognitiveservice_speech_name')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "S0"
             },
