@@ -50,10 +50,13 @@ run ./buildArm32.sh
 ## Running the sample
 
 ### usage: sample.exe config-file
-example running from the out folder:
-    
-    export LD_LIBRARY_PATH="../lib/arm32"
-    sample.exe ../configs/config.json
-    
-    
+
+* Run the sample from the out folder
+
+  ```sh
+  cd ../out
+  export LD_LIBRARY_PATH="../lib/arm32"
+  ./sample.exe ../configs/config.json
+  ```  
+
 #### [Main Devices Readme](README.md)
