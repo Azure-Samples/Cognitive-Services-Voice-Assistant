@@ -36,15 +36,18 @@ Replace the text in the configs/config.json file with your subscription key and 
 
 ## Build directly on Linux arm32
 
-This assumes you have the repo's files on your device and you have the prerequisites in the proper folders. (see above)
+* You will need to install some packages.
 
-You will need to install some packages.
+  ```sh
+  sudo apt-get install g++ libasound2-dev
+  ```
 
-    sudo apt-get install g++ libasound2-dev
+* Then run the build script.
 
-cd into the scripts directory
-
-run ./buildArm32.sh
+  ```sh
+  cd scripts
+  sh ./buildArm32.sh
+  ```
 
 ## Running the sample
 
