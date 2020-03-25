@@ -8,12 +8,6 @@
         "siteLocation": {
         "type": "string",
         "defaultValue": "West US 2"
-        },
-        "repoUrl": {
-        "type": "string"
-        },
-        "branch": {
-        "type": "string"
         }
     },
     "variables": {
