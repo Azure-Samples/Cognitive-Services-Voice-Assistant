@@ -92,7 +92,23 @@ If you built your dialog using the [Custom Commands](https://docs.microsoft.com/
 
 ## Use adaptive cards
 
-If your bot sends down adaptive cards, the client will display them and you will be able to click on the cards and the data from the action will be displayed in a message box. If you would like to send responses back to the bot, you will have to change the code to call the SendActivityAsync() API.
+If your bot sends down adaptive cards, the client will display them and you will be able to click on the cards and the data from the action will be displayed in a message box. If you would like to send responses back to the bot, you will have to change the code to call the SendActivityAsync() API. This is done by implementing the Action.Submit feature of the adaptive cards defined here: [Action.Submit](https://adaptivecards.io/explorer/Action.Submit.html)
+</br> </br>
+The code to override is in the RenderedCard_OnAction method.
+Here is an example of how to send a message back:
+
+    var botFrameworkActivity = Activity.CreateMessageActivity();
+    botFrameworkActivity.Text = submitAction.Data.ToString();
+    if (!string.IsNullOrEmpty(this.settings.RuntimeSettings.FromId))
+    {
+        botFrameworkActivity.From = new ChannelAccount(this.settings.RuntimeSettings.FromId);
+    }
+
+    var jsonConnectorActivity = JsonConvert.SerializeObject(botFrameworkActivity);
+    this.Messages.Add(new MessageDisplay(botFrameworkActivity.Text, Sender.User));
+    this.Activities.Add(new ActivityDisplay(jsonConnectorActivity, botFrameworkActivity, Sender.User));
+    string id = this.connector.SendActivityAsync(jsonConnectorActivity).Result;
+    Debug.WriteLine($"SendActivityAsync called, id = {id}");
 
 ## Resources
 - [Bot Framework](https://dev.botframework.com/) docs:

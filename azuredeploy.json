@@ -61,3 +61,8 @@
         }
     ]
 }
+            "kind": "SpeechServices",
+            "properties": {}
+        }
+    ]
+}

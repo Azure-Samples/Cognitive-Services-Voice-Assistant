@@ -184,7 +184,7 @@ Here is the full list:
 
 ### Bootstrapping mode
 
-Creating the test configuration files for the first time is hard, if your intention is to author the expected bot responses manually ([ExpectedResponses](#ExpectedResponses) field). For that reason we created the bootstrapping mode. This is where you run the test tool such that a particular turn in a dialog is run for the purpose of discovering the current bot responses, not for the purpose of failing or passing the test based on some expected bot responses. After running in bootstrapping mode, you can look at the detailed test result and find the bot responses as a array of JSON activities. You can then copy the array, filter out what you don't need then paste them as the [ExpectedResponses](#ExpectedResponses) ready for the next time your tun the tool.
+Creating the test configuration files for the first time is hard, if your intention is to author the expected bot responses manually ([ExpectedResponses](#ExpectedResponses) field). For that reason we created the bootstrapping mode. This is where you run the test tool such that a particular turn in a dialog is run for the purpose of discovering the current bot responses, not for the purpose of failing or passing the test based on some expected bot responses. After running in bootstrapping mode, you can look at the detailed test result and find the bot responses as a array of JSON activities. You can then copy the array, filter out what you don't need then paste them as the [ExpectedResponses](#ExpectedResponses) ready for the next time you run the tool.
 
 Here is the recipe to creating a new regression test from scratch:
 

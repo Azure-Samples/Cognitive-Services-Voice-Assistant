@@ -138,7 +138,7 @@ VoiceAssistantTest Information: 0 : Processing file TestConfig.json
     VoiceAssistantTest Information: 0 : DialogId 0 passed
 VoiceAssistantTest Information: 0 : ********** TEST PASS **********
 ```
-Notice that these files and folder were crated by the tool:
+Notice that these files and folder were created by the tool:
 * [VoiceAssistantTest.log](core-bot-examples/greeting/VoiceAssistantTest.log) - A capture of the same logs you see on the console
 * [VoiceAssistantTestReport.json](core-bot-examples/greeting/VoiceAssistantTestReport.json) - A short summary report of the test. For each one of the test files specified in AppConfig.json (here we only have one: TestConfig.json) it lists the pass rate (how many dialogs succeeded), and enumerates all the dialogs with their pass/fail result.
 * [TestConfigOutput\TestConfigOutput.json](core-bot-examples/greeting/TestConfigOutput/TestConfigOutput.json) - A detailed result of executing the dialogs specified in the TestConfig.txt file (here we only have on bot-greeting dialog). It lists all the expected values and the actual values observed when executing the dialog. At the end it also lists the pass/fail result for each validation step:

@@ -7,14 +7,14 @@ This readme should go over setting up a Linux OS. In our example we are using Ub
 ## Useful tools
 
 There are many ways to do development on a Raspberry pi. It may be useful to take advantage of these tools:
-* [Bitvise SSH client](https://www.bitvise.com/)
 * [Visual Studio Code remote SSH plugin](https://code.visualstudio.com/docs/remote/ssh)
+* [PuTTY SSH client](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
+* [Bitvise SSH client](https://www.bitvise.com/)
 
 ## Setting up the device
 
-* Install the Ubuntu server OS onto your Raspberry pi. 
-  * [ubuntu download](https://ubuntu.com/download/raspberry-pi)
-  * [install instructions](https://www.raspberrypi.org/documentation/installation/installing-images/)
+* Install Ubuntu Server on a Raspberry Pi, connecting it to the internet and using it remotely.
+  * [install instructions](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi)
 
 * Make sure you have speakers and a microphone attached
 
@@ -24,35 +24,54 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 
 ## Setting up the code
 
-The repo should be cloned onto your device and we will operate out of the cpp-console folder
+* Clone the Voice Assistant git repo onto your device
 
-Make sure you have the Microsoft speech SDK downloaded. Links are in the main readme
+  ```sh
+  git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
+  ```  
 
-For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo so that you have a structure like this (for ARM32): ./lib/arm32. 
+* Download the Speech SDK
 
-Headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api
+  ```sh
+  wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz
+  ```  
 
-Replace the text in the configs/config.json file with your subscription key and key region. If you are using a custom speech commands application or custom speech font you can insert those GUID's there as well.
+* Create a link to the cpp-console folder, move the Speech SDK libraries and headers to their destination, and change into the cpp-console folder. These commands are for the Speech SDK version 1.10, change it to match the version downloaded.
+
+  ```sh
+  ln -s Cognitive-Services-Voice-Assistant/samples/clients/cpp-console
+  mv SpeechSDK-Linux-1.10.0/lib/arm32 cpp-console/lib/
+  mv SpeechSDK-Linux-1.10.0/include/* cpp-console/include/
+  cd cpp-console
+  ```  
+
+* Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used, these are in /home/ubuntu/cpp-console/models
 
 ## Build directly on Linux arm32
 
-This assumes you have the repo's files on your device and you have the prerequisites in the proper folders. (see above)
+* You will need to install some packages.
 
-You will need to install some packages.
+  ```sh
+  sudo apt-get install g++ libasound2-dev
+  ```
 
-    sudo apt-get install g++ libasound2-dev
+* Then run the build script.
 
-cd into the scripts directory
-
-run ./buildArm32.sh
+  ```sh
+  cd scripts
+  sh ./buildArm32.sh
+  ```
 
 ## Running the sample
 
 ### usage: sample.exe config-file
-example running from the out folder:
-    
-    export LD_LIBRARY_PATH="../lib/arm32"
-    sample.exe ../configs/config.json
-    
-    
+
+* Run the sample from the out folder
+
+  ```sh
+  cd ../out
+  export LD_LIBRARY_PATH="../lib/arm32"
+  ./sample.exe ../configs/config.json
+  ```  
+
 #### [Main Devices Readme](README.md)
