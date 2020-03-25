@@ -24,15 +24,28 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 
 ## Setting up the code
 
-The repo should be cloned onto your device and we will operate out of the cpp-console folder
+* Clone the Voice Assistant git repo onto your device
 
-Make sure you have the Microsoft speech SDK downloaded. Links are in the main readme
+  ```sh
+  git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
+  ```  
 
-For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo so that you have a structure like this (for ARM32): ./lib/arm32. 
+* Download the Speech SDK
 
-Headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api
+  ```sh
+  wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz
+  ```  
 
-Replace the text in the configs/config.json file with your subscription key and key region. If you are using a custom speech commands application or custom speech font you can insert those GUID's there as well.
+* Create a link to the cpp-console folder, move the Speech SDK libraries and headers to their destination, and change into the cpp-console folder. These commands are for the Speech SDK version 1.10, change it to match the version downloaded.
+
+  ```sh
+  ln -s Cognitive-Services-Voice-Assistant/samples/clients/cpp-console
+  mv SpeechSDK-Linux-1.10.0/lib/arm32 cpp-console/lib/
+  mv SpeechSDK-Linux-1.10.0/include/* cpp-console/include/
+  cd cpp-console
+  ```  
+
+* Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used, these are in /home/ubuntu/cpp-console/models
 
 ## Build directly on Linux arm32
 
