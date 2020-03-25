@@ -12,9 +12,8 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 
 ## Setting up the device
 
-* Install the Ubuntu server OS onto your Raspberry pi. 
-  * [ubuntu download](https://ubuntu.com/download/raspberry-pi)
-  * [install instructions](https://www.raspberrypi.org/documentation/installation/installing-images/)
+* Install Ubuntu Server on a Raspberry Pi, connecting it to the internet and using it remotely.
+  * [install instructions](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi)
 
 * Make sure you have speakers and a microphone attached
 
