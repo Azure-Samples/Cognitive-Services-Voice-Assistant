@@ -342,8 +342,11 @@ namespace VoiceAssistantClient
                 && e.ErrorCode == CancellationErrorCode.ConnectionFailure
                 && e.ErrorDetails.Contains("1000"))
             {
+                // Connection was closed by the remote host.
+                // Error code: 1000.
+                // Error details: Exceeded maximum websocket connection idle duration (>300000ms = 5 minutes).
                 // A graceful timeout after a connection is idle manifests as an error but isn't an
-                // exceptional condition--we don't want it show up as a big red bubble!
+                // exceptional condition -- we don't want it show up as a big red bubble!
                 this.UpdateStatus("Active connection timed out but ready to reconnect on demand.");
             }
             else
