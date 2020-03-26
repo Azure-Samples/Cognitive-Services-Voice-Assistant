@@ -10,7 +10,7 @@ products:
 - azure-cognitive-services
 - azure-iot-edge
 - azure-language-understanding
-- azure-speech-text	
+- azure-speech-text    
 - azure-text-speech
 - windows
 - windows-iot
@@ -43,20 +43,20 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 
 ## Samples List
 
-To build any of the samples below, clone this GitHub repository and look at the projects in the samples folder:
+To build any of the samples below, clone this GitHub repository and look at the projects in the clients folder:
 
 ```bash
     git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-    cd samples
+    cd Cognitive-Services-Voice-Assistant\clients
 ```
 
 The following table describes the samples and root files in this repository:
 
 | File/folder | Description | Language/Platform |
 |-------------|-------------|-------------------|
-| [`samples\clients\csharp-wpf`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-wpf) |  Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application | C#, Windows Presentation Foundation (WPF) |
-| [`samples\clients\csharp-dotnet-core\voice-assistant-test`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/csharp-dotnet-core/voice-assistant-test) | Automated, multi-turn, end-to-end regression test for your bot or Custom Commands application. Supports WAV file input, text or Bot-Framework activities | C#, .NET Core |
-| [`samples\clients\cpp-console`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/samples/clients/cpp-console) | Console client sample for Smart Speaker devices, configured via a json file to connect to your bot or Custom Commands application. It supports microphone input and audio playback. Build scripts for [Raspberry Pi](https://www.raspberrypi.org/), [GGEC Speaker](http://www.ggec.com/) and Windows are provided | C++, Windows, Linux |
+| [`clients\csharp-wpf`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf) |  Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application | C#, Windows Presentation Foundation (WPF) |
+| [`clients\csharp-dotnet-core\voice-assistant-test`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-dotnet-core/voice-assistant-test) | Automated, multi-turn, end-to-end regression test for your bot or Custom Commands application. Supports WAV file input, text or Bot-Framework activities | C#, .NET Core |
+| [`clients\cpp-console`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) | Console client sample for Smart Speaker devices, configured via a json file to connect to your bot or Custom Commands application. It supports microphone input and audio playback. Build scripts for [Raspberry Pi](https://www.raspberrypi.org/), [GGEC Speaker](http://www.ggec.com/) and Windows are provided | C++, Windows, Linux |
 | `.gitignore`         | Define what to ignore at commit time
 | `CODE_OF_CONDUCT.md` | Code of Conduct for all Microsoft repositories
 | `CONTRIBUTING.md`    | Guidelines for contributing to these samples
