@@ -32,21 +32,21 @@ variables:
   dotNetCorePublishArtifactPath: 'DotNetCorePublish'
   dotNetCorePublishArtifactName: 'DotNetCoreExecutables'
 
-  # Sample 1: Windows Voice Assistant Client, C# WPF (\samples\clients\csharp-wpf)
+  # Sample 1: Windows Voice Assistant Client, C# WPF (\clients\csharp-wpf)
   sample1Name: VoiceAssistantClient
-  sample1Folder: 'samples\clients\csharp-wpf'
+  sample1Folder: 'clients\csharp-wpf'
   sample1Solution: '$(sample1Folder)\$(sample1Name).sln'
   sample1PublishedArtifactPath: '$(sample1Folder)\$(sample1Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
   sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
 
-  # Sample 2: Voice Assistant Test, .NET core (\samples\clients\csharp-dotnet-core\voice-assistant-test)
+  # Sample 2: Voice Assistant Test, .NET core (\clients\csharp-dotnet-core\voice-assistant-test)
   sample2Name: VoiceAssistantTest
-  sample2Folder: 'samples\clients\csharp-dotnet-core\voice-assistant-test\tool'
+  sample2Folder: 'clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\$(sample2Name).sln'
   
-  # Sample 3: Windows console Voice Assistant Client, C++ (\samples\clients\cpp-console)
+  # Sample 3: Windows console Voice Assistant Client, C++ (\clients\cpp-console)
   sample3Name: VoiceAssistantCPPClient
-  sample3Folder: 'samples\clients\cpp-console'
+  sample3Folder: 'clients\cpp-console'
   sample3Solution: '$(sample3Folder)\src\windows\cppSample.sln'
   sample3PublishedArtifactPath: '$(sample3Folder)\out'
   sample3PublishedArtifactName: 'CppSample'
