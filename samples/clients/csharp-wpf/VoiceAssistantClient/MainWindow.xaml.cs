@@ -338,13 +338,25 @@ namespace VoiceAssistantClient
 
         private void Connector_Canceled(object sender, SpeechRecognitionCanceledEventArgs e)
         {
-            var err = $"Error {e.ErrorCode} : {e.ErrorDetails}";
-            this.UpdateStatus(err);
-            this.RunOnUiThread(() =>
+            if (e.Reason == CancellationReason.Error
+                && e.ErrorCode == CancellationErrorCode.ConnectionFailure
+                && e.ErrorDetails.Contains("1000"))
             {
-                this.ListeningState = ListenState.NotListening;
-                this.Messages.Add(new MessageDisplay(err, Sender.Channel));
-            });
+                // A graceful timeout after a connection is idle manifests as an error but isn't an
+                // exceptional condition--we don't want it show up as a big red bubble!
+                this.UpdateStatus("Active connection timed out but ready to reconnect on demand.");
+            }
+            else
+            {
+                var statusMessage = $"Error ({e.ErrorCode}) : {e.ErrorDetails}";
+                this.UpdateStatus(statusMessage);
+                this.RunOnUiThread(() =>
+                {
+                    this.ListeningState = ListenState.NotListening;
+                    this.Messages.Add(new MessageDisplay(statusMessage, Sender.Channel));
+                });
+            }
+
         }
 
         private void Connector_Recognized(object sender, SpeechRecognitionEventArgs e)
