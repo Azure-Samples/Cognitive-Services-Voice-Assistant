@@ -2,21 +2,22 @@
 
 Param(
     [string] $speechResourceKey = $(Read-Host -prompt "speechResourceKey"),
-    [string] $siteName = $(Read-Host -prompt "siteName"),
+    [string] $resourceName = $(Read-Host -prompt "resourceName"),
     [string] $azureSubscriptionId = $(Read-Host -prompt "azureSubscriptionId"),
     [string] $resourceGroup,
     [string] $luisAuthoringKey = $(Read-Host -prompt "luisAuthoringKey"),
     [string] $luisAuthoringRegion = "westus",
+    [string] $CustomCommandsRegion = "westus2",
     [string] $websiteAddress = $(Read-Host -prompt "websiteAddress")
 )
 
 if (-not $resourceGroup) {
-	$resourceGroup = $siteName
+	$resourceGroup = $resourceName
 }
 
-$speechAppName = "$siteName-commands"
-$luisResourceName = "$siteName-luisauthoringkey"
-#$inventoryapiurl = "https://$siteName.azurewebsites.net/api/Inventory/UpdateInventory"
+$speechAppName = "$resourceName-commands"
+$luisResourceName = "$resourceName-luisauthoringkey"
+#$inventoryapiurl = "https://$resourceName.azurewebsites.net/api/Inventory/UpdateInventory"
 
 #
 # create the custom speech app
@@ -41,7 +42,7 @@ $headers = @{
     }
 
 try {
-    $response = invoke-restmethod -Method POST -Uri "https://westus2.commands.speech.microsoft.com/apps" -Body (ConvertTo-Json $body) -Header $headers
+    $response = invoke-restmethod -Method POST -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps" -Body (ConvertTo-Json $body) -Header $headers
 } catch {
     # Dig into the exception to get the Response details.
     # Note that value__ is not a typo.
@@ -62,7 +63,7 @@ write-host "Created project Id $appId"
 
 write-host "getting the initial $speechAppName inventory commands model"
 try {
-    $model = invoke-restmethod -Method GET -Uri "https://westus2.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Header $headers
+    $model = invoke-restmethod -Method GET -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Header $headers
 } catch {
     # Dig into the exception to get the Response details.
     # Note that value__ is not a typo.
@@ -91,7 +92,7 @@ $model.commands = $newModel.commands
 
 write-host "updating $speechAppName with the new inventory commands model"
 try {
-    $response = invoke-restmethod -Method PUT -Uri "https://westus2.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Body ($model | ConvertTo-Json  -depth 100) -Header $headers
+    $response = invoke-restmethod -Method PUT -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Body ($model | ConvertTo-Json  -depth 100) -Header $headers
 } catch {
     # Dig into the exception to get the Response details.
     # Note that value__ is not a typo.
@@ -107,7 +108,7 @@ write-host "...model update completed"
 #
 
 write-host "starting the training"
-$response = invoke-restmethod -Method POST -Uri "https://westus2.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train" -Header $headers
+$response = invoke-restmethod -Method POST -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train" -Header $headers
 $versionId = $response.versionId
 write-host -NoNewline "training version $versionId"
 
@@ -116,7 +117,7 @@ write-host -NoNewline "training version $versionId"
 #
 
 try {
-    $response = invoke-restmethod -Method GET -Uri "https://westus2.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train/$versionId" -Header $headers
+    $response = invoke-restmethod -Method GET -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train/$versionId" -Header $headers
 } catch {
     # Dig into the exception to get the Response details.
     # Note that value__ is not a typo.
@@ -131,7 +132,7 @@ while($response.completed -ne "true")
     start-sleep -seconds 1
     write-host -NoNewline "."
     try {
-        $response = invoke-restmethod -Method GET -Uri "https://westus2.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train/$versionId" -Header $headers
+        $response = invoke-restmethod -Method GET -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train/$versionId" -Header $headers
     }
     catch {
         # Dig into the exception to get the Response details.
@@ -150,7 +151,7 @@ write-host "...training is completed"
 #
 
 write-host "publishing the model"
-$response = invoke-restmethod -Method POST -Uri "https://westus2.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/publish/$versionId" -Header $headers
+$response = invoke-restmethod -Method POST -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/publish/$versionId" -Header $headers
 write-host "...model is published"
 
 #

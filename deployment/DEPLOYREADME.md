@@ -11,31 +11,35 @@ This README is under development and not guaranteed to be accurate or functional
 
 2. A new window should pop up that prompts you to log into your Azure account. 
 
-3. Once logged in, input the desired values in the fields. For this README we will create a new resource group.![DeployPage](../docs/images/DeployPage.png)<br/>
-Keep track of the Site Name you use. We will need it later.
+3. Once logged in, you should see a page similar to this. Select the subscription you want to use. I have chosen to create a new resource group titled "CognitiveServices12345" and selected West US 2 for the Location. Decide on a "Resource Name" for your resources. This will be prepended to the names of the resources created. Keep track of this name as we will use it later.![DeployPage](../docs/images/DeployPage.png)<br/>
 
-4. Click "Next" at the bottom of the page.
+4. Check the box to agree to the terms and conditions
 
-5. Click "Deploy"
+5. Click "Purchase"
 
-6. You're resources should be deployed
+6. You're resources should be deployed after a minute or two.
 
-7. In the Azure portal you should now have a resource group and some resources underneath it. You will need the following resources to use further down.
-* LUIS authoring key.
-* speech subscription key.
-* azure subscription key. - look for Subscriptions in Azure and you should be able to find it.
-* site name from earlier.
-* website for task completion. In our case this is the hospitality room website.
+7. You should now have a resource group and some resources underneath it. 
+Here is what mine looks like:
+![DeployPage](../docs/images/Resources.png)<br/>
+You'll notice how the resource name was used.
+You will also need the following strings to use further down.
+    * LUIS authoring key.
+    * speech subscription key.
+    * azure subscription key. - look for Subscriptions in Azure and you should be able to find it.
+    * website for task completion. In our case this is the hospitality room website.
+    
+
 
 ## Deploying your Custom Commands Application
 1. Open a powershell window and cd into the deployment directory
 2. run .\createSpeechApp.ps1 with the following parameters:
 * -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY
-* -siteName SITENAME_USED_IN_DEPLOYING
+* -resourceName RESOURCENAME_USED_IN_DEPLOYING
 * -azureSubscriptionId AZURE_SUBSCRIPTION_ID 
 * -luisAuthoringKey LUIS_AUTHORING_KEY
 * -websiteAddress WEBSITE_FOR_TASK_COMPLETION
 
 It should look something like this:
 
-    .\createSpeechApp.ps1 -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY -websiteAddress WEBSITE_FOR_TASK_COMPLETION -siteName SITENAME_USED_IN_DEPLOYING -azureSubscriptionId AZURE_SUBSCRIPTION_ID  -luisAuthoringKey LUIS_AUTHORING_KEY
+    .\createSpeechApp.ps1 -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY -websiteAddress WEBSITE_FOR_TASK_COMPLETION -resourceName RESOURCENAME_USED_IN_DEPLOYING -azureSubscriptionId AZURE_SUBSCRIPTION_ID  -luisAuthoringKey LUIS_AUTHORING_KEY
