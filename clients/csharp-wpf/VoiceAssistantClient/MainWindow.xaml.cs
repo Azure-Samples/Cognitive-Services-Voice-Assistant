@@ -332,18 +332,34 @@ namespace VoiceAssistantClient
         {
             Debug.WriteLine($"SessionStarted event, id = {e.SessionId}");
             this.UpdateStatus("Listening ...");
+            this.player.Stop();
             this.RunOnUiThread(() => this.ListeningState = ListenState.Listening);
         }
 
         private void Connector_Canceled(object sender, SpeechRecognitionCanceledEventArgs e)
         {
-            var err = $"Error {e.ErrorCode} : {e.ErrorDetails}";
-            this.UpdateStatus(err);
-            this.RunOnUiThread(() =>
+            if (e.Reason == CancellationReason.Error
+                && e.ErrorCode == CancellationErrorCode.ConnectionFailure
+                && e.ErrorDetails.Contains("1000"))
             {
-                this.ListeningState = ListenState.NotListening;
-                this.Messages.Add(new MessageDisplay(err, Sender.Channel));
-            });
+                // Connection was closed by the remote host.
+                // Error code: 1000.
+                // Error details: Exceeded maximum websocket connection idle duration (>300000ms = 5 minutes).
+                // A graceful timeout after a connection is idle manifests as an error but isn't an
+                // exceptional condition -- we don't want it show up as a big red bubble!
+                this.UpdateStatus("Active connection timed out but ready to reconnect on demand.");
+            }
+            else
+            {
+                var statusMessage = $"Error ({e.ErrorCode}) : {e.ErrorDetails}";
+                this.UpdateStatus(statusMessage);
+                this.RunOnUiThread(() =>
+                {
+                    this.ListeningState = ListenState.NotListening;
+                    this.Messages.Add(new MessageDisplay(statusMessage, Sender.Channel));
+                });
+            }
+
         }
 
         private void Connector_Recognized(object sender, SpeechRecognitionEventArgs e)
