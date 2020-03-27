@@ -6,7 +6,7 @@ This README is under development and not guaranteed to be accurate or functional
 
 ## Deploying Azure Resources
 1. Click the button below:<br/>
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2FCognitive-Services-Voice-Assistant%2Fchschrae%2FazureDeployScripts%2Fcustom%2520commands%2Fhospitality%2Fdeployment%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2FCognitive-Services-Voice-Assistant%2Fmaster%2Fcustom%2520commands%2Fhospitality%2Fdeployment%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 2. A new window should pop up that prompts you to log into your Azure account. 
@@ -32,8 +32,8 @@ You will also need the following strings to use further down.
 
 
 ## Deploying your Custom Commands Application
-1. Open a powershell window and cd into the deployment directory
-2. run .\createSpeechApp.ps1 with the following parameters:
+1. Open a powershell window and cd into the CustomCommands/scripts directory
+2. run .\deployCustomCommands.ps1 with the following parameters:
 * -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY
 * -resourceName RESOURCENAME_USED_IN_DEPLOYING
 * -azureSubscriptionId AZURE_SUBSCRIPTION_ID 
@@ -43,6 +43,6 @@ You will also need the following strings to use further down.
 
 It should look something like this:
 
-    .\createSpeechApp.ps1 -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY -websiteAddress WEBSITE_FOR_TASK_COMPLETION -resourceName RESOURCENAME_USED_IN_DEPLOYING -azureSubscriptionId AZURE_SUBSCRIPTION_ID  -luisAuthoringKey LUIS_AUTHORING_KEY -resourceGroup RESOURCE_GROUP
+    .\deployCustomCommands.ps1 -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY -websiteAddress WEBSITE_FOR_TASK_COMPLETION -resourceName RESOURCENAME_USED_IN_DEPLOYING -azureSubscriptionId AZURE_SUBSCRIPTION_ID  -luisAuthoringKey LUIS_AUTHORING_KEY -resourceGroup RESOURCE_GROUP
 
 Once complete you will be able to see your new Custom Commands application in the [Speech Studio](https://speech.microsoft.com) by selecting your "Speech Resource". In the example above it would be MyNewResources-speech. Click on "Go To Studio" and then "Custom Commands".
