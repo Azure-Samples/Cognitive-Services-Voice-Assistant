@@ -32,7 +32,7 @@ You will also need the following strings to use further down.
 
 
 ## Deploying your Custom Commands Application
-1. Open a powershell window and cd into the CustomCommands/scripts directory
+1. Open a powershell window and cd into the custom-commands/scripts directory
 2. run .\deployCustomCommands.ps1 with the following parameters:
 * -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY
 * -resourceName RESOURCENAME_USED_IN_DEPLOYING
