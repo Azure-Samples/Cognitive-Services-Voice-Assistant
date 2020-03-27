@@ -80,7 +80,7 @@ write-host "patching the $speechAppName inventory commands model"
 
 # change the model based on the local json file
 
-$newModel = Get-Content './hospitalityCustomCommands.json' | Out-String | ConvertFrom-Json
+$newModel = Get-Content '../skill/hospitalityCustomCommands.json' | Out-String | ConvertFrom-Json
 $model.httpEndpoints = $newModel.httpEndpoints
 $model.httpEndpoints[0].url = $websiteAddress
 $model.lgTemplates = $newModel.lgTemplates
