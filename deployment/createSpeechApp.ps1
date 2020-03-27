@@ -160,9 +160,9 @@ write-host "...model is published"
 
 Write-Host
 Write-Host "***********************"
-Write-Host "Speech commands have been published."
+Write-Host "Custom commands has been published."
 
-Write-Host "Update these parameters in the client to use them"
-Write-Host "    SpeechApplicationId   = $appId"
+Write-Host "Update these parameters in your client to use the Custom Commands Application"
+Write-Host "    CustomCommandsId   = $appId"
 Write-Host "    SpeechSubscriptionKey = $speechResourceKey"
 Write-Host "***********************"

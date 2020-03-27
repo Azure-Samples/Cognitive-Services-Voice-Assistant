@@ -39,7 +39,10 @@ You will also need the following strings to use further down.
 * -azureSubscriptionId AZURE_SUBSCRIPTION_ID 
 * -luisAuthoringKey LUIS_AUTHORING_KEY
 * -websiteAddress WEBSITE_FOR_TASK_COMPLETION
+* -resourceGroup RESOURCE_GROUP
 
 It should look something like this:
 
-    .\createSpeechApp.ps1 -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY -websiteAddress WEBSITE_FOR_TASK_COMPLETION -resourceName RESOURCENAME_USED_IN_DEPLOYING -azureSubscriptionId AZURE_SUBSCRIPTION_ID  -luisAuthoringKey LUIS_AUTHORING_KEY
+    .\createSpeechApp.ps1 -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY -websiteAddress WEBSITE_FOR_TASK_COMPLETION -resourceName RESOURCENAME_USED_IN_DEPLOYING -azureSubscriptionId AZURE_SUBSCRIPTION_ID  -luisAuthoringKey LUIS_AUTHORING_KEY -resourceGroup RESOURCE_GROUP
+
+Once complete you will be able to see your new Custom Commands application in the [Speech Studio](https://speech.microsoft.com) by selecting your "Speech Resource". In the example above it would be MyNewResources-speech. Click on "Go To Studio" and then "Custom Commands".
