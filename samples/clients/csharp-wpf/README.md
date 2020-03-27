@@ -1,1 +1,0 @@
-This file has move [here](../../../clients/csharp-wpf/README.md)

@@ -36,7 +36,7 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
    ```
 2. Then change directories:
    ```bash
-   cd Cognitive-Services-Voice-Assistants\samples\clients\csharp-wpf
+   cd Cognitive-Services-Voice-Assistants\clients\csharp-wpf
    ```
 3. Launch Visual Studio 2017 or newer by opening the solution `VoiceAssistantClient.sln`. Build the solution (the default build flavor is Debug x64)
 4. Run the executable. For example, for Debug x64 build, this will be the executable: `VoiceAssistantClient\bin\x64\Debug\VoiceAssistantClient.exe`.
