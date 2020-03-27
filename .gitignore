@@ -328,10 +328,10 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-samples/clients/cpp-console/.vscode/
-samples/clients/cpp-console/out/
-samples/clients/cpp-console/lib/
-samples/clients/cpp-console/include/c_api/
-samples/clients/cpp-console/include/cxx_api/
-samples/clients/cpp-console/cpp-console.code-workspace
-samples/clients/cpp-console/docker/qemu-arm-static.tar.gz
+clients/cpp-console/.vscode/
+clients/cpp-console/out/
+clients/cpp-console/lib/
+clients/cpp-console/include/c_api/
+clients/cpp-console/include/cxx_api/
+clients/cpp-console/cpp-console.code-workspace
+clients/cpp-console/docker/qemu-arm-static.tar.gz
