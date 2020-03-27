@@ -11,7 +11,7 @@ This README is under development and not guaranteed to be accurate or functional
 
 2. A new window should pop up that prompts you to log into your Azure account. 
 
-3. Once logged in, you should see a page similar to this. Select the subscription you want to use. I have chosen to create a new resource group titled "CognitiveServices12345" and selected West US 2 for the Location. Decide on a "Resource Name" for your resources. This will be prepended to the names of the resources created. Keep track of this name as we will use it later.![DeployPage](../docs/images/DeployPage.png)<br/>
+3. Once logged in, you should see a page similar to this. Select the subscription you want to use. I have chosen to create a new resource group titled "CognitiveServices12345" and selected West US 2 for the Location. Decide on a "Resource Name" for your resources. This will be prepended to the names of the resources created. Keep track of this name as we will use it later.![DeployPage](../../../docs/images/DeployPage.png)<br/>
 
 4. Check the box to agree to the terms and conditions
 
@@ -21,7 +21,7 @@ This README is under development and not guaranteed to be accurate or functional
 
 7. You should now have a resource group and some resources underneath it. 
 Here is what mine looks like:
-![DeployPage](../docs/images/Resources.png)<br/>
+![DeployPage](../../../docs/images/Resources.png)<br/>
 You'll notice how the resource name was used.
 You will also need the following strings to use further down.
     * LUIS authoring key.
