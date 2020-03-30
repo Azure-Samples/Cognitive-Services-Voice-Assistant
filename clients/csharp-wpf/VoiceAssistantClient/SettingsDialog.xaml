@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Settings" MinHeight="630" Height="630" Width="600" MinWidth="500" >
+        Title="Settings" MinHeight="700" Height="700" Width="600" MinWidth="500" >
     <Window.Resources>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Margin" Value="0,2"/>
@@ -19,6 +19,24 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical"  Grid.Row="0" Grid.Column="0" >
+            <Grid Margin="0,5,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Bot Profiles" FontWeight="Bold"/>
+                <Button Grid.Row="0" Grid.Column="3" Content="Save" Width="75" Margin="5,0,0,5"></Button>
+                
+                <Label Grid.Row="1" Grid.Column="0" Content="Profile Name:                     "/>
+                <!--<ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="BotProfileComboBox" IsEditable="True"  Padding="5"/>-->
+                <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="BotProfileComboBox" IsEditable="True"  Padding="5" TextBoxBase.TextChanged="BotProfileTextBox_TextChanged"  Text="{Binding BotProfile}"/>
+            </Grid>
             <Grid Margin="0,5,5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />

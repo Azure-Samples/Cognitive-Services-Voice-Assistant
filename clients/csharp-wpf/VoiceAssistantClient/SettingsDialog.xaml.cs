@@ -54,6 +54,8 @@ namespace VoiceAssistantClient
             this.Owner = App.Current.MainWindow;
         }
 
+        public string BotProfileName { get; set; }
+
         public string SubscriptionKey { get; set; }
 
         public string SubscriptionKeyRegion { get; set; }
@@ -403,6 +405,15 @@ namespace VoiceAssistantClient
         private void UrlOverrideTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             this.UpdateOkButtonState();
+        }
+
+        private void BotProfileTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            // WIP continue from here
+            if (string.IsNullOrWhiteSpace(this.BotProfileName))
+            {
+                this.SubscriptionKeyComboBox.Text = string.Empty;
+            }
         }
     }
 }
