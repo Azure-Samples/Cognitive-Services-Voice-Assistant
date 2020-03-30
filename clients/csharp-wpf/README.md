@@ -51,6 +51,7 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
 6. Press **Reconnect**. The application will try to connect to your bot via Direct Line Speech channel.
 ![Main Page](docs/media/MainPage.png)
 The message **New conversation started -- type or press the microphone button** will appear below the text bar if the connection succeeded.
+> *Note: If you get an error message saying "Unable to load DLL  Microsoft.CognitiveServices.Speech.core.dll", this is a known issue and we are working on a fix (tracked by [issue 150](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/issues/150)). As a workaround, try this: In Visual Studio, clean and rebuild your project (build -> clean solution, then build -> build solution). If that does not work, copy the file clients\csharp-wpf\packages\Microsoft.CognitiveServices.Speech.1.10.0\runtimes\win-x64\native\Microsoft.CognitiveServices.Speech.core.dll into your executable folder*
 7. You'll be prompted to allow microphone access. If you want to use the microphone, allow access.
 8. Press the microphone icon to begin recording. While speaking, intermediate recognition results will be shown in the application. The microphone icon will turn red while recording is in progress. It will automatically detect end of speech and stop recording.
 9. If everything works, you should see your bot's response on the screen and hear it speak the response. You can click on lines in the **Activity Log** window to see the full activity payload from the bot in JSON.
