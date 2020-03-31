@@ -9,7 +9,10 @@
     "variables": {
         "cognitiveservice_speech_name": "[concat(parameters('resourceName'),'-speech')]",
         "cognitiveservice_luis_name": "[concat(parameters('resourceName'),'-luis')]",
-        "cognitiveservice_luis_authoringkey_name": "[concat(parameters('resourceName'),'-luisauthoringkey')]"
+        "cognitiveservice_luis_authoringkey_name": "[concat(parameters('resourceName'),'-luisauthoringkey')]",
+        "hospitality_server_farm_name": "[concat(parameters('resourceName'),'-serverfarm')]",
+        "hospitality_virtualroommanager_name": "[concat(parameters('resourceName'),'-virtualroommanager')]",
+        "hospitality_storage_name": "[concat(parameters('resourceName'),'-storage')]"
     },
     "resources": [
         {
@@ -48,6 +51,318 @@
             },
             "kind": "SpeechServices",
             "properties": {}
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('hospitality_virtualroommanager_name')]",
+            "location": "[resourceGroup().location]",
+            "kind": "functionapp",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(variables('hospitality_virtualroommanager_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(variables('hospitality_virtualroommanager_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[subscriptions().id]/resourceGroups/resourceGroups/[resourceGroup().name]/providers/Microsoft.Web/serverfarms/[variables('hospitality_server_farm_name')]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('hospitality_virtualroommanager_name'), '/web')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('hospitality_virtualroommanager_name'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "phpVersion": "5.6",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2017",
+                "httpLoggingEnabled": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$virtualroommanager",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "cors": {
+                    "allowedOrigins": [
+                        "*"
+                    ],
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "ftpsState": "AllAllowed",
+                "reservedInstanceCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('hospitality_virtualroommanager_name'), '/3890c9621559402b838b2e6452dc6497')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('hospitality_virtualroommanager_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "Push-Deployer",
+                "message": "Created via a push deployment",
+                "start_time": "2019-12-24T00:43:16.1006167Z",
+                "end_time": "2019-12-24T00:43:17.0849404Z",
+                "active": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('hospitality_virtualroommanager_name'), '/979b9a35c712474ca1a988422f77374a')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('hospitality_virtualroommanager_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "Push-Deployer",
+                "message": "Created via a push deployment",
+                "start_time": "2019-12-24T00:03:20.099968Z",
+                "end_time": "2019-12-24T00:03:20.9596595Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('hospitality_virtualroommanager_name'), '/d2173170308a435dad6039756db02dd4')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('hospitality_virtualroommanager_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "Push-Deployer",
+                "message": "Created via a push deployment",
+                "start_time": "2019-12-24T00:14:11.4887447Z",
+                "end_time": "2019-12-24T00:14:12.1780694Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/functions",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('hospitality_virtualroommanager_name'), '/RoomDemo')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('hospitality_virtualroommanager_name'))]"
+            ],
+            "properties": {
+                "script_root_path_href": "https://virtualroommanager.azurewebsites.net/admin/vfs/site/wwwroot/RoomDemo/",
+                "script_href": "https://virtualroommanager.azurewebsites.net/admin/vfs/site/wwwroot/bin/VirtualRoomApp.dll",
+                "config_href": "https://virtualroommanager.azurewebsites.net/admin/vfs/site/wwwroot/RoomDemo/function.json",
+                "href": "https://virtualroommanager.azurewebsites.net/admin/functions/RoomDemo",
+                "config": {},
+                "test_data": "{\"method\":\"post\",\"body\":\"\",\"queryStringParams\":[{\"name\":\"operation\",\"value\":\"turn\"},{\"name\":\"item\",\"value\":\"TV\"},{\"name\":\"value\",\"value\":\"off\"},{\"name\":\"instance\",\"value\":\"all\"}],\"headers\":[{\"name\":\"room\",\"value\":\"devices-test\"}]}"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('hospitality_virtualroommanager_name'), '/', variables('hospitality_virtualroommanager_name'), '.azurewebsites.net')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('hospitality_virtualroommanager_name'))]"
+            ],
+            "properties": {
+                "siteName": "virtualroommanager",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('hospitality_server_farm_name')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "Name": "F1",
+                "Tier": "Free"
+            },
+            "kind": "linux",
+            "properties": {
+                "name": "[parameters('name')]",
+                "workerSize": "0",
+                "workerSizeId": "0",
+                "numberOfWorkers": "1",
+                "reserved": true,
+                "hostingEnvironment": ""
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('hospitality_storage_name')]",
+            "location": "centralus",
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": false,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('hospitality_storage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('hospitality_storage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('hospitality_storage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('hospitality_storage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_GRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('hospitality_storage_name'), '/default/azure-webjobs-hosts')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('hospitality_storage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('hospitality_storage_name'))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('hospitality_storage_name'), '/default/azure-webjobs-secrets')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('hospitality_storage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('hospitality_storage_name'))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
         }
     ]
 }
