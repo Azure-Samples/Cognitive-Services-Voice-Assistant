@@ -6,9 +6,25 @@ This readme should go over setting up a Windows dev box to build an arm32 binary
 
 ## Setting up the device
 
-GGEC instructions for setting up the device [GGEC instructions](link).
+You will need the Android Debug Bridge (adb) which can be found [here](https://developer.android.com/studio/releases/platform-tools).
 
-You will also need the Android Debug Bridge (adb) which can be found [here](https://developer.android.com/studio/releases/platform-tools).
+An unboxed NightFury device will have a hidden USB port between the AUX out and power input connections points. You have to peel off the adhered label to reveal the USB port.
+
+### Setting up the WiFi
+
+In adb shell window, run the following commands
+
+  ```sh
+    mount -o remount,rw /
+    export $(cat /tmp/dbus-session)
+    adk-message-send 'connectivity_wifi_connect {ssid:"<YOUR_SSID>" password:"<YOUR_WIFI_PASSWORD>"}'
+  ```  
+
+Wait for a while, then run
+
+  ```sh
+    adk-message-send 'connectivity_wifi_completeonboarding {}'
+  ```  
 
 ## Setting up the code
 
