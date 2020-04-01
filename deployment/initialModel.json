@@ -1,0 +1,65 @@
+{
+  "type": "CommandsDialogModel",
+  "culture": "en-us",
+  "recognizer": {
+    "application": "1c16269a-d1d8-4dd6-9f73-53c4ba9bf990",
+    "isStaging": false,
+    "versionId": "0.1",
+    "endpointKey": "06c0e16bed99440f81e81a3ac98bce11",
+    "region": "westus",
+    "type": "luis"
+  },
+  "httpEndpoints": [],
+  "lgTemplates": [
+    "# FallbackResponse",
+    "- Add your fallback message here"
+  ],
+  "globalParameters": [],
+  "commands": [
+    {
+      "name": "FallbackCommand",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "DefaultResponse",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# FallbackResponse"
+              }
+            }
+          ],
+          "postExecutionState": "None"
+        }
+      ],
+      "triggeringExamples": [
+        "> - You can start sentences with '>' to add comments.",
+        "> - You can also use parameters by adding the name of the parameter within curly braces, i.e.",
+        ">     Set an alarm to {YourDateParameterName}",
+        ">   Where YourDateParameterName is the name of a parameter defined in the 'Parameters' section.",
+        "Help",
+        "Help me",
+        "What can you do?",
+        "How can I start?",
+        "Hello",
+        "Hi"
+      ],
+      "multiTurnExamples": []
+    }
+  ],
+  "modelMetadata": {
+    "modelId": "3ced9234-c1cf-4e65-9ea8-23e6c9711c08",
+    "published": false,
+    "publishedForTest": false,
+    "requiresTraining": true
+  }
+}

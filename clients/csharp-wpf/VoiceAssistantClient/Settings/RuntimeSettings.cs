@@ -6,6 +6,7 @@ namespace VoiceAssistantClient.Settings
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -15,9 +16,13 @@ namespace VoiceAssistantClient.Settings
     [Serializable]
     public class RuntimeSettings : INotifyPropertyChanged
     {
+        private ObservableCollection<string> connectionProfileNameHistory = new ObservableCollection<string>();
+        private ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory = new ObservableCollection<Dictionary<string, ConnectionProfile>>();
         private ObservableCollection<string> cognitiveServiceKeyHistory = new ObservableCollection<string>();
         private ObservableCollection<string> cognitiveServiceRegionHistory = new ObservableCollection<string>();
         private ObservableCollection<string> customCommandsAppIdHistory = new ObservableCollection<string>();
+        private string connectionProfileName;
+        private Dictionary<string, ConnectionProfile> connectionProfile = new Dictionary<string, ConnectionProfile>();
         private string subscriptionKey;
         private string subscriptionKeyRegion;
         private string customCommandsAppId;
@@ -41,6 +46,18 @@ namespace VoiceAssistantClient.Settings
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public string ConnectionProfileName
+        {
+            get => this.connectionProfileName;
+            set => this.SetProperty(ref this.connectionProfileName, value);
+        }
+
+        public Dictionary<string, ConnectionProfile> ConnectionProfile
+        {
+            get => this.connectionProfile;
+            set => this.SetProperty(ref this.connectionProfile, value);
+        }
 
         public string SubscriptionKey
         {
@@ -132,6 +149,46 @@ namespace VoiceAssistantClient.Settings
             set => this.SetProperty(ref this.fromId, value);
         }
 
+        public ObservableCollection<string> ConnectionProfileNameHistory
+        {
+            get
+            {
+                return this.connectionProfileNameHistory;
+            }
+
+            set
+            {
+                if (this.connectionProfileNameHistory != null)
+                {
+                    this.connectionProfileNameHistory.CollectionChanged -= this.ConnectionProfileNameHistory_CollectionChanged;
+                }
+
+                this.connectionProfileNameHistory = value;
+                this.connectionProfileNameHistory.CollectionChanged += this.ConnectionProfileNameHistory_CollectionChanged;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory
+        {
+            get
+            {
+                return this.connectionProfileHistory;
+            }
+
+            set
+            {
+                if (this.connectionProfileHistory != null)
+                {
+                    this.connectionProfileHistory.CollectionChanged -= this.ConnectionProfileHistory_CollectionChanged;
+                }
+
+                this.connectionProfileHistory = value;
+                this.connectionProfileHistory.CollectionChanged += this.ConnectionProfileHistory_CollectionChanged;
+                this.OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<string> CognitiveServiceKeyHistory
         {
             get
@@ -192,10 +249,12 @@ namespace VoiceAssistantClient.Settings
             }
         }
 
-        internal (string subscriptionKey, string subscriptionKeyRegion, string customCommandsAppId, string language, string logFilePath, string customSpeechEndpointId, bool customSpeechEnabled, string voiceDeploymentIds, bool voiceDeploymentEnabled, bool wakeWordEnabled, string urlOverride,
-            string proxyHostName, string proxyPortNumber, string fromId, ObservableCollection<string> CognitiveServiceKeyHistory, ObservableCollection<string> CognitiveServiceRegionHistory) Get()
+        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, string subscriptionKey, string subscriptionKeyRegion, string customCommandsAppId, string language, string logFilePath, string customSpeechEndpointId, bool customSpeechEnabled, string voiceDeploymentIds, bool voiceDeploymentEnabled, bool wakeWordEnabled, string urlOverride,
+            string proxyHostName, string proxyPortNumber, string fromId, ObservableCollection<string> ConnectionProfileNameHistory, ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory, ObservableCollection<string> CognitiveServiceKeyHistory, ObservableCollection<string> CognitiveServiceRegionHistory) Get()
         {
             return (
+                this.connectionProfileName,
+                this.connectionProfile,
                 this.subscriptionKey,
                 this.subscriptionKeyRegion,
                 this.customCommandsAppId,
@@ -210,11 +269,15 @@ namespace VoiceAssistantClient.Settings
                 this.proxyHostName,
                 this.proxyPortNumber,
                 this.fromId,
+                this.ConnectionProfileNameHistory,
+                this.ConnectionProfileHistory,
                 this.CognitiveServiceKeyHistory,
                 this.CognitiveServiceRegionHistory);
         }
 
         internal void Set(
+            string connectionProfileName,
+            Dictionary<string, ConnectionProfile> connectionProfile,
             string subscriptionKey,
             string subscriptionKeyRegion,
             string customCommandsAppId,
@@ -230,10 +293,14 @@ namespace VoiceAssistantClient.Settings
             string proxyHostName,
             string proxyPortNumber,
             string fromId,
+            ObservableCollection<string> connectionProfileNameHistory,
+            ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory,
             ObservableCollection<string> cognitiveServiceKeyHistory,
             ObservableCollection<string> cognitiveServiceRegionHistory)
         {
-            (this.subscriptionKey,
+            (this.connectionProfileName,
+                this.connectionProfile,
+                this.subscriptionKey,
                 this.subscriptionKeyRegion,
                 this.customCommandsAppId,
                 this.language,
@@ -248,10 +315,14 @@ namespace VoiceAssistantClient.Settings
                 this.proxyHostName,
                 this.proxyPortNumber,
                 this.fromId,
+                this.connectionProfileNameHistory,
+                this.connectionProfileHistory,
                 this.cognitiveServiceKeyHistory,
                 this.cognitiveServiceRegionHistory)
                 =
-            (subscriptionKey,
+            (connectionProfileName,
+                connectionProfile,
+                subscriptionKey,
                 subscriptionKeyRegion,
                 customCommandsAppId,
                 language,
@@ -266,6 +337,8 @@ namespace VoiceAssistantClient.Settings
                 proxyHostName,
                 proxyPortNumber,
                 fromId,
+                this.ConnectionProfileNameHistory,
+                this.ConnectionProfileHistory,
                 this.CognitiveServiceKeyHistory,
                 this.CognitiveServiceRegionHistory);
         }
@@ -282,6 +355,16 @@ namespace VoiceAssistantClient.Settings
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void ConnectionProfileNameHistory_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.OnPropertyChanged(nameof(this.ConnectionProfileNameHistory));
+        }
+
+        private void ConnectionProfileHistory_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.OnPropertyChanged(nameof(this.ConnectionProfileHistory));
         }
 
         private void CognitiveServiceKeyHistory_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
