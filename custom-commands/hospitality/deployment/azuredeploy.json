@@ -12,7 +12,7 @@
         "cognitiveservice_luis_authoringkey_name": "[concat(parameters('resourceName'),'-luisauthoringkey')]",
         "hospitality_server_farm_name": "[concat(parameters('resourceName'),'-serverfarm')]",
         "hospitality_virtualroommanager_name": "[concat(parameters('resourceName'),'-virtualroommanager')]",
-        "hospitality_storage_name": "[concat(parameters('resourceName'),'-storage')]"
+        "hospitality_storage_name": "[toLower(parameters('resourceName'))]"
     },
     "resources": [
         {
@@ -51,40 +51,6 @@
             },
             "kind": "SpeechServices",
             "properties": {}
-        },
-        {
-            "type": "Microsoft.Web/sites",
-            "apiVersion": "2018-11-01",
-            "name": "[variables('hospitality_virtualroommanager_name')]",
-            "location": "[resourceGroup().location]",
-            "kind": "functionapp",
-            "properties": {
-                "enabled": true,
-                "hostNameSslStates": [
-                    {
-                        "name": "[concat(variables('hospitality_virtualroommanager_name'), '.azurewebsites.net')]",
-                        "sslState": "Disabled",
-                        "hostType": "Standard"
-                    },
-                    {
-                        "name": "[concat(variables('hospitality_virtualroommanager_name'), '.scm.azurewebsites.net')]",
-                        "sslState": "Disabled",
-                        "hostType": "Repository"
-                    }
-                ],
-                "serverFarmId": "[subscriptions().id]/resourceGroups/resourceGroups/[resourceGroup().name]/providers/Microsoft.Web/serverfarms/[variables('hospitality_server_farm_name')]",
-                "reserved": false,
-                "isXenon": false,
-                "hyperV": false,
-                "scmSiteAlsoStopped": false,
-                "clientAffinityEnabled": false,
-                "clientCertEnabled": false,
-                "hostNamesDisabled": false,
-                "containerSize": 1536,
-                "dailyMemoryTimeQuota": 0,
-                "httpsOnly": false,
-                "redundancyMode": "None"
-            }
         },
         {
             "type": "Microsoft.Web/sites/config",
@@ -262,7 +228,7 @@
             },
             "kind": "linux",
             "properties": {
-                "name": "[parameters('name')]",
+                "name": "[variables('hospitality_server_farm_name')]",
                 "workerSize": "0",
                 "workerSizeId": "0",
                 "numberOfWorkers": "1",
@@ -274,7 +240,7 @@
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2019-06-01",
             "name": "[variables('hospitality_storage_name')]",
-            "location": "centralus",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard_GRS",
                 "tier": "Standard"
@@ -362,6 +328,43 @@
             ],
             "properties": {
                 "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "dependsOn":[
+                "[resourceId('Microsoft.Web/serverfarms', variables('hospitality_server_farm_name'))]"
+            ],
+            "name": "[variables('hospitality_virtualroommanager_name')]",
+            "location": "[resourceGroup().location]",
+            "kind": "functionapp",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(variables('hospitality_virtualroommanager_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(variables('hospitality_virtualroommanager_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/serverfarms/', variables('hospitality_server_farm_name'))]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None"
             }
         }
     ]
