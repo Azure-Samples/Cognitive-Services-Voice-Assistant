@@ -31,7 +31,6 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="1" Grid.Column="0" Content="Connection Profile:          " FontWeight="Bold"/>
-                <!--<ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="BotProfileComboBox" IsEditable="True"  Padding="5"/>-->
                 <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="ConnectionProfileComboBox" IsEditable="True"  Padding="5" TextBoxBase.TextChanged="ConnectionProfileTextBox_TextChanged"  Text="{Binding ConnectionProfileName}"/>
             </Grid>
             <Grid Margin="0,5,5,0">
