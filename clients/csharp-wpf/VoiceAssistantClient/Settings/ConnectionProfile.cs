@@ -1,10 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.Windows.Documents;
+
 namespace VoiceAssistantClient.Settings
 {
     public class ConnectionProfile
     {
+
         public string SubscriptionKey { get; set; }
 
         public string SubscriptionKeyRegion { get; set; }
@@ -22,6 +25,8 @@ namespace VoiceAssistantClient.Settings
         public string ProxyPortNumber { get; set; }
 
         public string FromId { get; set; }
+
+        public string WakeWordPath { get; set; }
 
         public WakeWordConfiguration WakeWordConfig { get; set; }
 

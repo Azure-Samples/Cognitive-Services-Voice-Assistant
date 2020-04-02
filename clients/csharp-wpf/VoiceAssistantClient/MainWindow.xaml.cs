@@ -126,9 +126,9 @@ namespace VoiceAssistantClient
             // with the region for that subscription or, for development against a specific custom
             // URL, a URL override. If the client doesn't meet these requirements (e.g. on first
             // run), pop up the settings dialog to prompt for it.
-            var hasSubscriptionKey = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKey);
-            var hasSubscriptionRegion = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKeyRegion);
-            var hasUrlOverride = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.UrlOverride);
+            var hasSubscriptionKey = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.SubscriptionKey);
+            var hasSubscriptionRegion = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion);
+            var hasUrlOverride = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.UrlOverride);
 
             if (!hasSubscriptionKey || (!hasSubscriptionRegion && !hasUrlOverride))
             {
@@ -192,27 +192,27 @@ namespace VoiceAssistantClient
         {
             DialogServiceConfig config = null;
 
-            var hasSubscription = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKey);
-            var hasRegion = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.SubscriptionKeyRegion);
-            var hasUrlOverride = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.UrlOverride);
+            var hasSubscription = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.SubscriptionKey);
+            var hasRegion = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion);
+            var hasUrlOverride = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.UrlOverride);
 
             if (hasSubscription && (hasRegion || hasUrlOverride))
             {
-                if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.CustomCommandsAppId))
+                if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.CustomCommandsAppId))
                 {
                     // NOTE: Custom commands is a preview Azure Service.
                     // Set the custom commands configuration object based on three items:
                     // - The Custom commands application ID
                     // - Cognitive services speech subscription key.
                     // - The Azure region of the subscription key(e.g. "westus").
-                    config = CustomCommandsConfig.FromSubscription(this.settings.RuntimeSettings.CustomCommandsAppId, this.settings.RuntimeSettings.SubscriptionKey, this.settings.RuntimeSettings.SubscriptionKeyRegion);
+                    config = CustomCommandsConfig.FromSubscription(this.settings.RuntimeSettings.Profile.CustomCommandsAppId, this.settings.RuntimeSettings.Profile.SubscriptionKey, this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion);
                 }
                 else
                 {
                     // Set the bot framework configuration object based on two items:
                     // - Cognitive services speech subscription key. It is needed for billing and is tied to the bot registration.
                     // - The Azure region of the subscription key(e.g. "westus").
-                    config = BotFrameworkConfig.FromSubscription(this.settings.RuntimeSettings.SubscriptionKey, this.settings.RuntimeSettings.SubscriptionKeyRegion);
+                    config = BotFrameworkConfig.FromSubscription(this.settings.RuntimeSettings.Profile.SubscriptionKey, this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion);
                 }
             }
 
@@ -222,26 +222,26 @@ namespace VoiceAssistantClient
                 config.Language = this.settings.RuntimeSettings.Language;
             }
 
-            if (this.settings.RuntimeSettings.CustomSpeechEnabled)
+            if (this.settings.RuntimeSettings.Profile.CustomSpeechEnabled)
             {
                 // Set your custom speech end-point id here, as given to you by the speech portal https://speech.microsoft.com/portal.
                 // Otherwise the standard speech end-point will be used.
-                config.SetServiceProperty("cid", this.settings.RuntimeSettings.CustomSpeechEndpointId, ServicePropertyChannel.UriQueryParameter);
+                config.SetServiceProperty("cid", this.settings.RuntimeSettings.Profile.CustomSpeechEndpointId, ServicePropertyChannel.UriQueryParameter);
 
                 // Custom Speech does not support cloud Keyword Verification at the moment. If this is not done, there will be an error
                 // from the service and connection will close. Remove line below when supported.
                 config.SetProperty("KeywordConfig_EnableKeywordVerification", "false");
             }
 
-            if (this.settings.RuntimeSettings.VoiceDeploymentEnabled)
+            if (this.settings.RuntimeSettings.Profile.VoiceDeploymentEnabled)
             {
                 // Set one or more IDs associated with the custom TTS voice your bot will use
                 // The format of the string is one or more GUIDs separated by comma (no spaces). You get these GUIDs from
                 // your custom TTS on the speech portal https://speech.microsoft.com/portal.
-                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.settings.RuntimeSettings.VoiceDeploymentIds);
+                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.settings.RuntimeSettings.Profile.VoiceDeploymentIds);
             }
 
-            if (!string.IsNullOrEmpty(this.settings.RuntimeSettings.FromId))
+            if (!string.IsNullOrEmpty(this.settings.RuntimeSettings.Profile.FromId))
             {
                 // Set the from.id in the Bot-Framework Activity sent by this tool.
                 // from.id field identifies who generated the activity, and may be required by some bots.
@@ -250,26 +250,26 @@ namespace VoiceAssistantClient
                 config.SetProperty(PropertyId.Conversation_From_Id, this.settings.RuntimeSettings.FromId);
             }
 
-            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.LogFilePath))
+            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.LogFilePath))
             {
                 // Speech SDK has verbose logging to local file, which may be useful when reporting issues.
                 // Supply the path to a text file on disk here. By default no logging happens.
-                config.SetProperty(PropertyId.Speech_LogFilename, this.settings.RuntimeSettings.LogFilePath);
+                config.SetProperty(PropertyId.Speech_LogFilename, this.settings.RuntimeSettings.Profile.LogFilePath);
             }
 
             if (hasUrlOverride)
             {
                 // For prototyping new Direct Line Speech channel service feature, a custom service URL may be
                 // provided by Microsoft and entered in this tool.
-                config.SetProperty("SPEECH-Endpoint", this.settings.RuntimeSettings.UrlOverride);
+                config.SetProperty("SPEECH-Endpoint", this.settings.RuntimeSettings.Profile.UrlOverride);
             }
 
-            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.ProxyHostName) &&
-                !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.ProxyPortNumber) &&
-                int.TryParse(this.settings.RuntimeSettings.ProxyPortNumber, out var proxyPortNumber))
+            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.ProxyHostName) &&
+                !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.ProxyPortNumber) &&
+                int.TryParse(this.settings.RuntimeSettings.Profile.ProxyPortNumber, out var proxyPortNumber))
             {
                 // To funnel network traffic via a proxy, set the host name and port number here
-                config.SetProxy(this.settings.RuntimeSettings.ProxyHostName, proxyPortNumber, string.Empty, string.Empty);
+                config.SetProxy(this.settings.RuntimeSettings.Profile.ProxyHostName, proxyPortNumber, string.Empty, string.Empty);
             }
 
             // If a the DialogServiceConnector object already exists, destroy it first
@@ -300,15 +300,15 @@ namespace VoiceAssistantClient
             // Open a connection to Direct Line Speech channel
             this.connector.ConnectAsync();
 
-            if (this.settings.RuntimeSettings.CustomSpeechEnabled)
+            if (this.settings.RuntimeSettings.Profile.CustomSpeechEnabled)
             {
-                this.customSpeechConfig = new CustomSpeechConfiguration(this.settings.RuntimeSettings.CustomSpeechEndpointId);
+                this.customSpeechConfig = new CustomSpeechConfiguration(this.settings.RuntimeSettings.Profile.CustomSpeechEndpointId);
             }
 
-            if (this.settings.RuntimeSettings.WakeWordEnabled)
+            if (this.settings.RuntimeSettings.Profile.WakeWordEnabled)
             {
                 // Configure wake word (also known as "keyword")
-                this.activeWakeWordConfig = new WakeWordConfiguration(this.settings.RuntimeSettings.WakeWordPath);
+                this.activeWakeWordConfig = new WakeWordConfiguration(this.settings.RuntimeSettings.Profile.WakeWordPath);
                 this.connector.StartKeywordRecognitionAsync(this.activeWakeWordConfig.WakeWordModel);
             }
         }
@@ -319,7 +319,7 @@ namespace VoiceAssistantClient
 
             Debug.WriteLine($"SessionStopped event, id = {e.SessionId}");
 
-            if (this.settings.RuntimeSettings.WakeWordEnabled)
+            if (this.settings.RuntimeSettings.Profile.WakeWordEnabled)
             {
                 message = "Stopped actively listening - waiting for wake word";
             }
@@ -495,7 +495,7 @@ namespace VoiceAssistantClient
             this.InitSpeechConnector();
 
             var message = "New conversation started - type or press the microphone button";
-            if (this.settings.RuntimeSettings.WakeWordEnabled)
+            if (this.settings.RuntimeSettings.Profile.WakeWordEnabled)
             {
                 message = $"New conversation started - type, press the microphone button, or say the wake word";
             }
@@ -601,9 +601,9 @@ namespace VoiceAssistantClient
 
             var bfActivity = Activity.CreateMessageActivity();
             bfActivity.Text = this.statusBox.Text;
-            if (!string.IsNullOrEmpty(this.settings.RuntimeSettings.FromId))
+            if (!string.IsNullOrEmpty(this.settings.RuntimeSettings.Profile.FromId))
             {
-                bfActivity.From = new ChannelAccount(this.settings.RuntimeSettings.FromId);
+                bfActivity.From = new ChannelAccount(this.settings.RuntimeSettings.Profile.FromId);
             }
 
             this.statusBox.Clear();

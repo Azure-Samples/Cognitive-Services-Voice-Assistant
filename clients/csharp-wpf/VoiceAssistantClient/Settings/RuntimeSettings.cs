@@ -35,6 +35,7 @@ namespace VoiceAssistantClient.Settings
         private string proxyHostName;
         private string proxyPortNumber;
         private string fromId;
+        private ConnectionProfile profile = new ConnectionProfile();
 
         public RuntimeSettings()
         {
@@ -43,6 +44,12 @@ namespace VoiceAssistantClient.Settings
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public ConnectionProfile Profile
+        {
+            get => this.profile;
+            set => this.SetProperty(ref this.profile, value);
+        }
 
         public string ConnectionProfileName
         {
@@ -246,11 +253,12 @@ namespace VoiceAssistantClient.Settings
             }
         }
 
-        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, ObservableCollection<string> ConnectionProfileNameHistory, ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory, ObservableCollection<string> CognitiveServiceKeyHistory, ObservableCollection<string> CognitiveServiceRegionHistory) Get()
+        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, ConnectionProfile profile, ObservableCollection<string> ConnectionProfileNameHistory, ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory, ObservableCollection<string> CognitiveServiceKeyHistory, ObservableCollection<string> CognitiveServiceRegionHistory) Get()
         {
             return (
                 this.connectionProfileName,
                 this.connectionProfile,
+                this.profile,
                 this.ConnectionProfileNameHistory,
                 this.ConnectionProfileHistory,
                 this.CognitiveServiceKeyHistory,
@@ -260,6 +268,7 @@ namespace VoiceAssistantClient.Settings
         internal void Set(
             string connectionProfileName,
             Dictionary<string, ConnectionProfile> connectionProfile,
+            ConnectionProfile profile,
             ObservableCollection<string> connectionProfileNameHistory,
             ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory,
             ObservableCollection<string> cognitiveServiceKeyHistory,
@@ -267,6 +276,7 @@ namespace VoiceAssistantClient.Settings
         {
             (this.connectionProfileName,
                 this.connectionProfile,
+                this.profile,
                 this.connectionProfileNameHistory,
                 this.connectionProfileHistory,
                 this.cognitiveServiceKeyHistory,
@@ -274,6 +284,7 @@ namespace VoiceAssistantClient.Settings
                 =
             (connectionProfileName,
                 connectionProfile,
+                profile,
                 this.ConnectionProfileNameHistory,
                 this.ConnectionProfileHistory,
                 this.CognitiveServiceKeyHistory,
