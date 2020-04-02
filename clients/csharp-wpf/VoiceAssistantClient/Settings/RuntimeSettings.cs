@@ -8,7 +8,10 @@ namespace VoiceAssistantClient.Settings
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Text;
+    using System.Threading.Tasks;
 
     [Serializable]
     public class RuntimeSettings : INotifyPropertyChanged
@@ -246,11 +249,26 @@ namespace VoiceAssistantClient.Settings
             }
         }
 
-        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, ObservableCollection<string> ConnectionProfileNameHistory, ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory, ObservableCollection<string> CognitiveServiceKeyHistory, ObservableCollection<string> CognitiveServiceRegionHistory) Get()
+        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, string subscriptionKey, string subscriptionKeyRegion, string customCommandsAppId, string language, string logFilePath, string customSpeechEndpointId, bool customSpeechEnabled, string voiceDeploymentIds, bool voiceDeploymentEnabled, bool wakeWordEnabled, string urlOverride,
+            string proxyHostName, string proxyPortNumber, string fromId, ObservableCollection<string> ConnectionProfileNameHistory, ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory, ObservableCollection<string> CognitiveServiceKeyHistory, ObservableCollection<string> CognitiveServiceRegionHistory) Get()
         {
             return (
                 this.connectionProfileName,
                 this.connectionProfile,
+                this.subscriptionKey,
+                this.subscriptionKeyRegion,
+                this.customCommandsAppId,
+                this.language,
+                this.logFilePath,
+                this.customSpeechEndpointId,
+                this.customSpeechEnabled,
+                this.voiceDeploymentIds,
+                this.voiceDeploymentEnabled,
+                this.wakeWordEnabled,
+                this.urlOverride,
+                this.proxyHostName,
+                this.proxyPortNumber,
+                this.fromId,
                 this.ConnectionProfileNameHistory,
                 this.ConnectionProfileHistory,
                 this.CognitiveServiceKeyHistory,
@@ -260,6 +278,21 @@ namespace VoiceAssistantClient.Settings
         internal void Set(
             string connectionProfileName,
             Dictionary<string, ConnectionProfile> connectionProfile,
+            string subscriptionKey,
+            string subscriptionKeyRegion,
+            string customCommandsAppId,
+            string language,
+            string logFilePath,
+            string customSpeechEndpointId,
+            bool customSpeechEnabled,
+            string voiceDeploymentIds,
+            bool voiceDeploymentEnabled,
+            string wakeWordPath,
+            bool wakeWordEnabled,
+            string urlOverride,
+            string proxyHostName,
+            string proxyPortNumber,
+            string fromId,
             ObservableCollection<string> connectionProfileNameHistory,
             ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory,
             ObservableCollection<string> cognitiveServiceKeyHistory,
@@ -267,6 +300,21 @@ namespace VoiceAssistantClient.Settings
         {
             (this.connectionProfileName,
                 this.connectionProfile,
+                this.subscriptionKey,
+                this.subscriptionKeyRegion,
+                this.customCommandsAppId,
+                this.language,
+                this.logFilePath,
+                this.customSpeechEndpointId,
+                this.customSpeechEnabled,
+                this.voiceDeploymentIds,
+                this.voiceDeploymentEnabled,
+                this.wakeWordPath,
+                this.wakeWordEnabled,
+                this.urlOverride,
+                this.proxyHostName,
+                this.proxyPortNumber,
+                this.fromId,
                 this.connectionProfileNameHistory,
                 this.connectionProfileHistory,
                 this.cognitiveServiceKeyHistory,
@@ -274,6 +322,21 @@ namespace VoiceAssistantClient.Settings
                 =
             (connectionProfileName,
                 connectionProfile,
+                subscriptionKey,
+                subscriptionKeyRegion,
+                customCommandsAppId,
+                language,
+                logFilePath,
+                customSpeechEndpointId,
+                customSpeechEnabled,
+                voiceDeploymentIds,
+                voiceDeploymentEnabled,
+                wakeWordPath,
+                wakeWordEnabled,
+                urlOverride,
+                proxyHostName,
+                proxyPortNumber,
+                fromId,
                 this.ConnectionProfileNameHistory,
                 this.ConnectionProfileHistory,
                 this.CognitiveServiceKeyHistory,
