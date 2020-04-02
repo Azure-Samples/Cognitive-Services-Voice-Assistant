@@ -171,6 +171,7 @@
       <DependentUpon>SettingsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\AppSettings.cs" />
+    <Compile Include="Settings\ConnectionProfile.cs" />
     <Compile Include="Settings\CustomActiviyJsonDataEntry.cs" />
     <Compile Include="Settings\DisplaySettings.cs" />
     <Compile Include="Settings\RuntimeSettings.cs" />

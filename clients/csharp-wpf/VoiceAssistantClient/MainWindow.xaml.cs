@@ -14,6 +14,7 @@ namespace VoiceAssistantClient
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Documents;
     using System.Windows.Input;
     using System.Windows.Threading;
     using AdaptiveCards;
@@ -506,6 +507,7 @@ namespace VoiceAssistantClient
         private void Reconnect_Click(object sender, RoutedEventArgs e)
         {
             this.Reset();
+            this.UpdateConnectionProfileInfoBlock();
         }
 
         private void StartListening()
@@ -790,6 +792,18 @@ namespace VoiceAssistantClient
             var succeeded = settingsDialog.ShowDialog();
 
             // BUGBUG: Do not call reset, leave it for later as this is usually the first action.
+        }
+
+        private void UpdateConnectionProfileInfoBlock()
+        {
+            var settingsDialog = new SettingsDialog(this.settings.RuntimeSettings);
+
+            var connectionProfileName = !string.IsNullOrWhiteSpace(settingsDialog.ConnectionProfileName);
+
+            if (connectionProfileName)
+            {
+                this.ConnectionProfileInfoBlock.Text = $"Connection Profile: {settingsDialog.ConnectionProfileName}";
+            }
         }
     }
 }
