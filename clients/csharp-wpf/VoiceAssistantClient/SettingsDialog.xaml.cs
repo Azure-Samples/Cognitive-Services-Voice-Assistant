@@ -31,20 +31,6 @@ namespace VoiceAssistantClient
             (
                 this.ConnectionProfileName,
                 this.ConnectionProfile,
-                this.SubscriptionKey,
-                this.SubscriptionKeyRegion,
-                this.CustomCommandsAppId,
-                this.ConnectionLanguage,
-                this.LogFilePath,
-                this.CustomSpeechEndpointId,
-                this.CustomSpeechEnabled,
-                this.VoiceDeploymentIds,
-                this.VoiceDeploymentEnabled,
-                this.WakeWordEnabled,
-                this.UrlOverride,
-                this.ProxyHostName,
-                this.ProxyPortNumber,
-                this.FromId,
                 this.settings.ConnectionProfileNameHistory,
                 this.settings.ConnectionProfileHistory,
                 this.settings.CognitiveServiceKeyHistory,
@@ -113,11 +99,11 @@ namespace VoiceAssistantClient
             this.ConnectionProfileComboBox.ItemsSource = this.settings.ConnectionProfileNameHistory;
             this.ConnectionProfileComboBox.Text = this.ConnectionProfileName;
             this.SubscriptionKeyComboBox.ItemsSource = this.settings.CognitiveServiceKeyHistory;
-            this.SubscriptionKeyComboBox.Text = this.SubscriptionKey;
+            this.SubscriptionKeyComboBox.Text = this.settings.SubscriptionKey;
             this.SubscriptionRegionComboBox.ItemsSource = this.settings.CognitiveServiceRegionHistory;
-            this.SubscriptionRegionComboBox.Text = this.SubscriptionKeyRegion;
+            this.SubscriptionRegionComboBox.Text = this.settings.SubscriptionKeyRegion;
             this.CustomCommandsAppIdComboBox.ItemsSource = this.settings.CustomCommandsAppIdHistory;
-            this.CustomCommandsAppIdComboBox.Text = this.CustomCommandsAppId;
+            this.CustomCommandsAppIdComboBox.Text = this.settings.CustomCommandsAppId;
             base.OnActivated(e);
         }
 
@@ -175,21 +161,6 @@ namespace VoiceAssistantClient
                 this.settings.Set(
                     this.ConnectionProfileName,
                     this.ConnectionProfile,
-                    this.SubscriptionKey,
-                    this.SubscriptionKeyRegion,
-                    this.CustomCommandsAppId,
-                    this.ConnectionLanguage,
-                    this.LogFilePath,
-                    this.CustomSpeechEndpointId,
-                    this.CustomSpeechEnabled,
-                    this.VoiceDeploymentIds,
-                    this.VoiceDeploymentEnabled,
-                    this.WakeWordConfig.Path,
-                    this.WakeWordEnabled,
-                    this.UrlOverride,
-                    this.ProxyHostName,
-                    this.ProxyPortNumber,
-                    this.FromId,
                     this.settings.ConnectionProfileNameHistory,
                     this.settings.ConnectionProfileHistory,
                     this.settings.CognitiveServiceKeyHistory,
