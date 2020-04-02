@@ -101,5 +101,15 @@ Change the startService.sh file to use the config.json file you would like. Then
 
 Then reboot your device.
 
+## Troubleshooting
+
+### Error details: 2460
+
+This is a TLS certificate issue, a workaround is below
+
+```sh
+cd /usr/lib/ssl/certs
+c_rehash
+```
 
 #### [Main Devices Readme](README.md)
