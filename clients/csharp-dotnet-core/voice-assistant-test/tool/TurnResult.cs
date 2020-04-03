@@ -15,18 +15,18 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Initializes a new instance of the <see cref="TurnResult"/> class.
         /// </summary>
-        /// <param name="turns"> turns.</param>
-        public TurnResult(Turn turns)
+        /// <param name="turn"> turns.</param>
+        public TurnResult(Turn turn)
         {
-            this.TurnID = turns.TurnID;
-            this.Sleep = turns.Sleep;
-            this.Utterance = turns.Utterance;
-            this.Activity = turns.Activity;
-            this.WAVFile = turns.WAVFile;
-            this.Keyword = turns.Keyword;
-            this.ExpectedTTSAudioResponseDuration = turns.ExpectedTTSAudioResponseDuration;
-            this.ExpectedResponses = turns.ExpectedResponses;
-            this.ExpectedResponseLatency = turns.ExpectedResponseLatency;
+            this.TurnID = turn.TurnID;
+            this.Sleep = turn.Sleep;
+            this.Utterance = turn.Utterance;
+            this.Activity = turn.Activity;
+            this.WAVFile = turn.WAVFile;
+            this.Keyword = turn.Keyword;
+            this.ExpectedTTSAudioResponseDurations = turn.ExpectedTTSAudioResponseDurations;
+            this.ExpectedResponses = turn.ExpectedResponses;
+            this.ExpectedResponseLatency = turn.ExpectedResponseLatency;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace VoiceAssistantTest
         /// Gets or sets the Actual TTS Audio Reponse Duratio (in milliseconds).
         /// </summary>
         [JsonProperty(Order = 7, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<int> ActualTTSAudioResponseDuration { get; set; }
+        public List<int> ActualTTSAudioResponseDurations { get; set; }
 
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.

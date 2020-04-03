@@ -473,15 +473,21 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Checks if the Expected TTS Duration has valid values.
         /// </summary>
-        /// <param name="expectedTTSAudioDuration"> ExpectedTTSAudioDuration.</param>
+        /// <param name="expectedTTSAudioDurations"> ExpectedTTSAudioDuration.</param>
         /// <returns>True if the ListExpected TTS Duration has valid values else false.</returns>
-        private static bool CheckValidExpectedTTSAudioDuration(List<int> expectedTTSAudioDuration)
+        private static bool CheckValidExpectedTTSAudioDuration(List<string> expectedTTSAudioDurations)
         {
-            for (int i = 0; i < expectedTTSAudioDuration.Count; i++)
+            foreach (string expectedTTSAudioDuration in expectedTTSAudioDurations)
             {
-                if (expectedTTSAudioDuration[i] != -1)
+                foreach (string strDuration in expectedTTSAudioDuration.Split(ProgramConstants.OROperator))
                 {
-                    if (expectedTTSAudioDuration[i] <= 0)
+                    int intDuration;
+                    if (!int.TryParse(strDuration, out intDuration))
+                    {
+                        return false;
+                    }
+
+                    if (intDuration <= 0 && intDuration != -1)
                     {
                         return false;
                     }
@@ -534,23 +540,36 @@ namespace VoiceAssistantTest
                 }
             }
 
-            if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0 && turn.ExpectedTTSAudioResponseDuration != null)
+            if (((turn.ExpectedResponses == null) ? 0 : turn.ExpectedResponses.Count) != ((turn.ExpectedTTSAudioResponseDurations == null) ? 0 : turn.ExpectedTTSAudioResponseDurations.Count))
             {
-                if (turn.ExpectedTTSAudioResponseDuration.Count != turn.ExpectedResponses.Count)
+                exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_PRESENT);
+            }
+            else if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0)
+            {
+                if (turn.ExpectedTTSAudioResponseDurations.Count != turn.ExpectedResponses.Count)
                 {
                     exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_INVALID);
                 }
-
-                var expectedTTSAudioDurationObjectValid = CheckValidExpectedTTSAudioDuration(turn.ExpectedTTSAudioResponseDuration);
-                if (!expectedTTSAudioDurationObjectValid)
+                else
                 {
-                    exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_VALUES_INVALID);
-                }
-            }
+                    for (int i = 0; i < turn.ExpectedResponses.Count; i++)
+                    {
+                        Activity expectedResponse = turn.ExpectedResponses[i];
+                        int orsInText = expectedResponse.Text.Split(ProgramConstants.OROperator).Length;
+                        int orsInSpeak = expectedResponse.Speak.Split(ProgramConstants.OROperator).Length;
+                        int orsInExpectedTTSAudioResponseDuration = turn.ExpectedTTSAudioResponseDurations[i].Split(ProgramConstants.OROperator).Length;
 
-            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDuration != null)
-            {
-                exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_PRESENT);
+                        if (orsInText != orsInSpeak || orsInSpeak != orsInExpectedTTSAudioResponseDuration)
+                        {
+                            exceptionMessage.Add(ErrorStrings.OR_OCCURRENCE_INCONSISTENT);
+                        }
+                    }
+
+                    if (!CheckValidExpectedTTSAudioDuration(turn.ExpectedTTSAudioResponseDurations))
+                    {
+                        exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_VALUES_INVALID);
+                    }
+                }
             }
 
             if (utterancePresentValid && wavFilePresentValid && activityPresentValid)
