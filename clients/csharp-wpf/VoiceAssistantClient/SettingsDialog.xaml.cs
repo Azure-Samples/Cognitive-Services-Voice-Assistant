@@ -111,19 +111,6 @@ namespace VoiceAssistantClient
             this.SubscriptionRegionComboBox.Text = this.settings.Profile.SubscriptionKeyRegion;
             this.CustomCommandsAppIdComboBox.ItemsSource = this.settings.CustomCommandsAppIdHistory;
             this.CustomCommandsAppIdComboBox.Text = this.settings.Profile.CustomCommandsAppId;
-            this.BotIdTextBox.Text = this.settings.Profile.BotId;
-            this.FromIdTextBox.Text = this.settings.Profile.FromId;
-            this.LanguageTextBox.Text = this.settings.Profile.ConnectionLanguage;
-            this.LogFileTextBox.Text = this.settings.Profile.LogFilePath;
-            this.CustomSpeechEndpointIdTextBox.Text = this.settings.Profile.CustomSpeechEndpointId;
-            this.CustomSpeechEnabledBox.IsChecked = this.settings.Profile.CustomSpeechEnabled;
-            this.VoiceDeploymentIdsTextBox.Text = this.settings.Profile.VoiceDeploymentIds;
-            this.VoiceDeploymentEnabledBox.IsChecked = this.settings.Profile.VoiceDeploymentEnabled;
-            this.WakeWordPathTextBox.Text = this.settings.Profile.WakeWordPath;
-            this.WakeWordEnabledBox.IsChecked = this.settings.Profile.WakeWordEnabled;
-            this.UrlOverrideTextBox.Text = this.settings.Profile.UrlOverride;
-            this.ProxyHost.Text = this.settings.Profile.ProxyHostName;
-            this.ProxyPort.Text = this.settings.Profile.ProxyPortNumber;
             base.OnActivated(e);
         }
 
@@ -549,7 +536,7 @@ namespace VoiceAssistantClient
                     this.CustomSpeechEnabledBox.IsChecked = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEnabled;
                     this.VoiceDeploymentIdsTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentIds;
                     this.VoiceDeploymentEnabledBox.IsChecked = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentEnabled;
-                    this.WakeWordPathTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordConfig.Path;
+                    this.WakeWordPathTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath;
                     this.WakeWordEnabledBox.IsChecked = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled;
                 }
                 else
