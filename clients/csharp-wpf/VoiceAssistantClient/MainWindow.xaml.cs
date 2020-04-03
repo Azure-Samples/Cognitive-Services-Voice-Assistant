@@ -210,7 +210,7 @@ namespace VoiceAssistantClient
                 }
                 else if (hasBotId)
                 {
-                    config = BotFrameworkConfig.FromSubscription(this.settings.RuntimeSettings.Profile.SubscriptionKey, this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion, botId: this.settings.RuntimeSettings.Profile.BotId);
+                    config = BotFrameworkConfig.FromSubscription(this.settings.RuntimeSettings.Profile.SubscriptionKey, this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion, this.settings.RuntimeSettings.Profile.BotId);
                 }
                 else
                 {

@@ -72,6 +72,8 @@ namespace VoiceAssistantClient
 
         public string FromId { get; set; }
 
+        public string WakeWordPath { get; set; }
+
         public WakeWordConfiguration WakeWordConfig { get; set; }
 
         public bool WakeWordEnabled { get; set; }
@@ -109,6 +111,19 @@ namespace VoiceAssistantClient
             this.SubscriptionRegionComboBox.Text = this.settings.Profile.SubscriptionKeyRegion;
             this.CustomCommandsAppIdComboBox.ItemsSource = this.settings.CustomCommandsAppIdHistory;
             this.CustomCommandsAppIdComboBox.Text = this.settings.Profile.CustomCommandsAppId;
+            this.BotIdTextBox.Text = this.settings.Profile.BotId;
+            this.FromIdTextBox.Text = this.settings.Profile.FromId;
+            this.LanguageTextBox.Text = this.settings.Profile.ConnectionLanguage;
+            this.LogFileTextBox.Text = this.settings.Profile.LogFilePath;
+            this.CustomSpeechEndpointIdTextBox.Text = this.settings.Profile.CustomSpeechEndpointId;
+            this.CustomSpeechEnabledBox.IsChecked = this.settings.Profile.CustomSpeechEnabled;
+            this.VoiceDeploymentIdsTextBox.Text = this.settings.Profile.VoiceDeploymentIds;
+            this.VoiceDeploymentEnabledBox.IsChecked = this.settings.Profile.VoiceDeploymentEnabled;
+            this.WakeWordPathTextBox.Text = this.settings.Profile.WakeWordPath;
+            this.WakeWordEnabledBox.IsChecked = this.settings.Profile.WakeWordEnabled;
+            this.UrlOverrideTextBox.Text = this.settings.Profile.UrlOverride;
+            this.ProxyHost.Text = this.settings.Profile.ProxyHostName;
+            this.ProxyPort.Text = this.settings.Profile.ProxyPortNumber;
             base.OnActivated(e);
         }
 
@@ -132,8 +147,9 @@ namespace VoiceAssistantClient
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEnabled = (bool)this.CustomSpeechEnabledBox.IsChecked;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentIds = this.VoiceDeploymentIdsTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentEnabled = (bool)this.VoiceDeploymentEnabledBox.IsChecked;
-                    var wakeWordPath = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordConfig.Path;
-                    wakeWordPath = this.WakeWordPathTextBox.Text;
+                    var wakeWordConfigPath = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordConfig.Path;
+                    wakeWordConfigPath = this.WakeWordPathTextBox.Text;
+                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath = this.WakeWordPathTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled = (bool)this.WakeWordEnabledBox.IsChecked;
 
                     this.settings.Profile.SubscriptionKey = this.SubscriptionKeyComboBox.Text;
@@ -168,6 +184,7 @@ namespace VoiceAssistantClient
                         ProxyHostName = this.ProxyHostName,
                         ProxyPortNumber = this.ProxyPortNumber,
                         FromId = this.FromId,
+                        WakeWordPath = this.WakeWordPath,
                         WakeWordConfig = this.WakeWordConfig,
                         CustomSpeechConfig = this.CustomSpeechConfig,
                         CustomSpeechEndpointId = this.CustomSpeechEndpointId,
