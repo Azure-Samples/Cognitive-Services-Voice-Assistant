@@ -52,7 +52,7 @@ namespace VoiceAssistantClient
 
         public Dictionary<string, ConnectionProfile> ConnectionProfile { get; set; }
 
-        public string SubscriptionKey { get => this.settings.Profile.SubscriptionKey; set => this.settings.Profile.SubscriptionKey = value; }
+        public string SubscriptionKey { get; set; }
 
         public string SubscriptionKeyRegion { get; set; }
 
