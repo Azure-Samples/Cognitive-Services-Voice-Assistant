@@ -23,6 +23,7 @@ namespace VoiceAssistantClient.Settings
         private string subscriptionKey;
         private string subscriptionKeyRegion;
         private string customCommandsAppId;
+        private string botId;
         private string language;
         private string logFilePath;
         private string customSpeechEndpointId;
@@ -79,6 +80,12 @@ namespace VoiceAssistantClient.Settings
         {
             get => this.customCommandsAppId;
             set => this.SetProperty(ref this.customCommandsAppId, value);
+        }
+
+        public string BotId
+        {
+            get => this.botId;
+            set => this.SetProperty(ref this.botId, value);
         }
 
         public string Language

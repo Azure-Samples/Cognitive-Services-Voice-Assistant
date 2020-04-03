@@ -14,6 +14,8 @@ namespace VoiceAssistantClient.Settings
 
         public string CustomCommandsAppId { get; set; }
 
+        public string BotId { get; set; }
+
         public string ConnectionLanguage { get; set; }
 
         public string LogFilePath { get; set; }

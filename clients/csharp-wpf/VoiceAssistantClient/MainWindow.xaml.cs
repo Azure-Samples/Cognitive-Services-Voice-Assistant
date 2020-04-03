@@ -194,6 +194,7 @@ namespace VoiceAssistantClient
 
             var hasSubscription = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.SubscriptionKey);
             var hasRegion = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion);
+            var hasBotId = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.BotId);
             var hasUrlOverride = !string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.UrlOverride);
 
             if (hasSubscription && (hasRegion || hasUrlOverride))
@@ -206,6 +207,10 @@ namespace VoiceAssistantClient
                     // - Cognitive services speech subscription key.
                     // - The Azure region of the subscription key(e.g. "westus").
                     config = CustomCommandsConfig.FromSubscription(this.settings.RuntimeSettings.Profile.CustomCommandsAppId, this.settings.RuntimeSettings.Profile.SubscriptionKey, this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion);
+                }
+                else if (hasBotId)
+                {
+                    config = BotFrameworkConfig.FromSubscription(this.settings.RuntimeSettings.Profile.SubscriptionKey, this.settings.RuntimeSettings.Profile.SubscriptionKeyRegion, botId: this.settings.RuntimeSettings.Profile.BotId);
                 }
                 else
                 {

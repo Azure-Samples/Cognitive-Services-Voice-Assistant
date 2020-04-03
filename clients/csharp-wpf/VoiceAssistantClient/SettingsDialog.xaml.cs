@@ -52,11 +52,13 @@ namespace VoiceAssistantClient
 
         public Dictionary<string, ConnectionProfile> ConnectionProfile { get; set; }
 
-        public string SubscriptionKey { get; set; }
+        public string SubscriptionKey { get => this.settings.Profile.SubscriptionKey; set => this.settings.Profile.SubscriptionKey = value; }
 
         public string SubscriptionKeyRegion { get; set; }
 
         public string CustomCommandsAppId { get; set; }
+
+        public string BotId { get; set; }
 
         public string ConnectionLanguage { get; set; }
 
@@ -102,11 +104,11 @@ namespace VoiceAssistantClient
             this.ConnectionProfileComboBox.ItemsSource = this.settings.ConnectionProfileNameHistory;
             this.ConnectionProfileComboBox.Text = this.ConnectionProfileName;
             this.SubscriptionKeyComboBox.ItemsSource = this.settings.CognitiveServiceKeyHistory;
-            this.SubscriptionKeyComboBox.Text = this.settings.SubscriptionKey;
+            this.SubscriptionKeyComboBox.Text = this.settings.Profile.SubscriptionKey;
             this.SubscriptionRegionComboBox.ItemsSource = this.settings.CognitiveServiceRegionHistory;
-            this.SubscriptionRegionComboBox.Text = this.settings.SubscriptionKeyRegion;
+            this.SubscriptionRegionComboBox.Text = this.settings.Profile.SubscriptionKeyRegion;
             this.CustomCommandsAppIdComboBox.ItemsSource = this.settings.CustomCommandsAppIdHistory;
-            this.CustomCommandsAppIdComboBox.Text = this.settings.CustomCommandsAppId;
+            this.CustomCommandsAppIdComboBox.Text = this.settings.Profile.CustomCommandsAppId;
             base.OnActivated(e);
         }
 
@@ -119,6 +121,7 @@ namespace VoiceAssistantClient
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey = this.SubscriptionKeyComboBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion = this.SubscriptionRegionComboBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId = this.CustomCommandsAppIdComboBox.Text;
+                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].BotId = this.BotIdTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage = this.LanguageTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath = this.LogFileTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].UrlOverride = this.UrlOverrideTextBox.Text;
@@ -136,6 +139,7 @@ namespace VoiceAssistantClient
                     this.settings.Profile.SubscriptionKey = this.SubscriptionKeyComboBox.Text;
                     this.settings.Profile.SubscriptionKeyRegion = this.SubscriptionRegionComboBox.Text;
                     this.settings.Profile.CustomCommandsAppId = this.CustomCommandsAppIdComboBox.Text;
+                    this.settings.Profile.BotId = this.BotIdTextBox.Text;
                     this.settings.Profile.ConnectionLanguage = this.LanguageTextBox.Text;
                     this.settings.Profile.LogFilePath = this.LogFileTextBox.Text;
                     this.settings.Profile.UrlOverride = this.UrlOverrideTextBox.Text;
@@ -157,6 +161,7 @@ namespace VoiceAssistantClient
                         SubscriptionKey = this.SubscriptionKey,
                         SubscriptionKeyRegion = this.SubscriptionKeyRegion,
                         CustomCommandsAppId = this.CustomCommandsAppId,
+                        BotId = this.BotId,
                         ConnectionLanguage = this.ConnectionLanguage,
                         LogFilePath = this.LogFilePath,
                         UrlOverride = this.UrlOverride,
@@ -516,6 +521,7 @@ namespace VoiceAssistantClient
                     this.SubscriptionKeyComboBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey;
                     this.SubscriptionRegionComboBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion;
                     this.CustomCommandsAppIdComboBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId;
+                    this.BotIdTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].BotId;
                     this.LanguageTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage;
                     this.LogFileTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath;
                     this.UrlOverrideTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].UrlOverride;
@@ -534,6 +540,7 @@ namespace VoiceAssistantClient
                     this.SubscriptionKeyComboBox.Text = string.Empty;
                     this.SubscriptionRegionComboBox.Text = string.Empty;
                     this.CustomCommandsAppIdComboBox.Text = string.Empty;
+                    this.BotIdTextBox.Text = string.Empty;
                     this.LanguageTextBox.Text = string.Empty;
                     this.LogFileTextBox.Text = string.Empty;
                     this.UrlOverrideTextBox.Text = string.Empty;
