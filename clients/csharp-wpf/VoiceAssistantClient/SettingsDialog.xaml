@@ -47,6 +47,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
                 <Label  Grid.Row="0" Grid.Column="0" Content="General settings:" FontWeight="Bold" />
@@ -60,14 +61,17 @@
                 <Label Grid.Row="3" Grid.Column="0" Content="Custom commands app Id:"/>
                 <ComboBox Grid.Row="3" Grid.Column="1" Name="CustomCommandsAppIdComboBox" IsEditable="True"  Padding="5" TextBoxBase.TextChanged="CustomCommandsAppIdTextBox_TextChanged"  Text="{Binding CustomCommandsAppId}"/>
 
-                <Label Grid.Row="4" Grid.Column="0" Content="User From Id:"/>
-                <TextBox Grid.Row="4" Grid.Column="1" Name='FromIdTextBox' Text="{Binding FromId}"/>
+                <Label Grid.Row="4" Grid.Column="0" Content="Bot Id:"/>
+                <TextBox Grid.Row="4" Grid.Column="1" Name="BotIdTextBox" Text="{Binding BotId}"/>
+                
+                <Label Grid.Row="5" Grid.Column="0" Content="User From Id:"/>
+                <TextBox Grid.Row="5" Grid.Column="1" Name='FromIdTextBox' Text="{Binding FromId}"/>
 
-                <Label  Grid.Row="5" Grid.Column="0" Content="Language:"/>
-                <TextBox Grid.Row="5" Grid.Column="1" Name='LanguageTextBox'  Text="{Binding ConnectionLanguage}" />
+                <Label  Grid.Row="6" Grid.Column="0" Content="Language:"/>
+                <TextBox Grid.Row="6" Grid.Column="1" Name='LanguageTextBox'  Text="{Binding ConnectionLanguage}" />
 
-                <Label  Grid.Row="6" Grid.Column="0" Content="Log file path:"/>
-                <TextBox Grid.Row="6" Grid.Column="1"  Name="LogFileTextBox" Text="{Binding LogFilePath}"/>
+                <Label  Grid.Row="7" Grid.Column="0" Content="Log file path:"/>
+                <TextBox Grid.Row="7" Grid.Column="1"  Name="LogFileTextBox" Text="{Binding LogFilePath}"/>
             </Grid>
 
             <Grid Margin="0,5,5,0">
