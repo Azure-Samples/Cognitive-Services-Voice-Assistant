@@ -20,6 +20,7 @@ pr:
     
 pool: 'Voice Assistant Agent Pool'
 
+
 variables:
 
   # Common Build configurations
