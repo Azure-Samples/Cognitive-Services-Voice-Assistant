@@ -18,8 +18,7 @@ pr:
     include:
     - master
     
-pool:
-  vmImage: 'windows-latest'
+pool: 'Voice Assistant Agent Pool'
 
 variables:
 
