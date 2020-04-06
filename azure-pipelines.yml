@@ -112,7 +112,7 @@ steps:
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: 'Code sign $(sample1Name)'
   inputs:
-    ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing'
+    ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing' 
     signConfigType: inlineSignParams
     inlineOperation: '$(signParams)'
     FolderPath: '$(sample1PublishedArtifactPath)'
