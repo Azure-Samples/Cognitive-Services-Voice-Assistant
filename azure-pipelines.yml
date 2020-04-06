@@ -19,7 +19,7 @@ pr:
     - master
     
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'windows-latest'
 
 variables:
 
@@ -53,7 +53,7 @@ variables:
 
 steps:
 
-- task: NuGetToolInstaller@0
+- task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
   inputs:
