@@ -111,7 +111,44 @@ namespace VoiceAssistantClient
             this.SubscriptionRegionComboBox.Text = this.settings.Profile.SubscriptionKeyRegion;
             this.CustomCommandsAppIdComboBox.ItemsSource = this.settings.CustomCommandsAppIdHistory;
             this.CustomCommandsAppIdComboBox.Text = this.settings.Profile.CustomCommandsAppId;
+            this.BotIdTextBox.Text = this.settings.Profile.BotId;
+            this.LanguageTextBox.Text = this.settings.Profile.ConnectionLanguage;
+            this.LogFileTextBox.Text = this.settings.Profile.LogFilePath;
+            this.UrlOverrideTextBox.Text = this.settings.Profile.UrlOverride;
+            this.ProxyHost.Text = this.settings.Profile.ProxyHostName;
+            this.ProxyPort.Text = this.settings.Profile.ProxyPortNumber;
+            this.FromIdTextBox.Text = this.settings.Profile.FromId;
+            this.WakeWordPathTextBox.Text = this.settings.Profile.WakeWordPath;
+            this.WakeWordEnabledBox.IsChecked = this.settings.Profile.WakeWordEnabled;
+            this.CustomSpeechEndpointIdTextBox.Text = this.settings.Profile.CustomSpeechEndpointId;
+            this.CustomSpeechEnabledBox.IsChecked = this.settings.Profile.CustomSpeechEnabled;
+            this.VoiceDeploymentIdsTextBox.Text = this.settings.Profile.VoiceDeploymentIds;
+            this.VoiceDeploymentEnabledBox.IsChecked = this.settings.Profile.VoiceDeploymentEnabled;
+
             base.OnActivated(e);
+        }
+
+        protected override void OnDeactivated(EventArgs e)
+        {
+            this.ConnectionProfileName = this.ConnectionProfileComboBox.Text;
+            this.settings.Profile.SubscriptionKey = this.SubscriptionKeyComboBox.Text;
+            this.settings.Profile.SubscriptionKeyRegion = this.SubscriptionRegionComboBox.Text;
+            this.settings.Profile.CustomCommandsAppId = this.CustomCommandsAppIdComboBox.Text;
+            this.settings.Profile.BotId = this.BotIdTextBox.Text;
+            this.settings.Profile.ConnectionLanguage = this.LanguageTextBox.Text;
+            this.settings.Profile.LogFilePath = this.LogFileTextBox.Text;
+            this.settings.Profile.UrlOverride = this.UrlOverrideTextBox.Text;
+            this.settings.Profile.ProxyHostName = this.ProxyHost.Text;
+            this.settings.Profile.ProxyPortNumber = this.ProxyPort.Text;
+            this.settings.Profile.FromId = this.FromIdTextBox.Text;
+            this.settings.Profile.WakeWordPath = this.WakeWordPathTextBox.Text;
+            this.settings.Profile.WakeWordEnabled = (bool)this.WakeWordEnabledBox.IsChecked;
+            this.settings.Profile.CustomSpeechEndpointId = this.CustomSpeechEndpointIdTextBox.Text;
+            this.settings.Profile.CustomSpeechEnabled = (bool)this.CustomSpeechEnabledBox.IsChecked;
+            this.settings.Profile.VoiceDeploymentIds = this.VoiceDeploymentIdsTextBox.Text;
+            this.settings.Profile.VoiceDeploymentEnabled = (bool)this.VoiceDeploymentEnabledBox.IsChecked;
+
+            base.OnDeactivated(e);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)

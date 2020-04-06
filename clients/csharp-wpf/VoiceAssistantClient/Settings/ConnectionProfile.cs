@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System.Windows.Documents;
-
 namespace VoiceAssistantClient.Settings
 {
     public class ConnectionProfile
