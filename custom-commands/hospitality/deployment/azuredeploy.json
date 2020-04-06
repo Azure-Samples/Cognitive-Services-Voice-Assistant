@@ -196,12 +196,17 @@
                 "[resourceId('Microsoft.Web/sites', variables('hospitality_virtualroommanager_name'))]"
             ],
             "properties": {
-                "script_root_path_href": "https://virtualroommanager.azurewebsites.net/admin/vfs/site/wwwroot/RoomDemo/",
-                "script_href": "https://virtualroommanager.azurewebsites.net/admin/vfs/site/wwwroot/bin/VirtualRoomApp.dll",
-                "config_href": "https://virtualroommanager.azurewebsites.net/admin/vfs/site/wwwroot/RoomDemo/function.json",
-                "href": "https://virtualroommanager.azurewebsites.net/admin/functions/RoomDemo",
+                "script_root_path_href": "[concat('https://',variables('hospitality_virtualroommanager_name'), '.azurewebsites.net/admin/vfs/site/wwwroot/RoomDemo/')]",
+                "script_href": "[concat('https://',variables('hospitality_virtualroommanager_name'),'https://virtualroommanager.azurewebsites.net/admin/vfs/site/wwwroot/bin/VirtualRoomApp.dll')]",
+                "config_href": "[concat('https://',variables('hospitality_virtualroommanager_name'),'https://virtualroommanager.azurewebsites.net/admin/vfs/site/wwwroot/RoomDemo/function.json')]",
+                "href": "[concat('https://',variables('hospitality_virtualroommanager_name'),'https://virtualroommanager.azurewebsites.net/admin/functions/RoomDemo')]",
                 "config": {},
-                "test_data": "{\"method\":\"post\",\"body\":\"\",\"queryStringParams\":[{\"name\":\"operation\",\"value\":\"turn\"},{\"name\":\"item\",\"value\":\"TV\"},{\"name\":\"value\",\"value\":\"off\"},{\"name\":\"instance\",\"value\":\"all\"}],\"headers\":[{\"name\":\"room\",\"value\":\"devices-test\"}]}"
+                "test_data": "{\"method\":\"post\",\"body\":\"\",\"queryStringParams\":[{\"name\":\"operation\",\"value\":\"turn\"},{\"name\":\"item\",\"value\":\"TV\"},{\"name\":\"value\",\"value\":\"off\"},{\"name\":\"instance\",\"value\":\"all\"}],\"headers\":[{\"name\":\"room\",\"value\":\"devices-test\"}]}",
+                "cors": {
+                    "allowedOrigins": [
+                        "*"
+                    ]
+                }
             }
         },
         {
@@ -226,13 +231,13 @@
                 "Name": "F1",
                 "Tier": "Free"
             },
-            "kind": "linux",
+            "kind": "",
             "properties": {
                 "name": "[variables('hospitality_server_farm_name')]",
                 "workerSize": "0",
                 "workerSizeId": "0",
                 "numberOfWorkers": "1",
-                "reserved": true,
+                "reserved": false,
                 "hostingEnvironment": ""
             }
         },
