@@ -369,6 +369,11 @@ namespace VoiceAssistantTest
         /// <param name="text">A string text.</param>
         private static string GetNormalizedText(string text)
         {
+            if (text == null)
+            {
+                return string.Empty;
+            }
+
             return new string(text.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
         }
 

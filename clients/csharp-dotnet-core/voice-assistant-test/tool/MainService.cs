@@ -540,11 +540,7 @@ namespace VoiceAssistantTest
                 }
             }
 
-            if (((turn.ExpectedResponses == null) ? 0 : turn.ExpectedResponses.Count) != ((turn.ExpectedTTSAudioResponseDurations == null) ? 0 : turn.ExpectedTTSAudioResponseDurations.Count))
-            {
-                exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_PRESENT);
-            }
-            else if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0)
+            if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0 && turn.ExpectedTTSAudioResponseDurations != null)
             {
                 if (turn.ExpectedTTSAudioResponseDurations.Count != turn.ExpectedResponses.Count)
                 {
@@ -555,9 +551,9 @@ namespace VoiceAssistantTest
                     for (int i = 0; i < turn.ExpectedResponses.Count; i++)
                     {
                         Activity expectedResponse = turn.ExpectedResponses[i];
-                        int orsInText = expectedResponse.Text.Split(ProgramConstants.OROperator).Length;
-                        int orsInSpeak = expectedResponse.Speak.Split(ProgramConstants.OROperator).Length;
-                        int orsInExpectedTTSAudioResponseDuration = turn.ExpectedTTSAudioResponseDurations[i].Split(ProgramConstants.OROperator).Length;
+                        int orsInText = (expectedResponse.Text == null) ? 0 : expectedResponse.Text.Split(ProgramConstants.OROperator).Length - 1;
+                        int orsInSpeak = (expectedResponse.Speak == null) ? 0 : expectedResponse.Speak.Split(ProgramConstants.OROperator).Length - 1;
+                        int orsInExpectedTTSAudioResponseDuration = turn.ExpectedTTSAudioResponseDurations[i].Split(ProgramConstants.OROperator).Length - 1;
 
                         if (orsInText != orsInSpeak || orsInSpeak != orsInExpectedTTSAudioResponseDuration)
                         {
@@ -570,6 +566,11 @@ namespace VoiceAssistantTest
                         exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_VALUES_INVALID);
                     }
                 }
+            }
+
+            if ((turn.ExpectedResponses == null || turn.ExpectedResponses.Count == 0) && turn.ExpectedTTSAudioResponseDurations != null)
+            {
+                exceptionMessage.Add(ErrorStrings.TTS_AUDIO_DURATION_PRESENT);
             }
 
             if (utterancePresentValid && wavFilePresentValid && activityPresentValid)
