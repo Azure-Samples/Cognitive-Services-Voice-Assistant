@@ -15,9 +15,6 @@ namespace VoiceAssistantClient.Settings
     {
         private ObservableCollection<string> connectionProfileNameHistory = new ObservableCollection<string>();
         private ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory = new ObservableCollection<Dictionary<string, ConnectionProfile>>();
-        private ObservableCollection<string> cognitiveServiceKeyHistory = new ObservableCollection<string>();
-        private ObservableCollection<string> cognitiveServiceRegionHistory = new ObservableCollection<string>();
-        private ObservableCollection<string> customCommandsAppIdHistory = new ObservableCollection<string>();
         private string connectionProfileName;
         private Dictionary<string, ConnectionProfile> connectionProfile = new Dictionary<string, ConnectionProfile>();
         private string subscriptionKey;
@@ -200,76 +197,14 @@ namespace VoiceAssistantClient.Settings
             }
         }
 
-        public ObservableCollection<string> CognitiveServiceKeyHistory
-        {
-            get
-            {
-                return this.cognitiveServiceKeyHistory;
-            }
-
-            set
-            {
-                if (this.cognitiveServiceKeyHistory != null)
-                {
-                    this.cognitiveServiceKeyHistory.CollectionChanged -= this.CognitiveServiceKeyHistory_CollectionChanged;
-                }
-
-                this.cognitiveServiceKeyHistory = value;
-                this.cognitiveServiceKeyHistory.CollectionChanged += this.CognitiveServiceKeyHistory_CollectionChanged;
-                this.OnPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<string> CognitiveServiceRegionHistory
-        {
-            get
-            {
-                return this.cognitiveServiceRegionHistory;
-            }
-
-            set
-            {
-                if (this.cognitiveServiceRegionHistory != null)
-                {
-                    this.cognitiveServiceRegionHistory.CollectionChanged -= this.CognitiveServiceRegionHistory_CollectionChanged;
-                }
-
-                this.cognitiveServiceRegionHistory = value;
-                this.cognitiveServiceRegionHistory.CollectionChanged += this.CognitiveServiceRegionHistory_CollectionChanged;
-                this.OnPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<string> CustomCommandsAppIdHistory
-        {
-            get
-            {
-                return this.customCommandsAppIdHistory;
-            }
-
-            set
-            {
-                if (this.customCommandsAppIdHistory != null)
-                {
-                    this.customCommandsAppIdHistory.CollectionChanged -= this.CustomCommandsAppIdHistory_CollectionChanged;
-                }
-
-                this.customCommandsAppIdHistory = value;
-                this.customCommandsAppIdHistory.CollectionChanged += this.CustomCommandsAppIdHistory_CollectionChanged;
-                this.OnPropertyChanged();
-            }
-        }
-
-        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, ConnectionProfile profile, ObservableCollection<string> ConnectionProfileNameHistory, ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory, ObservableCollection<string> CognitiveServiceKeyHistory, ObservableCollection<string> CognitiveServiceRegionHistory) Get()
+        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, ConnectionProfile profile, ObservableCollection<string> ConnectionProfileNameHistory, ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory) Get()
         {
             return (
                 this.connectionProfileName,
                 this.connectionProfile,
                 this.profile,
                 this.ConnectionProfileNameHistory,
-                this.ConnectionProfileHistory,
-                this.CognitiveServiceKeyHistory,
-                this.CognitiveServiceRegionHistory);
+                this.ConnectionProfileHistory);
         }
 
         internal void Set(
@@ -277,25 +212,19 @@ namespace VoiceAssistantClient.Settings
             Dictionary<string, ConnectionProfile> connectionProfile,
             ConnectionProfile profile,
             ObservableCollection<string> connectionProfileNameHistory,
-            ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory,
-            ObservableCollection<string> cognitiveServiceKeyHistory,
-            ObservableCollection<string> cognitiveServiceRegionHistory)
+            ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory)
         {
             (this.connectionProfileName,
                 this.connectionProfile,
                 this.profile,
                 this.connectionProfileNameHistory,
-                this.connectionProfileHistory,
-                this.cognitiveServiceKeyHistory,
-                this.cognitiveServiceRegionHistory)
+                this.connectionProfileHistory)
                 =
             (connectionProfileName,
                 connectionProfile,
                 profile,
                 this.ConnectionProfileNameHistory,
-                this.ConnectionProfileHistory,
-                this.CognitiveServiceKeyHistory,
-                this.CognitiveServiceRegionHistory);
+                this.ConnectionProfileHistory);
         }
 
         protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
@@ -320,21 +249,6 @@ namespace VoiceAssistantClient.Settings
         private void ConnectionProfileHistory_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.OnPropertyChanged(nameof(this.ConnectionProfileHistory));
-        }
-
-        private void CognitiveServiceKeyHistory_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            this.OnPropertyChanged(nameof(this.CognitiveServiceKeyHistory));
-        }
-
-        private void CognitiveServiceRegionHistory_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            this.OnPropertyChanged(nameof(this.CognitiveServiceRegionHistory));
-        }
-
-        private void CustomCommandsAppIdHistory_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            this.OnPropertyChanged(nameof(this.CustomCommandsAppIdHistory));
         }
     }
 }

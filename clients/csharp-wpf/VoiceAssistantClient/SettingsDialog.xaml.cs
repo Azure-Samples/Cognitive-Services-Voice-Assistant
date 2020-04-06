@@ -33,9 +33,7 @@ namespace VoiceAssistantClient
                 this.ConnectionProfile,
                 this.settings.Profile,
                 this.settings.ConnectionProfileNameHistory,
-                this.settings.ConnectionProfileHistory,
-                this.settings.CognitiveServiceKeyHistory,
-                this.settings.CognitiveServiceRegionHistory) = settings.Get();
+                this.settings.ConnectionProfileHistory) = settings.Get();
 
             this.CustomSpeechConfig = new CustomSpeechConfiguration(settings.CustomSpeechEndpointId);
             this.VoiceDeploymentConfig = new VoiceDeploymentConfiguration(settings.VoiceDeploymentIds);
@@ -105,13 +103,47 @@ namespace VoiceAssistantClient
         {
             this.ConnectionProfileComboBox.ItemsSource = this.settings.ConnectionProfileNameHistory;
             this.ConnectionProfileComboBox.Text = this.ConnectionProfileName;
-            this.SubscriptionKeyComboBox.ItemsSource = this.settings.CognitiveServiceKeyHistory;
-            this.SubscriptionKeyComboBox.Text = this.settings.Profile.SubscriptionKey;
-            this.SubscriptionRegionComboBox.ItemsSource = this.settings.CognitiveServiceRegionHistory;
-            this.SubscriptionRegionComboBox.Text = this.settings.Profile.SubscriptionKeyRegion;
-            this.CustomCommandsAppIdComboBox.ItemsSource = this.settings.CustomCommandsAppIdHistory;
-            this.CustomCommandsAppIdComboBox.Text = this.settings.Profile.CustomCommandsAppId;
+            this.SubscriptionKeyTextBox.Text = this.settings.Profile.SubscriptionKey;
+            this.SubscriptionRegionTextBox.Text = this.settings.Profile.SubscriptionKeyRegion;
+            this.CustomCommandsAppIdTextBox.Text = this.settings.Profile.CustomCommandsAppId;
+            this.BotIdTextBox.Text = this.settings.Profile.BotId;
+            this.LanguageTextBox.Text = this.settings.Profile.ConnectionLanguage;
+            this.LogFileTextBox.Text = this.settings.Profile.LogFilePath;
+            this.UrlOverrideTextBox.Text = this.settings.Profile.UrlOverride;
+            this.ProxyHost.Text = this.settings.Profile.ProxyHostName;
+            this.ProxyPort.Text = this.settings.Profile.ProxyPortNumber;
+            this.FromIdTextBox.Text = this.settings.Profile.FromId;
+            this.WakeWordPathTextBox.Text = this.settings.Profile.WakeWordPath;
+            this.WakeWordEnabledBox.IsChecked = this.settings.Profile.WakeWordEnabled;
+            this.CustomSpeechEndpointIdTextBox.Text = this.settings.Profile.CustomSpeechEndpointId;
+            this.CustomSpeechEnabledBox.IsChecked = this.settings.Profile.CustomSpeechEnabled;
+            this.VoiceDeploymentIdsTextBox.Text = this.settings.Profile.VoiceDeploymentIds;
+            this.VoiceDeploymentEnabledBox.IsChecked = this.settings.Profile.VoiceDeploymentEnabled;
+
             base.OnActivated(e);
+        }
+
+        protected override void OnDeactivated(EventArgs e)
+        {
+            this.ConnectionProfileName = this.ConnectionProfileComboBox.Text;
+            this.settings.Profile.SubscriptionKey = this.SubscriptionKeyTextBox.Text;
+            this.settings.Profile.SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text;
+            this.settings.Profile.CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
+            this.settings.Profile.BotId = this.BotIdTextBox.Text;
+            this.settings.Profile.ConnectionLanguage = this.LanguageTextBox.Text;
+            this.settings.Profile.LogFilePath = this.LogFileTextBox.Text;
+            this.settings.Profile.UrlOverride = this.UrlOverrideTextBox.Text;
+            this.settings.Profile.ProxyHostName = this.ProxyHost.Text;
+            this.settings.Profile.ProxyPortNumber = this.ProxyPort.Text;
+            this.settings.Profile.FromId = this.FromIdTextBox.Text;
+            this.settings.Profile.WakeWordPath = this.WakeWordPathTextBox.Text;
+            this.settings.Profile.WakeWordEnabled = (bool)this.WakeWordEnabledBox.IsChecked;
+            this.settings.Profile.CustomSpeechEndpointId = this.CustomSpeechEndpointIdTextBox.Text;
+            this.settings.Profile.CustomSpeechEnabled = (bool)this.CustomSpeechEnabledBox.IsChecked;
+            this.settings.Profile.VoiceDeploymentIds = this.VoiceDeploymentIdsTextBox.Text;
+            this.settings.Profile.VoiceDeploymentEnabled = (bool)this.VoiceDeploymentEnabledBox.IsChecked;
+
+            base.OnDeactivated(e);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -120,9 +152,9 @@ namespace VoiceAssistantClient
             {
                 if (this.ConnectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
                 {
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey = this.SubscriptionKeyComboBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion = this.SubscriptionRegionComboBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId = this.CustomCommandsAppIdComboBox.Text;
+                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey = this.SubscriptionKeyTextBox.Text;
+                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text;
+                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].BotId = this.BotIdTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage = this.LanguageTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath = this.LogFileTextBox.Text;
@@ -139,9 +171,9 @@ namespace VoiceAssistantClient
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath = this.WakeWordPathTextBox.Text;
                     this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled = (bool)this.WakeWordEnabledBox.IsChecked;
 
-                    this.settings.Profile.SubscriptionKey = this.SubscriptionKeyComboBox.Text;
-                    this.settings.Profile.SubscriptionKeyRegion = this.SubscriptionRegionComboBox.Text;
-                    this.settings.Profile.CustomCommandsAppId = this.CustomCommandsAppIdComboBox.Text;
+                    this.settings.Profile.SubscriptionKey = this.SubscriptionKeyTextBox.Text;
+                    this.settings.Profile.SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text;
+                    this.settings.Profile.CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
                     this.settings.Profile.BotId = this.BotIdTextBox.Text;
                     this.settings.Profile.ConnectionLanguage = this.LanguageTextBox.Text;
                     this.settings.Profile.LogFilePath = this.LogFileTextBox.Text;
@@ -184,21 +216,26 @@ namespace VoiceAssistantClient
 
                 this.AddConnectionProfileNameIntoHistory(this.ConnectionProfileName);
                 this.AddConnectionProfileIntoHistory(this.ConnectionProfile);
-                this.AddCognitiveServicesKeyEntryIntoHistory(this.SubscriptionKey);
-                this.AddCognitiveServicesRegionEntryIntoHistory(this.SubscriptionKeyRegion);
-                this.AddCustomCommandsAppIdEntryIntoHistory(this.CustomCommandsAppId);
                 this.settings.Set(
                     this.ConnectionProfileName,
                     this.ConnectionProfile,
                     this.settings.Profile,
                     this.settings.ConnectionProfileNameHistory,
-                    this.settings.ConnectionProfileHistory,
-                    this.settings.CognitiveServiceKeyHistory,
-                    this.settings.CognitiveServiceRegionHistory);
+                    this.settings.ConnectionProfileHistory);
             }
 
             this.DialogResult = true;
             this.Close();
+        }
+
+        private void DeleteProfile_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(this.ConnectionProfileComboBox.Text))
+            {
+                this.ConnectionProfile.Remove(this.ConnectionProfileComboBox.Text);
+                this.settings.ConnectionProfileNameHistory.Remove(this.ConnectionProfileComboBox.Text);
+                this.ConnectionProfileComboBox.Text = string.Empty;
+            }
         }
 
         private void AddConnectionProfileNameIntoHistory(string connectionProfileName)
@@ -236,54 +273,6 @@ namespace VoiceAssistantClient
                             }
                         }
                     }
-                }
-            }
-        }
-
-        private void AddCognitiveServicesKeyEntryIntoHistory(string cognitiveServicesKey)
-        {
-            var keyHistory = this.settings.CognitiveServiceKeyHistory;
-
-            var existingItem = keyHistory.FirstOrDefault(item => string.Compare(item, cognitiveServicesKey, StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (existingItem == null)
-            {
-                keyHistory.Insert(0, cognitiveServicesKey);
-                if (keyHistory.Count == UrlHistoryMaxLength)
-                {
-                    keyHistory.RemoveAt(UrlHistoryMaxLength - 1);
-                }
-            }
-        }
-
-        private void AddCognitiveServicesRegionEntryIntoHistory(string cognitiveServicesKey)
-        {
-            var regionHistory = this.settings.CognitiveServiceRegionHistory;
-
-            var existingItem = regionHistory.FirstOrDefault(item => string.Compare(item, cognitiveServicesKey, StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (existingItem == null)
-            {
-                regionHistory.Insert(0, cognitiveServicesKey);
-                if (regionHistory.Count == UrlHistoryMaxLength)
-                {
-                    regionHistory.RemoveAt(UrlHistoryMaxLength - 1);
-                }
-            }
-        }
-
-        private void AddCustomCommandsAppIdEntryIntoHistory(string customCommandsAppId)
-        {
-            var idHistory = this.settings.CustomCommandsAppIdHistory;
-
-            var existingItem = idHistory.FirstOrDefault(item => string.Compare(item, customCommandsAppId, StringComparison.OrdinalIgnoreCase) == 0);
-
-            if (existingItem == null)
-            {
-                idHistory.Insert(0, customCommandsAppId);
-                if (idHistory.Count == UrlHistoryMaxLength)
-                {
-                    idHistory.RemoveAt(UrlHistoryMaxLength - 1);
                 }
             }
         }
@@ -334,11 +323,12 @@ namespace VoiceAssistantClient
         {
             // BUGBUG: The transfer into variables does not seem to be done consistently with these events so we read straight from the controls
             var hasConnectionProfileName = !string.IsNullOrWhiteSpace(this.ConnectionProfileComboBox.Text);
-            var hasSubscription = !string.IsNullOrWhiteSpace(this.SubscriptionKeyComboBox.Text);
-            var hasRegion = !string.IsNullOrWhiteSpace(this.SubscriptionRegionComboBox.Text);
+            var hasSubscription = !string.IsNullOrWhiteSpace(this.SubscriptionKeyTextBox.Text);
+            var hasRegion = !string.IsNullOrWhiteSpace(this.SubscriptionRegionTextBox.Text);
             var hasUrlOverride = !string.IsNullOrWhiteSpace(this.UrlOverrideTextBox.Text);
 
             var enableSaveButton = false;
+            var enableDeleteButton = false;
             if (!hasConnectionProfileName)
             {
                 this.SaveButtonInfoBlock.Text = "You must provide a profile name";
@@ -359,9 +349,12 @@ namespace VoiceAssistantClient
             {
                 this.SaveButtonInfoBlock.Text = string.Empty;
                 enableSaveButton = true;
+                enableDeleteButton = true;
+
             }
 
             this.SaveButton.IsEnabled = enableSaveButton;
+            this.DeleteProfile.IsEnabled = enableDeleteButton;
         }
 
         private void CustomSpeechEnabledBox_Checked(object sender, RoutedEventArgs e)
@@ -522,9 +515,9 @@ namespace VoiceAssistantClient
             {
                 if (this.ConnectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
                 {
-                    this.SubscriptionKeyComboBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey;
-                    this.SubscriptionRegionComboBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion;
-                    this.CustomCommandsAppIdComboBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId;
+                    this.SubscriptionKeyTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey;
+                    this.SubscriptionRegionTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion;
+                    this.CustomCommandsAppIdTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId;
                     this.BotIdTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].BotId;
                     this.LanguageTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage;
                     this.LogFileTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath;
@@ -541,9 +534,9 @@ namespace VoiceAssistantClient
                 }
                 else
                 {
-                    this.SubscriptionKeyComboBox.Text = string.Empty;
-                    this.SubscriptionRegionComboBox.Text = string.Empty;
-                    this.CustomCommandsAppIdComboBox.Text = string.Empty;
+                    this.SubscriptionKeyTextBox.Text = string.Empty;
+                    this.SubscriptionRegionTextBox.Text = string.Empty;
+                    this.CustomCommandsAppIdTextBox.Text = string.Empty;
                     this.BotIdTextBox.Text = string.Empty;
                     this.LanguageTextBox.Text = string.Empty;
                     this.LogFileTextBox.Text = string.Empty;
