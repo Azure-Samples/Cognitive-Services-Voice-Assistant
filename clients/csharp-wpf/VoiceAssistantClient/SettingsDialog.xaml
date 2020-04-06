@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Settings" MinHeight="700" Height="700" Width="600" MinWidth="500" >
+        Title="Settings" MinHeight="700" Height="700" Width="615" MinWidth="500" >
     <Window.Resources>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Margin" Value="0,2"/>
@@ -53,13 +53,13 @@
                 <Label  Grid.Row="0" Grid.Column="0" Content="General settings:" FontWeight="Bold" />
 
                 <Label Grid.Row="1" Grid.Column="0" Content="Subscription key:"/>
-                <ComboBox Grid.Row="1" Grid.Column="1" Name="SubscriptionKeyComboBox" IsEditable="True"  Padding="5" TextBoxBase.TextChanged="SubscriptionKeyTextBox_TextChanged"  Text="{Binding SubscriptionKey}"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Name="SubscriptionKeyTextBox" TextBoxBase.TextChanged="SubscriptionKeyTextBox_TextChanged"  Text="{Binding SubscriptionKey}"/>
 
                 <Label  Grid.Row="2" Grid.Column="0" Content="Subscription key region:"/>
-                <ComboBox  Grid.Row="2" Grid.Column="1" Name='SubscriptionRegionComboBox'  IsEditable="True" TextBoxBase.TextChanged="SubscriptionKeyRegionTextBox_TextChanged" Text="{Binding SubscriptionKeyRegion}"/>
+                <TextBox  Grid.Row="2" Grid.Column="1" Name='SubscriptionRegionTextBox' TextBoxBase.TextChanged="SubscriptionKeyRegionTextBox_TextChanged" Text="{Binding SubscriptionKeyRegion}"/>
 
                 <Label Grid.Row="3" Grid.Column="0" Content="Custom commands app Id:"/>
-                <ComboBox Grid.Row="3" Grid.Column="1" Name="CustomCommandsAppIdComboBox" IsEditable="True"  Padding="5" TextBoxBase.TextChanged="CustomCommandsAppIdTextBox_TextChanged"  Text="{Binding CustomCommandsAppId}"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Name="CustomCommandsAppIdTextBox" TextBoxBase.TextChanged="CustomCommandsAppIdTextBox_TextChanged"  Text="{Binding CustomCommandsAppId}"/>
 
                 <Label Grid.Row="4" Grid.Column="0" Content="Bot Id:"/>
                 <TextBox Grid.Row="4" Grid.Column="1" Name="BotIdTextBox" Text="{Binding BotId}"/>
@@ -166,6 +166,7 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock Name="SaveButtonInfoBlock" Text="" Foreground="Red" Margin="0,0,10,0"/>
             <Button Name="SaveButton"     Content="Save Profile" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="SaveButton_Click"/>
+            <Button Name="DeleteProfile" Content="Delete Profile" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="DeleteProfile_Click"/>
             <Button Name="CancelButton" Content="Discard Profile Changes" IsCancel="True" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="CancelButton_Click"/>
         </StackPanel>
     </Grid>
