@@ -5,7 +5,6 @@ namespace VoiceAssistantClient.Settings
 {
     public class ConnectionProfile
     {
-
         public string SubscriptionKey { get; set; }
 
         public string SubscriptionKeyRegion { get; set; }

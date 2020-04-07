@@ -33,6 +33,8 @@ namespace VoiceAssistantClient.Settings
         private string proxyHostName;
         private string proxyPortNumber;
         private string fromId;
+
+        [NonSerialized]
         private ConnectionProfile profile = new ConnectionProfile();
 
         public RuntimeSettings()
@@ -172,7 +174,11 @@ namespace VoiceAssistantClient.Settings
                 }
 
                 this.connectionProfileNameHistory = value;
-                this.connectionProfileNameHistory.CollectionChanged += this.ConnectionProfileNameHistory_CollectionChanged;
+                if (this.connectionProfileNameHistory != null)
+                {
+                    this.connectionProfileNameHistory.CollectionChanged += this.ConnectionProfileNameHistory_CollectionChanged;
+                }
+
                 this.OnPropertyChanged();
             }
         }
@@ -192,39 +198,35 @@ namespace VoiceAssistantClient.Settings
                 }
 
                 this.connectionProfileHistory = value;
-                this.connectionProfileHistory.CollectionChanged += this.ConnectionProfileHistory_CollectionChanged;
+                if (this.connectionProfileHistory != null)
+                {
+                    this.connectionProfileHistory.CollectionChanged += this.ConnectionProfileHistory_CollectionChanged;
+                }
+
                 this.OnPropertyChanged();
             }
         }
 
-        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, ConnectionProfile profile, ObservableCollection<string> ConnectionProfileNameHistory, ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory) Get()
+        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, ConnectionProfile profile) Get()
         {
             return (
                 this.connectionProfileName,
                 this.connectionProfile,
-                this.profile,
-                this.ConnectionProfileNameHistory,
-                this.ConnectionProfileHistory);
+                this.profile);
         }
 
         internal void Set(
             string connectionProfileName,
             Dictionary<string, ConnectionProfile> connectionProfile,
-            ConnectionProfile profile,
-            ObservableCollection<string> connectionProfileNameHistory,
-            ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory)
+            ConnectionProfile profile)
         {
             (this.connectionProfileName,
                 this.connectionProfile,
-                this.profile,
-                this.connectionProfileNameHistory,
-                this.connectionProfileHistory)
+                this.profile)
                 =
             (connectionProfileName,
                 connectionProfile,
-                profile,
-                this.ConnectionProfileNameHistory,
-                this.ConnectionProfileHistory);
+                profile);
         }
 
         protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

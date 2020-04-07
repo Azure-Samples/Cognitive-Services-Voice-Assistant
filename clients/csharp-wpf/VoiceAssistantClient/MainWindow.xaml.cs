@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 namespace VoiceAssistantClient
@@ -364,7 +364,6 @@ namespace VoiceAssistantClient
                     this.Messages.Add(new MessageDisplay(statusMessage, Sender.Channel));
                 });
             }
-
         }
 
         private void Connector_Recognized(object sender, SpeechRecognitionEventArgs e)
