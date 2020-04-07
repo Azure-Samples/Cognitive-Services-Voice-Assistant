@@ -19,13 +19,9 @@ namespace VoiceAssistantClient
     public partial class SettingsDialog : Window
     {
         private const int UrlHistoryMaxLength = 10;
+        private readonly Dictionary<string, ConnectionProfile> connectionProfile;
         private RuntimeSettings settings;
         private bool renderComplete;
-        private readonly Dictionary<string, ConnectionProfile> connectionProfile;
-
-        public ConnectionProfile Profile { get; set; }
-
-        public string ConnectionProfileName { get; set; }
 
         public SettingsDialog(RuntimeSettings settings)
         {
@@ -35,9 +31,7 @@ namespace VoiceAssistantClient
             (
                 this.ConnectionProfileName,
                 this.connectionProfile,
-                this.settings.Profile,
-                this.settings.ConnectionProfileNameHistory,
-                this.settings.ConnectionProfileHistory) = settings.Get();
+                this.settings.Profile) = settings.Get();
 
             this.settings.Profile.CustomSpeechConfig = new CustomSpeechConfiguration(settings.CustomSpeechEndpointId);
             this.settings.Profile.VoiceDeploymentConfig = new VoiceDeploymentConfiguration(settings.VoiceDeploymentIds);
@@ -47,6 +41,10 @@ namespace VoiceAssistantClient
             this.DataContext = this;
             this.Owner = App.Current.MainWindow;
         }
+
+        public ConnectionProfile Profile { get; set; }
+
+        public string ConnectionProfileName { get; set; }
 
         protected override void OnContentRendered(EventArgs e)
         {
@@ -179,9 +177,7 @@ namespace VoiceAssistantClient
                 this.settings.Set(
                     this.ConnectionProfileName,
                     this.connectionProfile,
-                    this.settings.Profile,
-                    this.settings.ConnectionProfileNameHistory,
-                    this.settings.ConnectionProfileHistory);
+                    this.settings.Profile);
             }
 
             this.DialogResult = true;
