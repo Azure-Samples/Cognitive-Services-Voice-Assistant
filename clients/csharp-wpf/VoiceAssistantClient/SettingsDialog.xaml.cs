@@ -20,8 +20,12 @@ namespace VoiceAssistantClient
     {
         private const int UrlHistoryMaxLength = 10;
         private RuntimeSettings settings;
-
         private bool renderComplete;
+        private readonly Dictionary<string, ConnectionProfile> connectionProfile;
+
+        public ConnectionProfile Profile { get; set; }
+
+        public string ConnectionProfileName { get; set; }
 
         public SettingsDialog(RuntimeSettings settings)
         {
@@ -30,7 +34,7 @@ namespace VoiceAssistantClient
             this.settings = settings;
             (
                 this.ConnectionProfileName,
-                this.ConnectionProfile,
+                this.connectionProfile,
                 this.settings.Profile,
                 this.settings.ConnectionProfileNameHistory,
                 this.settings.ConnectionProfileHistory) = settings.Get();
@@ -43,12 +47,6 @@ namespace VoiceAssistantClient
             this.DataContext = this;
             this.Owner = App.Current.MainWindow;
         }
-
-        public ConnectionProfile Profile { get; set; }
-
-        public string ConnectionProfileName { get; set; }
-
-        public readonly Dictionary<string, ConnectionProfile> ConnectionProfile;
 
         protected override void OnContentRendered(EventArgs e)
         {
@@ -112,26 +110,26 @@ namespace VoiceAssistantClient
         {
             if (!string.IsNullOrWhiteSpace(this.ConnectionProfileComboBox.Text))
             {
-                if (this.ConnectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
+                if (this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
                 {
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey = this.SubscriptionKeyTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].BotId = this.BotIdTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage = this.LanguageTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath = this.LogFileTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].UrlOverride = this.UrlOverrideTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ProxyHostName = this.ProxyHost.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ProxyPortNumber = this.ProxyPort.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].FromId = this.FromIdTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEndpointId = this.CustomSpeechEndpointIdTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEnabled = (bool)this.CustomSpeechEnabledBox.IsChecked;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentIds = this.VoiceDeploymentIdsTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentEnabled = (bool)this.VoiceDeploymentEnabledBox.IsChecked;
-                    var wakeWordConfigPath = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordConfig.Path;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey = this.SubscriptionKeyTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].BotId = this.BotIdTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage = this.LanguageTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath = this.LogFileTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].UrlOverride = this.UrlOverrideTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].ProxyHostName = this.ProxyHost.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].ProxyPortNumber = this.ProxyPort.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].FromId = this.FromIdTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEndpointId = this.CustomSpeechEndpointIdTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEnabled = (bool)this.CustomSpeechEnabledBox.IsChecked;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentIds = this.VoiceDeploymentIdsTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentEnabled = (bool)this.VoiceDeploymentEnabledBox.IsChecked;
+                    var wakeWordConfigPath = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordConfig.Path;
                     wakeWordConfigPath = this.WakeWordPathTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath = this.WakeWordPathTextBox.Text;
-                    this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled = (bool)this.WakeWordEnabledBox.IsChecked;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath = this.WakeWordPathTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled = (bool)this.WakeWordEnabledBox.IsChecked;
 
                     this.settings.Profile.SubscriptionKey = this.SubscriptionKeyTextBox.Text;
                     this.settings.Profile.SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text;
@@ -153,7 +151,7 @@ namespace VoiceAssistantClient
                 }
                 else
                 {
-                    this.ConnectionProfile.Add(this.ConnectionProfileName, new ConnectionProfile
+                    this.connectionProfile.Add(this.ConnectionProfileName, new ConnectionProfile
                     {
                         SubscriptionKey = this.settings.Profile.SubscriptionKey,
                         SubscriptionKeyRegion = this.settings.Profile.SubscriptionKeyRegion,
@@ -177,11 +175,13 @@ namespace VoiceAssistantClient
                 }
 
                 this.AddConnectionProfileNameIntoHistory(this.ConnectionProfileName);
-                this.AddConnectionProfileIntoHistory(this.ConnectionProfile);
+                this.AddConnectionProfileIntoHistory(this.connectionProfile);
                 this.settings.Set(
                     this.ConnectionProfileName,
-                    this.ConnectionProfile,
-                    this.settings.Profile);
+                    this.connectionProfile,
+                    this.settings.Profile,
+                    this.settings.ConnectionProfileNameHistory,
+                    this.settings.ConnectionProfileHistory);
             }
 
             this.DialogResult = true;
@@ -192,7 +192,7 @@ namespace VoiceAssistantClient
         {
             if (!string.IsNullOrWhiteSpace(this.ConnectionProfileComboBox.Text))
             {
-                this.ConnectionProfile.Remove(this.ConnectionProfileComboBox.Text);
+                this.connectionProfile.Remove(this.ConnectionProfileComboBox.Text);
                 this.settings.ConnectionProfileNameHistory.Remove(this.ConnectionProfileComboBox.Text);
                 this.ConnectionProfileComboBox.Text = string.Empty;
             }
@@ -465,31 +465,31 @@ namespace VoiceAssistantClient
 
         private void ConnectionProfileTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (this.ConnectionProfile.Count == 0)
+            if (this.connectionProfile.Count == 0)
             {
                 this.ConnectionProfileName = this.ConnectionProfileComboBox.Text;
             }
 
-            if (this.ConnectionProfile.Count != 0)
+            if (this.connectionProfile.Count != 0)
             {
-                if (this.ConnectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
+                if (this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
                 {
-                    this.SubscriptionKeyTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey;
-                    this.SubscriptionRegionTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion;
-                    this.CustomCommandsAppIdTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId;
-                    this.BotIdTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].BotId;
-                    this.LanguageTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage;
-                    this.LogFileTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath;
-                    this.UrlOverrideTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].UrlOverride;
-                    this.ProxyHost.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ProxyHostName;
-                    this.ProxyPort.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].ProxyPortNumber;
-                    this.FromIdTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].FromId;
-                    this.CustomSpeechEndpointIdTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEndpointId;
-                    this.CustomSpeechEnabledBox.IsChecked = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEnabled;
-                    this.VoiceDeploymentIdsTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentIds;
-                    this.VoiceDeploymentEnabledBox.IsChecked = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentEnabled;
-                    this.WakeWordPathTextBox.Text = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath;
-                    this.WakeWordEnabledBox.IsChecked = this.ConnectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled;
+                    this.SubscriptionKeyTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey;
+                    this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion;
+                    this.CustomCommandsAppIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId;
+                    this.BotIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].BotId;
+                    this.LanguageTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage;
+                    this.LogFileTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath;
+                    this.UrlOverrideTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].UrlOverride;
+                    this.ProxyHost.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].ProxyHostName;
+                    this.ProxyPort.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].ProxyPortNumber;
+                    this.FromIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].FromId;
+                    this.CustomSpeechEndpointIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEndpointId;
+                    this.CustomSpeechEnabledBox.IsChecked = this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEnabled;
+                    this.VoiceDeploymentIdsTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentIds;
+                    this.VoiceDeploymentEnabledBox.IsChecked = this.connectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentEnabled;
+                    this.WakeWordPathTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath;
+                    this.WakeWordEnabledBox.IsChecked = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled;
                 }
                 else
                 {

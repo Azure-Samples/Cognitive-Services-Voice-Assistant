@@ -33,6 +33,8 @@ namespace VoiceAssistantClient.Settings
         private string proxyHostName;
         private string proxyPortNumber;
         private string fromId;
+
+        [NonSerialized]
         private ConnectionProfile profile = new ConnectionProfile();
 
         public RuntimeSettings()
@@ -218,15 +220,21 @@ namespace VoiceAssistantClient.Settings
         internal void Set(
             string connectionProfileName,
             Dictionary<string, ConnectionProfile> connectionProfile,
-            ConnectionProfile profile)
+            ConnectionProfile profile,
+            ObservableCollection<string> connectionProfileNameHistory,
+            ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory)
         {
             (this.connectionProfileName,
                 this.connectionProfile,
-                this.profile)
+                this.profile,
+                this.connectionProfileNameHistory,
+                this.connectionProfileHistory)
                 =
             (connectionProfileName,
                 connectionProfile,
-                profile);
+                profile,
+                this.ConnectionProfileNameHistory,
+                this.ConnectionProfileHistory);
         }
 
         protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

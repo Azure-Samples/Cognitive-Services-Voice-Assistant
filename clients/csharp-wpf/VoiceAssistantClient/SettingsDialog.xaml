@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Settings" MinHeight="700" Height="700" Width="615" MinWidth="500" >
+        Title="Settings" MinHeight="700" Height="700" Width="675" MinWidth="500" >
     <Window.Resources>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Margin" Value="0,2"/>
@@ -165,7 +165,7 @@
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock Name="SaveButtonInfoBlock" Text="" Foreground="Red" Margin="0,0,10,0"/>
-            <Button Name="SaveButton"     Content="Save Profile" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="SaveButton_Click"/>
+            <Button Name="SaveButton"     Content="Save and Apply Profile" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="SaveButton_Click"/>
             <Button Name="DeleteProfile" Content="Delete Profile" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="DeleteProfile_Click"/>
             <Button Name="CancelButton" Content="Discard Profile Changes" IsCancel="True" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="CancelButton_Click"/>
         </StackPanel>
