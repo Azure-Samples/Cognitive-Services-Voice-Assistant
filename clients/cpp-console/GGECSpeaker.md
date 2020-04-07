@@ -12,18 +12,24 @@ An unboxed NightFury device will have a hidden USB port between the AUX out and 
 
 ### Setting up the WiFi
 
-In adb shell window, run the following commands
+Open a command prompt and run the following commands. The first one will open an adb shell to the speaker.
 
   ```sh
-    mount -o remount,rw /
-    export $(cat /tmp/dbus-session)
-    adk-message-send 'connectivity_wifi_connect {ssid:"<YOUR_SSID>" password:"<YOUR_WIFI_PASSWORD>"}'
+  adb shell
+  export $(cat /tmp/dbus-session)
+  adk-message-send 'connectivity_wifi_onboard {}'
   ```  
 
-Wait for a while, then run
+Wait until the LED ring glows red, then replace your own WiFi's NETWORK-NAME and PASSWORD in the next command.
 
   ```sh
-    adk-message-send 'connectivity_wifi_completeonboarding {}'
+  adk-message-send 'connectivity_wifi_connect {ssid:"NETWORK-NAME" password:"PASSWORD" homeap:true}'
+  ```  
+
+Wait until the LED ring glows green.
+
+  ```sh
+  adk-message-send 'connectivity_wifi_completeonboarding {}'
   ```  
 
 ## Setting up the code
