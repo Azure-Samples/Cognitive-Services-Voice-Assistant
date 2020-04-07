@@ -198,6 +198,9 @@
   <data name="NO_WRITE_ACCESS_FOLDER" xml:space="preserve">
     <value>The folder does not have write permissions for the user running the code.</value>
   </data>
+  <data name="OR_OCCURRENCE_INCONSISTENT" xml:space="preserve">
+    <value>OR operator occurrence is inconsistent among corresponding expected text, speak, and ExpectedTTSAudioDuration.</value>
+  </data>
   <data name="SR_LANGUAGE_INVALID" xml:space="preserve">
     <value>Speech Recognition Language is invalid.</value>
   </data>
@@ -211,16 +214,16 @@
     <value>A negative number is not a valid value for Timeout.</value>
   </data>
   <data name="TTS_AUDIO_DURATION_INVALID" xml:space="preserve">
-    <value>Size of ExpectedTTSAudioDuration does not match the size of ExpectedResponses.</value>
+    <value>Size of ExpectedTTSAudioDurations does not match the size of ExpectedResponses.</value>
   </data>
   <data name="TTS_AUDIO_DURATION_MARGIN_INVALID" xml:space="preserve">
     <value>A negative number is not a valid value for TTSAudioDurationMargin.</value>
   </data>
   <data name="TTS_AUDIO_DURATION_PRESENT" xml:space="preserve">
-    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedTTSAudioDuration.</value>
+    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedTTSAudioDurations. Otherwise, the size of ExpectedResponses and ExpectedTTSAudioDurations should be same.</value>
   </data>
   <data name="TTS_AUDIO_DURATION_VALUES_INVALID" xml:space="preserve">
-    <value>ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid.</value>
+    <value>ExpectedTTSAudioDurations is not valid. Zero and negative values other than -1 are not valid.</value>
   </data>
   <data name="UTTERANCE_ACTIVITY_PRESENT" xml:space="preserve">
     <value>Both Utterance and Activity field present. </value>

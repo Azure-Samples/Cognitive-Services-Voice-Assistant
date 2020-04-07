@@ -304,6 +304,15 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OR operator occurrence is inconsistent among corresponding expected text, speak, and ExpectedTTSAudioDuration..
+        /// </summary>
+        public static string OR_OCCURRENCE_INCONSISTENT {
+            get {
+                return ResourceManager.GetString("OR_OCCURRENCE_INCONSISTENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Speech Recognition Language is invalid..
         /// </summary>
         public static string SR_LANGUAGE_INVALID {
@@ -340,7 +349,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Size of ExpectedTTSAudioDuration does not match the size of ExpectedResponses..
+        ///   Looks up a localized string similar to Size of ExpectedTTSAudioDurations does not match the size of ExpectedResponses..
         /// </summary>
         public static string TTS_AUDIO_DURATION_INVALID {
             get {
@@ -358,7 +367,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedTTSAudioDuration..
+        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedTTSAudioDurations. Otherwise, the size of ExpectedResponses and ExpectedTTSAudioDurations should be same..
         /// </summary>
         public static string TTS_AUDIO_DURATION_PRESENT {
             get {
@@ -367,7 +376,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ExpectedTTSAudioDuration is not valid. Zero and negative values other than -1 are not valid..
+        ///   Looks up a localized string similar to ExpectedTTSAudioDurations is not valid. Zero and negative values other than -1 are not valid..
         /// </summary>
         public static string TTS_AUDIO_DURATION_VALUES_INVALID {
             get {

@@ -177,10 +177,27 @@ namespace VoiceAssistantTest
                         string actualResult = actualValue.ToString();
                         string expectedResult = expectedValue.ToString();
 
-                        string normalizedActualResult = new string(actualResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
-                        string normalizedExpectedResult = new string(expectedResult.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+                        string normalizedActualResult = GetNormalizedText(actualResult);
+                        string normalizedExpectedResult = GetNormalizedText(expectedResult);
 
-                        if (!normalizedExpectedResult.Equals(normalizedActualResult, StringComparison.OrdinalIgnoreCase))
+                        if (normalizedExpectedResult.Contains(ProgramConstants.OROperator, StringComparison.OrdinalIgnoreCase))
+                        {
+                            string[] splittedNormalizedExpectedResult = normalizedExpectedResult.Split(ProgramConstants.OROperator);
+                            if (!splittedNormalizedExpectedResult.Contains(normalizedActualResult))
+                            {
+                                ActivityMismatchCount++;
+                                if (enableLogging)
+                                {
+                                    Trace.TraceInformation($"Activity field: \"{expectedPair.Key}\" has mismatching values: \"{actualValue}\" is not within expected \"{expectedValue}\".");
+                                }
+                            }
+                            else if (expectedPair.Key == "text")
+                            {
+                                // Display matching actual response text if it could be randomly selected.
+                                Trace.TraceInformation($"Activity \"{expectedPair.Key}\" field has matching value: \"{actualValue}\" is within expected \"{expectedValue}\".");
+                            }
+                        }
+                        else if (!normalizedExpectedResult.Equals(normalizedActualResult, StringComparison.OrdinalIgnoreCase))
                         {
                             ActivityMismatchCount++;
                             if (enableLogging)
@@ -198,17 +215,17 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Builds the output.
         /// </summary>
-        /// <param name="turns"> Input Turns.</param>
+        /// <param name="turn"> Input Turns.</param>
         /// <param name="bootstrapMode">Boolean which defines if turn is in bootstrapping mode or not.</param>
         /// <param name="recognizedText">Recognized text from Speech Recongition.</param>
         /// <param name="recognizedKeyword">Recogized Keyword from Keyword Recognition.</param>
         /// <returns>TurnsOutput.</returns>
-        public TurnResult BuildOutput(Turn turns, bool bootstrapMode, string recognizedText, string recognizedKeyword)
+        public TurnResult BuildOutput(Turn turn, bool bootstrapMode, string recognizedText, string recognizedKeyword)
         {
-            TurnResult turnsOutput = new TurnResult(turns)
+            TurnResult turnsOutput = new TurnResult(turn)
             {
                 ActualResponses = new List<Activity>(),
-                ActualTTSAudioResponseDuration = new List<int>(),
+                ActualTTSAudioResponseDurations = new List<int>(),
             };
 
             turnsOutput.ActualRecognizedText = recognizedText;
@@ -221,7 +238,7 @@ namespace VoiceAssistantTest
             foreach (BotReply botReply in this.BotResponses)
             {
                 turnsOutput.ActualResponses.Add(botReply.Activity);
-                turnsOutput.ActualTTSAudioResponseDuration.Add(botReply.TTSAudioDuration);
+                turnsOutput.ActualTTSAudioResponseDurations.Add(botReply.TTSAudioDuration);
             }
 
             if (bootstrapMode)
@@ -240,7 +257,7 @@ namespace VoiceAssistantTest
 
                 if (string.IsNullOrWhiteSpace(turnsOutput.ExpectedResponseLatency))
                 {
-                    activityIndexForLatency = turns.ExpectedResponses.Count - 1;
+                    activityIndexForLatency = turn.ExpectedResponses.Count - 1;
                 }
                 else
                 {
@@ -253,7 +270,7 @@ namespace VoiceAssistantTest
                     else
                     {
                         // The user has specified an expected response latency in the single integer string format, without an index
-                        activityIndexForLatency = turns.ExpectedResponses.Count - 1;
+                        activityIndexForLatency = turn.ExpectedResponses.Count - 1;
                     }
                 }
 
@@ -275,22 +292,20 @@ namespace VoiceAssistantTest
         /// <returns>true if the all turn tests pass, false if any of the test failed.</returns>
         public bool ValidateTurn(TurnResult turnResult, bool bootstrapMode)
         {
-            turnResult.ResponseMatch = true;
-            turnResult.UtteranceMatch = true;
-            turnResult.TTSAudioResponseDurationMatch = true;
-            turnResult.ResponseLatencyMatch = true;
             turnResult.Pass = true;
-
-            int margin = this.appSettings.TTSAudioDurationMargin;
 
             if (!bootstrapMode)
             {
-                turnResult.ResponseMatch = DialogResult.ActivityListsMatch(turnResult.ExpectedResponses, turnResult.ActualResponses);
+                turnResult.ResponseMatch = true;
+                turnResult.UtteranceMatch = true;
+                turnResult.TTSAudioResponseDurationMatch = true;
+                turnResult.ResponseLatencyMatch = true;
+                int margin = this.appSettings.TTSAudioDurationMargin;
 
                 if (!string.IsNullOrWhiteSpace(turnResult.WAVFile) && !string.IsNullOrWhiteSpace(turnResult.Utterance))
                 {
-                    string normalizedActualRecognizedText = new string(turnResult.ActualRecognizedText.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
-                    string normalizedExpectedRecognizedText = new string(turnResult.Utterance.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
+                    string normalizedActualRecognizedText = GetNormalizedText(turnResult.ActualRecognizedText);
+                    string normalizedExpectedRecognizedText = GetNormalizedText(turnResult.Utterance);
 
                     if (!normalizedExpectedRecognizedText.Equals(normalizedActualRecognizedText, StringComparison.OrdinalIgnoreCase))
                     {
@@ -299,31 +314,30 @@ namespace VoiceAssistantTest
                     }
                 }
 
-                bool durationMatch = true;
+                turnResult.ResponseMatch = DialogResult.ActivityListsMatch(turnResult.ExpectedResponses, turnResult.ActualResponses);
 
-                if (turnResult.ExpectedTTSAudioResponseDuration != null && turnResult.ExpectedTTSAudioResponseDuration.Count != 0 && turnResult.ActualTTSAudioResponseDuration != null && turnResult.ActualTTSAudioResponseDuration.Count != 0)
+                if (turnResult.ResponseMatch && turnResult.ExpectedTTSAudioResponseDurations != null && turnResult.ExpectedTTSAudioResponseDurations.Count != 0 && turnResult.ActualTTSAudioResponseDurations != null && turnResult.ActualTTSAudioResponseDurations.Count != 0)
                 {
-                    if (turnResult.ExpectedTTSAudioResponseDuration.Count > turnResult.ActualTTSAudioResponseDuration.Count)
+                    if (turnResult.ExpectedTTSAudioResponseDurations.Count > turnResult.ActualTTSAudioResponseDurations.Count)
                     {
                         turnResult.TTSAudioResponseDurationMatch = false;
                     }
                     else
                     {
-                        for (int i = 0; i < turnResult.ExpectedTTSAudioResponseDuration.Count; i++)
+                        for (int i = 0; i < turnResult.ExpectedTTSAudioResponseDurations.Count; i++)
                         {
-                            if (turnResult.ExpectedTTSAudioResponseDuration[i] > 0)
+                            int expectedTTSAudioResponseDuration = GetCorrespondingExpectedTTSAudioResponseDuration(turnResult.ExpectedResponses[i], turnResult.ActualResponses[i], turnResult.ExpectedTTSAudioResponseDurations[i]);
+                            int actualTTSAudioResponseDuration = turnResult.ActualTTSAudioResponseDurations[i];
+
+                            if (expectedTTSAudioResponseDuration > 0)
                             {
-                                if (turnResult.ActualTTSAudioResponseDuration[i] >= (turnResult.ExpectedTTSAudioResponseDuration[i] - margin) && turnResult.ActualTTSAudioResponseDuration[i] <= (turnResult.ExpectedTTSAudioResponseDuration[i] + margin))
+                                if (actualTTSAudioResponseDuration >= (expectedTTSAudioResponseDuration - margin) && actualTTSAudioResponseDuration <= (expectedTTSAudioResponseDuration + margin))
                                 {
-                                    if (durationMatch)
-                                    {
-                                        turnResult.TTSAudioResponseDurationMatch = true;
-                                    }
+                                    turnResult.TTSAudioResponseDurationMatch = true;
                                 }
                                 else
                                 {
-                                    Trace.TraceInformation($"Actual TTS audio duration {turnResult.ActualTTSAudioResponseDuration[i]} is outside the expected range {turnResult.ExpectedTTSAudioResponseDuration[i]}+/-{margin}");
-                                    durationMatch = false;
+                                    Trace.TraceInformation($"Actual TTS audio duration {actualTTSAudioResponseDuration} is outside the expected range {expectedTTSAudioResponseDuration}+/-{margin}");
                                     turnResult.TTSAudioResponseDurationMatch = false;
                                 }
                             }
@@ -340,13 +354,27 @@ namespace VoiceAssistantTest
                         turnResult.ResponseLatencyMatch = false;
                     }
                 }
-            }
 
-            turnResult.Pass = turnResult.ResponseMatch && turnResult.UtteranceMatch && turnResult.TTSAudioResponseDurationMatch && turnResult.ResponseLatencyMatch;
+                turnResult.Pass = turnResult.ResponseMatch && turnResult.UtteranceMatch && turnResult.TTSAudioResponseDurationMatch && turnResult.ResponseLatencyMatch;
+            }
 
             this.DisplayTestResultMessage(turnResult);
 
             return turnResult.Pass;
+        }
+
+        /// <summary>
+        /// Method to normalize a string text.
+        /// </summary>
+        /// <param name="text">A string text.</param>
+        private static string GetNormalizedText(string text)
+        {
+            if (text == null)
+            {
+                return string.Empty;
+            }
+
+            return new string(text.Where(c => !char.IsPunctuation(c) && !char.IsWhiteSpace(c)).ToArray()).ToUpperInvariant();
         }
 
         /// <summary>
@@ -371,6 +399,28 @@ namespace VoiceAssistantTest
             }
 
             return;
+        }
+
+        /// <summary>
+        /// Method to get Expected TTS Audio Response Duration corresponding to an Expected Response Text that matches Actual Response Text.
+        /// </summary>
+        /// <param name="expectedResponse">Expected Bot response activity.</param>
+        /// <param name="actualResponse">Bot response activity.</param>
+        /// <param name="expectedTTSAudioResponseDuration">Expected TTS Audio Response Duration that might be separated by OR operator.</param>
+        private static int GetCorrespondingExpectedTTSAudioResponseDuration(Activity expectedResponse, Activity actualResponse, string expectedTTSAudioResponseDuration)
+        {
+            string normalizedExpectedText = GetNormalizedText(expectedResponse.Text);
+            string normalizedActualText = GetNormalizedText(actualResponse.Text);
+
+            if (normalizedExpectedText.Contains(ProgramConstants.OROperator, StringComparison.OrdinalIgnoreCase))
+            {
+                int i = normalizedExpectedText.Split(ProgramConstants.OROperator).ToList().IndexOf(normalizedActualText);
+                return Convert.ToInt32(expectedTTSAudioResponseDuration.Split(ProgramConstants.OROperator)[i], CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                return Convert.ToInt32(expectedTTSAudioResponseDuration, CultureInfo.InvariantCulture);
+            }
         }
 
         /// <summary>

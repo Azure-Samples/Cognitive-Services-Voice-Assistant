@@ -34,5 +34,10 @@ namespace VoiceAssistantTest
         /// The test output folder is the OutputFolder/{testfile-name}Output/.
         /// </summary>
         public const string WAVFileFolderName = "WAVFiles";
+
+        /// <summary>
+        /// OR operator to separate multiple values in specific activity fields.
+        /// </summary>
+        public const string OROperator = "||";
     }
 }
