@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+
 namespace VoiceAssistantClient.Settings
 {
     public class ConnectionProfile
     {
-
         public string SubscriptionKey { get; set; }
 
         public string SubscriptionKeyRegion { get; set; }

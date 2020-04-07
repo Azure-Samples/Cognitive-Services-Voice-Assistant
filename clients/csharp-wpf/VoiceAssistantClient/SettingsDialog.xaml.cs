@@ -35,9 +35,9 @@ namespace VoiceAssistantClient
                 this.settings.ConnectionProfileNameHistory,
                 this.settings.ConnectionProfileHistory) = settings.Get();
 
-            this.CustomSpeechConfig = new CustomSpeechConfiguration(settings.CustomSpeechEndpointId);
-            this.VoiceDeploymentConfig = new VoiceDeploymentConfiguration(settings.VoiceDeploymentIds);
-            this.WakeWordConfig = new WakeWordConfiguration(settings.WakeWordPath);
+            this.settings.Profile.CustomSpeechConfig = new CustomSpeechConfiguration(settings.CustomSpeechEndpointId);
+            this.settings.Profile.VoiceDeploymentConfig = new VoiceDeploymentConfiguration(settings.VoiceDeploymentIds);
+            this.settings.Profile.WakeWordConfig = new WakeWordConfiguration(settings.WakeWordPath);
 
             this.InitializeComponent();
             this.DataContext = this;
@@ -48,45 +48,7 @@ namespace VoiceAssistantClient
 
         public string ConnectionProfileName { get; set; }
 
-        public Dictionary<string, ConnectionProfile> ConnectionProfile { get; set; }
-
-        public string SubscriptionKey { get; set; }
-
-        public string SubscriptionKeyRegion { get; set; }
-
-        public string CustomCommandsAppId { get; set; }
-
-        public string BotId { get; set; }
-
-        public string ConnectionLanguage { get; set; }
-
-        public string LogFilePath { get; set; }
-
-        public string UrlOverride { get; set; }
-
-        public string ProxyHostName { get; set; }
-
-        public string ProxyPortNumber { get; set; }
-
-        public string FromId { get; set; }
-
-        public string WakeWordPath { get; set; }
-
-        public WakeWordConfiguration WakeWordConfig { get; set; }
-
-        public bool WakeWordEnabled { get; set; }
-
-        public CustomSpeechConfiguration CustomSpeechConfig { get; set; }
-
-        public string CustomSpeechEndpointId { get; set; }
-
-        public bool CustomSpeechEnabled { get; set; }
-
-        public VoiceDeploymentConfiguration VoiceDeploymentConfig { get; set; }
-
-        public string VoiceDeploymentIds { get; set; }
-
-        public bool VoiceDeploymentEnabled { get; set; }
+        public readonly Dictionary<string, ConnectionProfile> ConnectionProfile;
 
         protected override void OnContentRendered(EventArgs e)
         {
@@ -193,24 +155,24 @@ namespace VoiceAssistantClient
                 {
                     this.ConnectionProfile.Add(this.ConnectionProfileName, new ConnectionProfile
                     {
-                        SubscriptionKey = this.SubscriptionKey,
-                        SubscriptionKeyRegion = this.SubscriptionKeyRegion,
-                        CustomCommandsAppId = this.CustomCommandsAppId,
-                        BotId = this.BotId,
-                        ConnectionLanguage = this.ConnectionLanguage,
-                        LogFilePath = this.LogFilePath,
-                        UrlOverride = this.UrlOverride,
-                        ProxyHostName = this.ProxyHostName,
-                        ProxyPortNumber = this.ProxyPortNumber,
-                        FromId = this.FromId,
-                        WakeWordPath = this.WakeWordPath,
-                        WakeWordConfig = this.WakeWordConfig,
-                        CustomSpeechConfig = this.CustomSpeechConfig,
-                        CustomSpeechEndpointId = this.CustomSpeechEndpointId,
-                        CustomSpeechEnabled = this.CustomSpeechEnabled,
-                        VoiceDeploymentConfig = this.VoiceDeploymentConfig,
-                        VoiceDeploymentIds = this.VoiceDeploymentIds,
-                        VoiceDeploymentEnabled = this.VoiceDeploymentEnabled,
+                        SubscriptionKey = this.settings.Profile.SubscriptionKey,
+                        SubscriptionKeyRegion = this.settings.Profile.SubscriptionKeyRegion,
+                        CustomCommandsAppId = this.settings.Profile.CustomCommandsAppId,
+                        BotId = this.settings.Profile.BotId,
+                        ConnectionLanguage = this.settings.Profile.ConnectionLanguage,
+                        LogFilePath = this.settings.Profile.LogFilePath,
+                        UrlOverride = this.settings.Profile.UrlOverride,
+                        ProxyHostName = this.settings.Profile.ProxyHostName,
+                        ProxyPortNumber = this.settings.Profile.ProxyPortNumber,
+                        FromId = this.settings.Profile.FromId,
+                        WakeWordPath = this.settings.Profile.WakeWordPath,
+                        WakeWordConfig = this.settings.Profile.WakeWordConfig,
+                        CustomSpeechConfig = this.settings.Profile.CustomSpeechConfig,
+                        CustomSpeechEndpointId = this.settings.Profile.CustomSpeechEndpointId,
+                        CustomSpeechEnabled = this.settings.Profile.CustomSpeechEnabled,
+                        VoiceDeploymentConfig = this.settings.Profile.VoiceDeploymentConfig,
+                        VoiceDeploymentIds = this.settings.Profile.VoiceDeploymentIds,
+                        VoiceDeploymentEnabled = this.settings.Profile.VoiceDeploymentEnabled,
                     });
                 }
 
@@ -219,9 +181,7 @@ namespace VoiceAssistantClient
                 this.settings.Set(
                     this.ConnectionProfileName,
                     this.ConnectionProfile,
-                    this.settings.Profile,
-                    this.settings.ConnectionProfileNameHistory,
-                    this.settings.ConnectionProfileHistory);
+                    this.settings.Profile);
             }
 
             this.DialogResult = true;
@@ -350,7 +310,6 @@ namespace VoiceAssistantClient
                 this.SaveButtonInfoBlock.Text = string.Empty;
                 enableSaveButton = true;
                 enableDeleteButton = true;
-
             }
 
             this.SaveButton.IsEnabled = enableSaveButton;
@@ -367,9 +326,9 @@ namespace VoiceAssistantClient
 
         private void UpdateCustomSpeechStatus(bool updateLabelOnInvalidContent)
         {
-            this.CustomSpeechConfig = new CustomSpeechConfiguration(this.CustomSpeechEndpointIdTextBox.Text);
+            this.settings.Profile.CustomSpeechConfig = new CustomSpeechConfiguration(this.CustomSpeechEndpointIdTextBox.Text);
 
-            if (!this.CustomSpeechConfig.IsValid)
+            if (!this.settings.Profile.CustomSpeechConfig.IsValid)
             {
                 if (updateLabelOnInvalidContent)
                 {
@@ -381,10 +340,10 @@ namespace VoiceAssistantClient
                     this.CustomSpeechEnabledBox.Content = "Click to enable";
                 }
 
-                this.CustomSpeechEnabled = false;
+                this.settings.Profile.CustomSpeechEnabled = false;
                 this.CustomSpeechEnabledBox.IsChecked = false;
             }
-            else if (this.CustomSpeechEnabled)
+            else if (this.settings.Profile.CustomSpeechEnabled)
             {
                 this.CustomSpeechEnabledBox.Content = "Custom speech will be used upon next connection";
             }
@@ -398,7 +357,7 @@ namespace VoiceAssistantClient
         {
             if (this.renderComplete)
             {
-                this.CustomSpeechEnabled = false;
+                this.settings.Profile.CustomSpeechEnabled = false;
                 this.CustomSpeechEnabledBox.IsChecked = false;
             }
 
@@ -415,9 +374,9 @@ namespace VoiceAssistantClient
 
         private void UpdateVoiceDeploymentIdsStatus(bool updateLabelOnInvalidContent)
         {
-            this.VoiceDeploymentConfig = new VoiceDeploymentConfiguration(this.VoiceDeploymentIdsTextBox.Text);
+            this.settings.Profile.VoiceDeploymentConfig = new VoiceDeploymentConfiguration(this.VoiceDeploymentIdsTextBox.Text);
 
-            if (!this.VoiceDeploymentConfig.IsValid)
+            if (!this.settings.Profile.VoiceDeploymentConfig.IsValid)
             {
                 if (updateLabelOnInvalidContent)
                 {
@@ -429,10 +388,10 @@ namespace VoiceAssistantClient
                     this.VoiceDeploymentEnabledBox.Content = "Click to enable";
                 }
 
-                this.VoiceDeploymentEnabled = false;
+                this.settings.Profile.VoiceDeploymentEnabled = false;
                 this.VoiceDeploymentEnabledBox.IsChecked = false;
             }
-            else if (this.VoiceDeploymentEnabled)
+            else if (this.settings.Profile.VoiceDeploymentEnabled)
             {
                 this.VoiceDeploymentEnabledBox.Content = "Voice deployment IDs will be used upon next connection";
             }
@@ -446,7 +405,7 @@ namespace VoiceAssistantClient
         {
             if (this.renderComplete)
             {
-                this.VoiceDeploymentEnabled = false;
+                this.settings.Profile.VoiceDeploymentEnabled = false;
                 this.VoiceDeploymentEnabledBox.IsChecked = false;
             }
 
@@ -455,15 +414,15 @@ namespace VoiceAssistantClient
 
         private void UpdateWakeWordStatus()
         {
-            this.WakeWordConfig = new WakeWordConfiguration(this.WakeWordPathTextBox.Text);
+            this.settings.Profile.WakeWordConfig = new WakeWordConfiguration(this.WakeWordPathTextBox.Text);
 
-            if (!this.WakeWordConfig.IsValid)
+            if (!this.settings.Profile.WakeWordConfig.IsValid)
             {
                 this.WakeWordEnabledBox.Content = "Invalid wake word model file or location";
-                this.WakeWordEnabled = false;
+                this.settings.Profile.WakeWordEnabled = false;
                 this.WakeWordEnabledBox.IsChecked = false;
             }
-            else if (this.WakeWordEnabled)
+            else if (this.settings.Profile.WakeWordEnabled)
             {
                 this.WakeWordEnabledBox.Content = $"Will listen for the wake word upon next connection";
             }
@@ -492,7 +451,7 @@ namespace VoiceAssistantClient
         {
             if (this.renderComplete)
             {
-                this.WakeWordEnabled = false;
+                this.settings.Profile.WakeWordEnabled = false;
                 this.WakeWordEnabledBox.IsChecked = false;
             }
 
