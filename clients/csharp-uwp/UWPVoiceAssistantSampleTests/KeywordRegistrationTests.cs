@@ -122,7 +122,7 @@ namespace KeywordRegistrationTests
 
             var MVAKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "MVAKeywords\\Contoso.bin");
 
-            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName+ ".bin", result.DisplayName);
+            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".bin", result.DisplayName);
             Assert.AreEqual("BIN File", result.DisplayType);
             Assert.AreEqual(".bin", result.FileType);
             Assert.IsTrue(result.IsAvailable);
@@ -214,7 +214,7 @@ namespace KeywordRegistrationTests
                             "1033",
                             "",
                             "ms-appx:///MVAKeywords/Contoso.bin",
-                            new Version (1, 0,0,0),
+                            new Version(1, 0, 0, 0),
                             "ms-appx:///SDKKeywords/Contoso.table");
 
             var lastVersion = keyword.LastUpdatedActivationKeywordModelVersion;

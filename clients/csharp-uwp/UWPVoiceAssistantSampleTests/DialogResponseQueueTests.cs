@@ -37,8 +37,8 @@ namespace UWPVoiceAssistantSampleTests
             Assert.AreEqual(1, dialogResponseReceivedEvents.Count, "Fired executingresponse callback before first callback completed");
 
             Assert.IsTrue(
-                dialogResponseExecutedEventReceived.WaitOne(MockDialogOutputAdapter.PlayLength + 100), 
-                "First responseexecuted callback not fired"); 
+                dialogResponseExecutedEventReceived.WaitOne(MockDialogOutputAdapter.PlayLength + 100),
+                "First responseexecuted callback not fired");
             Assert.IsTrue(
                  dialogResponseReceivedEventReceived.WaitOne(10),
                  "Second executingresponse callback not fired");
@@ -109,7 +109,7 @@ namespace UWPVoiceAssistantSampleTests
             var text4 = new DialogResponse("text 3", null, false, true);
             var voice3 = new DialogResponse("voice 4", new MockDirectLineSpeechAudioStream(), false, true);
 
-            new Thread(() => 
+            new Thread(() =>
             {
                 // Enqueue and dequeue voice 1 immediately
                 queue.Enqueue(voice1);

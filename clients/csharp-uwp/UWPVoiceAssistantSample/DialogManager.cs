@@ -22,7 +22,7 @@ namespace UWPVoiceAssistantSample
     /// <summary>
     /// Base abstract class. Contains the common methods in both MVA only and MVA+DLS only scenarios.
     /// </summary>
-    /// <typeparam name="TInputType">Input type of audio</typeparam>
+    /// <typeparam name="TInputType">Input type of audio.</typeparam>
     public class DialogManager<TInputType> : IDialogManager, IDisposable
     {
         private IDialogBackend<TInputType> dialogBackend;
@@ -67,7 +67,6 @@ namespace UWPVoiceAssistantSample
             this.agentSessionManager = agentSessionManager;
 
             this.agentSessionManager.SignalDetected += (sender, args) => this.HandleSignalDetection(args);
-            
             this.InitializeSignalDetectionHelper();
 
             _ = this.InitializeAsync(dialogAudioOutput);
@@ -265,7 +264,8 @@ namespace UWPVoiceAssistantSample
                 if (signalOrigin == DetectionOrigin.FromPushToTalk)
                 {
                     await this.dialogAudioInput.InitializeFromNowAsync();
-                } else
+                }
+                else
                 {
                     await this.dialogAudioInput.InitializeFromAgentSessionAsync(session);
                 }

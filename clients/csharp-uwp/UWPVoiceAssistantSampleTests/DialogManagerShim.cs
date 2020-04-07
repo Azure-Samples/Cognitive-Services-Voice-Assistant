@@ -25,7 +25,7 @@ namespace UWPVoiceAssistantSampleTests
         }
 
         public static async Task<DialogManager<List<byte>>> CreateMockManagerAsync(
-            IDialogBackend<List<byte>> backend, 
+            IDialogBackend<List<byte>> backend,
             IKeywordRegistration keywordRegistration,
             IAgentSessionManager agentSessionManager)
         {

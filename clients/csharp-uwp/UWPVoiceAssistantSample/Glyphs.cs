@@ -6,7 +6,7 @@ namespace UWPVoiceAssistantSample
     /// <summary>
     /// Collection of Unicode point definitions used by the Segoe UI MDL2 font symbol
     /// assets.
-    /// https://docs.microsoft.com/windows/uwp/design/style/segoe-ui-symbol-font
+    /// https://docs.microsoft.com/windows/uwp/design/style/segoe-ui-symbol-font.
     /// </summary>
     public static class Glyphs
     {

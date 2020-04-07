@@ -10,7 +10,7 @@ namespace UWPVoiceAssistantSample
     using Windows.Media.Audio;
 
     /// <summary>
-    /// Wrapper for ConversationalAgentSession
+    /// Wrapper for ConversationalAgentSession.
     /// </summary>
     public interface IAgentSessionWrapper : IDisposable
     {

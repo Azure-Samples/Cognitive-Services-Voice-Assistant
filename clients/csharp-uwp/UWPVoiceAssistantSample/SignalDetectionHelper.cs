@@ -148,7 +148,7 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Fires rejected event if state change to inactive occurs during verification
+        /// Fires rejected event if state change to inactive occurs during verification.
         /// </summary>
         /// <param name="oldState"> The old session state. </param>
         /// <param name="newState"> The new session state. </param>
@@ -163,7 +163,7 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Takes the next step in keyword verfication or projects the result if the keyword is confirmed or rejected
+        /// Takes the next step in keyword verfication or projects the result if the keyword is confirmed or rejected.
         /// </summary>
         /// <param name="recognitionText"> Keyword text, valid unless empty. </param>
         /// <param name="isFinal"> Whether the verification is the final stage or not. </param>
@@ -240,7 +240,7 @@ namespace UWPVoiceAssistantSample
             lock (this.keywordResponseLock)
             {
                 this.secondStageStopwatch?.Stop();
-                if (secondStageFailsafeTimer == null)
+                if (this.secondStageFailsafeTimer == null)
                 {
                     return;
                 }

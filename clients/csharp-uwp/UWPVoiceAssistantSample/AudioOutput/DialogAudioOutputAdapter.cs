@@ -297,6 +297,7 @@ namespace UWPVoiceAssistantSample
                 if (requestBytesRead < bytesRequested)
                 {
                     this.activeUtterances += 1;
+
                     // As current sources are exhausted, remove them from the queue.
                     this.audioOutputStreams.Dequeue();
                 }

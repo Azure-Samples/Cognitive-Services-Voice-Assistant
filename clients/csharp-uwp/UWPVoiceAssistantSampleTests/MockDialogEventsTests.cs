@@ -224,7 +224,7 @@ namespace DialogManagerTests
             this.dialogManager.HandleSignalDetection();
 
             session = await this.mockAgentSessionManager.GetSessionAsync();
-            
+
             Assert.IsTrue(this.signalRejectedEventReceived
                 .WaitOne((int)SignalDetectionHelper.SignalConfirmationTimeout.TotalMilliseconds + 200));
             Assert.AreEqual(ConversationalAgentState.Inactive, session.AgentState);
@@ -292,7 +292,7 @@ namespace DialogManagerTests
         public async Task CanSignalRejectUponKeywordConfirmation()
         {
             await this.dialogManager.InitializeAsync();
-            
+
             var session = await this.mockAgentSessionManager.GetSessionAsync();
             session.IsSignalVerificationRequired = true;
 

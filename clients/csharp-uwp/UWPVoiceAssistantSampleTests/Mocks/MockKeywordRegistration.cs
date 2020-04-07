@@ -27,7 +27,7 @@ namespace UWPVoiceAssistantSampleTests
         public Version AvailableActivationKeywordModelVersion { get; private set; }
 
         public Version LastUpdatedActivationKeywordModelVersion { get; set; }
-        
+
         public bool KeywordEnabledByApp { get; set; }
 
         public string ConfirmationKeywordModelPath => string.Empty;

@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System;
-using System.Threading.Tasks;
-
 namespace UWPVoiceAssistantSample
 {
+    using System;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Responsible for Creating and maintaining the Audio Graph for comminucation with Direct Line Speech.
     /// </summary>
-    public interface IDialogAudioOutputAdapter: IDisposable
+    public interface IDialogAudioOutputAdapter : IDisposable
     {
         /// <summary>
         /// Raised when all enqueued audio has completed playback.

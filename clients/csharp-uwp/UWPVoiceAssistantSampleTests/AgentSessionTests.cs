@@ -120,7 +120,7 @@ namespace AgentSessionTests
                 await agentSession.SetSignalModelIdAsync(9999);
             });
         }
-        
+
         /// <summary>
         /// Ensures that calling Dispose resets the session to its initial state regardless of the current state
         /// </summary>
@@ -135,7 +135,7 @@ namespace AgentSessionTests
                     //ConversationalAgentState.ListeningAndSpeaking,
                     ConversationalAgentState.Speaking,
                     ConversationalAgentState.Working
-                })) 
+                }))
             {
                 await ValidStateTransition(state);
                 agentSession.Dispose();

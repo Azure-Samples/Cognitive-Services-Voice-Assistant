@@ -5,7 +5,6 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Diagnostics;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -79,7 +78,8 @@ namespace UWPVoiceAssistantSample
                     {
                         this.operationInProgress = true;
                         this.outputAdapter.EnqueueDialogAudio(nextResponse.MessageMedia);
-                    } else
+                    }
+                    else
                     {
                         this.ResponseExecuted?.Invoke(nextResponse);
                     }

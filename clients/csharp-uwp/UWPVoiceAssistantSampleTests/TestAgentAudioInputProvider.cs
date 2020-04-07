@@ -60,7 +60,7 @@ namespace AgentAudioInputProviderTests
             {
                 EncodingProperties = outputEncoding
             };
-            
+
             var createGraph = await AudioGraph.CreateAsync(settings);
             if (createGraph.Status != AudioGraphCreationStatus.Success)
             {
@@ -96,7 +96,7 @@ namespace AgentAudioInputProviderTests
                 {
                     this.debugAudioOutputFileStream?.Write(bytes.ToArray(), 0, bytes.Count);
                 }
-            }; 
+            };
         }
 
         public void DisposeAgentAudioProducer()

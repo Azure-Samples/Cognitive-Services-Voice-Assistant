@@ -105,14 +105,15 @@ namespace UWPVoiceAssistantSample
         public bool IsSignalVerificationRequired
         {
             get { return this.session.Signal.IsSignalVerificationRequired; }
-            set { this.session.Signal.IsSignalVerificationRequired = value; } 
+            set { this.session.Signal.IsSignalVerificationRequired = value; }
         }
 
         /// <summary>
         /// Gets or sets the name of the ConversationalAgentSignal (for example, "Cortana"
         /// or "Alexa").
         /// </summary>
-        public string SignalName {
+        public string SignalName
+        {
             get { return this.session.Signal.SignalName; }
             set { this.session.Signal.SignalName = value; }
         }

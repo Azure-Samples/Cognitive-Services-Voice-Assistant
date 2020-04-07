@@ -28,17 +28,17 @@ namespace UWPVoiceAssistantSampleTests
             });
         }
 
-        public Task PlayAudioAsync(DialogAudioOutputStream stream) 
+        public Task PlayAudioAsync(DialogAudioOutputStream stream)
         {
             this.IsPlaying = true;
-            return new Task(async () => 
+            return new Task(async () =>
             {
                 await Task.Delay(PlayLength);
                 this.OutputEnded.Invoke();
-            }); 
+            });
         }
 
-        public Task StopPlaybackAsync() 
+        public Task StopPlaybackAsync()
         {
             this.IsPlaying = false;
             return new Task(() => { });

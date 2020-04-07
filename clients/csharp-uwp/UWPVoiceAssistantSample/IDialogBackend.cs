@@ -11,7 +11,7 @@ namespace UWPVoiceAssistantSample
     /// Describes the contract for dialog backends responsible for servicing general conversational
     /// state updates and providing responses from an assistant implementation.
     /// </summary>
-    /// <typeparam name="TInputType">Input type of audio</typeparam>
+    /// <typeparam name="TInputType">Input type of audio.</typeparam>
     public interface IDialogBackend<TInputType>
         : IDisposable
     {

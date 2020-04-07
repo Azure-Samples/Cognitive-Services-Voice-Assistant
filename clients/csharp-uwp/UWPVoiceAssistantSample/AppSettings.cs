@@ -49,7 +49,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Reads and deserializes the configuration file.
         /// </summary>
-        /// <param name="configFile">config.json</param>
+        /// <param name="configFile">config.json.</param>
         /// <returns>Instance of AppSettings.</returns>
         public static AppSettings Load(string configFile)
         {
@@ -88,7 +88,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Verifies if Azure Region provided is listed within the speechRegions.
         /// </summary>
-        /// <param name="region">Azure Region</param>
+        /// <param name="region">Azure Region.</param>
         /// <returns>Bool - true if region is within the speechRegions.</returns>
         public static bool ValidateAzureRegion(string region)
         {
