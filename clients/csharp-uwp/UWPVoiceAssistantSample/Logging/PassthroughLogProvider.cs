@@ -4,6 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
@@ -13,6 +14,8 @@ namespace UWPVoiceAssistantSample
     public class PassthroughLogProvider : ILogProvider
     {
         private readonly string name;
+
+        public List<string> LogBuffer { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PassthroughLogProvider"/> class.

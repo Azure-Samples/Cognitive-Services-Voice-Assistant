@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System.Collections.Generic;
+
 namespace UWPVoiceAssistantSample
 {
     /// <summary>
@@ -33,6 +35,10 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public interface ILogProvider
     {
+        //private List<string> logBuffer;
+
+        List<string> LogBuffer { get; }
+
         /// <summary>
         /// Instructs the log provider to emit a log at the specified message level.
         /// </summary>

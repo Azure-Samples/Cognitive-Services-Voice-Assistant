@@ -24,6 +24,11 @@
                 <RowDefinition Height="40" />
                 <RowDefinition Height="40" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="45" />
                 <RowDefinition Height="45" />
                 <RowDefinition Height="45" />
@@ -151,6 +156,21 @@
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"  
                 Text="Status"/>
+            <TextBlock x:Name="ChangeLogTextHeader"
+                Grid.Row="12" Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Text="ChangeLog Window" />
+            <TextBox x:Name="ChangeLogText"
+                Grid.Row="13" Grid.Column="1"
+                Grid.RowSpan="4" Grid.ColumnSpan="2"
+                IsReadOnly="True"
+                TextWrapping="Wrap"
+                BorderThickness="1"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"  
+                Text="ChangeLog"/>
             <Button x:Name="ClearButton"
                 Grid.Row="9" Grid.Column="0"
                 Height="35" Width="140"
@@ -168,12 +188,12 @@
                 Content="Open log/audio file location" />
             <TextBlock
                 x:Name="SpeechKeyTextBlock"
-                Grid.Row="13" Grid.Column="0"
+                Grid.Row="18" Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Text="Speech Key" />
             <TextBox x:Name="SpeechKeyTextBox"
-                Grid.Row="13" Grid.Column="1" 
+                Grid.Row="18" Grid.Column="1" 
                 Grid.ColumnSpan="2"
                 Height="35"
                 HorizontalAlignment="Stretch"
@@ -182,12 +202,12 @@
                 Text="{x:Bind mvadls:LocalSettingsHelper.SpeechSubscriptionKey, Mode=TwoWay}"/>
             <TextBlock
                 x:Name="CustomCommandsAppIdTextBlock"
-                Grid.Row="14" Grid.Column="0"
+                Grid.Row="19" Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Text="Custom Commands App ID" />
             <TextBox x:Name="CustomCommandsAppIdTextBox"
-                Grid.Row="14" Grid.Column="1" 
+                Grid.Row="19" Grid.Column="1" 
                 Grid.ColumnSpan="2"
                 Height="35"
                 HorizontalAlignment="Stretch"
@@ -196,12 +216,12 @@
                 PlaceholderText="(optional) Custom Commands App ID go here" />
             <TextBlock
                 x:Name="BotIdTextBlock"
-                Grid.Row="15" Grid.Column="0"
+                Grid.Row="20" Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Text="Bot ID" />
             <TextBox x:Name="BotIdTextBox"
-                Grid.Row="15" Grid.Column="1" 
+                Grid.Row="20" Grid.Column="1" 
                 Grid.ColumnSpan="2"
                 Height="35"
                 HorizontalAlignment="Stretch"
@@ -210,12 +230,12 @@
                 PlaceholderText="(optional) Bot ID go here" />
             <TextBlock
                 x:Name="SpeechRegionTextBlock"
-                Grid.Row="16" Grid.Column="0"
+                Grid.Row="21" Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Text="Speech Region" />
             <TextBox x:Name="SpeechRegionTextBox"
-                Grid.Row="16" Grid.Column="1" 
+                Grid.Row="21" Grid.Column="1" 
                 Grid.ColumnSpan="2"
                 Height="35"
                 HorizontalAlignment="Stretch"
@@ -223,12 +243,12 @@
                 Text="{x:Bind mvadls:LocalSettingsHelper.AzureRegion,Mode=TwoWay}"
                 PlaceholderText="Azure region (e.g. westus2) goes here" />
             <TextBlock x:Name="CustomSpeechIdTextBlock"
-                Grid.Row="17" Grid.Column="0"
+                Grid.Row="22" Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Text="SR Endpoint ID" />
             <TextBox x:Name="CustomSpeechIdTextBox"
-                Grid.Row="17" Grid.Column="1" 
+                Grid.Row="22" Grid.Column="1" 
                 Grid.ColumnSpan="2"
                 Height="35"
                 HorizontalAlignment="Stretch"
@@ -237,12 +257,12 @@
                 PlaceholderText="(optional) Custom SR Endpoint ID goes here" />
             <TextBlock
                 x:Name="CustomVoiceIdsTextBlock"
-                Grid.Row="18" Grid.Column="0"
+                Grid.Row="23" Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Text="Custom Voice ID" />
             <TextBox x:Name="CustomVoiceIdsTextBox"
-                Grid.Row="18" Grid.Column="1" 
+                Grid.Row="23" Grid.Column="1" 
                 Grid.ColumnSpan="2"
                 Height="35"
                 HorizontalAlignment="Stretch"

@@ -3,6 +3,7 @@
 
 namespace UWPVoiceAssistantSample.Logging
 {
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using Windows.Storage;
@@ -15,6 +16,7 @@ namespace UWPVoiceAssistantSample.Logging
     {
         private static TextWriter outputFileWriter;
         private readonly string name;
+        public List<string> LogBuffer { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticTraceLogProvider"/> class.

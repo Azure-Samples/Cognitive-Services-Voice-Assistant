@@ -5,8 +5,10 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using NLog.Fluent;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Security.Authorization.AppCapabilityAccess;
@@ -32,6 +34,7 @@ namespace UWPVoiceAssistantSample
         private readonly IDialogManager dialogManager;
         private readonly IAgentSessionManager agentSessionManager;
         private App app;
+        private int bufferIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -213,6 +216,7 @@ namespace UWPVoiceAssistantSample
             // UI changes must be performed on the UI thread.
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
+                this.ReadBufferStream();
                 this.RefreshStatus();
 
                 var session = await this.agentSessionManager.GetSessionAsync();
@@ -298,6 +302,19 @@ namespace UWPVoiceAssistantSample
             this.statusBuffer.Enqueue((message, alignToRight));
 
             this.RefreshStatus();
+        }
+
+        private void ReadBufferStream()
+        {
+            for (var i = 0; i < this.logger.LogBuffer.Count; i++)
+            {
+                if (this.bufferIndex < this.logger.LogBuffer.Count)
+                {
+                    this.ChangeLogText.Text += this.logger.LogBuffer[this.bufferIndex] + "\r\n";
+                    this.bufferIndex++;
+                }
+            }
+
         }
     }
 }

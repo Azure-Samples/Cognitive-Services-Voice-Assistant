@@ -4,6 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using UWPVoiceAssistantSample;
     using UWPVoiceAssistantSample.Logging;
