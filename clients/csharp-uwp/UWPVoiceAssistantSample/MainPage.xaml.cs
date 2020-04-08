@@ -334,7 +334,7 @@ namespace UWPVoiceAssistantSample
                 }
             }
 
-            this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue + 100.0f, 1.0f);
+            this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
         }
     }
 }
