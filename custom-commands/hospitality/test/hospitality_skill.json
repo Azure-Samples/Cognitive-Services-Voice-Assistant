@@ -1,0 +1,68 @@
+{
+  "Tests": [
+    {
+      "FileName": "input-files\\Test_FallbackCommand_TextInput.json",
+      "SingleConnection": true,
+      "Skip": false,
+	  "IgnoreActivities": [
+        {
+          "type": "event",
+        }
+      ]
+    },
+	{
+      "FileName": "input-files\\Test_TurnOnOff_TextInput.json",
+      "SingleConnection": true,
+      "Skip": false,
+	  "IgnoreActivities": [
+        {
+          "type": "event",
+        }
+      ]
+    },
+	{
+      "FileName": "input-files\\Test_Help_TextInput.json",
+      "SingleConnection": true,
+      "Skip": false,
+	  "IgnoreActivities": [
+        {
+          "type": "event",
+        }
+      ]
+    },
+	{
+      "FileName": "input-files\\Test_Greeting_TextInput.json",
+      "SingleConnection": true,
+      "Skip": false,
+	  "IgnoreActivities": [
+        {
+          "type": "event",
+        }
+      ]
+    },
+	{
+      "FileName": "input-files\\Test_AdjustTemperature_TextInput.json",
+      "SingleConnection": true,
+      "Skip": false,
+	  "IgnoreActivities": [
+        {
+          "type": "event",
+        }
+      ]
+    },
+	{
+      "FileName": "input-files\\Test_OpenClose_TextInput.json",
+      "SingleConnection": true,
+      "Skip": false,
+	  "IgnoreActivities": [
+        {
+          "type": "event",
+        }
+      ]
+    }
+  ],
+  "SubscriptionKey": "fd0d3bd0b03f4e36a149e342b56d5004",
+  "Region": "westus2",
+  "CustomCommandsAppId": "e8ebc7b9-93ea-4d44-83ce-4960f5a7958a",
+  "BotGreeting": false,
+}
