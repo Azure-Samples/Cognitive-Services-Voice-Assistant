@@ -190,7 +190,7 @@ namespace VoiceAssistantClient
             {
                 this.connectionProfile.Remove(this.ConnectionProfileComboBox.Text);
                 this.settings.ConnectionProfileNameHistory.Remove(this.ConnectionProfileComboBox.Text);
-                this.ConnectionProfileComboBox.Text = string.Empty;
+                this.ConnectionProfileComboBox.Text = this.settings.ConnectionProfileNameHistory[0];
             }
         }
 
