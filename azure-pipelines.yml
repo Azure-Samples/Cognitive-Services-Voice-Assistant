@@ -50,6 +50,13 @@ variables:
   sample3Solution: '$(sample3Folder)\src\windows\cppSample.sln'
   sample3PublishedArtifactPath: '$(sample3Folder)\out'
   sample3PublishedArtifactName: 'CppSample'
+ 
+  # Sample 4: UWP Voice Assistant Sample (\clients\csharp-uwp)
+  sample4Name: UWPVoiceAssistantSample
+  sample4Folder: 'clients\csharp-uwp'
+  sample4Solution: '$(sample4Folder)\$(sample4Name).sln'
+  sample4PublishedArtifactPath: '$(sample4Folder)\$(sample4Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
+  sample4PublishedArtifactName: '$(sample4Name)'
 
   # ESRP code signing
   signParams: |
@@ -99,7 +106,8 @@ steps:
   inputs:
     restoreSolution: '$(sample1Solution)'
 
-# Build .Net Standard applications
+# Build Windows Voice Assistant Client (C#, WPF)
+
 - task: VSBuild@1
   displayName: 'VSBuild - $(sample1Name)'
   inputs:
@@ -124,7 +132,8 @@ steps:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
 
-# Build .NET Core applications and publish self-contained executables   
+# Build Voice Assistant Test (C# .NET Core)
+
 - task: DotNetCoreCLI@2
   displayName: 'DotNetCoreCLI - .NET Core build and publish $(sample2Name)'
   inputs:
@@ -135,14 +144,13 @@ steps:
     zipAfterPublish: false
     modifyOutputPath: true    
 
-# Include all .NET Core executables in the resulting artifacts 
 - task: PublishPipelineArtifact@1
   displayName: 'PublishPipelineArtifact - Publish artifacts for .NET core executables'
   inputs:
     path: $(dotNetCorePublishArtifactPath)
     artifact: $(dotNetCorePublishArtifactName)
     
-# Build cpp console application
+# Build cpp console application (C++)
 
 - task: NuGetCommand@2
   inputs:
@@ -152,6 +160,20 @@ steps:
   displayName: 'VSCPPBuild - $(sample3Name)'
   inputs:
     solution: '$(sample3Solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatformNative)'
+    configuration: '$(buildConfiguration)'
+
+# Build UWP Voice Assistant Sample (C# UWP)
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(sample4Solution)'
+
+- task: VSBuild@1
+  displayName: 'VSBuild - $(sample4Name)'
+  inputs:
+    solution: '$(sample4Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
