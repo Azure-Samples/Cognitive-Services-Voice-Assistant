@@ -310,11 +310,20 @@ namespace UWPVoiceAssistantSample
             {
                 if (this.bufferIndex < this.logger.LogBuffer.Count)
                 {
-                    this.ChangeLogText.Text += this.logger.LogBuffer[this.bufferIndex] + "\r\n";
+                    string text = this.logger.LogBuffer[this.bufferIndex];
+                    if (text.Contains(" : "))
+                    {
+                        string[] split = text.Split(" : ");
+                        this.ChangeLogText.Text += split[1] + "\r\n";
+                    }
+                    else
+                    {
+                        this.ChangeLogText.Text += text + "\r\n";
+                    }
+
                     this.bufferIndex++;
                 }
             }
-
         }
     }
 }
