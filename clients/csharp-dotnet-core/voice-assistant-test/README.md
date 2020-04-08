@@ -175,39 +175,12 @@ Here is the full list:
 >>`JSON string | optional`. An array of Bot-Framework JSON activities. These are the expected bot responses. You only need to specify the activity fields you care about. If the number of bot responses is less than what you specify here, the test will fail. If the number is the same, but some of the fields you specify do not match the fields in the bot reply, the test will fail. Note that the tool orders the bot responses based on their activity [Timestamp](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp), before comparing the actual bot response to the expected response. If the number of bot responses is greater than the expected number, and there is a match to all expected activities, the test will pass. If ExpectedResponses is null or missing, the turn will run in bootstrapping mode, which is useful to do when writing the tests for the first time. See the [bootstrapping mode](#bootstrapping-mode) section for more details.
 >>
 >>##### ExpectedTTSAudioResponseDurations 
->>`array of strings | optional | null | ["1500", "-1", "2000"]`. Expected duration (in msec) of bot response TTS audio stream. This allows you to validate that the right audio stream duration was downloaded by the tool. Otherwise the test will fail. The length of this array (if exists) must match the length of the [ExpectedResponses](#expectedresponses) array. Not every bot-response will have a TTS audio stream associated with it. In that case, specify a value of -1 in the array cell. The expected duration does not have to exactly match the actual duration for the test to succeed. This is controlled by the field [TTSAudioDurationMargin](#ttsaudiodurationmargin). Only if the different between expected duration and actual duration is outside this margin, the test will fail. See the [Getting Started Guide](docs/GETTING-STARTED-GUIDE.md) for an example of using ExpectedTTSAudioResponseDurations.
+>>`array of strings | optional | null | ["1500", "-1", "2000 || 1700"]`. Expected duration (in msec) of bot response TTS audio stream. This allows you to validate that the right audio stream duration was downloaded by the tool. Otherwise the test will fail. The length of this array (if exists) must match the length of the [ExpectedResponses](#expectedresponses) array. Not every bot-response will have a TTS audio stream associated with it. In that case, specify a value of -1 in the array cell. The expected duration does not have to exactly match the actual duration for the test to succeed. This is controlled by the field [TTSAudioDurationMargin](#ttsaudiodurationmargin). Only if the different between expected duration and actual duration is outside this margin, the test will fail. See the [Getting Started Guide](docs/GETTING-STARTED-GUIDE.md) for an example of using ExpectedTTSAudioResponseDurations.
 >>
 >>##### ExpectedResponseLatency 
 >>`string | optional | null | "500", or "500,0" or "500,1"'. The expected time the tool should have received a particular bot-response activity. If the tool did not receive that activity by this latency value, the test will fail. There are two formats for the string. The first one just includes a positive integer. In this case the bot-response that is timed is the last one expected to arrive (based on the length of the [ExpectedResponses](#ExpectedResponses) array]). So for example of the length of ExpectedResponses is 3, it means the tool will wait until it receives three bot response activities. If the 3rd one was not received by the time specified by  Expectedresponse, the test will fail. The second format of the string is a positive integer (the duration), followed by a comma, followed by a zero-based index. The index specifies which of the bot-response activities should be time-measured, which 0 being the first one specified in the ExpectedResponses array. This second format allows you to put an upper limit on either one of the bot responses, not just the last one.
 
 ## Topics
-
-### Testing response activities with random text and speak from a predefined set
-
-In some cases, Bot or Custom Commands application can define a set of text or speech for responding, and randomly select to use one of them in actual responded activity. For example, a command of Custom Commands application defines 2 sentences asking for the temperature to change - 1. How much do you want to change the temperature by? 2. By how many degrees? This command will randomly use the first sentence in some responses and the second sentence in other responses. To deal with this case, you can use " || " in text, speak of ExpectedResponses field along with ExpectedTTSAudioResponseDurations field to specify the expected responses as below:
-```json
-    [
-      {
-        "DialogID": "0",
-        "Turns": [
-          {
-            "TurnID": 0,
-            "Utterance": "change temperature",
-            "WavFile": "",
-            "ExpectedResponses": [
-              {
-                "type": "message",
-                "text": "How much do you want to change the temperature by? || By how many degrees?",
-                "speak": "How much do you want to change the temperature by? || By how many degrees?",
-              }
-            ],
-            "ExpectedTTSAudioResponseDurations": ["3000 || 2000"],
-          }
-        ]
-      }
-    ]
-```
-Actual response matches any of the expected responses will pass the test.
 
 ### Bootstrapping mode
 
@@ -259,6 +232,33 @@ It's important to understand how to configure your test correctly to support bot
 If SingleConnection is false, each dialog will start with a boot greeting. Therefore Turn 0 cannot include any of the fields that send information up to the bot ([Utterance](#utterance), [Activity](#activity) and [WavFile](#wafile)).
 
 If SingleConnection is true, only the first dialog in every test file will see a bot greeting. Therefore Turn 0 of the first dialog in every test file should include a fields that sends information up to the bot.
+
+### Testing response activities with random text and speak from a predefined set
+
+In some cases, Bot or Custom Commands application can define a set of text or speech for responding, and randomly select to use one of them in actual responded activity. For example, a command of Custom Commands application defines 2 sentences asking for the temperature to change - (1) How much do you want to change the temperature by? (2) By how many degrees? This command will randomly use the first sentence in some responses and the second sentence in other responses. To deal with this case, you can use " || " in text, speak of ExpectedResponses field along with ExpectedTTSAudioResponseDurations field to specify the expected responses as below:
+```json
+    [
+      {
+        "DialogID": "0",
+        "Turns": [
+          {
+            "TurnID": 0,
+            "Utterance": "change temperature",
+            "WavFile": "",
+            "ExpectedResponses": [
+              {
+                "type": "message",
+                "text": "How much do you want to change the temperature by? || By how many degrees?",
+                "speak": "How much do you want to change the temperature by? || By how many degrees?",
+              }
+            ],
+            "ExpectedTTSAudioResponseDurations": ["3000 || 2000"],
+          }
+        ]
+      }
+    ]
+```
+Actual response matches any of the expected responses will pass the test.
 
 ### Keyword activation tests
 
