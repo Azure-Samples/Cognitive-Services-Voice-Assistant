@@ -5,10 +5,8 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
-    using NLog.Fluent;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Security.Authorization.AppCapabilityAccess;
@@ -312,7 +310,7 @@ namespace UWPVoiceAssistantSample
                 if (this.bufferIndex < this.logger.LogBuffer.Count)
                 {
                     string text = this.logger.LogBuffer[this.bufferIndex];
-                    if (text.Contains(" : "))
+                    if (text.Contains(" : ", StringComparison.OrdinalIgnoreCase))
                     {
                         string[] split = text.Split(" : ");
                         Paragraph paragraph = new Paragraph();

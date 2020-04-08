@@ -15,8 +15,6 @@ namespace UWPVoiceAssistantSample
     {
         private readonly string name;
 
-        public List<string> LogBuffer { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PassthroughLogProvider"/> class.
         /// </summary>
@@ -25,6 +23,11 @@ namespace UWPVoiceAssistantSample
         {
             this.name = name;
         }
+
+        /// <summary>
+        /// Gets the list of logs from LogBuffer.
+        /// </summary>
+        public List<string> LogBuffer { get; }
 
         /// <summary>
         /// Initialization routine needed for ILogProvider initialization. This implementation

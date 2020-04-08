@@ -16,7 +16,6 @@ namespace UWPVoiceAssistantSample.Logging
     {
         private static TextWriter outputFileWriter;
         private readonly string name;
-        public List<string> LogBuffer { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticTraceLogProvider"/> class.
@@ -26,6 +25,8 @@ namespace UWPVoiceAssistantSample.Logging
         {
             this.name = name;
         }
+
+        public List<string> LogBuffer { get; }
 
         /// <summary>
         /// Once-per-app-lifetime initialization method needed for setup via LogRouter.

@@ -12,10 +12,11 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public class NLogProvider : ILogProvider
     {
-        public static readonly List<string> logBuffer = new List<string>();
+        /// <summary>
+        /// List of Log messages.
+        /// </summary>
+        public static readonly List<string> LogBuffer = new List<string>();
         private Logger logger;
-
-        List<string> ILogProvider.LogBuffer { get => logBuffer; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogProvider"/> class.
@@ -25,6 +26,11 @@ namespace UWPVoiceAssistantSample
         {
             this.logger = NLog.LogManager.GetLogger(name);
         }
+
+        /// <summary>
+        /// Gets LogBuffer.
+        /// </summary>
+        List<string> ILogProvider.LogBuffer { get => LogBuffer; }
 
         /// <summary>
         /// Initializes the app-global state needed for NLog to emit to its output locations via
@@ -65,7 +71,7 @@ namespace UWPVoiceAssistantSample
         public void Log(LogMessageLevel level, string message)
         {
             this.logger.Log(ConvertLogLevel(level), message);
-            logBuffer.Add(message);
+            LogBuffer.Add(message);
         }
 
         private static LogLevel ConvertLogLevel(LogMessageLevel level)

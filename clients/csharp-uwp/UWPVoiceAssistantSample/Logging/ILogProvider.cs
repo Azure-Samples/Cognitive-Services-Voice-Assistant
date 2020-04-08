@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
-
 namespace UWPVoiceAssistantSample
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Abstracted information levels to log, used for individual providers to filter their output
     /// targets based on severity and related rules.
@@ -35,8 +35,9 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public interface ILogProvider
     {
-        //private List<string> logBuffer;
-
+        /// <summary>
+        /// Gets the list of logs from LogBuffer.
+        /// </summary>
         List<string> LogBuffer { get; }
 
         /// <summary>
