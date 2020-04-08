@@ -34,7 +34,7 @@ cd Cognitive-Services-Voice-Assistant\clients\csharp-uwp\UWPVoiceAssistantSample
 ## Preparing the config.json file
 The config.json file in this project should be updated with the credentials you will be using for your bot and for Cognitive Speech Services. To do this,
 * Obtain the Speech Subscription Key linked to your Direct Line Speech Channel 
-* Obttain the Speech Key and Region associated with your Bot
+* Obtain the Speech Key and Region associated with your Bot
 * Update each of these fields in the config.json file in the UWPVoiceAssistantSample folder (leave the other fields blank for now)
 * Note: The Speech Key and any other resource integrations must be registered in the same Azure Region
 
