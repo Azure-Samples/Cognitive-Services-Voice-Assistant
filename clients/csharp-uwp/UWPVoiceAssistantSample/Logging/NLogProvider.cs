@@ -3,9 +3,8 @@
 
 namespace UWPVoiceAssistantSample
 {
-    using NLog;
     using System.Collections.Generic;
-    using System.Runtime.CompilerServices;
+    using NLog;
     using Windows.Storage;
 
     /// <summary>
@@ -13,8 +12,8 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public class NLogProvider : ILogProvider
     {
-        private Logger logger;
         public static readonly List<string> logBuffer = new List<string>();
+        private Logger logger;
 
         List<string> ILogProvider.LogBuffer { get => logBuffer; }
 

@@ -19,6 +19,7 @@ namespace UWPVoiceAssistantSample
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Documents;
     using Windows.UI.Xaml.Media;
 
     /// <summary>
@@ -314,16 +315,26 @@ namespace UWPVoiceAssistantSample
                     if (text.Contains(" : "))
                     {
                         string[] split = text.Split(" : ");
-                        this.ChangeLogText.Text += split[1] + "\r\n";
+                        Paragraph paragraph = new Paragraph();
+                        Run run = new Run();
+                        run.Text = split[1];
+                        paragraph.Inlines.Add(run);
+                        this.ChangeLogTextBlock.Blocks.Add(paragraph);
                     }
                     else
                     {
-                        this.ChangeLogText.Text += text + "\r\n";
+                        Paragraph paragraph = new Paragraph();
+                        Run run = new Run();
+                        run.Text = text;
+                        paragraph.Inlines.Add(run);
+                        this.ChangeLogTextBlock.Blocks.Add(paragraph);
                     }
 
                     this.bufferIndex++;
                 }
             }
+
+            this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue + 100.0f, 1.0f);
         }
     }
 }

@@ -161,16 +161,12 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Text="ChangeLog Window" />
-            <TextBox x:Name="ChangeLogText"
-                Grid.Row="13" Grid.Column="1"
-                Grid.RowSpan="4" Grid.ColumnSpan="2"
-                IsReadOnly="True"
-                TextWrapping="Wrap"
-                BorderThickness="1"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                ScrollViewer.VerticalScrollBarVisibility="Auto"  
-                Text="ChangeLog"/>
+            <ScrollViewer x:Name="ChangeLogScrollViewer"
+                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom"
+                          Grid.Row="13" Grid.Column="1" 
+                          Grid.RowSpan="4" Grid.ColumnSpan="2">
+                <RichTextBlock x:Name="ChangeLogTextBlock" FontWeight="Bold"/>
+            </ScrollViewer>
             <Button x:Name="ClearButton"
                 Grid.Row="9" Grid.Column="0"
                 Height="35" Width="140"
