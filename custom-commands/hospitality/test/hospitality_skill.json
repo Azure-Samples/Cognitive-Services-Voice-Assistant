@@ -61,8 +61,8 @@
       ]
     }
   ],
-  "SubscriptionKey": "fd0d3bd0b03f4e36a149e342b56d5004",
+  "SubscriptionKey": "0123456789abcdef0123456789abcdef",
   "Region": "westus2",
-  "CustomCommandsAppId": "e8ebc7b9-93ea-4d44-83ce-4960f5a7958a",
+  "CustomCommandsAppId": "abcdef0123456789abcdef0123456789",
   "BotGreeting": false,
 }
