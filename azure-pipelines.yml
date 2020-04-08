@@ -51,9 +51,33 @@ variables:
   sample3PublishedArtifactPath: '$(sample3Folder)\out'
   sample3PublishedArtifactName: 'CppSample'
 
+  # Sample 4: UWP Voice Assistant Sample (\clients\csharp-uwp)
+  sample4Name: UWPVoiceAssistantSample
+  sample4Folder: 'clients\csharp-uwp'
+  sample4Solution: '$(sample4Folder)\$(sample4Name).sln'
+  sample4PublishedArtifactPath: '$(sample4Folder)\$(sample4Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
+  sample4PublishedArtifactName: '$(sample4Name)'
+
 steps:
 
 - task: NuGetToolInstaller@1
+
+
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(sample4Solution)'
+
+# Build .Net Standard applications
+- task: VSBuild@1
+  displayName: 'VSBuild - $(sample4Name)'
+  inputs:
+    solution: '$(sample4Solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatformNative)'
+    configuration: '$(buildConfiguration)'
+
+
 
 - task: NuGetCommand@2
   inputs:
