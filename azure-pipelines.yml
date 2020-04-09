@@ -177,9 +177,11 @@ steps:
   displayName: '$(sample4Name) - VSBuild'
   inputs:
     solution: '$(sample4Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
+
+#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
 
 - task: PublishPipelineArtifact@1
   displayName: '$(sample4Name) - PublishPipelineArtifact'
