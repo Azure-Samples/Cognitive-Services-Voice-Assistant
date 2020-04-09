@@ -190,8 +190,6 @@ namespace VoiceAssistantClient
             {
                 if (existingItem == null)
                 {
-                    this.settings.ConnectionProfileNameHistory[0] = string.Empty;
-                    var emptyProfileNameHistory = this.settings.ConnectionProfileNameHistory[0];
                     profileNameHistory.Insert(0, " ");
                     profileNameHistory.Insert(1, connectionProfileName);
                     if (profileNameHistory.Count == UrlHistoryMaxLength)
