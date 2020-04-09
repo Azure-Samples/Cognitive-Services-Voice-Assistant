@@ -182,17 +182,31 @@ namespace VoiceAssistantClient
         private void AddConnectionProfileNameIntoHistory(string connectionProfileName)
         {
             var profileNameHistory = this.settings.ConnectionProfileNameHistory;
-            this.settings.ConnectionProfileNameHistory[0] = string.Empty;
-            var emptyProfileNameHistory = this.settings.ConnectionProfileNameHistory[0];
             var existingItem = profileNameHistory.FirstOrDefault(item => string.Compare(item, connectionProfileName, StringComparison.OrdinalIgnoreCase) == 0);
 
-            if (existingItem == null)
+            if (this.settings.ConnectionProfileNameHistory.Count > 0)
             {
-                emptyProfileNameHistory.Insert(0, string.Empty);
-                profileNameHistory.Insert(1, connectionProfileName);
-                if (profileNameHistory.Count == UrlHistoryMaxLength)
+                if (existingItem == null)
                 {
-                    profileNameHistory.RemoveAt(UrlHistoryMaxLength - 1);
+                    profileNameHistory.Insert(1, connectionProfileName);
+                    if (profileNameHistory.Count == UrlHistoryMaxLength)
+                    {
+                        profileNameHistory.RemoveAt(UrlHistoryMaxLength - 1);
+                    }
+                }
+            }
+            else
+            {
+                if (existingItem == null)
+                {
+                    this.settings.ConnectionProfileNameHistory[0] = string.Empty;
+                    var emptyProfileNameHistory = this.settings.ConnectionProfileNameHistory[0];
+                    profileNameHistory.Insert(0, " ");
+                    profileNameHistory.Insert(1, connectionProfileName);
+                    if (profileNameHistory.Count == UrlHistoryMaxLength)
+                    {
+                        profileNameHistory.RemoveAt(UrlHistoryMaxLength - 1);
+                    }
                 }
             }
         }
