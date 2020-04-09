@@ -5,8 +5,6 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Diagnostics;
-    using UWPVoiceAssistantSample;
-    using UWPVoiceAssistantSample.Logging;
 
     /// <summary>
     /// Static manager class for generating instances of the selected ILogProvider interface. The

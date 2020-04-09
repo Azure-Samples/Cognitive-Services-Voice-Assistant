@@ -4,6 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
@@ -22,6 +23,16 @@ namespace UWPVoiceAssistantSample
         {
             this.name = name;
         }
+
+        /// <summary>
+        /// Event to indicate a log was generated.
+        /// </summary>
+        public event EventHandler LogAvailable;
+
+        /// <summary>
+        /// Gets the list of log messages.
+        /// </summary>
+        public List<string> LogBuffer { get; }
 
         /// <summary>
         /// Initialization routine needed for ILogProvider initialization. This implementation
