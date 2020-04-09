@@ -1,0 +1,394 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing '{Operation} the temperature by {Temperature} degrees'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Raise the temperature by 30 degrees",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "You can only adjust the temperature by a max of 15 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">You can only adjust the temperature by a max of 15 degrees</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [4300],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "Raise the temperature by 12 degrees",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, raise the temperature by 12 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, raise the temperature by 12 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3700],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing 'change temperature'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "change temperature",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "How much do you want to change the temperature by?||By how many degrees?",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">How much do you want to change the temperature by?</voice></speak>||<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">By how many degrees?</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": ["3300||2000"],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "12",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to make it warmer or cooler?",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">Do you want to make it warmer or cooler?</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2750],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "cooler",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, lower the temperature by 12 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, lower the temperature by 12 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3750],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "2",
+    "Description": "Testing '{Operation} {Temperature} degrees'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "raise 11 degrees",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, raise the temperature by 11 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, raise the temperature by 11 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3950],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "3",
+    "Description": "Testing '{Temperature} degree {Operation}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "11 degree warmer",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, raise the temperature by 11 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, raise the temperature by 11 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3950],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "4",
+    "Description": "Testing 'i want it {Operation}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "I want it reduce",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "What temperature do you want to set it to?",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">What temperature do you want to set it to?</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3000],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "18",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "You can only adjust the temperature by a max of 15 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">You can only adjust the temperature by a max of 15 degrees</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [4350],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "12",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, lower the temperature by 12 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, lower the temperature by 12 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3750],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "5",
+    "Description": "Testing '{Operation} temperature'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn down temperature",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "What temperature do you want to set it to?",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">What temperature do you want to set it to?</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3000],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "12",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, lower the temperature by 12 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, lower the temperature by 12 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3750],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "6",
+    "Description": "Testing 'make it {Temperature} degrees {Operation}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Make it 10 degrees hotter",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, raise the temperature by 10 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, raise the temperature by 10 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3600],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "7",
+    "Description": "Testing 'set to {Temperature} degrees'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Set to 5 degrees",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to make it warmer or cooler?",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">Do you want to make it warmer or cooler?</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2750],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "hotter",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, raise the temperature by 5 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, raise the temperature by 5 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3700],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "8",
+    "Description": "Testing 'set the temperature to {Temperature}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "set the temperature to 5",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to make it warmer or cooler?",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">Do you want to make it warmer or cooler?</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2750],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "colder",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, lower the temperature by 5 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, lower the temperature by 5 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3750],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "9",
+    "Description": "Testing 'change the temp to {Temperature}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "change the temp to 11",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to make it warmer or cooler?",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">Do you want to make it warmer or cooler?</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2750],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "colder",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, lower the temperature by 11 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, lower the temperature by 11 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3900],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "10",
+    "Description": "Testing 'adjust the temp to {Temperature}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "adjust the temp to 15",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to make it warmer or cooler?",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">Do you want to make it warmer or cooler?</voice></speak>",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2750],
+        "ExpectedResponseLatency": 3800
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "higher",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, raise the temperature by 15 degrees",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, raise the temperature by 15 degrees</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [3850],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  }
+]

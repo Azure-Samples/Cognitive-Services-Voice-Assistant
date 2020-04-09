@@ -1,0 +1,90 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing '{OpenCloseOperation} the {OpenCloseSubject}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Raise the shades",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, opening the blinds",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, opening the blinds</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2700],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing 'i want to {OpenCloseOperation} the {OpenCloseSubject}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "I want to down the blind",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, closing the blinds",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, closing the blinds</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2800],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "2",
+    "Description": "Testing '{OpenCloseOperation} {OpenCloseSubject}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Lower curtains",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, closing the blinds",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, closing the blinds</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2800],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  },
+  {
+    "DialogID": "3",
+    "Description": "Testing '{OpenCloseSubject} {OpenCloseOperation}'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Shades up",
+        "WavFile": "",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "All right, opening the blinds",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">All right, opening the blinds</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": [2700],
+        "ExpectedResponseLatency": 3800
+      }
+    ]
+  }
+]
