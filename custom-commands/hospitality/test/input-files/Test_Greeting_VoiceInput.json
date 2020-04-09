@@ -7,7 +7,7 @@
       {
         "TurnID": 0,
         "Utterance": "What's up",
-        "WavFile": "",
+        "WavFile": "wav\\What_s_up.wav",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -22,7 +22,7 @@
       {
         "TurnID": 1,
         "Utterance": "Hello how are you",
-        "WavFile": "",
+        "WavFile": "wav\\Hello_how_are_you.wav",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -37,7 +37,7 @@
       {
         "TurnID": 2,
         "Utterance": "Hi there",
-        "WavFile": "",
+        "WavFile": "wav\\Hi_there.wav",
         "ExpectedResponses": [
           {
             "type": "message",

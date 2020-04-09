@@ -1,0 +1,24 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing 'turn it'",
+    "Skip": false,
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn it",
+        "WavFile": "wav\\turn_it.wav",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Sorry. I didn't quite catch that||I'm not sure what you meant by that",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">Sorry. I didn't quite catch that</voice></speak>||<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, Jessa24kRUS)\">I'm not sure what you meant by that</voice></speak>",
+            "inputHint": "acceptingInput"
+          }
+        ],
+        "ExpectedTTSAudioResponseDurations": ["3500||2500"],
+        "ExpectedResponseLatency": 9000
+      }
+    ]
+  }
+]

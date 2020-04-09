@@ -7,7 +7,7 @@
       {
         "TurnID": 0,
         "Utterance": "What can I do",
-        "WavFile": "",
+        "WavFile": "wav\\What_can_I_do.wav",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -22,7 +22,7 @@
       {
         "TurnID": 1,
         "Utterance": "I want assistance",
-        "WavFile": "",
+        "WavFile": "wav\\I_want_assistance.wav",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -37,7 +37,7 @@
       {
         "TurnID": 2,
         "Utterance": "What do i say",
-        "WavFile": "",
+        "WavFile": "wav\\What_do_i_say.wav",
         "ExpectedResponses": [
           {
             "type": "message",
