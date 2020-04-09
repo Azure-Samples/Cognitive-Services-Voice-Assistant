@@ -22,7 +22,20 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Event to indicate a log was generated.
         /// </summary>
-        public event EventHandler LogAvailable;
+        public static event EventHandler logAvailable;
+
+        public event EventHandler LogAvailable
+        {
+            add
+            {
+                logAvailable += value;
+            }
+
+            remove
+            {
+                logAvailable -= value;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogProvider"/> class.
@@ -86,7 +99,7 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public void OnLogAvailable()
         {
-            this.LogAvailable?.Invoke(this, EventArgs.Empty);
+            logAvailable?.Invoke(this, EventArgs.Empty);
         }
 
         private static LogLevel ConvertLogLevel(LogMessageLevel level)

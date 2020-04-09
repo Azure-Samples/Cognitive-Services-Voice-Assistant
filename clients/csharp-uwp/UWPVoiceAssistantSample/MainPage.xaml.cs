@@ -7,6 +7,7 @@ namespace UWPVoiceAssistantSample
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using NLog.Fluent;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Security.Authorization.AppCapabilityAccess;
@@ -41,7 +42,7 @@ namespace UWPVoiceAssistantSample
         public MainPage()
         {
             this.logger = LogRouter.GetClassLogger();
-            this.logger.Log(LogMessageLevel.Noise, "Main page created, UI rendering");
+            //this.logger.Log(LogMessageLevel.Noise, "Main page created, UI rendering");
 
             this.InitializeComponent();
 
@@ -184,8 +185,9 @@ namespace UWPVoiceAssistantSample
 
             this.logger.LogAvailable += (s, e) =>
             {
-                this.ReadBufferStream();
+                this.ReadLogBuffer();
             };
+            this.logger.Log(LogMessageLevel.Noise, "Main page created, UI rendering");
         }
 
         private void UpdateUIBasedOnToggles()
@@ -220,7 +222,6 @@ namespace UWPVoiceAssistantSample
             // UI changes must be performed on the UI thread.
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                this.ReadBufferStream();
                 this.RefreshStatus();
 
                 var session = await this.agentSessionManager.GetSessionAsync();
@@ -308,36 +309,39 @@ namespace UWPVoiceAssistantSample
             this.RefreshStatus();
         }
 
-        private void ReadBufferStream()
+        private async void ReadLogBuffer()
         {
-            for (var i = 0; i < this.logger.LogBuffer.Count; i++)
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                if (this.bufferIndex < this.logger.LogBuffer.Count)
+                for (var i = 0; i < this.logger.LogBuffer.Count; i++)
                 {
-                    string text = this.logger.LogBuffer[this.bufferIndex];
-                    if (text.Contains(" : ", StringComparison.OrdinalIgnoreCase))
+                    if (this.bufferIndex < this.logger.LogBuffer.Count)
                     {
-                        string[] split = text.Split(" : ");
-                        Paragraph paragraph = new Paragraph();
-                        Run run = new Run();
-                        run.Text = split[1];
-                        paragraph.Inlines.Add(run);
-                        this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                    }
-                    else
-                    {
-                        Paragraph paragraph = new Paragraph();
-                        Run run = new Run();
-                        run.Text = text;
-                        paragraph.Inlines.Add(run);
-                        this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                    }
+                        string text = this.logger.LogBuffer[this.bufferIndex];
+                        if (text.Contains(" : ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            string[] split = text.Split(" : ");
+                            Paragraph paragraph = new Paragraph();
+                            Run run = new Run();
+                            run.Text = split[1];
+                            paragraph.Inlines.Add(run);
+                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                        }
+                        else
+                        {
+                            Paragraph paragraph = new Paragraph();
+                            Run run = new Run();
+                            run.Text = text;
+                            paragraph.Inlines.Add(run);
+                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                        }
 
-                    this.bufferIndex++;
+                        this.bufferIndex++;
+                    }
                 }
-            }
 
-            this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
+                this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
+            });
         }
     }
 }
