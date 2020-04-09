@@ -105,12 +105,12 @@ steps:
 # Build Windows Voice Assistant Client (C#, WPF)
 
 - task: NuGetCommand@2
-  displayName: 'NuGetCommand - $(sample1Name)'
+  displayName: '$(sample1Name) - NuGetCommand'
   inputs:
     restoreSolution: '$(sample1Solution)'
 
 - task: VSBuild@1
-  displayName: 'VSBuild - $(sample1Name)'
+  displayName: '$(sample1Name) - VSBuild'
   inputs:
     solution: '$(sample1Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -128,7 +128,7 @@ steps:
     SessionTimeout: '60'
 
 - task: PublishPipelineArtifact@1
-  displayName: 'PublishPipelineArtifact - $(sample1Name)'
+  displayName: '$(sample1Name) - PublishPipelineArtifact'
   inputs:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
@@ -136,17 +136,17 @@ steps:
 # Build Voice Assistant Test (C# .NET Core)
 
 - task: DotNetCoreCLI@2
-  displayName: 'DotNetCoreCLI - $(sample2Name)'
+  displayName: '$(sample2Name) - DotNetCoreCLI'
   inputs:
     Command: 'publish'
     Projects: $(sample2Solution)
     publishWebProjects: false
-    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(dotNetCorePublishArtifactPath)  /p:PublishSingleFile=true'
+    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(sample2PublishedArtifactPath)  /p:PublishSingleFile=true'
     zipAfterPublish: false
     modifyOutputPath: true    
 
 - task: PublishPipelineArtifact@1
-  displayName: 'PublishPipelineArtifact - $(sample2Name)'
+  displayName: '$(sample2Name) - PublishPipelineArtifact'
   inputs:
     path: $(sample2PublishedArtifactPath)
     artifact: $(sample2PublishedArtifactName)
@@ -154,12 +154,12 @@ steps:
 # Build C++ console application
 
 - task: NuGetCommand@2
-  displayName: 'NuGetCommand - $(sample3Name)'
+  displayName: '$(sample3Name) - NuGetCommand'
   inputs:
     restoreSolution: '$(sample3Solution)'
     
 - task: VSBuild@1
-  displayName: 'VSBuild - $(sample3Name)'
+  displayName: '$(sample3Name) - VSBuild'
   inputs:
     solution: '$(sample3Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -169,12 +169,12 @@ steps:
 # Build UWP Voice Assistant Sample (C# UWP)
 
 - task: NuGetCommand@2
-  displayName: 'NuGetCommand - $(sample4Name)'
+  displayName: '$(sample4Name) - NuGetCommand'
   inputs:
     restoreSolution: '$(sample4Solution)'
 
 - task: VSBuild@1
-  displayName: 'VSBuild - $(sample4Name)'
+  displayName: '$(sample4Name) - VSBuild'
   inputs:
     solution: '$(sample4Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -182,7 +182,7 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: PublishPipelineArtifact@1
-  displayName: 'PublishPipelineArtifact - $(sample4Name)'
+  displayName: '$(sample4Name) - PublishPipelineArtifact'
   inputs:
     path: $(sample4PublishedArtifactPath)
     artifact: $(sample4PublishedArtifactName)
