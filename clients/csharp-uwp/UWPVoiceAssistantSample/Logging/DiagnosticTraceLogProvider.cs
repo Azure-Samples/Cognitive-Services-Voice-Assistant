@@ -3,6 +3,7 @@
 
 namespace UWPVoiceAssistantSample.Logging
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -26,6 +27,14 @@ namespace UWPVoiceAssistantSample.Logging
             this.name = name;
         }
 
+        /// <summary>
+        /// Event to indicate a log was generated.
+        /// </summary>
+        public event EventHandler LogAvailable;
+
+        /// <summary>
+        /// Gets the list of log messages.
+        /// </summary>
         public List<string> LogBuffer { get; }
 
         /// <summary>

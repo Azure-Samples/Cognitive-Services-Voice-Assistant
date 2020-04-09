@@ -181,6 +181,11 @@ namespace UWPVoiceAssistantSample
                     this.AddMessageToStatus($"Bot: \"{wrapper.Message}\"");
                 }
             };
+
+            this.logger.LogAvailable += (s, e) =>
+            {
+                this.ReadBufferStream();
+            };
         }
 
         private void UpdateUIBasedOnToggles()

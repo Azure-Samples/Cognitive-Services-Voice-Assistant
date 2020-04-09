@@ -3,6 +3,7 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -35,6 +36,11 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public interface ILogProvider
     {
+        /// <summary>
+        /// Event to indicate a log generated.
+        /// </summary>
+        event EventHandler LogAvailable;
+
         /// <summary>
         /// Gets the list of logs from LogBuffer.
         /// </summary>

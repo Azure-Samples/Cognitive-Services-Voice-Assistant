@@ -25,7 +25,12 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets the list of logs from LogBuffer.
+        /// Event to indicate a log was generated.
+        /// </summary>
+        public event EventHandler LogAvailable;
+
+        /// <summary>
+        /// Gets the list of log messages.
         /// </summary>
         public List<string> LogBuffer { get; }
 

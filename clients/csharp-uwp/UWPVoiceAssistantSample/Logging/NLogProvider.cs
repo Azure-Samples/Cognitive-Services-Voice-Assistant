@@ -3,6 +3,7 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using System;
     using System.Collections.Generic;
     using NLog;
     using Windows.Storage;
@@ -13,10 +14,15 @@ namespace UWPVoiceAssistantSample
     public class NLogProvider : ILogProvider
     {
         /// <summary>
-        /// List of Log messages.
+        /// List of log messages.
         /// </summary>
         public static readonly List<string> LogBuffer = new List<string>();
         private Logger logger;
+
+        /// <summary>
+        /// Event to indicate a log was generated.
+        /// </summary>
+        public event EventHandler LogAvailable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogProvider"/> class.
@@ -72,6 +78,15 @@ namespace UWPVoiceAssistantSample
         {
             this.logger.Log(ConvertLogLevel(level), message);
             LogBuffer.Add(message);
+            this.OnLogAvailable();
+        }
+
+        /// <summary>
+        /// Invokes the LogAvailable EventHandler to indicate a log was created.
+        /// </summary>
+        public void OnLogAvailable()
+        {
+            this.LogAvailable?.Invoke(this, EventArgs.Empty);
         }
 
         private static LogLevel ConvertLogLevel(LogMessageLevel level)
