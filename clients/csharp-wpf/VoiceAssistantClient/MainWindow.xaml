@@ -47,7 +47,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="" VerticalAlignment="Center" Name="ConnectionProfileInfoBlock" FontWeight="Bold"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2">
                     <Button Content="Reconnect" HorizontalAlignment="Right" VerticalAlignment="Center" Width="68" Height="35" Margin="5,0" Click="Reconnect_Click"/>
                     <Button Name="Settings"  ToolTip="Application settings"  Click="Settings_Click" Margin="5,0" Height="35" Width="35">

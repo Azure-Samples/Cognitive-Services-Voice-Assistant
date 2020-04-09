@@ -6,21 +6,21 @@ namespace VoiceAssistantClient.Settings
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.ComponentModel;
-    using System.Linq;
     using System.Runtime.CompilerServices;
-    using System.Text;
-    using System.Threading.Tasks;
 
     [Serializable]
     public class RuntimeSettings : INotifyPropertyChanged
     {
-        private ObservableCollection<string> cognitiveServiceKeyHistory = new ObservableCollection<string>();
-        private ObservableCollection<string> cognitiveServiceRegionHistory = new ObservableCollection<string>();
-        private ObservableCollection<string> customCommandsAppIdHistory = new ObservableCollection<string>();
+        private ObservableCollection<string> connectionProfileNameHistory = new ObservableCollection<string>();
+        private ObservableCollection<Dictionary<string, ConnectionProfile>> connectionProfileHistory = new ObservableCollection<Dictionary<string, ConnectionProfile>>();
+        private string connectionProfileName;
+        private Dictionary<string, ConnectionProfile> connectionProfile = new Dictionary<string, ConnectionProfile>();
         private string subscriptionKey;
         private string subscriptionKeyRegion;
         private string customCommandsAppId;
+        private string botId;
         private string language;
         private string logFilePath;
         private string customSpeechEndpointId;
@@ -34,6 +34,9 @@ namespace VoiceAssistantClient.Settings
         private string proxyPortNumber;
         private string fromId;
 
+        [NonSerialized]
+        private ConnectionProfile profile = new ConnectionProfile();
+
         public RuntimeSettings()
         {
             this.language = string.Empty;
@@ -41,6 +44,24 @@ namespace VoiceAssistantClient.Settings
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public ConnectionProfile Profile
+        {
+            get => this.profile;
+            set => this.SetProperty(ref this.profile, value);
+        }
+
+        public string ConnectionProfileName
+        {
+            get => this.connectionProfileName;
+            set => this.SetProperty(ref this.connectionProfileName, value);
+        }
+
+        public Dictionary<string, ConnectionProfile> ConnectionProfile
+        {
+            get => this.connectionProfile;
+            set => this.SetProperty(ref this.connectionProfile, value);
+        }
 
         public string SubscriptionKey
         {
@@ -58,6 +79,12 @@ namespace VoiceAssistantClient.Settings
         {
             get => this.customCommandsAppId;
             set => this.SetProperty(ref this.customCommandsAppId, value);
+        }
+
+        public string BotId
+        {
+            get => this.botId;
+            set => this.SetProperty(ref this.botId, value);
         }
 
         public string Language
@@ -132,142 +159,74 @@ namespace VoiceAssistantClient.Settings
             set => this.SetProperty(ref this.fromId, value);
         }
 
-        public ObservableCollection<string> CognitiveServiceKeyHistory
+        public ObservableCollection<string> ConnectionProfileNameHistory
         {
             get
             {
-                return this.cognitiveServiceKeyHistory;
+                return this.connectionProfileNameHistory;
             }
 
             set
             {
-                if (this.cognitiveServiceKeyHistory != null)
+                if (this.connectionProfileNameHistory != null)
                 {
-                    this.cognitiveServiceKeyHistory.CollectionChanged -= this.CognitiveServiceKeyHistory_CollectionChanged;
+                    this.connectionProfileNameHistory.CollectionChanged -= this.ConnectionProfileNameHistory_CollectionChanged;
                 }
 
-                this.cognitiveServiceKeyHistory = value;
-                this.cognitiveServiceKeyHistory.CollectionChanged += this.CognitiveServiceKeyHistory_CollectionChanged;
+                this.connectionProfileNameHistory = value;
+                if (this.connectionProfileNameHistory != null)
+                {
+                    this.connectionProfileNameHistory.CollectionChanged += this.ConnectionProfileNameHistory_CollectionChanged;
+                }
+
                 this.OnPropertyChanged();
             }
         }
 
-        public ObservableCollection<string> CognitiveServiceRegionHistory
+        public ObservableCollection<Dictionary<string, ConnectionProfile>> ConnectionProfileHistory
         {
             get
             {
-                return this.cognitiveServiceRegionHistory;
+                return this.connectionProfileHistory;
             }
 
             set
             {
-                if (this.cognitiveServiceRegionHistory != null)
+                if (this.connectionProfileHistory != null)
                 {
-                    this.cognitiveServiceRegionHistory.CollectionChanged -= this.CognitiveServiceRegionHistory_CollectionChanged;
+                    this.connectionProfileHistory.CollectionChanged -= this.ConnectionProfileHistory_CollectionChanged;
                 }
 
-                this.cognitiveServiceRegionHistory = value;
-                this.cognitiveServiceRegionHistory.CollectionChanged += this.CognitiveServiceRegionHistory_CollectionChanged;
+                this.connectionProfileHistory = value;
+                if (this.connectionProfileHistory != null)
+                {
+                    this.connectionProfileHistory.CollectionChanged += this.ConnectionProfileHistory_CollectionChanged;
+                }
+
                 this.OnPropertyChanged();
             }
         }
 
-        public ObservableCollection<string> CustomCommandsAppIdHistory
-        {
-            get
-            {
-                return this.customCommandsAppIdHistory;
-            }
-
-            set
-            {
-                if (this.customCommandsAppIdHistory != null)
-                {
-                    this.customCommandsAppIdHistory.CollectionChanged -= this.CustomCommandsAppIdHistory_CollectionChanged;
-                }
-
-                this.customCommandsAppIdHistory = value;
-                this.customCommandsAppIdHistory.CollectionChanged += this.CustomCommandsAppIdHistory_CollectionChanged;
-                this.OnPropertyChanged();
-            }
-        }
-
-        internal (string subscriptionKey, string subscriptionKeyRegion, string customCommandsAppId, string language, string logFilePath, string customSpeechEndpointId, bool customSpeechEnabled, string voiceDeploymentIds, bool voiceDeploymentEnabled, bool wakeWordEnabled, string urlOverride,
-            string proxyHostName, string proxyPortNumber, string fromId, ObservableCollection<string> CognitiveServiceKeyHistory, ObservableCollection<string> CognitiveServiceRegionHistory) Get()
+        internal (string connectionProfileName, Dictionary<string, ConnectionProfile> connectionProfile, ConnectionProfile profile) Get()
         {
             return (
-                this.subscriptionKey,
-                this.subscriptionKeyRegion,
-                this.customCommandsAppId,
-                this.language,
-                this.logFilePath,
-                this.customSpeechEndpointId,
-                this.customSpeechEnabled,
-                this.voiceDeploymentIds,
-                this.voiceDeploymentEnabled,
-                this.wakeWordEnabled,
-                this.urlOverride,
-                this.proxyHostName,
-                this.proxyPortNumber,
-                this.fromId,
-                this.CognitiveServiceKeyHistory,
-                this.CognitiveServiceRegionHistory);
+                this.connectionProfileName,
+                this.connectionProfile,
+                this.profile);
         }
 
         internal void Set(
-            string subscriptionKey,
-            string subscriptionKeyRegion,
-            string customCommandsAppId,
-            string language,
-            string logFilePath,
-            string customSpeechEndpointId,
-            bool customSpeechEnabled,
-            string voiceDeploymentIds,
-            bool voiceDeploymentEnabled,
-            string wakeWordPath,
-            bool wakeWordEnabled,
-            string urlOverride,
-            string proxyHostName,
-            string proxyPortNumber,
-            string fromId,
-            ObservableCollection<string> cognitiveServiceKeyHistory,
-            ObservableCollection<string> cognitiveServiceRegionHistory)
+            string connectionProfileName,
+            Dictionary<string, ConnectionProfile> connectionProfile,
+            ConnectionProfile profile)
         {
-            (this.subscriptionKey,
-                this.subscriptionKeyRegion,
-                this.customCommandsAppId,
-                this.language,
-                this.logFilePath,
-                this.customSpeechEndpointId,
-                this.customSpeechEnabled,
-                this.voiceDeploymentIds,
-                this.voiceDeploymentEnabled,
-                this.wakeWordPath,
-                this.wakeWordEnabled,
-                this.urlOverride,
-                this.proxyHostName,
-                this.proxyPortNumber,
-                this.fromId,
-                this.cognitiveServiceKeyHistory,
-                this.cognitiveServiceRegionHistory)
+            (this.connectionProfileName,
+                this.connectionProfile,
+                this.profile)
                 =
-            (subscriptionKey,
-                subscriptionKeyRegion,
-                customCommandsAppId,
-                language,
-                logFilePath,
-                customSpeechEndpointId,
-                customSpeechEnabled,
-                voiceDeploymentIds,
-                voiceDeploymentEnabled,
-                wakeWordPath,
-                wakeWordEnabled,
-                urlOverride,
-                proxyHostName,
-                proxyPortNumber,
-                fromId,
-                this.CognitiveServiceKeyHistory,
-                this.CognitiveServiceRegionHistory);
+            (connectionProfileName,
+                connectionProfile,
+                profile);
         }
 
         protected void SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
@@ -284,19 +243,14 @@ namespace VoiceAssistantClient.Settings
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void CognitiveServiceKeyHistory_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ConnectionProfileNameHistory_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.OnPropertyChanged(nameof(this.CognitiveServiceKeyHistory));
+            this.OnPropertyChanged(nameof(this.ConnectionProfileNameHistory));
         }
 
-        private void CognitiveServiceRegionHistory_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ConnectionProfileHistory_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.OnPropertyChanged(nameof(this.CognitiveServiceRegionHistory));
-        }
-
-        private void CustomCommandsAppIdHistory_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            this.OnPropertyChanged(nameof(this.CustomCommandsAppIdHistory));
+            this.OnPropertyChanged(nameof(this.ConnectionProfileHistory));
         }
     }
 }

@@ -3,11 +3,6 @@
 
 namespace VoiceAssistantClient.Settings
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Jot.DefaultInitializer;
 
     public class AppSettings

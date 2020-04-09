@@ -98,7 +98,7 @@ Now, write the test configuration. Copy and paste the following to your text edi
             "inputHint": "expectingInput"
           }
         ],
-        "ExpectedTTSAudioResponseDuration": [2300, 8200],
+        "ExpectedTTSAudioResponseDurations": [2300, 8200],
         "ExpectedResponseLatency": 3000
       }
     ]
@@ -112,7 +112,7 @@ The test includes one dialog to verify the bot's greeting. It has the following 
 * Turns - A dialog with the bot may contain several turns (user request followed by bot reply). Here we list one turn, and it is a greeting turn in the sense that we only specify the expect bot reply. We do not specify a preceding user request.
     * TurnId - A non-negative integer that enumerates the turns, starting from 0.
     * ExpectedResponses - This is an array that lists the bot reply activities in the order you expect the client to receive them. Each activity is JSON string that follows the [Bot-Framework Activity schema](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md). You only need to list the activity fields that you care about. In the example above, we expect the bot greeting to include two activities of type "message". We list values for "text", "speak", "inputHint" and "attachments". If the actual activities received have different values for these fields, the test will fail. Note that the tool first orders the bot responses based on the [activity timestamp](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp) field, before comparing to the expected bot responses.
-    * ExpectedTTSAudioResponseDuration - An optional array of integers, specifying the expected duration in msec of the resulting Text-to-Speech (TTS) audio stream associated with each bot-reply activity. The length of this array must equal the length of the ExpectedResponses array. If there is no TTS audio associated with any of the bot-reply activities, you can enter a value of -1. The duration does not need to be exact. When the tool compares expected duration to actual duration, there is a tolerance defined by the application configuration setting TTSAudioDurationMargin. Its default value is 200 msec.
+    * ExpectedTTSAudioResponseDurations - An optional array of integers, specifying the expected duration in msec of the resulting Text-to-Speech (TTS) audio stream associated with each bot-reply activity. The length of this array must equal the length of the ExpectedResponses array. If there is no TTS audio associated with any of the bot-reply activities, you can enter a value of -1. The duration does not need to be exact. When the tool compares expected duration to actual duration, there is a tolerance defined by the application configuration setting TTSAudioDurationMargin. Its default value is 200 msec.
     * ExpectedResponseLatency - Specifies the maximum expected duration to receive all the bot responses, in msec. If the actual duration is larger than the value specified here, the test will fail.
 
 ## Step 4: Run your test
@@ -144,7 +144,7 @@ Notice that these files and folder were created by the tool:
 * [TestConfigOutput\TestConfigOutput.json](core-bot-examples/greeting/TestConfigOutput/TestConfigOutput.json) - A detailed result of executing the dialogs specified in the TestConfig.txt file (here we only have on bot-greeting dialog). It lists all the expected values and the actual values observed when executing the dialog. At the end it also lists the pass/fail result for each validation step:
     * ResponseMatch - True if ActualResponses matched ExpectedResponses
     * UtteranceMatch - True if expected speech recognition matched actual speech recognition result. This is only relevant for turns with WAV file input (to be discussed further down)
-    * TTSAudioResponseDurationMatch - True if ActualTTSAudioResponseDuration values are all within the tolerance range of ExpectedTTSAudioResponseDuration.
+    * TTSAudioResponseDurationMatch - True if ActualTTSAudioResponseDuration values are all within the tolerance range of ExpectedTTSAudioResponseDurations.
     * ResponseLatencyMatch - True if ActualResponseLatency is less or equal ExpectedResponseLatency.
     * Pass - True if all of the above are true.
 * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-0.WAV](core-bot-examples/greeting/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-0.WAV) - This is the TTS audio stream associated with the first bot response ("welcome to Bot Framework"). The WAV file name is a concatenation of 
@@ -191,7 +191,7 @@ Now that you've verified the expected bot greeting, update your test configurati
             "inputHint": "expectingInput"
           }
         ],
-        "ExpectedTTSAudioResponseDuration": [2300, 8200],
+        "ExpectedTTSAudioResponseDurations": [2300, 8200],
         "ExpectedResponseLatency": 3000
       },
       {
@@ -206,7 +206,7 @@ Now that you've verified the expected bot greeting, update your test configurati
             "inputHint": "expectingInput"
           }
         ],
-        "ExpectedTTSAudioResponseDuration": [9221],
+        "ExpectedTTSAudioResponseDurations": [9221],
         "ExpectedResponseLatency": 1000,
       },
       {
@@ -227,7 +227,7 @@ Now that you've verified the expected bot greeting, update your test configurati
             "inputHint": "expectingInput"
           }
         ],
-        "ExpectedTTSAudioResponseDuration": [5100, 2200],
+        "ExpectedTTSAudioResponseDurations": [5100, 2200],
         "ExpectedResponseLatency": 1000,
       }
     ]
