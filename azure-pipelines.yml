@@ -29,8 +29,6 @@ variables:
   buildConfiguration: Release
   dotNetCoreRuntimeIdentifier: win-x64 
   dotNetCoreVersion: '3.1'
-  dotNetCorePublishArtifactPath: 'DotNetCorePublish'
-  dotNetCorePublishArtifactName: 'DotNetCoreExecutables'
 
   # Sample 1: Windows Voice Assistant Client, C# WPF (\clients\csharp-wpf)
   sample1Name: VoiceAssistantClient
@@ -43,7 +41,9 @@ variables:
   sample2Name: VoiceAssistantTest
   sample2Folder: 'clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\$(sample2Name).sln'
-  
+  sample2PublishedArtifactPath: 'DotNetCorePublish'
+  sample2PublishedArtifactName: 'DotNetCoreExecutables'
+
   # Sample 3: Windows console Voice Assistant Client, C++ (\clients\cpp-console)
   sample3Name: VoiceAssistantCPPClient
   sample3Folder: 'clients\cpp-console'
@@ -102,11 +102,12 @@ steps:
 
 - task: NuGetToolInstaller@1
 
+# Build Windows Voice Assistant Client (C#, WPF)
+
 - task: NuGetCommand@2
+  displayName: 'NuGetCommand - $(sample1Name)'
   inputs:
     restoreSolution: '$(sample1Solution)'
-
-# Build Windows Voice Assistant Client (C#, WPF)
 
 - task: VSBuild@1
   displayName: 'VSBuild - $(sample1Name)'
@@ -127,7 +128,7 @@ steps:
     SessionTimeout: '60'
 
 - task: PublishPipelineArtifact@1
-  displayName: 'PublishPipelineArtifact - Publish artifacts for $(sample1Name)'
+  displayName: 'PublishPipelineArtifact - $(sample1Name)'
   inputs:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
@@ -135,7 +136,7 @@ steps:
 # Build Voice Assistant Test (C# .NET Core)
 
 - task: DotNetCoreCLI@2
-  displayName: 'DotNetCoreCLI - .NET Core build and publish $(sample2Name)'
+  displayName: 'DotNetCoreCLI - $(sample2Name)'
   inputs:
     Command: 'publish'
     Projects: $(sample2Solution)
@@ -145,19 +146,20 @@ steps:
     modifyOutputPath: true    
 
 - task: PublishPipelineArtifact@1
-  displayName: 'PublishPipelineArtifact - Publish artifacts for .NET core executables'
+  displayName: 'PublishPipelineArtifact - $(sample2Name)'
   inputs:
-    path: $(dotNetCorePublishArtifactPath)
-    artifact: $(dotNetCorePublishArtifactName)
+    path: $(sample2PublishedArtifactPath)
+    artifact: $(sample2PublishedArtifactName)
     
-# Build cpp console application (C++)
+# Build C++ console application
 
 - task: NuGetCommand@2
+  displayName: 'NuGetCommand - $(sample3Name)'
   inputs:
     restoreSolution: '$(sample3Solution)'
     
 - task: VSBuild@1
-  displayName: 'VSCPPBuild - $(sample3Name)'
+  displayName: 'VSBuild - $(sample3Name)'
   inputs:
     solution: '$(sample3Solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -167,6 +169,7 @@ steps:
 # Build UWP Voice Assistant Sample (C# UWP)
 
 - task: NuGetCommand@2
+  displayName: 'NuGetCommand - $(sample4Name)'
   inputs:
     restoreSolution: '$(sample4Solution)'
 
@@ -177,6 +180,12 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
+
+- task: PublishPipelineArtifact@1
+  displayName: 'PublishPipelineArtifact - $(sample4Name)'
+  inputs:
+    path: $(sample4PublishedArtifactPath)
+    artifact: $(sample4PublishedArtifactName)
 
 #- task: VSTest@2
 #  inputs:
