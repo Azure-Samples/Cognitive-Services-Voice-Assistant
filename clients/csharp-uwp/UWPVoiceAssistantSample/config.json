@@ -1,8 +1,8 @@
 {
-  "SpeechSubscriptionKey": "f0b40e9e67db4c9392e174946bb15436",
+  "SpeechSubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
   "AzureRegion": "westus",
   "CustomSpeechId": "",
   "CustomVoiceIds": "",
   "CustomCommandsAppId": "",
-  "BotId": "Sajjad-EchoBot-BotId1"
+  "BotId": ""
 }
