@@ -45,7 +45,7 @@ variables:
   sample2Name: VoiceAssistantTest
   sample2Folder: 'clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\$(sample2Name).sln'
-  sample2PublishedArtifactPath: 'DotNetCorePublish'
+  sample2PublishedArtifactPath: '$(sample2Name)Publish'
   sample2PublishedArtifactName: 'VoiceAssistantTest-$(Build.BuildNumber)'
 
   # Sample 3: Windows console Voice Assistant Client, C++ (\clients\cpp-console)
