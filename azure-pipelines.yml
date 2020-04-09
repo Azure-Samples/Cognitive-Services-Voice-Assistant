@@ -18,7 +18,11 @@ pr:
     include:
     - master
     
-pool: 'Voice Assistant Agent Pool'
+pool:
+  vmImage: 'windows-latest'
+
+# Use this when build agents are ready:
+# pool: 'Voice Assistant Agent Pool'
 
 
 variables:
@@ -35,28 +39,28 @@ variables:
   sample1Folder: 'clients\csharp-wpf'
   sample1Solution: '$(sample1Folder)\$(sample1Name).sln'
   sample1PublishedArtifactPath: '$(sample1Folder)\$(sample1Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
-  sample1PublishedArtifactName: 'WindowsVoiceAssistantClientBuild'
+  sample1PublishedArtifactName: 'WindowsVoiceAssistantClient-$(Build.BuildNumber)''
 
   # Sample 2: Voice Assistant Test, .NET core (\clients\csharp-dotnet-core\voice-assistant-test)
   sample2Name: VoiceAssistantTest
   sample2Folder: 'clients\csharp-dotnet-core\voice-assistant-test\tool'
   sample2Solution: '$(sample2Folder)\$(sample2Name).sln'
   sample2PublishedArtifactPath: 'DotNetCorePublish'
-  sample2PublishedArtifactName: 'DotNetCoreExecutables'
+  sample2PublishedArtifactName: 'VoiceAssistantTest-$(Build.BuildNumber)'
 
   # Sample 3: Windows console Voice Assistant Client, C++ (\clients\cpp-console)
   sample3Name: VoiceAssistantCPPClient
   sample3Folder: 'clients\cpp-console'
   sample3Solution: '$(sample3Folder)\src\windows\cppSample.sln'
   sample3PublishedArtifactPath: '$(sample3Folder)\out'
-  sample3PublishedArtifactName: 'CppSample'
+  sample3PublishedArtifactName: 'CppSample-$(Build.BuildNumber)'
  
   # Sample 4: UWP Voice Assistant Sample (\clients\csharp-uwp)
   sample4Name: UWPVoiceAssistantSample
   sample4Folder: 'clients\csharp-uwp'
   sample4Solution: '$(sample4Folder)\$(sample4Name).sln'
   sample4PublishedArtifactPath: '$(sample4Folder)\$(sample4Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
-  sample4PublishedArtifactName: '$(sample4Name)'
+  sample4PublishedArtifactName: '$(sample4Name)-$(Build.BuildNumber)'
 
   # ESRP code signing
   signParams: |
@@ -118,7 +122,7 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  displayName: 'Code sign $(sample1Name)'
+  displayName: '$(sample1Name) - EsrpCodeSigning'
   inputs:
     ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing' 
     signConfigType: inlineSignParams
@@ -168,26 +172,24 @@ steps:
 
 # Build UWP Voice Assistant Sample (C# UWP)
 
-- task: NuGetCommand@2
-  displayName: '$(sample4Name) - NuGetCommand'
-  inputs:
-    restoreSolution: '$(sample4Solution)'
+#- task: NuGetCommand@2
+#  displayName: '$(sample4Name) - NuGetCommand'
+#  inputs:
+#    restoreSolution: '$(sample4Solution)'
 
-- task: VSBuild@1
-  displayName: '$(sample4Name) - VSBuild'
-  inputs:
-    solution: '$(sample4Solution)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
+#- task: VSBuild@1
+#  displayName: '$(sample4Name) - VSBuild'
+#  inputs:
+#    solution: '$(sample4Solution)'
+#    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+#    platform: '$(buildPlatformNative)'
+#    configuration: '$(buildConfiguration)'
 
-#     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-
-- task: PublishPipelineArtifact@1
-  displayName: '$(sample4Name) - PublishPipelineArtifact'
-  inputs:
-    path: $(sample4PublishedArtifactPath)
-    artifact: $(sample4PublishedArtifactName)
+#- task: PublishPipelineArtifact@1
+#  displayName: '$(sample4Name) - PublishPipelineArtifact'
+#  inputs:
+#    path: $(sample4PublishedArtifactPath)
+#    artifact: $(sample4PublishedArtifactName)
 
 #- task: VSTest@2
 #  inputs:
