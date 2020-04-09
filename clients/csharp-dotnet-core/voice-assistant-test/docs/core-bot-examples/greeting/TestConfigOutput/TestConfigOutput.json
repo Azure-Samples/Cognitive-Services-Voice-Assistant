@@ -1,0 +1,145 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing core bot greeting",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Keyword": false,
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "speak": "Welcome to Bot Framework!",
+            "inputHint": "acceptingInput",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "inputHint": "expectingInput"
+          }
+        ],
+        "ActualResponses": [
+          {
+            "type": "message",
+            "id": "a32bad1d-bd2a-4b3e-9dff-4f318cb7cbc4",
+            "timestamp": "2020-02-24T22:24:26.2125217+00:00",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "from": {
+              "id": "dcohen-core-bot-registration",
+              "name": "dcohen-core-bot-registration"
+            },
+            "conversation": {
+              "isGroup": false,
+              "id": "eea7dba1-59a5-4cac-82b6-7fd1e06a9de7"
+            },
+            "recipient": {
+              "id": "eea7dba1-59a5-4cac-82b6-7fd1e06a9de7|0000"
+            },
+            "attachmentLayout": "list",
+            "speak": "Welcome to Bot Framework!",
+            "inputHint": "acceptingInput",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  "actions": [
+                    {
+                      "title": "Get an overview",
+                      "type": "Action.OpenUrl",
+                      "url": "https://docs.microsoft.com/en-us/azure/bot-service/?view=azure-bot-service-4.0"
+                    },
+                    {
+                      "title": "Ask a question",
+                      "type": "Action.OpenUrl",
+                      "url": "https://stackoverflow.com/questions/tagged/botframework"
+                    },
+                    {
+                      "title": "Learn how to deploy",
+                      "type": "Action.OpenUrl",
+                      "url": "https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-howto-deploy-azure?view=azure-bot-service-4.0"
+                    }
+                  ],
+                  "body": [
+                    {
+                      "size": "stretch",
+                      "type": "Image",
+                      "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtB3AwMUeNoq4gUBGe6Ocj8kyh3bXa9ZbV7u1fVKQoyKFHdkqU"
+                    },
+                    {
+                      "maxLines": 0,
+                      "size": "default",
+                      "spacing": "medium",
+                      "text": "Welcome to Bot Framework!",
+                      "type": "TextBlock",
+                      "weight": "bolder",
+                      "wrap": true
+                    },
+                    {
+                      "isSubtle": true,
+                      "maxLines": 0,
+                      "size": "default",
+                      "text": "Now that you have successfully run your bot, follow the links in this Adaptive Card to expand your knowledge of Bot Framework.",
+                      "type": "TextBlock",
+                      "wrap": true
+                    }
+                  ],
+                  "type": "AdaptiveCard",
+                  "version": "1.0"
+                }
+              }
+            ],
+            "entities": [],
+            "replyToId": "be413f6a-64b8-418d-9aa0-437c03ebf1a5"
+          },
+          {
+            "type": "message",
+            "id": "ff6d4992-7106-4cbb-a28f-cb9cedd7ef8c",
+            "timestamp": "2020-02-24T22:24:26.3068045+00:00",
+            "serviceUrl": "urn:botframework:websocket:directlinespeech",
+            "channelId": "directlinespeech",
+            "from": {
+              "id": "dcohen-core-bot-registration",
+              "name": "dcohen-core-bot-registration"
+            },
+            "conversation": {
+              "isGroup": false,
+              "id": "eea7dba1-59a5-4cac-82b6-7fd1e06a9de7"
+            },
+            "recipient": {
+              "id": "eea7dba1-59a5-4cac-82b6-7fd1e06a9de7|0000"
+            },
+            "text": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "speak": "What can I help you with today?\nSay something like \"Book a flight from Paris to Berlin on March 22, 2020\"",
+            "inputHint": "expectingInput",
+            "attachments": [],
+            "entities": [],
+            "replyToId": "be413f6a-64b8-418d-9aa0-437c03ebf1a5"
+          }
+        ],
+        "ExpectedTTSAudioResponseDuration": [
+          2300,
+          8200
+        ],
+        "ActualTTSAudioResponseDuration": [
+          2304,
+          8197
+        ],
+        "ExpectedResponseLatency": "3000",
+        "ActualResponseLatency": 460,
+        "ResponseMatch": true,
+        "UtteranceMatch": true,
+        "TTSAudioResponseDurationMatch": true,
+        "ResponseLatencyMatch": true,
+        "Pass": true
+      }
+    ]
+  }
+]

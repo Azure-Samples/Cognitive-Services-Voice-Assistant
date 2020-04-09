@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoiceAssistantTest", "VoiceAssistantTest.csproj", "{6F56F5C6-AAC1-4613-BEF0-A56E2D4B4AED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F56F5C6-AAC1-4613-BEF0-A56E2D4B4AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F56F5C6-AAC1-4613-BEF0-A56E2D4B4AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F56F5C6-AAC1-4613-BEF0-A56E2D4B4AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F56F5C6-AAC1-4613-BEF0-A56E2D4B4AED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B1B3BBD-AC3E-4C78-8376-1CBAF0CF4EC5}
+	EndGlobalSection
+EndGlobal

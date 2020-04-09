@@ -1,0 +1,21 @@
+[
+  {
+    "FileName": "c:\\test\\TestConfig.json",
+    "DialogCount": 1,
+    "DialogPassCount": 1,
+    "DialogPassRate": 1.0,
+    "DialogResults": [
+      {
+        "DialogID": "0",
+        "Description": "Testing core bot greeting",
+        "TurnCount": 3,
+        "TurnPassResults": [
+          true,
+          true,
+          true
+        ],
+        "DialogPass": true
+      }
+    ]
+  }
+]

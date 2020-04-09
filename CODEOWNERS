@@ -1,0 +1,11 @@
+#
+# This GitHub team is the default code owners for the whole repo. 
+# Since the "Require review from Code Owners" box is checked, at least one person from this group
+# needs to approve the pull-request before it can merge to master.
+# (Settings -> Branches -> Main -> Require pull request reviews before merging -> Require review from Code Owners)
+# For more info on Code Owners, see:
+# https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+# To view who is in this group, see:
+# https://github.com/orgs/Azure-Samples/teams/cognitive-services-voice-assistant-maintain
+#
+*       @Azure-Samples/cognitive-services-voice-assistant-maintain

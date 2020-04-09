@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="VoiceAssistantClient.ConversationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VoiceAssistantClient"
+             mc:Ignorable="d" 
+            d:DesignHeight="300" d:DesignWidth="460">
+
+    <ListView ItemsSource="{Binding Messages}" x:Name="ConversationHistory" HorizontalContentAlignment="Stretch"
+              ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            </Style>
+        </ListView.ItemContainerStyle>
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Vertical">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!--Columns to support messages being left/right aligned based on source-->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="{x:Type ColumnDefinition}">
+                                        <Setter Property="Width" Value="1*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=From}" Value="User">
+                                                <Setter Property="Width" Value="0" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Style>
+                                    <Style TargetType="{x:Type ColumnDefinition}">
+                                        <Setter Property="Width" Value="1*" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=From}" Value="Bot">
+                                                <Setter Property="Width" Value="0" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ColumnDefinition.Style>
+                            </ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Actual message -->
+                        <Grid Grid.Row="0" Grid.Column="1" Margin="5, 0" Visibility="{Binding Visibility}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Border  BorderBrush="Black" CornerRadius="10" Padding="2" HorizontalAlignment="Right" Background="SteelBlue"  Name="textBubble" >
+                                <TextBox  Grid.Row="1" Text="{Binding Message}" Background="Transparent" Foreground="White" FontWeight="Bold" Name="textBlock"  
+                                                   HorizontalAlignment="Center" TextAlignment="Center" MinWidth="50"  BorderThickness="0" Padding="5,0"
+                                                   TextWrapping="Wrap"/>
+                            </Border>
+                            <Polygon  Points="0,0 -16,0 0,5"  Fill="SteelBlue" Margin="0,-1,5,0" HorizontalAlignment="Right" Grid.Row="1" Name="bubbleTip"  />
+                        </Grid>
+
+                        <!-- Adaptive cards -->
+                        <ListView Grid.Row="1" Grid.Column="1" BorderThickness="0" ItemsSource="{Binding AdaptiveCards}" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border  BorderBrush="{x:Static SystemColors.ActiveBorderBrush}" CornerRadius="8" BorderThickness="1">
+                                        <ContentPresenter Margin="3,3" Name="adaptiveCard" Content="{Binding}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </StackPanel>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding Path=From}" Value="User">
+                        <Setter Property="Background" Value="SteelBlue" TargetName="textBubble"/>
+                        <Setter Property="Fill" Value="SteelBlue" TargetName="bubbleTip"/>
+                        <Setter Property="Points" Value="0,0 0,5 16,0" TargetName="bubbleTip"/>
+                        <Setter Property="Margin" Value="5,-1,0,0" TargetName="bubbleTip"/>
+                        <Setter Property="HorizontalAlignment" Value="Left" TargetName="textBubble"/>
+                        <Setter Property="HorizontalAlignment"  Value="Left" TargetName="textBlock"/>
+                        <Setter Property="HorizontalAlignment" Value="Left" TargetName="bubbleTip"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=From}" Value="Bot">
+                        <Setter Property="Points" Value="0,0 -16,0 0,5" TargetName="bubbleTip"/>
+                        <Setter Property="Margin" Value="0,-1,5,0" TargetName="bubbleTip"/>
+                        <Setter Property="Background" Value="ForestGreen" TargetName="textBubble"/>
+                        <Setter Property="Fill" Value="ForestGreen" TargetName="bubbleTip"/>
+                        <Setter Property="HorizontalAlignment" Value="Right" TargetName="textBubble"/>
+                        <Setter Property="HorizontalAlignment"  Value="Right" TargetName="textBlock"/>
+                        <Setter Property="HorizontalAlignment" Value="Right" TargetName="bubbleTip"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=From}" Value="Channel">
+                        <Setter Property="Background" Value="DarkRed" TargetName="textBubble"/>
+                        <Setter Property="Points" Value="" TargetName="bubbleTip"/>
+                        <Setter Property="HorizontalAlignment" Value="Center" TargetName="textBubble"/>
+                        <Setter Property="HorizontalAlignment"  Value="Center" TargetName="textBlock"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</UserControl>

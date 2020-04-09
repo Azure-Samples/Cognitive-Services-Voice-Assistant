@@ -1,0 +1,12 @@
+[Unit]
+Description=Hospitality Demo service
+
+[Service]
+Requires=connectivity-manager.service audio-manager.service
+Restart=always
+RestartSec=1
+Type=forking
+ExecStart=/data/cppSample/startService.sh
+
+[Install]
+WantedBy=multi-user.target
