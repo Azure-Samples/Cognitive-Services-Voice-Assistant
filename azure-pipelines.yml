@@ -39,7 +39,7 @@ variables:
   sample1Folder: 'clients\csharp-wpf'
   sample1Solution: '$(sample1Folder)\$(sample1Name).sln'
   sample1PublishedArtifactPath: '$(sample1Folder)\$(sample1Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
-  sample1PublishedArtifactName: 'WindowsVoiceAssistantClient-$(Build.BuildNumber)''
+  sample1PublishedArtifactName: 'WindowsVoiceAssistantClient-$(Build.BuildNumber)'
 
   # Sample 2: Voice Assistant Test, .NET core (\clients\csharp-dotnet-core\voice-assistant-test)
   sample2Name: VoiceAssistantTest
