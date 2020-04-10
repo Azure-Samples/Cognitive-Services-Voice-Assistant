@@ -15,7 +15,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [11650],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       },
       {
         "TurnID": 1,
@@ -29,7 +29,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [11650],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       },
       {
         "TurnID": 2,
@@ -43,7 +43,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [11650],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   }

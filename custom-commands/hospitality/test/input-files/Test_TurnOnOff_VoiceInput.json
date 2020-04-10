@@ -16,7 +16,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       },
       {
         "TurnID": 1,
@@ -31,7 +31,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -52,7 +52,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -73,7 +73,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -94,7 +94,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2500],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -115,7 +115,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -136,7 +136,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -157,7 +157,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -178,7 +178,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       },
       {
         "TurnID": 1,
@@ -193,7 +193,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       },
       {
         "TurnID": 2,
@@ -208,7 +208,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -229,7 +229,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       },
       {
         "TurnID": 1,
@@ -244,7 +244,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       },
       {
         "TurnID": 2,
@@ -259,7 +259,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2600],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   },
@@ -280,7 +280,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       },
       {
         "TurnID": 1,
@@ -295,7 +295,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 500
+        "ExpectedResponseLatency": 1500
       }
     ]
   }

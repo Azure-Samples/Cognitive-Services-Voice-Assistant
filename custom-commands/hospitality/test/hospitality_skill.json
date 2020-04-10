@@ -100,5 +100,4 @@
   "SubscriptionKey": "0123456789abcdef0123456789abcdef",
   "Region": "westus2",
   "CustomCommandsAppId": "abcdef0123456789abcdef0123456789",
-  "BotGreeting": false
 }
