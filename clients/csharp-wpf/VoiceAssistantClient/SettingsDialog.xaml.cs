@@ -79,6 +79,11 @@ namespace VoiceAssistantClient
             this.VoiceDeploymentIdsTextBox.Text = this.settings.Profile.VoiceDeploymentIds;
             this.VoiceDeploymentEnabledBox.IsChecked = this.settings.Profile.VoiceDeploymentEnabled;
 
+            if (!this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
+            {
+                this.ConnectionProfileComboBox.Text = string.Empty;
+            }
+
             base.OnActivated(e);
         }
 
@@ -247,6 +252,7 @@ namespace VoiceAssistantClient
             else
             {
                 this.ConnectionProfileComboBox.Text = string.Empty;
+                this.ConnectionProfileName = string.Empty;
                 this.SetConnectionSettingsTextBoxesToEmpty();
             }
 
