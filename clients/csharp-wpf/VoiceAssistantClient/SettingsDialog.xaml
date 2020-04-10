@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Settings" MinHeight="700" Height="700" Width="675" MinWidth="500" >
+        Title="Settings" MinHeight="700" Height="700" Width="675" MinWidth="675" 
+        WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Margin" Value="0,2"/>
