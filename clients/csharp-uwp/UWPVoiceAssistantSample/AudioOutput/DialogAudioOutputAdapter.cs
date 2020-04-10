@@ -8,8 +8,8 @@ namespace UWPVoiceAssistantSample
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+    using UWPVoiceAssistantSample.AudioOutput;
     using Windows.Devices.Enumeration;
-    using Windows.Media;
     using Windows.Media.Audio;
     using Windows.Media.MediaProperties;
     using Windows.Media.Render;
@@ -31,7 +31,6 @@ namespace UWPVoiceAssistantSample
         private DeviceWatcher audioOutputDeviceWatcher;
         private bool firstDeviceEnumerationComplete = false;
         private bool alreadyDisposed = false;
-        private int activeUtterances = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogAudioOutputAdapter"/> class.
@@ -207,12 +206,11 @@ namespace UWPVoiceAssistantSample
                 this.graph = creationResult.Graph;
 
                 this.frameInputNode = this.graph.CreateFrameInputNode(AudioEncodingProperties.CreatePcm(16000, 1, 16));
-                this.frameInputNode.QuantumStarted += this.FrameInputNode_QuantumStarted;
+                this.frameInputNode.QuantumStarted += this.OnFrameInputQuantumStarted;
                 this.frameInputNode.AudioFrameCompleted += async (s, e) =>
                 {
-                    this.activeUtterances -= 1;
-
-                    if (this.audioOutputStreams.Count == 0 && this.activeUtterances == 0)
+                    // If we just finished processing an audio frame and there's no more data to process, output is done.
+                    if (this.audioOutputStreams.Count == 0)
                     {
                         await this.StopPlaybackAsync();
                     }
@@ -269,7 +267,7 @@ namespace UWPVoiceAssistantSample
             }
         }
 
-        private void FrameInputNode_QuantumStarted(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
+        private void OnFrameInputQuantumStarted(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
         {
             if (args.RequiredSamples == 0)
             {
@@ -278,59 +276,36 @@ namespace UWPVoiceAssistantSample
             }
 
             var encoding = this.frameInputNode.EncodingProperties;
-            var byteRate = encoding.Bitrate / 8;
-            var bytesRequested = args.RequiredSamples * byteRate;
+            var bytesPerSample = encoding.BitsPerSample / 8;
+            var bytesRequested = args.RequiredSamples * bytesPerSample;
 
             var requestBuffer = new byte[bytesRequested];
             var requestBytesRead = 0;
 
             lock (this.audioOutputStreamsLock)
             {
-                if (this.audioOutputStreams.Count == 0)
+                if (this.audioOutputStreams.Count > 0)
                 {
-                    return;
-                }
+                    // DialogAudioOutputStream::Read will block until all requested data is populated or no further
+                    // data is available in the stream.
+                    var currentStream = this.audioOutputStreams.Peek();
+                    requestBytesRead = currentStream.Read(requestBuffer, 0, requestBuffer.Length);
 
-                var currentStream = this.audioOutputStreams.Peek();
-                requestBytesRead = currentStream.Read(requestBuffer, 0, requestBuffer.Length);
-
-                if (requestBytesRead < bytesRequested)
-                {
-                    this.activeUtterances += 1;
-
-                    // As current sources are exhausted, remove them from the queue.
-                    this.audioOutputStreams.Dequeue();
+                    // If fewer than the requested number of bytes were served, that means the stream is exhausted.
+                    if (requestBytesRead < bytesRequested)
+                    {
+                        this.audioOutputStreams.Dequeue();
+                    }
                 }
             }
 
-            if (requestBytesRead == 0)
+            if (requestBytesRead > 0)
             {
-                return;
-            }
-
-            using (var frameToPush = new AudioFrame((uint)requestBytesRead))
-            {
-                this.FrameInputNode_PushFrame(frameToPush, requestBuffer);
-            }
-        }
-
-        private unsafe void FrameInputNode_PushFrame(AudioFrame frame, byte[] frameData)
-        {
-            using (var audioBuffer = frame.LockBuffer(AudioBufferAccessMode.Write))
-
-            // TODO: using (Windows.Storage.Streams.Buffer.) -- way to do this without unsafe?
-            using (var bufferReference = audioBuffer.CreateReference())
-            {
-                var bufferAccess = (IMemoryBufferByteAccess)bufferReference;
-                bufferAccess.GetBuffer(out byte* unsafeBuffer, out uint unsafeBufferCapacity);
-
-                for (uint i = 0; i < unsafeBufferCapacity; i++)
+                using (var frameToAdd = DialogAudioOutputUnsafeMethods.CreateFrameFromBytes(requestBuffer, requestBytesRead))
                 {
-                    unsafeBuffer[i] = frameData[i];
+                    this.frameInputNode.AddFrame(frameToAdd);
                 }
             }
-
-            this.frameInputNode.AddFrame(frame);
         }
     }
 }
