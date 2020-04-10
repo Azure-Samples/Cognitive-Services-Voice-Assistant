@@ -95,6 +95,7 @@
                 <HyperlinkButton x:Name="ConfigLocationButton"
                         Margin="10,0,0,0"
                         Content="Config Location"
+                                 NavigateUri="C:\Users\v-saplum\Documents\DevOpsRepos\ProjectMarvin"
                                  Click="ConfigLocationClick"
                          />
             </StackPanel>

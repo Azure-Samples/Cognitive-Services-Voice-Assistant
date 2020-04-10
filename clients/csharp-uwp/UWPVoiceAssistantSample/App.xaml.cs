@@ -169,7 +169,7 @@ namespace UWPVoiceAssistantSample
                 // parameter
                 rootFrame.Navigate(typeof(MainPage), null);
             }
-
+            //this.CopyConfigAndAssignValues().GetAwaiter();
             this.AddVersionToTitle();
             Window.Current.Activate();
         }
@@ -265,7 +265,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task CopyConfigAndAssignValues()
         {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
+            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Config/config.json"));
 
             if (!string.IsNullOrWhiteSpace(configFile.Path))
             {

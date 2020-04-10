@@ -16,6 +16,8 @@ namespace UWPVoiceAssistantSample
     {
         private static ILogProvider logger = LogRouter.GetClassLogger();
 
+        public static event EventHandler AppSettingsModified;
+
         /// <summary>
         /// Gets or sets Speech Subscription Key.
         /// </summary>

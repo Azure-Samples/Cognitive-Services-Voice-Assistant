@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,7 @@ namespace UWPVoiceAssistantSample
         private readonly IAgentSessionManager agentSessionManager;
         private App app;
         private int bufferIndex;
+        private bool configModified;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -78,6 +80,7 @@ namespace UWPVoiceAssistantSample
 
             // Ensure consistency between a few dependent controls and their settings
             this.UpdateUIBasedOnToggles();
+            this.configModified = false;
         }
 
         private bool BackgroundTaskRegistered
@@ -342,32 +345,56 @@ namespace UWPVoiceAssistantSample
                 }
 
                 this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
+
+                if (this.configModified)
+                {
+                    await this.ReassignAppSettings();
+                }
             });
         }
 
         private async void ConfigLocationClick(object sender, RoutedEventArgs e)
         {
-            //var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            //picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
-            //picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.ComputerFolder;
-            //picker.FileTypeFilter.Add(".json");
-            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
-            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
-            folderPicker.FileTypeFilter.Add("*");
+            string fileName = "Config\\config.json";
+            var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
+            if (file.Path != null)
+            {
+                await Launcher.LaunchFileAsync(file);
+                
+                // add FileSystemWatcher to watch config file. if changed set configmodified to true.
+                using (FileSystemWatcher watcher = new FileSystemWatcher())
+                {
+                    watcher.Path = file.Path;
+                    watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
 
-            Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
-            if (folder != null)
-            {
-                // Application now has read/write access to all contents in the picked folder
-                // (including other sub-folder contents)
-                Windows.Storage.AccessCache.StorageApplicationPermissions.
-                FutureAccessList.AddOrReplace("PickedFolderToken", folder);
-                //this.textBlock.Text = "Picked folder: " + folder.Name;
+                    watcher.Filter = "*.json";
+
+                    watcher.Changed += Watcher_Changed;
+                }
             }
-            else
-            {
-                //this.textBlock.Text = "Operation cancelled.";
-            }
+        }
+
+        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            this.configModified = true;
+        }
+
+        private async Task ReassignAppSettings()
+        {
+            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Config/config.json"));
+
+            AppSettings appSettings = AppSettings.Load(configFile.Path);
+
+            this.SpeechKeyTextBox.Text = appSettings.SpeechSubscriptionKey;
+            this.SpeechRegionTextBox.Text = appSettings.AzureRegion;
+            this.BotIdTextBox.Text = appSettings.BotId;
+            LocalSettingsHelper.SpeechSubscriptionKey = this.SpeechKeyTextBox.Text;
+            LocalSettingsHelper.AzureRegion = this.SpeechRegionTextBox.Text;
+            LocalSettingsHelper.BotId = this.BotIdTextBox.Text;
+
+            this.logger.Log("Configuration has been modified");
+
+            this.configModified = false;
         }
     }
 }

@@ -246,7 +246,7 @@
     <Content Include="MVAKeywords\Contoso.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="config.json">
+    <None Include="Config\config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="SDKKeywords\Contoso.table">
