@@ -102,9 +102,7 @@ Here is an example of how to send a message back:
 
     var botFrameworkActivity = Activity.CreateMessageActivity();
     botFrameworkActivity.Text = submitAction.Data.ToString();
-    if (!string.IsNullOrEmpty(
-    
-    FromId))
+    if (!string.IsNullOrEmpty(FromId))
     {
         botFrameworkActivity.From = new ChannelAccount(this.settings.RuntimeSettings.Profile.FromId);
     }
