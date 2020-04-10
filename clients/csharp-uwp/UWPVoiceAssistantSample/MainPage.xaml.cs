@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using NLog.Fluent;
@@ -342,6 +343,31 @@ namespace UWPVoiceAssistantSample
 
                 this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
             });
+        }
+
+        private async void ConfigLocationClick(object sender, RoutedEventArgs e)
+        {
+            //var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            //picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
+            //picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.ComputerFolder;
+            //picker.FileTypeFilter.Add(".json");
+            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+            folderPicker.FileTypeFilter.Add("*");
+
+            Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                // Application now has read/write access to all contents in the picked folder
+                // (including other sub-folder contents)
+                Windows.Storage.AccessCache.StorageApplicationPermissions.
+                FutureAccessList.AddOrReplace("PickedFolderToken", folder);
+                //this.textBlock.Text = "Picked folder: " + folder.Name;
+            }
+            else
+            {
+                //this.textBlock.Text = "Operation cancelled.";
+            }
         }
     }
 }
