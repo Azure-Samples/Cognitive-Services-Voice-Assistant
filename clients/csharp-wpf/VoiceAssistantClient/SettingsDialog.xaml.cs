@@ -246,6 +246,7 @@ namespace VoiceAssistantClient
             }
             else
             {
+                this.ConnectionProfileComboBox.Text = string.Empty;
                 this.SetConnectionSettingsTextBoxesToEmpty();
             }
 
