@@ -3,6 +3,9 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Abstracted information levels to log, used for individual providers to filter their output
     /// targets based on severity and related rules.
@@ -33,6 +36,16 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public interface ILogProvider
     {
+        /// <summary>
+        /// Event to indicate a log generated.
+        /// </summary>
+        event EventHandler LogAvailable;
+
+        /// <summary>
+        /// Gets the list of logs from LogBuffer.
+        /// </summary>
+        List<string> LogBuffer { get; }
+
         /// <summary>
         /// Instructs the log provider to emit a log at the specified message level.
         /// </summary>

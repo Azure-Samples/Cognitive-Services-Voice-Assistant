@@ -221,10 +221,10 @@ namespace VoiceAssistantClient
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Language))
+            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.ConnectionLanguage))
             {
                 // Set the speech recognition language. If not set, the default is "en-us".
-                config.Language = this.settings.RuntimeSettings.Language;
+                config.Language = this.settings.RuntimeSettings.Profile.ConnectionLanguage;
             }
 
             if (this.settings.RuntimeSettings.Profile.CustomSpeechEnabled)
@@ -252,7 +252,7 @@ namespace VoiceAssistantClient
                 // from.id field identifies who generated the activity, and may be required by some bots.
                 // See https://github.com/microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md
                 // for Bot Framework Activity schema and from.id.
-                config.SetProperty(PropertyId.Conversation_From_Id, this.settings.RuntimeSettings.FromId);
+                config.SetProperty(PropertyId.Conversation_From_Id, this.settings.RuntimeSettings.Profile.FromId);
             }
 
             if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.LogFilePath))
