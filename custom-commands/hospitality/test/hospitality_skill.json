@@ -1,0 +1,103 @@
+{
+  "Tests": [
+    {
+      "FileName": "input-files\\Test_FallbackCommand_TextInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_FallbackCommand_VoiceInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_TurnOnOff_TextInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_TurnOnOff_VoiceInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_Help_TextInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_Help_VoiceInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_Greeting_TextInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_Greeting_VoiceInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_AdjustTemperature_TextInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_AdjustTemperature_VoiceInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_OpenClose_TextInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    },
+    {
+      "FileName": "input-files\\Test_OpenClose_VoiceInput.json",
+      "IgnoreActivities": [
+        {
+          "type": "event"
+        }
+      ]
+    }
+  ],
+  "SubscriptionKey": "0123456789abcdef0123456789abcdef",
+  "Region": "westus2",
+  "CustomCommandsAppId": "abcdef0123456789abcdef0123456789",
+}
