@@ -2,7 +2,6 @@
   {
     "DialogID": "0",
     "Description": "Testing several greeting sentences",
-    "Skip": false,
     "Turns": [
       {
         "TurnID": 0,
@@ -17,7 +16,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [1000],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       },
       {
         "TurnID": 1,
@@ -32,7 +31,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [1000],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       },
       {
         "TurnID": 2,
@@ -47,7 +46,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [1000],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       }
     ]
   }

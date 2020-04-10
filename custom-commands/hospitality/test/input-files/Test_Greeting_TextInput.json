@@ -2,12 +2,10 @@
   {
     "DialogID": "0",
     "Description": "Testing several greeting sentences",
-    "Skip": false,
     "Turns": [
       {
         "TurnID": 0,
         "Utterance": "What's up",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -17,12 +15,11 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [1000],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       },
       {
         "TurnID": 1,
         "Utterance": "Hello how are you",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -32,12 +29,11 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [1000],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       },
       {
         "TurnID": 2,
         "Utterance": "Hi there",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -47,7 +43,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [1000],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       }
     ]
   }

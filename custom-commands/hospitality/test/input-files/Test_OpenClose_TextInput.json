@@ -2,12 +2,10 @@
   {
     "DialogID": "0",
     "Description": "Testing '{OpenCloseOperation} the {OpenCloseSubject}'",
-    "Skip": false,
     "Turns": [
       {
         "TurnID": 0,
         "Utterance": "Raise the shades",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -17,19 +15,17 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 3800
+        "ExpectedResponseLatency": 500
       }
     ]
   },
   {
     "DialogID": "1",
     "Description": "Testing 'i want to {OpenCloseOperation} the {OpenCloseSubject}'",
-    "Skip": false,
     "Turns": [
       {
         "TurnID": 0,
         "Utterance": "I want to down the blind",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -39,19 +35,17 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 3800
+        "ExpectedResponseLatency": 500
       }
     ]
   },
   {
     "DialogID": "2",
     "Description": "Testing '{OpenCloseOperation} {OpenCloseSubject}'",
-    "Skip": false,
     "Turns": [
       {
         "TurnID": 0,
         "Utterance": "Lower curtains",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -61,19 +55,17 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 3800
+        "ExpectedResponseLatency": 500
       }
     ]
   },
   {
     "DialogID": "3",
     "Description": "Testing '{OpenCloseSubject} {OpenCloseOperation}'",
-    "Skip": false,
     "Turns": [
       {
         "TurnID": 0,
         "Utterance": "Shades up",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -83,7 +75,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 3800
+        "ExpectedResponseLatency": 500
       }
     ]
   }

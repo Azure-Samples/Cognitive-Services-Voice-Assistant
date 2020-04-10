@@ -2,12 +2,10 @@
   {
     "DialogID": "0",
     "Description": "Testing several needing help sentences",
-    "Skip": false,
     "Turns": [
       {
         "TurnID": 0,
         "Utterance": "What can I do",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -17,12 +15,11 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [11650],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       },
       {
         "TurnID": 1,
         "Utterance": "I want assistance",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -32,12 +29,11 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [11650],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       },
       {
         "TurnID": 2,
         "Utterance": "What do i say",
-        "WavFile": "",
         "ExpectedResponses": [
           {
             "type": "message",
@@ -47,7 +43,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [11650],
-        "ExpectedResponseLatency": 2500
+        "ExpectedResponseLatency": 500
       }
     ]
   }
