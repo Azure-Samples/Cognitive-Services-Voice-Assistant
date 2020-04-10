@@ -48,7 +48,7 @@ namespace VoiceAssistantClient
 
         protected override void OnContentRendered(EventArgs e)
         {
-            this.WakeWordPathTextBox.Text = this.settings.WakeWordPath ?? string.Empty;
+            this.WakeWordPathTextBox.Text = this.settings.Profile.WakeWordPath ?? string.Empty;
             this.UpdateSaveButtonState();
             this.UpdateCustomSpeechStatus(false);
             this.UpdateVoiceDeploymentIdsStatus(false);
@@ -225,6 +225,26 @@ namespace VoiceAssistantClient
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            if (this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
+            {
+                this.SubscriptionKeyTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey;
+                this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion;
+                this.CustomCommandsAppIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId;
+                this.BotIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].BotId;
+                this.LanguageTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage;
+                this.LogFileTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].LogFilePath;
+                this.UrlOverrideTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].UrlOverride;
+                this.ProxyHost.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].ProxyHostName;
+                this.ProxyPort.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].ProxyPortNumber;
+                this.FromIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].FromId;
+                this.CustomSpeechEndpointIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEndpointId;
+                this.CustomSpeechEnabledBox.IsChecked = this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomSpeechEnabled;
+                this.VoiceDeploymentIdsTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentIds;
+                this.VoiceDeploymentEnabledBox.IsChecked = this.connectionProfile[this.ConnectionProfileComboBox.Text].VoiceDeploymentEnabled;
+                this.WakeWordPathTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath;
+                this.WakeWordEnabledBox.IsChecked = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled;
+            }
+
             this.DialogResult = false;
             this.Close();
         }
@@ -268,7 +288,7 @@ namespace VoiceAssistantClient
         private void UpdateSaveButtonState()
         {
             // BUGBUG: The transfer into variables does not seem to be done consistently with these events so we read straight from the controls
-            var hasConnectionProfileName = !string.IsNullOrWhiteSpace(this.ConnectionProfileComboBox.Text);
+            var hasConnectionProfileName = !string.IsNullOrWhiteSpace(this.ConnectionProfileComboBox.Text) && this.ConnectionProfileComboBox.Text != " ";
             var hasSubscription = !string.IsNullOrWhiteSpace(this.SubscriptionKeyTextBox.Text);
             var hasRegion = !string.IsNullOrWhiteSpace(this.SubscriptionRegionTextBox.Text);
             var hasUrlOverride = !string.IsNullOrWhiteSpace(this.UrlOverrideTextBox.Text);
