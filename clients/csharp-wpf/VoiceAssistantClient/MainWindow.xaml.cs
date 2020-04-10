@@ -221,10 +221,10 @@ namespace VoiceAssistantClient
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Language))
+            if (!string.IsNullOrWhiteSpace(this.settings.RuntimeSettings.Profile.ConnectionLanguage))
             {
                 // Set the speech recognition language. If not set, the default is "en-us".
-                config.Language = this.settings.RuntimeSettings.Language;
+                config.Language = this.settings.RuntimeSettings.Profile.ConnectionLanguage;
             }
 
             if (this.settings.RuntimeSettings.Profile.CustomSpeechEnabled)

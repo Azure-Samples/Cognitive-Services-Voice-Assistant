@@ -3,6 +3,8 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using System;
+    using System.Collections.Generic;
     using NLog;
     using Windows.Storage;
 
@@ -11,7 +13,29 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public class NLogProvider : ILogProvider
     {
+        /// <summary>
+        /// List of log messages.
+        /// </summary>
+        public static readonly List<string> LogBuffer = new List<string>();
         private Logger logger;
+
+        /// <summary>
+        /// Event to indicate a log was generated.
+        /// </summary>
+        public static event EventHandler logAvailable;
+
+        public event EventHandler LogAvailable
+        {
+            add
+            {
+                logAvailable += value;
+            }
+
+            remove
+            {
+                logAvailable -= value;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogProvider"/> class.
@@ -21,6 +45,11 @@ namespace UWPVoiceAssistantSample
         {
             this.logger = NLog.LogManager.GetLogger(name);
         }
+
+        /// <summary>
+        /// Gets LogBuffer.
+        /// </summary>
+        List<string> ILogProvider.LogBuffer { get => LogBuffer; }
 
         /// <summary>
         /// Initializes the app-global state needed for NLog to emit to its output locations via
@@ -61,6 +90,16 @@ namespace UWPVoiceAssistantSample
         public void Log(LogMessageLevel level, string message)
         {
             this.logger.Log(ConvertLogLevel(level), message);
+            LogBuffer.Add(message);
+            this.OnLogAvailable();
+        }
+
+        /// <summary>
+        /// Invokes the LogAvailable EventHandler to indicate a log was created.
+        /// </summary>
+        public void OnLogAvailable()
+        {
+            logAvailable?.Invoke(this, EventArgs.Empty);
         }
 
         private static LogLevel ConvertLogLevel(LogMessageLevel level)
