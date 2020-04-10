@@ -249,10 +249,29 @@ namespace VoiceAssistantClient
                 this.WakeWordPathTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath;
                 this.WakeWordEnabledBox.IsChecked = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled;
             }
+            else if (!this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text) && this.settings.ConnectionProfileNameHistory.Count > 1)
+            {
+                this.SubscriptionKeyTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].SubscriptionKey;
+                this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].SubscriptionKeyRegion;
+                this.CustomCommandsAppIdTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].CustomCommandsAppId;
+                this.BotIdTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].BotId;
+                this.LanguageTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].ConnectionLanguage;
+                this.LogFileTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].LogFilePath;
+                this.UrlOverrideTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].UrlOverride;
+                this.ProxyHost.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].ProxyHostName;
+                this.ProxyPort.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].ProxyPortNumber;
+                this.FromIdTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].FromId;
+                this.CustomSpeechEndpointIdTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].CustomSpeechEndpointId;
+                this.CustomSpeechEnabledBox.IsChecked = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].CustomSpeechEnabled;
+                this.VoiceDeploymentIdsTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].VoiceDeploymentIds;
+                this.VoiceDeploymentEnabledBox.IsChecked = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].VoiceDeploymentEnabled;
+                this.WakeWordPathTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].WakeWordPath;
+                this.WakeWordEnabledBox.IsChecked = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].WakeWordEnabled;
+            }
             else
             {
                 this.ConnectionProfileComboBox.Text = string.Empty;
-                this.ConnectionProfileName = string.Empty;
+                this.settings.ConnectionProfileName = string.Empty;
                 this.SetConnectionSettingsTextBoxesToEmpty();
             }
 
