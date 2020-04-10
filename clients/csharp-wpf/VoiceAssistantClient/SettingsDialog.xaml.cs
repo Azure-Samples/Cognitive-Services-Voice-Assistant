@@ -244,6 +244,10 @@ namespace VoiceAssistantClient
                 this.WakeWordPathTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordPath;
                 this.WakeWordEnabledBox.IsChecked = this.connectionProfile[this.ConnectionProfileComboBox.Text].WakeWordEnabled;
             }
+            else
+            {
+                this.SetConnectionSettingsTextBoxesToEmpty();
+            }
 
             this.DialogResult = false;
             this.Close();
@@ -502,6 +506,8 @@ namespace VoiceAssistantClient
                     this.SetConnectionSettingsTextBoxesToEmpty();
                 }
             }
+
+            this.UpdateSaveButtonState();
         }
 
         private void SetConnectionSettingsTextBoxesToEmpty()
