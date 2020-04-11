@@ -6,7 +6,7 @@ namespace UWPVoiceAssistantSample.AudioOutput
     using System;
     using System.Diagnostics.Contracts;
     using Windows.Media;
-    
+
     /// <summary>
     /// Implementation of unsafe helper methods needed for the direct manipulation of input AudioGraph data.
     /// </summary>
