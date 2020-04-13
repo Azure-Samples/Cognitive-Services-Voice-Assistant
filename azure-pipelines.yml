@@ -173,24 +173,24 @@ steps:
 
 # Build UWP Voice Assistant Sample (C# UWP)
 
-#- task: NuGetCommand@2
-#  displayName: '$(sample4Name) - NuGetCommand'
-#  inputs:
-#    restoreSolution: '$(sample4Solution)'
+- task: NuGetCommand@2
+  displayName: '$(sample4Name) - NuGetCommand'
+  inputs:
+    restoreSolution: '$(sample4Solution)'
 
-#- task: VSBuild@1
-#  displayName: '$(sample4Name) - VSBuild'
-#  inputs:
-#    solution: '$(sample4Solution)'
-#    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
-#    platform: '$(buildPlatformNative)'
-#    configuration: '$(buildConfiguration)'
+- task: VSBuild@1
+  displayName: '$(sample4Name) - VSBuild'
+  inputs:
+    solution: '$(sample4Solution)'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    platform: '$(buildPlatformNative)'
+    configuration: '$(buildConfiguration)'
 
-#- task: PublishPipelineArtifact@1
-#  displayName: '$(sample4Name) - PublishPipelineArtifact'
-#  inputs:
-#    path: $(sample4PublishedArtifactPath)
-#    artifact: $(sample4PublishedArtifactName)
+- task: PublishPipelineArtifact@1
+  displayName: '$(sample4Name) - PublishPipelineArtifact'
+  inputs:
+    path: $(sample4PublishedArtifactPath)
+    artifact: $(sample4PublishedArtifactName)
 
 #- task: VSTest@2
 #  inputs:
