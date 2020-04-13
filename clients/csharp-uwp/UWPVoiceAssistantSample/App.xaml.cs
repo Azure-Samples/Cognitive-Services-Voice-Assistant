@@ -169,7 +169,7 @@ namespace UWPVoiceAssistantSample
                 // parameter
                 rootFrame.Navigate(typeof(MainPage), null);
             }
-            //this.CopyConfigAndAssignValues().GetAwaiter();
+
             this.AddVersionToTitle();
             Window.Current.Activate();
         }
