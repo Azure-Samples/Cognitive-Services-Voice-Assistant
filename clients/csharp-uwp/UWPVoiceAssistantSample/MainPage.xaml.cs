@@ -391,7 +391,7 @@ namespace UWPVoiceAssistantSample
             LocalSettingsHelper.BotId = this.BotIdTextBox.Text;
             LocalSettingsHelper.CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
 
-            this.logger.Log("Configuration file has been modified");
+            this.logger.Log("Configuration has been modified");
         }
     }
 }
