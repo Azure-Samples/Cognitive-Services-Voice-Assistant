@@ -80,7 +80,6 @@ namespace UWPVoiceAssistantSample
 
             // Ensure consistency between a few dependent controls and their settings
             this.UpdateUIBasedOnToggles();
-            this.configModified = false;
         }
 
         private bool BackgroundTaskRegistered
@@ -345,12 +344,6 @@ namespace UWPVoiceAssistantSample
                 }
 
                 this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
-
-                if (this.configModified)
-                {
-                    await this.ReassignAppSettings();
-                    this.configModified = false;
-                }
             });
         }
 
@@ -370,28 +363,80 @@ namespace UWPVoiceAssistantSample
                 if (file.Path != null)
                 {
                     await Launcher.LaunchFileAsync(file);
+                    this.logger.Log("Config file opened");
+                    this.logger.Log("Click Load Config to use modified values");
                 }
 
                 this.configModified = true;
             }
         }
 
-        private async Task ReassignAppSettings()
+        private async void LoadConfigClick(object sender, RoutedEventArgs e)
         {
             var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
 
             AppSettings appSettings = AppSettings.Load(configFile.Path);
 
-            this.SpeechKeyTextBox.Text = appSettings.SpeechSubscriptionKey;
-            this.SpeechRegionTextBox.Text = appSettings.AzureRegion;
-            this.BotIdTextBox.Text = appSettings.BotId;
-            this.CustomCommandsAppIdTextBox.Text = appSettings.CustomCommandsAppId;
-            LocalSettingsHelper.SpeechSubscriptionKey = this.SpeechKeyTextBox.Text;
-            LocalSettingsHelper.AzureRegion = this.SpeechRegionTextBox.Text;
-            LocalSettingsHelper.BotId = this.BotIdTextBox.Text;
-            LocalSettingsHelper.CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
+            var speechKeyModified = LocalSettingsHelper.SpeechSubscriptionKey != appSettings.SpeechSubscriptionKey;
+            var speechRegionModified = LocalSettingsHelper.AzureRegion != appSettings.AzureRegion;
+            var customSpeechIdModified = LocalSettingsHelper.CustomSpeechId != appSettings.CustomSpeechId;
+            var customVoiceIdModified = LocalSettingsHelper.CustomVoiceIds != appSettings.CustomVoiceIds;
+            var customCommandsAppIdModified = LocalSettingsHelper.CustomCommandsAppId != appSettings.CustomCommandsAppId;
+            var botIdModified = LocalSettingsHelper.BotId != appSettings.BotId;
 
-            this.logger.Log("Configuration has been modified");
+            this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified || customVoiceIdModified || customCommandsAppIdModified || botIdModified;
+
+            if (this.configModified)
+            {
+                this.logger.Log("Configuration file has been modified");
+
+                if (speechKeyModified)
+                {
+                    // Replace below two lines with LocalSettingsHelper.SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey
+                    this.SpeechKeyTextBox.Text = appSettings.SpeechSubscriptionKey;
+                    LocalSettingsHelper.SpeechSubscriptionKey = this.SpeechKeyTextBox.Text;
+                    this.logger.Log($"Speech Key: {LocalSettingsHelper.SpeechSubscriptionKey}");
+                }
+
+                if (speechRegionModified)
+                {
+                    this.SpeechRegionTextBox.Text = appSettings.AzureRegion;
+                    LocalSettingsHelper.AzureRegion = this.SpeechRegionTextBox.Text;
+                    this.logger.Log($"Azure Region: {LocalSettingsHelper.AzureRegion}");
+                }
+
+                if (customSpeechIdModified)
+                {
+                    this.CustomSpeechIdTextBox.Text = appSettings.CustomSpeechId;
+                    LocalSettingsHelper.CustomSpeechId = this.CustomSpeechIdTextBox.Text;
+                    this.logger.Log($"Custom Speech Id: {LocalSettingsHelper.CustomSpeechId}");
+                }
+
+                if (customVoiceIdModified)
+                {
+                    this.CustomVoiceIdsTextBox.Text = appSettings.CustomVoiceIds;
+                    LocalSettingsHelper.CustomVoiceIds = this.CustomVoiceIdsTextBox.Text;
+                    this.logger.Log($"Custom Voice Id: {LocalSettingsHelper.CustomVoiceIds}");
+                }
+
+                if (customCommandsAppIdModified)
+                {
+                    this.CustomCommandsAppIdTextBox.Text = appSettings.CustomCommandsAppId;
+                    LocalSettingsHelper.CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
+                    this.logger.Log($"Custom Commands App Id: {LocalSettingsHelper.CustomCommandsAppId}");
+                }
+
+                if (botIdModified)
+                {
+                    this.BotIdTextBox.Text = appSettings.BotId;
+                    LocalSettingsHelper.BotId = this.BotIdTextBox.Text;
+                    this.logger.Log($"Bot Id: {LocalSettingsHelper.BotId}");
+                }
+            }
+            else
+            {
+                this.logger.Log("No changes in config");
+            }
         }
     }
 }

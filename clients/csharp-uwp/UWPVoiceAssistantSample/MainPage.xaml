@@ -91,12 +91,24 @@
                 Grid.Column="2"
                     Grid.ColumnSpan="2"
                     Margin="5,0,10,0">
-                <FontIcon x:Name="ConfigLocationIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
+                <FontIcon x:Name="ConfigLocationIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Edit}"/>
                 <HyperlinkButton x:Name="ConfigLocationButton"
                         Margin="10,0,0,0"
-                        Content="Config Location"
-                                 NavigateUri="C:\Users\v-saplum\Documents\DevOpsRepos\ProjectMarvin"
-                                 Click="ConfigLocationClick"
+                        Content="Open Config"
+                        Click="ConfigLocationClick"
+                         />
+            </StackPanel>
+            <StackPanel
+                    Orientation="Horizontal"
+                    Grid.Row="3"
+                Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                    Margin="5,0,10,0">
+                <FontIcon x:Name="LoadConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Load}"/>
+                <HyperlinkButton x:Name="LoadConfigButton"
+                        Margin="10,0,0,0"
+                        Content="Load Config"
+                        Click="LoadConfigClick"
                          />
             </StackPanel>
             <StackPanel
