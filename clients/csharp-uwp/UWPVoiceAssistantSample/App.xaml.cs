@@ -265,7 +265,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task CopyConfigAndAssignValues()
         {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Config/config.json"));
+            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
 
             if (!string.IsNullOrWhiteSpace(configFile.Path))
             {

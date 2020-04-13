@@ -349,52 +349,49 @@ namespace UWPVoiceAssistantSample
                 if (this.configModified)
                 {
                     await this.ReassignAppSettings();
+                    this.configModified = false;
                 }
             });
         }
 
         private async void ConfigLocationClick(object sender, RoutedEventArgs e)
         {
-            string fileName = "Config\\config.json";
-            var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
-            if (file.Path != null)
+            // Add FileSystemWatcher to watch config file. If changed set configmodified to true.
+            using (FileSystemWatcher watcher = new FileSystemWatcher())
             {
-                await Launcher.LaunchFileAsync(file);
-                
-                // add FileSystemWatcher to watch config file. if changed set configmodified to true.
-                using (FileSystemWatcher watcher = new FileSystemWatcher())
+                watcher.Path = Directory.GetCurrentDirectory();
+                watcher.NotifyFilter = NotifyFilters.LastWrite;
+
+                watcher.Filter = "*.json";
+
+                string fileName = "config.json";
+                var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
+
+                if (file.Path != null)
                 {
-                    watcher.Path = file.Path;
-                    watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
-
-                    watcher.Filter = "*.json";
-
-                    watcher.Changed += Watcher_Changed;
+                    await Launcher.LaunchFileAsync(file);
                 }
-            }
-        }
 
-        private void Watcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            this.configModified = true;
+                this.configModified = true;
+            }
         }
 
         private async Task ReassignAppSettings()
         {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Config/config.json"));
+            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
 
             AppSettings appSettings = AppSettings.Load(configFile.Path);
 
             this.SpeechKeyTextBox.Text = appSettings.SpeechSubscriptionKey;
             this.SpeechRegionTextBox.Text = appSettings.AzureRegion;
             this.BotIdTextBox.Text = appSettings.BotId;
+            this.CustomCommandsAppIdTextBox.Text = appSettings.CustomCommandsAppId;
             LocalSettingsHelper.SpeechSubscriptionKey = this.SpeechKeyTextBox.Text;
             LocalSettingsHelper.AzureRegion = this.SpeechRegionTextBox.Text;
             LocalSettingsHelper.BotId = this.BotIdTextBox.Text;
+            LocalSettingsHelper.CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
 
-            this.logger.Log("Configuration has been modified");
-
-            this.configModified = false;
+            this.logger.Log("Configuration file has been modified");
         }
     }
 }
