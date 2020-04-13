@@ -347,7 +347,7 @@ namespace UWPVoiceAssistantSample
             });
         }
 
-        private async void ConfigLocationClick(object sender, RoutedEventArgs e)
+        private async void OpenConfigClick(object sender, RoutedEventArgs e)
         {
             // Add FileSystemWatcher to watch config file. If changed set configmodified to true.
             using (FileSystemWatcher watcher = new FileSystemWatcher())
