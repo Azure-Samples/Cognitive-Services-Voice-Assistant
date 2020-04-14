@@ -147,7 +147,10 @@
     <Compile Include="AudioOutput\DialogAudioOutputStream.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputUnsafeMethods.cs" />
+<<<<<<< HEAD
     <Compile Include="AudioOutput\DirectLineSpeechAudioOutputFormat.cs" />
+=======
+>>>>>>> master
     <Compile Include="AudioOutput\DirectLineSpeechAudioOutputStream.cs" />
     <Compile Include="AudioOutput\IDialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\MediaPlayerDialogAudioOutputAdapter.cs" />
@@ -252,13 +255,14 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="SDKKeywords\Contoso.table">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
