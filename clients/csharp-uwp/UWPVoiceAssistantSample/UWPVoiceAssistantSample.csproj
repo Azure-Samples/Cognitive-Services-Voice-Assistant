@@ -147,7 +147,7 @@
     <Compile Include="AudioOutput\DialogAudioOutputStream.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputUnsafeMethods.cs" />
-    <Compile Include="AudioOutput\DialogLineSpeechAudioOutputFormat.cs" />
+    <Compile Include="AudioOutput\DirectLineSpeechAudioOutputFormat.cs" />
     <Compile Include="AudioOutput\DirectLineSpeechAudioOutputStream.cs" />
     <Compile Include="AudioOutput\IDialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\MediaPlayerDialogAudioOutputAdapter.cs" />
@@ -159,7 +159,6 @@
     <Compile Include="DialogManager.cs" />
     <Compile Include="DialogResponse.cs" />
     <Compile Include="DirectLineSpeechDialogBackend.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="AudioInput\IDialogAudioInputProvider.cs" />
     <Compile Include="Glyphs.cs" />
     <Compile Include="IDialogBackend.cs" />

@@ -95,8 +95,10 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <param name="keywordFile"> The keyword file to be loaded as part of initialization.</param>
         /// <returns> A task that completes once initialization is complete. </returns>
-        public async Task InitializeAsync(StorageFile keywordFile)
+        public Task InitializeAsync(StorageFile keywordFile)
         {
+            Contract.Requires(keywordFile != null);
+
             // Default values -- these can be updated
             this.ConnectorConfiguration = this.CreateConfiguration();
             this.ConfirmationModel = KeywordRecognitionModel.FromFile(keywordFile.Path);
@@ -163,6 +165,8 @@ namespace UWPVoiceAssistantSample
                 Debug.WriteLine($"Connector activity received");
                 this.DialogResponseReceived?.Invoke(payload);
             };
+
+            return Task.FromResult(0);
         }
 
         /// <summary>

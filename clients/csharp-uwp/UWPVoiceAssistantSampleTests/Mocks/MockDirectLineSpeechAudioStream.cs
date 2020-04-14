@@ -7,7 +7,7 @@ namespace UWPVoiceAssistantSampleTests
 
     public class MockDirectLineSpeechAudioStream : DirectLineSpeechAudioOutputStream
     {
-        public MockDirectLineSpeechAudioStream() : base(null)
+        public MockDirectLineSpeechAudioStream() : base(null, null)
         {
         }
     }

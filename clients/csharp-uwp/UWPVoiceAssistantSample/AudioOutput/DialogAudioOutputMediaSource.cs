@@ -1,43 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Media.Core;
-using Windows.Media.MediaProperties;
-using Windows.Media.Playback;
-using Windows.Security.Cryptography;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace UWPVoiceAssistantSample.AudioOutput
 {
+    using System;
+    using System.Diagnostics.Contracts;
+    using Windows.Media.Core;
+    using Windows.Media.MediaProperties;
+    using Windows.Security.Cryptography;
+
+    /// <summary>
+    /// A wrapper on top of a DialogAudioOutputStream that encapsulates a MediaSource for Windows Audio playback that
+    /// in turn uses a MediaStreamSource. Requires an underlying, partial IRandomAccessStream implementation on the
+    /// provided streams to fulfill.
+    /// </summary>
     public class DialogAudioOutputMediaSource
     {
+        // This value controls how much audio a buffered player (like MediaPlayer) will accumulate before beginning
+        // or resuming playback. The default is 3.0 seconds. Lower values will decrease latency but may increase
+        // the rate of playback problems like stuttering or artifacts.
         private static readonly TimeSpan TimeToBuffer = TimeSpan.FromSeconds(1.5);
 
-        private DialogAudioOutputStream sourceStream;
-        private TimeSpan totalPlaybackDuration = TimeSpan.Zero;
+        private readonly DialogAudioOutputStream sourceStream;
+        private readonly byte[] sampleBuffer;
         private TimeSpan sampleDuration;
-        private byte[] sampleBuffer;
+        private TimeSpan totalPlaybackDuration = TimeSpan.Zero;
 
-        public MediaSource MediaSource { get; private set; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DialogAudioOutputMediaSource"/> class.
+        /// </summary>
+        /// <param name="stream"> The DialogAudioOutputStream to use as input for this MediaElement. </param>
         public DialogAudioOutputMediaSource(DialogAudioOutputStream stream)
         {
             Contract.Requires(stream != null);
 
             this.sourceStream = stream;
+
+            // Here we precompute constants for the duration of this source to avoid doing it every sample
             this.sampleDuration = SampleDurationForEncoding(stream.Encoding);
             var bytesInSample = (uint)(this.sampleDuration.TotalSeconds * stream.Encoding.Bitrate / 8);
             this.sampleBuffer = new byte[bytesInSample];
+
             var sourceDescriptor = new AudioStreamDescriptor(stream.Encoding);
             var mediaStreamSource = new MediaStreamSource(sourceDescriptor)
             {
                 IsLive = true,
                 BufferTime = TimeToBuffer,
             };
-            mediaStreamSource.SampleRequested += OnMediaSampleRequested;
-            this.MediaSource = MediaSource.CreateFromIMediaSource(mediaStreamSource);
+            mediaStreamSource.SampleRequested += this.OnMediaSampleRequested;
+            this.WindowsMediaSource = MediaSource.CreateFromIMediaSource(mediaStreamSource);
+        }
+
+        /// <summary>
+        /// Gets the MediaSource object used in Windows Audio components.
+        /// </summary>
+        public MediaSource WindowsMediaSource { get; private set; }
+
+        /// <summary>
+        /// Retrieves a duration associated with MediaStreamSamples for the provided AudioEncodingProperties. These
+        /// values were determined based on observation and may require adjustment on other architectures or
+        /// environments.
+        /// </summary>
+        /// <param name="encoding"> The AudioEncodingProperties for this source. </param>
+        /// <returns> A TimeSpan representing the expected duration of a single sample for this source. </returns>
+        public static TimeSpan SampleDurationForEncoding(AudioEncodingProperties encoding)
+        {
+            Contract.Requires(encoding != null);
+
+            return TimeSpan.FromMilliseconds(
+                encoding.Subtype == "WAV" ? 10
+                : encoding.SampleRate == 16000 ? 36
+                : encoding.SampleRate == 24000 ? 24
+                : throw new NotImplementedException());
         }
 
         private void OnMediaSampleRequested(MediaStreamSource sender, MediaStreamSourceSampleRequestedEventArgs args)
@@ -58,15 +92,6 @@ namespace UWPVoiceAssistantSample.AudioOutput
             }
 
             deferral.Complete();
-        }
-
-        public static TimeSpan SampleDurationForEncoding(AudioEncodingProperties encoding)
-        {
-            return TimeSpan.FromMilliseconds(
-                encoding.Subtype == "WAV" ? 10
-                : encoding.SampleRate == 16000 ? 36
-                : encoding.SampleRate == 24000 ? 24
-                : throw new NotImplementedException());
         }
     }
 }

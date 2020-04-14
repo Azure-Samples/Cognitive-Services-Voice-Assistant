@@ -45,7 +45,6 @@ namespace UWPVoiceAssistantSample
         public MainPage()
         {
             this.logger = LogRouter.GetClassLogger();
-            //this.logger.Log(LogMessageLevel.Noise, "Main page created, UI rendering");
 
             this.InitializeComponent();
 
@@ -314,7 +313,7 @@ namespace UWPVoiceAssistantSample
 
         private async void ReadLogBuffer()
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 for (var i = 0; i < this.logger.LogBuffer.Count; i++)
                 {
@@ -347,8 +346,11 @@ namespace UWPVoiceAssistantSample
             });
         }
 
-        private async void OpenConfigClick(object sender, RoutedEventArgs e)
+        private async void OpenConfigClick(object o, RoutedEventArgs e)
         {
+            _ = o;
+            _ = e;
+
             // Add FileSystemWatcher to watch config file. If changed set configmodified to true.
             using (FileSystemWatcher watcher = new FileSystemWatcher())
             {

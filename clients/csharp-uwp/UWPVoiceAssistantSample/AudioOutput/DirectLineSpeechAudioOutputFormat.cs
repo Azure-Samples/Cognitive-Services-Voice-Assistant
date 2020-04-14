@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Media.MediaProperties;
-using System.Runtime.CompilerServices;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 namespace UWPVoiceAssistantSample.AudioOutput
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Windows.Media.MediaProperties;
+
+    /// <summary>
+    /// An abstraction for various output formats available for Direct Line Speech text-to-speech.
+    /// </summary>
     public class DirectLineSpeechAudioOutputFormat
     {
         private static readonly Lazy<List<DirectLineSpeechAudioOutputFormat>> LazySupportedFormats
@@ -27,25 +29,6 @@ namespace UWPVoiceAssistantSample.AudioOutput
                 };
             });
 
-        public static List<DirectLineSpeechAudioOutputFormat> SupportedFormats
-        {
-            get => LazySupportedFormats.Value;
-        }
-
-        public static DirectLineSpeechAudioOutputFormat GetFromEncoding(AudioEncodingProperties encoding)
-        {
-            return SupportedFormats.First(format =>
-                format.Encoding.Subtype == encoding.Subtype
-                && format.Encoding.SampleRate == encoding.SampleRate
-                && format.Encoding.BitsPerSample == encoding.BitsPerSample
-                && format.Encoding.ChannelCount == encoding.ChannelCount
-                && format.Encoding.Bitrate == encoding.Bitrate);
-        }
-
-        public AudioEncodingProperties Encoding { get; private set; }
-
-        public string FormatLabel { get; private set; }
-        
         private DirectLineSpeechAudioOutputFormat(string encodingSubtype, uint sampleRate, uint bitsPerSample, uint channels, uint bitrate)
         {
             string prefix;
@@ -73,6 +56,41 @@ namespace UWPVoiceAssistantSample.AudioOutput
             }
 
             this.FormatLabel = $"{prefix}-{sampleRate / 1000}khz-{infix}-{channel}-{suffix}";
+        }
+
+        /// <summary>
+        /// Gets a partial list of supported formats for Direct Line text-to-speech. This is a subset of the Speech
+        /// SDK's SpeechSynthesisOutputFormat set.
+        /// </summary>
+        public static List<DirectLineSpeechAudioOutputFormat> SupportedFormats
+        {
+            get => LazySupportedFormats.Value;
+        }
+
+        /// <summary>
+        /// Gets the AudioEncodingProperties associated with this output format.
+        /// </summary>
+        public AudioEncodingProperties Encoding { get; private set; }
+
+        /// <summary>
+        /// Gets the string representation of the output format as used by the Speech SDK.
+        /// </summary>
+        public string FormatLabel { get; private set; }
+
+        /// <summary>
+        /// Returns an appropriate <see cref="DirectLineSpeechAudioOutputFormat"/> that matches the provided
+        /// <see cref="AudioEncodingProperties"/>.
+        /// </summary>
+        /// <param name="encoding"> The AudioEncodingProperties object to search for in the list of supported formats. </param>
+        /// <returns> A DirectLineSpeechAudioOutputFormat that matches the provided AudioEncodingProperties. </returns>
+        public static DirectLineSpeechAudioOutputFormat GetFromEncoding(AudioEncodingProperties encoding)
+        {
+            return SupportedFormats.First(format =>
+                format.Encoding.Subtype == encoding.Subtype
+                && format.Encoding.SampleRate == encoding.SampleRate
+                && format.Encoding.BitsPerSample == encoding.BitsPerSample
+                && format.Encoding.ChannelCount == encoding.ChannelCount
+                && format.Encoding.Bitrate == encoding.Bitrate);
         }
 
         private class Mp3Format : DirectLineSpeechAudioOutputFormat

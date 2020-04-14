@@ -49,6 +49,8 @@ namespace UWPVoiceAssistantSample
             IDialogAudioOutputAdapter dialogAudioOutput = null)
         {
             Contract.Requires(dialogBackend != null);
+            Contract.Requires(agentSessionManager != null);
+
             this.dialogBackend = dialogBackend;
             this.dialogBackend.SessionStarted += (id)
                 => Debug.WriteLine($"DialogManager: Session start: {id}");
