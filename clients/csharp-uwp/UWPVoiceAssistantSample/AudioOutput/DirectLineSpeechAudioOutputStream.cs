@@ -5,7 +5,9 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Diagnostics.Contracts;
+    using System.Runtime.CompilerServices;
     using Microsoft.CognitiveServices.Speech.Audio;
+    using Windows.Media.MediaProperties;
 
     /// <summary>
     /// A derived specialization of the DialogAudioOutputStream abstract class that provides the
@@ -21,9 +23,10 @@ namespace UWPVoiceAssistantSample
         /// Initializes a new instance of the <see cref="DirectLineSpeechAudioOutputStream"/> class.
         /// </summary>
         /// <param name="audioSource"> The PullAudioOutputStream that should be read from. </param>
-        public DirectLineSpeechAudioOutputStream(PullAudioOutputStream audioSource)
+        public DirectLineSpeechAudioOutputStream(PullAudioOutputStream audioSource, AudioEncodingProperties encoding)
         {
             this.audioSource = audioSource;
+            this.Encoding = encoding;
         }
 
         /// <summary>

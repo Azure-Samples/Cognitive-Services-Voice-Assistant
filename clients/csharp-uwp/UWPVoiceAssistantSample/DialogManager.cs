@@ -27,7 +27,7 @@ namespace UWPVoiceAssistantSample
     {
         private IDialogBackend<TInputType> dialogBackend;
         private IDialogAudioInputProvider<TInputType> dialogAudioInput;
-        private DialogAudioOutputAdapter dialogAudioOutput;
+        private IDialogAudioOutputAdapter dialogAudioOutput;
         private SignalDetectionHelper signalDetectionHelper;
         private IKeywordRegistration keywordRegistration;
         private IAgentSessionManager agentSessionManager;
@@ -46,7 +46,7 @@ namespace UWPVoiceAssistantSample
             IKeywordRegistration keywordRegistration,
             IDialogAudioInputProvider<TInputType> dialogAudioInput,
             IAgentSessionManager agentSessionManager,
-            DialogAudioOutputAdapter dialogAudioOutput = null)
+            IDialogAudioOutputAdapter dialogAudioOutput = null)
         {
             Contract.Requires(dialogBackend != null);
             this.dialogBackend = dialogBackend;
@@ -134,7 +134,7 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <param name="dialogAudioOutput"> The dialog audio output sink to use. </param>
         /// <returns> A task that completes once the state is updated and consumers are notified. </returns>
-        public async Task InitializeAsync(DialogAudioOutputAdapter dialogAudioOutput = null)
+        public async Task InitializeAsync(IDialogAudioOutputAdapter dialogAudioOutput = null)
         {
             this.dialogAudioOutput = dialogAudioOutput ?? await DialogAudioOutputAdapter.CreateAsync();
             this.dialogResponseQueue = new DialogResponseQueue(this.dialogAudioOutput);

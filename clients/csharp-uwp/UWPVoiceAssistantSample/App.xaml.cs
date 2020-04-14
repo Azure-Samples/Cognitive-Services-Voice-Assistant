@@ -7,6 +7,7 @@ namespace UWPVoiceAssistantSample
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using UWPVoiceAssistantSample.AudioOutput;
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
     using Windows.ApplicationModel.Background;
@@ -60,7 +61,8 @@ namespace UWPVoiceAssistantSample
                 new DirectLineSpeechDialogBackend(),
                 keywordRegistration,
                 new AgentAudioInputProvider(),
-                this.agentSessionManager);
+                this.agentSessionManager,
+                new MediaPlayerDialogAudioOutputAdapter());
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton(this.dialogManager);

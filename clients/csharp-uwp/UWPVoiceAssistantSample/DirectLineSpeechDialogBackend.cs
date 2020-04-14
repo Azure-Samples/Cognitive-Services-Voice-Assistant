@@ -11,6 +11,8 @@ namespace UWPVoiceAssistantSample
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
+    using UWPVoiceAssistantSample.AudioOutput;
+    using Windows.Media.MediaProperties;
     using Windows.Storage;
 
     /// <summary>
@@ -20,6 +22,8 @@ namespace UWPVoiceAssistantSample
     public class DirectLineSpeechDialogBackend
         : IDialogBackend<List<byte>>
     {
+        private static readonly AudioEncodingProperties OutputEncoding = AudioEncodingProperties.CreateMp3(24000, 1, 96000);
+
         private IDialogAudioInputProvider<List<byte>> audioSource;
         private DialogServiceConnector connector;
         private PushAudioInputStream connectorInputStream;
@@ -153,7 +157,7 @@ namespace UWPVoiceAssistantSample
                 var wrapper = new ActivityWrapper(e.Activity);
                 var payload = new DialogResponse(
                     messageBody: e.Activity,
-                    messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio) : null,
+                    messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio, OutputEncoding) : null,
                     shouldEndTurn: e.Audio == null && wrapper.Type == ActivityWrapper.ActivityType.Message,
                     shouldStartNewTurn: wrapper.InputHint == ActivityWrapper.InputHintType.ExpectingInput);
                 Debug.WriteLine($"Connector activity received");
@@ -287,6 +291,10 @@ namespace UWPVoiceAssistantSample
             // Disable throttling of input audio (send it as fast as we can!)
             config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "9999");
             config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "10000");
+
+            var outputFormatInfo = DirectLineSpeechAudioOutputFormat.GetFromEncoding(OutputEncoding);
+
+            config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputFormatInfo.FormatLabel);
 
             if (!string.IsNullOrEmpty(customSpeechId))
             {

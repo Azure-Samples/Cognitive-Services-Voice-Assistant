@@ -143,11 +143,14 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AudioInput\AudioCaptureControl.cs" />
+    <Compile Include="AudioOutput\DialogAudioOutputMediaSource.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputStream.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputUnsafeMethods.cs" />
+    <Compile Include="AudioOutput\DirectLineSpeechAudioOutputFormat.cs" />
     <Compile Include="AudioOutput\DirectLineSpeechAudioOutputStream.cs" />
     <Compile Include="AudioOutput\IDialogAudioOutputAdapter.cs" />
+    <Compile Include="AudioOutput\MediaPlayerDialogAudioOutputAdapter.cs" />
     <Compile Include="DialogErrorInformation.cs" />
     <Compile Include="IAgentSessionManager.cs" />
     <Compile Include="IAgentSessionWrapper.cs" />
