@@ -6,90 +6,133 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    x:Name="MainPageWindow">
 
-    <ScrollViewer>
-        <Grid>
+    <Grid x:Name="MainWindowGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button x:Name="WindowFilterButton" Content="Windows" Grid.Column="0">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Windows"/>
+                            <MenuFlyoutSeparator/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsContolFlyoutItem" Text="Controls" IsChecked="True"  Click="ToggleControls"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsInteractionFlyoutItem" Text="Interaction" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsLogFlyoutItem" Text="Logs" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsChatFlyoutItem" Text="Chat" IsChecked="True"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="HelpButton" Content="Help"/>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="ApplicationStateGrid" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height=".2*" />
-                <RowDefinition Height=".5*" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="45" />
-                <RowDefinition Height="45" />
-                <RowDefinition Height="45" />
-                <RowDefinition Height="45" />
-                <RowDefinition Height="45" />
-                <RowDefinition Height="40" />
-                <RowDefinition Height=".2*" />
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="175" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
-            <Button x:Name="DismissButton"
-                FontFamily="Segoe MDL2 Assets"
-                Grid.Row="0" Grid.Column="3"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Content="&#xE106;"
-                Visibility="Visible"/>
+            <TextBlock x:Name="VoiceSettingsTextBlock" Text="Voice: " Grid.Column="0" Margin="30,0,0,0"></TextBlock>
+            <TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="30,0,0,0"></TextBlock>
+            <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="30,0,0,0"></TextBlock>
+        </Grid>
+        <Grid x:Name="ControlsGrid" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Controls" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2"/>
+            <Button x:Name="CollpaseControlsPane" Grid.Column="2" HorizontalAlignment="Right" Content="X" Click="CollapseControls"/>
             <ToggleSwitch x:Name="BackgroundTaskToggle"
                 IsOn="{x:Bind BackgroundTaskRegistered, Mode=TwoWay}"
-                Grid.Row="0"
-                Grid.ColumnSpan="4"
-                Margin="5,0,5,0"
-                OnContent="Background Task is Registered: Voice Activation (when available) will work with the app closed"
-                OffContent="Background Task is Not Registered: Voice Activation (when available) will only work with the app open"/>
-            <TextBox x:Name="ConversationState"
-                Grid.Row="0" Grid.Column="2"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                BorderBrush="White"
-                IsReadOnly="True"
-                Text="Conversation State" />
+                Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                Margin="5,0,0,0"       
+                OnContent="Background Task is Registered:"
+                OffContent="Background Task is Not Registered: "/>
             <ToggleSwitch x:Name="AppVoiceActivationEnabledToggle"
                 IsOn="{x:Bind keywordRegistration.KeywordEnabledByApp, Mode=TwoWay}"
                 IsEnabled="false"
-                Grid.Row="1"
-                Grid.ColumnSpan="4"
-                Margin="5,0,5,0"
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Margin="5,0,0,0"
                 OnContent="Application has enabled voice activation (when available)"
                 OffContent="" />
-
+            <ToggleSwitch x:Name="EnableSpeechSDKToggle"
+                    IsEnabled="False"
+                    IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSpeechSDK, Mode=TwoWay}"
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="5,0,0,0"
+                    OnContent="Speech SDK is ON"
+                    OffContent="Speech SDK is OFF" />
+            <ToggleSwitch x:Name="EnableAudioInputCaptureToggle"
+                    IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableAudioCaptureFiles, Mode=TwoWay}"
+                    Margin="5,0,0,0"
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    OnContent="Microphone audio file capture is ON"
+                    OffContent="Microphone audio file capture is OFF" />
+            <ToggleSwitch x:Name="EnableSpeechSDKLoggingToggle"
+                    IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSdkLogging, Mode=TwoWay}"
+                    Margin="5,0,0,0"
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    OnContent="Speech SDK file logging is ON"
+                    OffContent="Speech SDK file logging is OFF" />
+            <ToggleSwitch x:Name="EnableSecondStageKwsToggle"
+                    IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSecondStageKws, Mode=TwoWay}"
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    OnContent="Speech SDK 2nd Stage KWS is ON"
+                    OffContent="Speech SDK 2nd Stage KWS is OFF"/>
             <StackPanel
                     Orientation="Horizontal"
-                    Grid.Row="2"
-                    Grid.ColumnSpan="2"
-                    Margin="5,0,10,0">
-                <FontIcon x:Name="MicrophoneInfoIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
-                <HyperlinkButton x:Name="MicrophoneLinkButton"
-                        Margin="10,0,0,0"
-                        Content="Microphone Privacy Settings"
-                        NavigateUri="ms-settings:privacy-microphone" />
-            </StackPanel>
-            <StackPanel
-                    Orientation="Horizontal"
-                    Grid.Row="2"
-                Grid.Column="2"
-                    Grid.ColumnSpan="2"
+                    Grid.Row="7"
+                Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Margin="5,0,10,0">
                 <FontIcon x:Name="OpenConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Edit}"/>
                 <HyperlinkButton x:Name="OpenConfigButton"
@@ -100,9 +143,9 @@
             </StackPanel>
             <StackPanel
                     Orientation="Horizontal"
-                    Grid.Row="3"
-                Grid.Column="2"
-                    Grid.ColumnSpan="2"
+                    Grid.Row="8"
+                Grid.Column="0"
+                    Grid.ColumnSpan="3"
                     Margin="5,0,10,0">
                 <FontIcon x:Name="LoadConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Load}"/>
                 <HyperlinkButton x:Name="LoadConfigButton"
@@ -113,8 +156,19 @@
             </StackPanel>
             <StackPanel
                     Orientation="Horizontal"
-                    Grid.Row="3"
-                    Grid.ColumnSpan="2"
+                    Grid.Row="9"
+                    Grid.ColumnSpan="3"
+                    Margin="5,0,10,0">
+                <FontIcon x:Name="MicrophoneInfoIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
+                <HyperlinkButton x:Name="MicrophoneLinkButton"
+                        Margin="10,0,0,0"
+                        Content="Microphone Privacy Settings"
+                        NavigateUri="ms-settings:privacy-microphone" />
+            </StackPanel>
+            <StackPanel
+                    Orientation="Horizontal"
+                    Grid.Row="10"
+                    Grid.ColumnSpan="3"
                     Margin="5,0,10,0">
                 <FontIcon x:Name="VAStatusIcon" FontFamily="Segoe MDL2 Assets" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
                 <HyperlinkButton x:Name="VoiceActivationLinkButton"
@@ -122,175 +176,71 @@
                         Content="Voice Activation Privacy Settings"
                         NavigateUri="ms-settings:privacy-voiceactivation" />
             </StackPanel>
-
-            <VariableSizedWrapGrid
-                Grid.Row="4"
-                Grid.RowSpan="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="4"
-                Orientation="Horizontal">
-                <ToggleSwitch x:Name="EnableSpeechSDKToggle"
-                    IsEnabled="False"
-                    IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSpeechSDK, Mode=TwoWay}"
-                    VariableSizedWrapGrid.ColumnSpan="2"
-                    Margin="5,0,5,0"
-                    OnContent="Speech SDK is ON"
-                    OffContent="Speech SDK is OFF" />
-                <ToggleSwitch x:Name="EnableAudioInputCaptureToggle"
-                    IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableAudioCaptureFiles, Mode=TwoWay}"
-                    Margin="5,0,5,0"
-                    VariableSizedWrapGrid.ColumnSpan="2"
-                    OnContent="Microphone audio file capture is ON"
-                    OffContent="Microphone audio file capture is OFF" />
-                <ToggleSwitch x:Name="EnableSpeechSDKLoggingToggle"
-                    IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSdkLogging, Mode=TwoWay}"
-                    Margin="5,0,5,0"
-                    VariableSizedWrapGrid.ColumnSpan="2"
-                    OnContent="Speech SDK file logging is ON"
-                    OffContent="Speech SDK file logging is OFF" />
-                <ToggleSwitch x:Name="EnableSecondStageKwsToggle"
-                    IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSecondStageKws, Mode=TwoWay}"
-                    Margin="5,0,5,0"
-                    VariableSizedWrapGrid.ColumnSpan="2"
-                    OnContent="Speech SDK 2nd Stage KWS is ON"
-                    OffContent="Speech SDK 2nd Stage KWS is OFF" />
-            </VariableSizedWrapGrid>
-
-            <Button x:Name="StartListeningButton"
-                Grid.Row="7" Grid.Column="0"
-                Grid.RowSpan="1"
-                Height="35" Width="140"
-                HorizontalAlignment="Center"
-                Content="Start Listening" />
-            <Button x:Name="StopListeningButton"
-                Grid.Row="8" Grid.Column="0"
-                Height="35" Width="140"
-                HorizontalAlignment="Center"
-                Content="Stop Recording" />
-            <TextBlock x:Name="StatusTextHeader"
-                Grid.Row="6" Grid.Column="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Text="Conversation Window" />
-            <TextBox x:Name="StatusText"
-                Grid.Row="7" Grid.Column="1"
-                Grid.RowSpan="4" Grid.ColumnSpan="2"
-                IsReadOnly="True"
-                TextWrapping="Wrap"
-                BorderThickness="1"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                ScrollViewer.VerticalScrollBarVisibility="Auto"  
-                Text="Status"/>
-            <TextBlock x:Name="ChangeLogTextHeader"
-                Grid.Row="12" Grid.Column="1"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Text="ChangeLog Window" />
-            <ScrollViewer x:Name="ChangeLogScrollViewer"
-                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom"
-                          Grid.Row="13" Grid.Column="1" 
-                          Grid.RowSpan="4" Grid.ColumnSpan="2">
-                <RichTextBlock x:Name="ChangeLogTextBlock" FontWeight="Bold"/>
-            </ScrollViewer>
-            <Button x:Name="ClearButton"
-                Grid.Row="9" Grid.Column="0"
-                Height="35" Width="140"
-                Content="Clear"
-                HorizontalAlignment="Center"/>
-            <Button x:Name="StopPlaybackButton"
-                Grid.Row="10" Grid.Column="0"
-                Height="35" Width="140"
-                Content="Stop Playback"
-                HorizontalAlignment="Center" />
-            <Button x:Name="OpenLogLocationButton"
-                Grid.Row="11"
-                Height="35" Width="140"
-                HorizontalAlignment="Center"    
-                Content="Open log/audio file location" />
-            <TextBlock
-                x:Name="SpeechKeyTextBlock"
-                Grid.Row="18" Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Speech Key" />
-            <TextBox x:Name="SpeechKeyTextBox"
-                Grid.Row="18" Grid.Column="1" 
-                Grid.ColumnSpan="2"
-                Height="35"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                PlaceholderText="Cognitive Services Speech Subscription Key goes here"
-                Text="{x:Bind mvadls:LocalSettingsHelper.SpeechSubscriptionKey, Mode=TwoWay}"/>
-            <TextBlock
-                x:Name="CustomCommandsAppIdTextBlock"
-                Grid.Row="19" Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Custom Commands App ID" />
-            <TextBox x:Name="CustomCommandsAppIdTextBox"
-                Grid.Row="19" Grid.Column="1" 
-                Grid.ColumnSpan="2"
-                Height="35"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                Text="{x:Bind mvadls:LocalSettingsHelper.CustomCommandsAppId, Mode=TwoWay}"
-                PlaceholderText="(optional) Custom Commands App ID go here" />
-            <TextBlock
-                x:Name="BotIdTextBlock"
-                Grid.Row="20" Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Bot ID" />
-            <TextBox x:Name="BotIdTextBox"
-                Grid.Row="20" Grid.Column="1" 
-                Grid.ColumnSpan="2"
-                Height="35"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                Text="{x:Bind mvadls:LocalSettingsHelper.BotId, Mode=TwoWay}"
-                PlaceholderText="(optional) Bot ID go here" />
-            <TextBlock
-                x:Name="SpeechRegionTextBlock"
-                Grid.Row="21" Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Speech Region" />
-            <TextBox x:Name="SpeechRegionTextBox"
-                Grid.Row="21" Grid.Column="1" 
-                Grid.ColumnSpan="2"
-                Height="35"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                Text="{x:Bind mvadls:LocalSettingsHelper.AzureRegion,Mode=TwoWay}"
-                PlaceholderText="Azure region (e.g. westus2) goes here" />
-            <TextBlock x:Name="CustomSpeechIdTextBlock"
-                Grid.Row="22" Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="SR Endpoint ID" />
-            <TextBox x:Name="CustomSpeechIdTextBox"
-                Grid.Row="22" Grid.Column="1" 
-                Grid.ColumnSpan="2"
-                Height="35"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                Text="{x:Bind mvadls:LocalSettingsHelper.CustomSpeechId, Mode=TwoWay}"
-                PlaceholderText="(optional) Custom SR Endpoint ID goes here" />
-            <TextBlock
-                x:Name="CustomVoiceIdsTextBlock"
-                Grid.Row="23" Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Text="Custom Voice ID" />
-            <TextBox x:Name="CustomVoiceIdsTextBox"
-                Grid.Row="23" Grid.Column="1" 
-                Grid.ColumnSpan="2"
-                Height="35"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                Text="{x:Bind mvadls:LocalSettingsHelper.CustomVoiceIds, Mode=TwoWay}"
-                PlaceholderText="(optional) Custom Voice deployment IDs go here" />
         </Grid>
-    </ScrollViewer>
+
+        <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Logs" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
+                <HyperlinkButton x:Name="OpenLogLocationButton" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
+                <Button x:Name="CollapseLogPane" Content="X" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CollapseLogs"/>
+            </StackPanel>
+
+            <ScrollViewer x:Name="ChangeLogScrollViewer"
+                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom" BorderBrush="Black" BorderThickness="2"
+                          Margin="5"
+                          Grid.Row="1" Grid.Column="1" 
+                          Grid.RowSpan="4" Grid.ColumnSpan="2">
+                <RichTextBlock x:Name="ChangeLogTextBlock" Width="500" FontWeight="Bold"/>
+            </ScrollViewer>
+        </Grid>
+        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="3" Grid.RowSpan="6" Width="500" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Chat" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30"/>
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <HyperlinkButton Name="DownloadChatHistory" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
+                <Button x:Name="ResetChatHistory" Content="Reset"/>
+            </StackPanel>
+            <ScrollViewer x:Name="ChatHistoryScollViewer"
+                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom" BorderBrush="Black" BorderThickness="2"
+                          Margin="5"
+                          Grid.Row="1" Grid.Column="0" 
+                          Grid.RowSpan="3" Grid.ColumnSpan="2">
+                <RichTextBlock x:Name="ChatHistoryTextBlock" FontWeight="Bold"/>
+            </ScrollViewer>
+
+            <Border Grid.Row="4" Grid.ColumnSpan="2" BorderBrush="White" BorderThickness="2" Margin="40,20,40,20"/>
+
+            <Grid Grid.Row="6" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="StatusTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="400" Width="Auto" VerticalAlignment="Stretch"></TextBox>
+                <Button Content="Mic" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right"></Button>
+            </Grid>
+
+        </Grid>
+    </Grid>
 </Page>

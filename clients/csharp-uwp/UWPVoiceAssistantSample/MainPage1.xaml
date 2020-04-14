@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -79,7 +79,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Controls" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30"/>
             <Button x:Name="CollpaseControlsPane" Grid.Row="0" Grid.Column="1" Content="X" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <ToggleSwitch x:Name="BackgroundTaskToggle"
+            --><!--<ToggleSwitch x:Name="BackgroundTaskToggle"
                 IsOn="{x:Bind BackgroundTaskRegistered, Mode=TwoWay}"
                 Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                 Margin="5,0,5,0"
@@ -93,7 +93,7 @@
                 Grid.ColumnSpan="2"
                 Margin="5,0,5,0"
                 OnContent="Application has enabled voice activation (when available)"
-                OffContent="" />
+                OffContent="" />--><!--
             <ToggleSwitch x:Name="EnableSpeechSDKToggle"
                     IsEnabled="False"
                     IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSpeechSDK, Mode=TwoWay}"
@@ -134,11 +134,11 @@
                     Grid.ColumnSpan="2"
                     Margin="5,0,10,0">
                 <FontIcon x:Name="OpenConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Edit}"/>
-                <HyperlinkButton x:Name="OpenConfigButton"
+                --><!--<HyperlinkButton x:Name="OpenConfigButton"
                         Margin="10,0,0,0"
                         Content="Open Config"
                         Click="OpenConfigClick"
-                         />
+                         />--><!--
             </StackPanel>
             <StackPanel
                     Orientation="Horizontal"
@@ -147,11 +147,11 @@
                     Grid.ColumnSpan="2"
                     Margin="5,0,10,0">
                 <FontIcon x:Name="LoadConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Load}"/>
-                <HyperlinkButton x:Name="LoadConfigButton"
+                --><!--<HyperlinkButton x:Name="LoadConfigButton"
                         Margin="10,0,0,0"
                         Content="Load Config"
                         Click="LoadConfigClick"
-                         />
+                         />--><!--
             </StackPanel>
             <StackPanel
                     Orientation="Horizontal"
@@ -241,5 +241,5 @@
             </Grid>
 
         </Grid>
-    </Grid>
+    </Grid>-->
 </Page>

@@ -97,28 +97,28 @@ namespace UWPVoiceAssistantSample
             this.AddSystemAvailabilityHandlers();
             this.AddDialogHandlersAsync();
 
-            this.DismissButton.Click += (_, __) =>
-            {
-                WindowService.CloseWindow();
-            };
-            this.StartListeningButton.Click += async (_, __) =>
-            {
-                this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
-                await this.UpdateUIForSharedStateAsync();
-            };
-            this.StopListeningButton.Click += async (_, __) =>
-            {
-                await this.dialogManager.FinishConversationAsync();
-            };
-            this.StopPlaybackButton.Click += async (_, __) =>
-            {
-                await this.dialogManager.StopAudioPlaybackAsync();
-            };
-            this.ClearButton.Click += (_, __) =>
-            {
-                this.statusBuffer.Clear();
-                this.RefreshStatus();
-            };
+            //this.DismissButton.Click += (_, __) =>
+            //{
+            //    WindowService.CloseWindow();
+            //};
+            //this.StartListeningButton.Click += async (_, __) =>
+            //{
+            //    this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
+            //    await this.UpdateUIForSharedStateAsync();
+            //};
+            //this.StopListeningButton.Click += async (_, __) =>
+            //{
+            //    await this.dialogManager.FinishConversationAsync();
+            //};
+            //this.StopPlaybackButton.Click += async (_, __) =>
+            //{
+            //    await this.dialogManager.StopAudioPlaybackAsync();
+            //};
+            //this.ClearButton.Click += (_, __) =>
+            //{
+            //    this.statusBuffer.Clear();
+            //    this.RefreshStatus();
+            //};
             this.OpenLogLocationButton.Click += async (_, __)
                 => await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
         }
@@ -200,18 +200,18 @@ namespace UWPVoiceAssistantSample
             var useKws = useSpeechSdk && LocalSettingsHelper.EnableSecondStageKws;
             var enableLogs = useSpeechSdk && LocalSettingsHelper.EnableSdkLogging;
 
-            this.SpeechKeyTextBlock.Visibility = visibility;
-            this.SpeechRegionTextBlock.Visibility = visibility;
-            this.CustomSpeechIdTextBlock.Visibility = visibility;
-            this.CustomVoiceIdsTextBlock.Visibility = visibility;
-            this.CustomCommandsAppIdTextBlock.Visibility = visibility;
-            this.BotIdTextBlock.Visibility = visibility;
-            this.SpeechKeyTextBox.Visibility = visibility;
-            this.SpeechRegionTextBox.Visibility = visibility;
-            this.CustomSpeechIdTextBox.Visibility = visibility;
-            this.CustomVoiceIdsTextBox.Visibility = visibility;
-            this.CustomCommandsAppIdTextBox.Visibility = visibility;
-            this.BotIdTextBox.Visibility = visibility;
+            //this.SpeechKeyTextBlock.Visibility = visibility;
+            //this.SpeechRegionTextBlock.Visibility = visibility;
+            //this.CustomSpeechIdTextBlock.Visibility = visibility;
+            //this.CustomVoiceIdsTextBlock.Visibility = visibility;
+            //this.CustomCommandsAppIdTextBlock.Visibility = visibility;
+            //this.BotIdTextBlock.Visibility = visibility;
+            //this.SpeechKeyTextBox.Visibility = visibility;
+            //this.SpeechRegionTextBox.Visibility = visibility;
+            //this.CustomSpeechIdTextBox.Visibility = visibility;
+            //this.CustomVoiceIdsTextBox.Visibility = visibility;
+            //this.CustomCommandsAppIdTextBox.Visibility = visibility;
+            //this.BotIdTextBox.Visibility = visibility;
             this.EnableSpeechSDKLoggingToggle.Visibility = visibility;
             this.EnableSecondStageKwsToggle.Visibility = visibility;
             this.EnableSecondStageKwsToggle.IsOn = useKws;
@@ -242,15 +242,15 @@ namespace UWPVoiceAssistantSample
                     : "App voice activation status unknown: configuration not yet queried";
                 this.AppVoiceActivationEnabledToggle.IsOn = keywordConfig != null && keywordConfig.AvailabilityInfo.IsEnabled;
 
-                this.StartListeningButton.IsEnabled = agentIdle && micReady;
-                this.StartListeningButton.Content = micReady ? "Start Listening" : "No mic";
-                this.SpeechKeyTextBox.IsEnabled = agentIdle;
-                this.SpeechRegionTextBox.IsEnabled = agentIdle;
-                this.CustomSpeechIdTextBox.IsEnabled = agentIdle;
-                this.CustomVoiceIdsTextBox.IsEnabled = agentIdle;
-                this.CustomCommandsAppIdTextBox.IsEnabled = agentIdle;
-                this.BotIdTextBox.IsEnabled = agentIdle;
-                this.StopListeningButton.IsEnabled = !agentIdle;
+                //this.StartListeningButton.IsEnabled = agentIdle && micReady;
+                //this.StartListeningButton.Content = micReady ? "Start Listening" : "No mic";
+                //this.SpeechKeyTextBox.IsEnabled = agentIdle;
+                //this.SpeechRegionTextBox.IsEnabled = agentIdle;
+                //this.CustomSpeechIdTextBox.IsEnabled = agentIdle;
+                //this.CustomVoiceIdsTextBox.IsEnabled = agentIdle;
+                //this.CustomCommandsAppIdTextBox.IsEnabled = agentIdle;
+                //this.BotIdTextBox.IsEnabled = agentIdle;
+                //this.StopListeningButton.IsEnabled = !agentIdle;
 
                 var microphoneStatusInfo = await UIAudioStatus.GetMicrophoneStatusAsync();
                 this.MicrophoneInfoIcon.Glyph = microphoneStatusInfo.Glyph;
@@ -262,7 +262,7 @@ namespace UWPVoiceAssistantSample
                 this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
                 this.VoiceActivationLinkButton.Content = voiceActivationStatusInfo.Status;
 
-                this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
+                //this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
             });
         }
 
@@ -295,8 +295,8 @@ namespace UWPVoiceAssistantSample
 
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                this.StatusText.Text = newText;
-                this.ConversationState.Text = agentStatusMessage;
+                //this.StatusText.Text = newText;
+                //this.ConversationState.Text = agentStatusMessage;
             });
         }
 
@@ -393,43 +393,43 @@ namespace UWPVoiceAssistantSample
                 if (speechKeyModified)
                 {
                     // Replace below two lines with LocalSettingsHelper.SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey
-                    this.SpeechKeyTextBox.Text = appSettings.SpeechSubscriptionKey;
-                    LocalSettingsHelper.SpeechSubscriptionKey = this.SpeechKeyTextBox.Text;
+                    //this.SpeechKeyTextBox.Text = appSettings.SpeechSubscriptionKey;
+                    LocalSettingsHelper.SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
                     this.logger.Log($"Speech Key: {LocalSettingsHelper.SpeechSubscriptionKey}");
                 }
 
                 if (speechRegionModified)
                 {
-                    this.SpeechRegionTextBox.Text = appSettings.AzureRegion;
-                    LocalSettingsHelper.AzureRegion = this.SpeechRegionTextBox.Text;
+                    //this.SpeechRegionTextBox.Text = appSettings.AzureRegion;
+                    LocalSettingsHelper.AzureRegion = appSettings.AzureRegion;
                     this.logger.Log($"Azure Region: {LocalSettingsHelper.AzureRegion}");
                 }
 
                 if (customSpeechIdModified)
                 {
-                    this.CustomSpeechIdTextBox.Text = appSettings.CustomSpeechId;
-                    LocalSettingsHelper.CustomSpeechId = this.CustomSpeechIdTextBox.Text;
+                    //this.CustomSpeechIdTextBox.Text = appSettings.CustomSpeechId;
+                    LocalSettingsHelper.CustomSpeechId = appSettings.CustomSpeechId;
                     this.logger.Log($"Custom Speech Id: {LocalSettingsHelper.CustomSpeechId}");
                 }
 
                 if (customVoiceIdModified)
                 {
-                    this.CustomVoiceIdsTextBox.Text = appSettings.CustomVoiceIds;
-                    LocalSettingsHelper.CustomVoiceIds = this.CustomVoiceIdsTextBox.Text;
+                    //this.CustomVoiceIdsTextBox.Text = appSettings.CustomVoiceIds;
+                    LocalSettingsHelper.CustomVoiceIds = appSettings.CustomVoiceIds;
                     this.logger.Log($"Custom Voice Id: {LocalSettingsHelper.CustomVoiceIds}");
                 }
 
                 if (customCommandsAppIdModified)
                 {
-                    this.CustomCommandsAppIdTextBox.Text = appSettings.CustomCommandsAppId;
-                    LocalSettingsHelper.CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
+                    //this.CustomCommandsAppIdTextBox.Text = appSettings.CustomCommandsAppId;
+                    LocalSettingsHelper.CustomCommandsAppId = appSettings.CustomCommandsAppId;
                     this.logger.Log($"Custom Commands App Id: {LocalSettingsHelper.CustomCommandsAppId}");
                 }
 
                 if (botIdModified)
                 {
-                    this.BotIdTextBox.Text = appSettings.BotId;
-                    LocalSettingsHelper.BotId = this.BotIdTextBox.Text;
+                    //this.BotIdTextBox.Text = appSettings.BotId;
+                    LocalSettingsHelper.BotId = appSettings.BotId;
                     this.logger.Log($"Bot Id: {LocalSettingsHelper.BotId}");
                 }
             }
@@ -437,6 +437,68 @@ namespace UWPVoiceAssistantSample
             {
                 this.logger.Log("No changes in config");
             }
+        }
+
+        private void CollapseControls(object sender, RoutedEventArgs e)
+        {
+            this.ControlsGrid.Visibility = Visibility.Collapsed;
+            Grid.SetColumn(this.LogGrid, 0);
+            Grid.SetColumn(this.ChatGrid, 1);
+            Grid.SetRow(this.ChatGrid, 2);
+            this.WindowsContolFlyoutItem.IsChecked = false;
+        }
+
+        private void CollapseLogs(object sender, RoutedEventArgs e)
+        {
+            this.LogGrid.Visibility = Visibility.Collapsed;
+            this.WindowsLogFlyoutItem.IsChecked = false;
+            if (this.ControlsGrid.Visibility != Visibility.Collapsed)
+            {
+                Grid.SetColumn(this.ChatGrid, 1);
+                Grid.SetRow(this.ChatGrid, 2);
+                this.Frame.MinWidth = this.ChatGrid.ActualWidth + this.LogGrid.ActualWidth;
+                this.Frame.MaxWidth = this.ChatGrid.ActualWidth + this.LogGrid.ActualWidth;
+                this.WindowsLogFlyoutItem.IsChecked = false;
+            }
+            else
+            {
+                Grid.SetColumn(this.ChatGrid, 0);
+                Grid.SetRow(this.ChatGrid, 2);
+                Grid.SetColumnSpan(this.ChatGrid, 2);
+                Grid.SetColumn(this.ApplicationStateGrid, 0);
+                this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
+                this.Frame.MinWidth = this.ChatGrid.ActualWidth;
+                this.Frame.MaxWidth = this.ChatGrid.ActualWidth;
+                this.WindowsLogFlyoutItem.IsChecked = false;
+            }
+        }
+
+        private void ToggleControls(object sender, RoutedEventArgs e)
+        {
+            var controlFlyoutItem = this.WindowsContolFlyoutItem.IsChecked ? this.ControlsGrid.Visibility = Visibility.Visible : this.ControlsGrid.Visibility = Visibility.Collapsed;
+
+            if (this.WindowsContolFlyoutItem.IsChecked == false)
+            {
+                this.ControlsGrid.Visibility = Visibility.Collapsed;
+                Grid.SetColumn(this.LogGrid, 0);
+                Grid.SetColumn(this.ChatGrid, 1);
+                Grid.SetRow(this.ChatGrid, 2);
+                this.WindowsContolFlyoutItem.IsChecked = false;
+                //this.Frame.Width = this.LogGrid.ActualWidth + this.ChatGrid.ActualWidth;
+            }
+            else
+            {
+                this.ControlsGrid.Visibility = Visibility.Visible;
+                Grid.SetColumn(this.ControlsGrid, 0);
+                Grid.SetColumn(this.LogGrid, 1);
+                Grid.SetColumn(this.ChatGrid, 2);
+                Grid.SetRow(this.ChatGrid, 0);
+            }
+        }
+
+        private void ToggleLogs(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
