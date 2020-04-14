@@ -454,21 +454,10 @@ namespace UWPVoiceAssistantSample
             this.WindowsLogFlyoutItem.IsChecked = false;
             if (this.ControlsGrid.Visibility != Visibility.Collapsed)
             {
+                Grid.SetColumn(this.ControlsGrid, 0);
+                Grid.SetRow(this.ControlsGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 1);
                 Grid.SetRow(this.ChatGrid, 2);
-                this.Frame.MinWidth = this.ChatGrid.ActualWidth + this.LogGrid.ActualWidth;
-                this.Frame.MaxWidth = this.ChatGrid.ActualWidth + this.LogGrid.ActualWidth;
-                this.WindowsLogFlyoutItem.IsChecked = false;
-            }
-            else
-            {
-                Grid.SetColumn(this.ChatGrid, 0);
-                Grid.SetRow(this.ChatGrid, 2);
-                Grid.SetColumnSpan(this.ChatGrid, 2);
-                Grid.SetColumn(this.ApplicationStateGrid, 0);
-                this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
-                this.Frame.MinWidth = this.ChatGrid.ActualWidth;
-                this.Frame.MaxWidth = this.ChatGrid.ActualWidth;
                 this.WindowsLogFlyoutItem.IsChecked = false;
             }
         }
@@ -479,18 +468,55 @@ namespace UWPVoiceAssistantSample
 
             if (this.WindowsContolFlyoutItem.IsChecked == false)
             {
-                this.ControlsGrid.Visibility = Visibility.Collapsed;
-                Grid.SetColumn(this.LogGrid, 0);
-                Grid.SetColumn(this.ChatGrid, 1);
-                Grid.SetRow(this.ChatGrid, 2);
-                this.WindowsContolFlyoutItem.IsChecked = false;
-                //this.Frame.Width = this.LogGrid.ActualWidth + this.ChatGrid.ActualWidth;
+                this.CollapseControls(sender, e);
             }
-            else
+
+            if (this.WindowsContolFlyoutItem.IsChecked == true && this.WindowsLogFlyoutItem.IsChecked == true)
             {
                 this.ControlsGrid.Visibility = Visibility.Visible;
+                this.LogGrid.Visibility = Visibility.Visible;
                 Grid.SetColumn(this.ControlsGrid, 0);
+                //Grid.SetColumnSpan(this.ControlsGrid, 2);
                 Grid.SetColumn(this.LogGrid, 1);
+                Grid.SetRow(this.LogGrid, 2);
+                Grid.SetColumn(this.ChatGrid, 2);
+                Grid.SetRow(this.ChatGrid, 0);
+            }
+
+            if (this.WindowsContolFlyoutItem.IsChecked == true && this.WindowsLogFlyoutItem.IsChecked == false && this.WindowsChatFlyoutItem.IsChecked == true)
+            {
+                this.CollapseLogs(sender, e);
+                //Grid.SetColumnSpan(this.ControlsGrid, 1);
+            }
+
+            if (this.WindowsContolFlyoutItem.IsChecked == false && this.WindowsLogFlyoutItem.IsChecked == true && this.WindowsChatFlyoutItem.IsChecked == true)
+            {
+                this.LogGrid.Visibility = Visibility.Visible;
+                Grid.SetColumn(this.LogGrid, 0);
+                Grid.SetRow(this.LogGrid, 2);
+                Grid.SetColumn(this.ChatGrid, 1);
+                Grid.SetRow(this.ChatGrid, 2);
+            }
+
+            if (this.WindowsContolFlyoutItem.IsChecked == false && this.WindowsLogFlyoutItem.IsChecked == false && this.WindowsChatFlyoutItem.IsChecked == true)
+            {
+                this.ControlsGrid.Visibility = Visibility.Collapsed;
+                this.LogGrid.Visibility = Visibility.Collapsed;
+                Grid.SetColumn(this.ChatGrid, 0);
+                Grid.SetRow(this.ChatGrid, 2);
+                Grid.SetColumn(this.ApplicationStateGrid, 0);
+                this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
+            }
+
+
+            if (this.WindowsContolFlyoutItem.IsChecked == true && this.WindowsLogFlyoutItem.IsChecked == true && this.WindowsChatFlyoutItem.IsChecked == true)
+            {
+                this.ControlsGrid.Visibility = Visibility.Visible;
+                this.LogGrid.Visibility = Visibility.Visible;
+                Grid.SetColumn(this.ControlsGrid, 0);
+                Grid.SetRow(this.ControlsGrid, 2);
+                Grid.SetColumn(this.LogGrid, 1);
+                Grid.SetRow(this.LogGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 2);
                 Grid.SetRow(this.ChatGrid, 0);
             }

@@ -31,9 +31,9 @@
                             <MenuFlyoutItem Text="Windows"/>
                             <MenuFlyoutSeparator/>
                             <ToggleMenuFlyoutItem x:Name="WindowsContolFlyoutItem" Text="Controls" IsChecked="True"  Click="ToggleControls"/>
-                            <ToggleMenuFlyoutItem x:Name="WindowsInteractionFlyoutItem" Text="Interaction" IsChecked="True"/>
-                            <ToggleMenuFlyoutItem x:Name="WindowsLogFlyoutItem" Text="Logs" IsChecked="True"/>
-                            <ToggleMenuFlyoutItem x:Name="WindowsChatFlyoutItem" Text="Chat" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsInteractionFlyoutItem" Text="Interaction" IsChecked="True" Click="ToggleControls"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsLogFlyoutItem" Text="Logs" IsChecked="True" Click="ToggleControls"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsChatFlyoutItem" Text="Chat" IsChecked="True" Click="ToggleControls"/>
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>
