@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -442,10 +443,19 @@ namespace UWPVoiceAssistantSample
         private void CollapseControls(object sender, RoutedEventArgs e)
         {
             this.ControlsGrid.Visibility = Visibility.Collapsed;
-            Grid.SetColumn(this.LogGrid, 0);
-            Grid.SetColumn(this.ChatGrid, 1);
-            Grid.SetRow(this.ChatGrid, 2);
             this.WindowsContolFlyoutItem.IsChecked = false;
+            if (this.LogGrid.Visibility != Visibility.Collapsed)
+            {
+                Grid.SetColumn(this.LogGrid, 0);
+                Grid.SetColumn(this.ChatGrid, 1);
+                Grid.SetRow(this.ChatGrid, 2);
+            }
+            else
+            {
+                Grid.SetColumn(this.ChatGrid, 0);
+                Grid.SetRow(this.ChatGrid, 2);
+            }
+
         }
 
         private void CollapseLogs(object sender, RoutedEventArgs e)
@@ -458,7 +468,11 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ControlsGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 1);
                 Grid.SetRow(this.ChatGrid, 2);
-                this.WindowsLogFlyoutItem.IsChecked = false;
+            }
+            else
+            {
+                Grid.SetColumn(this.ChatGrid, 0);
+                Grid.SetRow(this.ChatGrid, 2);
             }
         }
 
@@ -500,12 +514,26 @@ namespace UWPVoiceAssistantSample
 
             if (this.WindowsContolFlyoutItem.IsChecked == false && this.WindowsLogFlyoutItem.IsChecked == false && this.WindowsChatFlyoutItem.IsChecked == true)
             {
+                this.logger.Log($" before Width: {this.ChatGrid.Width}");
+                this.logger.Log($" before ActualWidth: {this.ChatGrid.ActualWidth}");
                 this.ControlsGrid.Visibility = Visibility.Collapsed;
                 this.LogGrid.Visibility = Visibility.Collapsed;
+                Grid.SetColumn(MainWindowGrid, 0);
+                Grid.SetColumnSpan(MainWindowGrid, 1);
+                Grid.SetColumnSpan(ApplicationStateGrid, 1);
                 Grid.SetColumn(this.ChatGrid, 0);
                 Grid.SetRow(this.ChatGrid, 2);
+                Grid.SetColumnSpan(this.ChatGrid, 1);
                 Grid.SetColumn(this.ApplicationStateGrid, 0);
+                Grid.SetColumn(this.HelpButtonGrid, 0);
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
+                this.HelpButtonGrid.HorizontalAlignment = HorizontalAlignment.Right;
+                this.MainWindowGrid.Width = this.ChatGrid.ActualWidth;
+                var resize = ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth, Height = 800 });
                 this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
+                this.logger.Log($" After Width: {this.ChatGrid.Width}");
+                this.logger.Log($" After ActualWidth: {this.ChatGrid.ActualWidth}");
+                this.logger.Log($"{resize}");
             }
 
 
