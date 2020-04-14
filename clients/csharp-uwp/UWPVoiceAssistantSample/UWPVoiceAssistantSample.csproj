@@ -147,10 +147,7 @@
     <Compile Include="AudioOutput\DialogAudioOutputStream.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputUnsafeMethods.cs" />
-<<<<<<< HEAD
-    <Compile Include="AudioOutput\DirectLineSpeechAudioOutputFormat.cs" />
-=======
->>>>>>> master
+    <Compile Include="AudioOutput\DialogLineSpeechAudioOutputFormat.cs" />
     <Compile Include="AudioOutput\DirectLineSpeechAudioOutputStream.cs" />
     <Compile Include="AudioOutput\IDialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\MediaPlayerDialogAudioOutputAdapter.cs" />
