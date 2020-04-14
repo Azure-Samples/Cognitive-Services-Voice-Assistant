@@ -10,6 +10,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -20,13 +22,41 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button x:Name="WindowFilterButton" Content="Windows" Grid.Column="0">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Windows"/>
+                            <MenuFlyoutSeparator/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsContolFlyoutItem" Text="Controls" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsInteractionFlyoutItem" Text="Interaction" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsLogFlyoutItem" Text="Logs" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem x:Name="WindowsChatFlyoutItem" Text="Chat" IsChecked="True"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="HelpButton" Content="Help"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="VoiceSettingsTextBlock" Text="Voice: " Grid.Column="0" Margin="30,0,0,0"></TextBlock>
+            <TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="30,0,0,0"></TextBlock>
+            <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="30,0,0,0"></TextBlock>
         </Grid>
-        <Grid Grid.Column="0" Grid.RowSpan="3" Grid.Row="1">
+        <Grid x:Name="ControlsGrid" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -147,7 +177,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="3">
+        <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="1" Grid.RowSpan="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -169,7 +199,7 @@
                 <RichTextBlock x:Name="ChangeLogTextBlock" FontWeight="Bold"/>
             </ScrollViewer>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="2" Grid.RowSpan="4">
+        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
