@@ -95,9 +95,12 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Invokes the LogAvailable EventHandler to indicate a log was created.
+        /// Logs an NLog message at the LogLevel.Error level.
         /// </summary>
-        public void OnLogAvailable()
+        /// <param name="message"> The message to log via NLog. </param>
+        public void Error(string message) => this.logger.Error(message);
+
+        private void OnLogAvailable()
         {
             logAvailable?.Invoke(this, EventArgs.Empty);
         }

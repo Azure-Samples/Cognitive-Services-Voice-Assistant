@@ -34,5 +34,15 @@ namespace UWPVoiceAssistantSample
         /// Gets the Unicode point for an icon of a person with a chat bubble.
         /// </summary>
         public static readonly string FeedbackApp = "\uE939";
+
+        /// <summary>
+        /// Gets the Unicode point for an edit icon.
+        /// </summary>
+        public static readonly string Edit = "\uE70F";
+
+        /// <summary>
+        /// Gets the Unicode point for an upload icon.
+        /// </summary>
+        public static readonly string Load = "\uE898";
     }
 }
