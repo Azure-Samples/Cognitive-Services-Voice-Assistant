@@ -182,7 +182,9 @@ steps:
   displayName: '$(sample4Name) - VSBuild'
   inputs:
     solution: '$(sample4Solution)'
-    msbuildArgs: '/p:Configuration="$(buildConfiguration)" /p:Platform="$(buildPlatformNative)" /p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatformNative)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    platform: '$(buildPlatformNative)'
+    configuration: '$(buildConfiguration)'
 
 - task: PublishPipelineArtifact@1
   displayName: '$(sample4Name) - PublishPipelineArtifact'
