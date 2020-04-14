@@ -18,6 +18,7 @@ namespace UWPVoiceAssistantSample.AudioOutput
     {
         private readonly MediaPlayer mediaPlayer;
         private DialogAudioOutputMediaSource mediaSource;
+        private MediaPlaybackState lastPlaybackState;
         private bool alreadyDisposed = false;
 
         /// <summary>
@@ -30,7 +31,15 @@ namespace UWPVoiceAssistantSample.AudioOutput
                 AudioCategory = MediaPlayerAudioCategory.Speech,
                 Volume = 1.0,
             };
-            this.mediaPlayer.MediaEnded += (_, __) => this.OutputEnded?.Invoke();
+            this.mediaPlayer.PlaybackSession.PlaybackStateChanged += (session, _) =>
+            {
+                if (this.lastPlaybackState == MediaPlaybackState.Playing
+                    && session.PlaybackState != MediaPlaybackState.Playing)
+                {
+                    this.OutputEnded?.Invoke();
+                }
+                this.lastPlaybackState = session.PlaybackState;
+            };
         }
 
         /// <summary>
