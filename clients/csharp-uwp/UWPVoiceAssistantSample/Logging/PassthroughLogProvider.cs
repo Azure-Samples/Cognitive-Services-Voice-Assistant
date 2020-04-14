@@ -59,5 +59,11 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <param name="messageToLog"> The statement to log. </param>
         public void Log(string messageToLog) => this.Log(LogMessageLevel.Information, messageToLog);
+
+        /// <summary>
+        /// Emits a log statement at the error logging level for the provided message.
+        /// </summary>
+        /// <param name="messageToLog"> The statement to log. </param>
+        public void Error(string messageToLog) => this.Log(LogMessageLevel.Error, messageToLog);
     }
 }

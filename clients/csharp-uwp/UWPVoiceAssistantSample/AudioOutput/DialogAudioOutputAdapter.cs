@@ -4,49 +4,49 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+    using UWPVoiceAssistantSample.AudioOutput;
     using Windows.Devices.Enumeration;
-    using Windows.Media;
     using Windows.Media.Audio;
+    using Windows.Media.Devices;
     using Windows.Media.MediaProperties;
     using Windows.Media.Render;
 
     /// <summary>
-    /// Responsible for Creating and maintaining the Audio Graph for comminucation with Direct Line Speech.
+    /// Output audio implementation generic to any DialogAudioOutputStream source that manages the creation and use of
+    /// a Windows AudioGraph for the output of media associated with a DialogResponse, such as text-to-speech output.
     /// </summary>
     public class DialogAudioOutputAdapter
         : IDisposable, IDialogAudioOutputAdapter
     {
+        private static readonly AudioEncodingProperties DefaultEncoding
+            = AudioEncodingProperties.CreatePcm(16000, 1, 16);
+
         private readonly SemaphoreSlim graphSemaphore;
         private readonly AutoResetEvent outputEndedEvent;
-        private readonly object audioOutputStreamsLock;
-        private readonly Queue<DialogAudioOutputStream> audioOutputStreams;
-
+        private readonly ILogProvider log = LogRouter.GetClassLogger();
+        private DialogAudioOutputStream activeOutputStream;
         private AudioGraph graph;
         private AudioFrameInputNode frameInputNode;
+        private AudioEncodingProperties frameInputEncoding;
         private AudioDeviceOutputNode deviceOutputNode;
-        private DeviceWatcher audioOutputDeviceWatcher;
-        private bool firstDeviceEnumerationComplete = false;
+        private string lastOutputDeviceId;
         private bool alreadyDisposed = false;
-        private int activeUtterances = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogAudioOutputAdapter"/> class.
         /// </summary>
         private DialogAudioOutputAdapter()
         {
-            this.audioOutputStreams = new Queue<DialogAudioOutputStream>();
-            this.audioOutputStreamsLock = new object();
             this.outputEndedEvent = new AutoResetEvent(false);
             this.graphSemaphore = new SemaphoreSlim(1, 1);
-            this.InitializeAudioDeviceWatching();
+            this.frameInputEncoding = DefaultEncoding;
+            this.ConfigureOutputDeviceWatching();
         }
 
         /// <summary>
-        /// Raised when all enqueued audio has completed playback.
+        /// Raised when the current active audio playback has finished.
         /// </summary>
         public event Action OutputEnded;
 
@@ -56,9 +56,21 @@ namespace UWPVoiceAssistantSample
         public bool IsPlaying { get; private set; }
 
         /// <summary>
-        /// Asynchronously creates a new instance of the DialogAudioOutputAdapter class
-        /// and initializes the underlying audio resources to begin audio output to the
-        /// default output device.
+        /// Gets or sets the encoding to be used for output. Should match the expected format of data being provided.
+        /// </summary>
+        public AudioEncodingProperties OutputEncoding
+        {
+            get => this.frameInputEncoding;
+            set
+            {
+                this.frameInputEncoding = value;
+                _ = this.RegenerateAudioGraphAsync();
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously creates a new instance of the DialogAudioOutputAdapter class and initializes the underlying
+        /// audio resources to begin audio output to the default output device.
         /// </summary>
         /// <returns> A task that completes once the adapter is ready. </returns>
         public static async Task<DialogAudioOutputAdapter> CreateAsync()
@@ -69,60 +81,43 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Cancels any current playback on the adapter and asynchronously begins playback of the
-        /// provided Speech SDK dialog output audio.
+        /// Cancels any current playback on the adapter and asynchronously begins playback of the provided Speech SDK
+        /// dialog output audio.
         /// </summary>
         /// <param name="stream"> The output stream to play. </param>
-        /// <returns> A task that completes once all pending output is completed. </returns>
-        public Task PlayAudioAsync(DialogAudioOutputStream stream)
+        /// <returns> A task that completes once the pending output is completed. </returns>
+        public async Task PlayAudioAsync(DialogAudioOutputStream stream)
         {
-            lock (this.audioOutputStreamsLock)
+            await this.StopPlaybackAsync();
+
+            using (await this.graphSemaphore.AutoReleaseWaitAsync())
             {
-                this.audioOutputStreams.Clear();
+                this.activeOutputStream = stream;
+                this.outputEndedEvent.Reset();
+                this.frameInputNode?.Start();
+                this.IsPlaying = true;
             }
 
-            return Task.Run(() =>
-            {
-                this.EnqueueDialogAudio(stream);
-                this.outputEndedEvent.WaitOne();
-            });
+            await Task.Run(() => this.outputEndedEvent.WaitOne());
         }
 
         /// <summary>
-        /// Enqueues a new audio output source for the adapter and begins playback if
-        /// it has not already begun.
-        /// </summary>
-        /// <param name="audioData"> The output stream to enqueue. </param>
-        public void EnqueueDialogAudio(DialogAudioOutputStream audioData)
-        {
-            lock (this.audioOutputStreamsLock)
-            {
-                this.audioOutputStreams.Enqueue(audioData);
-            }
-
-            Task.Run(async () =>
-            {
-                using (await this.graphSemaphore.AutoReleaseWaitAsync())
-                {
-                    if (!this.IsPlaying)
-                    {
-                        this.outputEndedEvent.Reset();
-                        this.graph?.Start();
-                        this.IsPlaying = true;
-                    }
-                }
-            });
-        }
-
-        /// <summary>
-        /// Ends Audio Playback and regenerates Audio Graph with corresponding Input and Output Nodes.
+        /// Immediately stops output playback and discards the active output stream.
         /// </summary>
         /// <returns> A task that completes once playback has stopped. </returns>
         public async Task StopPlaybackAsync()
         {
             using (await this.graphSemaphore.AutoReleaseWaitAsync())
             {
-                this.StopOutputInternal();
+                this.frameInputNode?.Stop();
+                if (this.activeOutputStream != null)
+                {
+                    this.outputEndedEvent.Set();
+                    this.OutputEnded?.Invoke();
+                    this.activeOutputStream = null;
+                }
+
+                this.IsPlaying = false;
             }
         }
 
@@ -156,181 +151,98 @@ namespace UWPVoiceAssistantSample
             }
         }
 
-        private void InitializeAudioDeviceWatching()
+        private void ConfigureOutputDeviceWatching()
         {
-            this.audioOutputDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.AudioRender);
-            this.audioOutputDeviceWatcher.Added += async (s, e)
-                => await this.OnAudioOutputDevicesChangedAsync();
-            this.audioOutputDeviceWatcher.Removed += async (s, e)
-                => await this.OnAudioOutputDevicesChangedAsync();
-            this.audioOutputDeviceWatcher.Updated += async (s, e)
-                => await this.OnAudioOutputDevicesChangedAsync();
-            this.audioOutputDeviceWatcher.EnumerationCompleted += (s, e)
-                => this.firstDeviceEnumerationComplete = true;
-            this.audioOutputDeviceWatcher.Start();
-        }
-
-        private async Task OnAudioOutputDevicesChangedAsync()
-        {
-            if (this.firstDeviceEnumerationComplete)
+            // DefaultAudioRenderDeviceChanged will fire every time the 'Default Device' or 'Default Communications
+            // Device' for playback changes.
+            MediaDevice.DefaultAudioRenderDeviceChanged += async (_, args) =>
             {
-                await this.RegenerateAudioGraphAsync();
-            }
+                // Our output AudioGraph with MediaCategory.Speech will correspond to the Communications role.
+                if (args.Role == AudioDeviceRole.Communications)
+                {
+                    var allCurrentDevices = await DeviceInformation.FindAllAsync(DeviceClass.AudioRender);
+                    foreach (var device in allCurrentDevices)
+                    {
+                        // Device change reporting can be "bouncy," so we'll ensure we're not "changing" unnecessarily
+                        // to the same device.
+                        if (device.Id == args.Id && args.Id != this.lastOutputDeviceId)
+                        {
+                            this.log.Log($"New audio output device: {device.Name}");
+                            await this.RegenerateAudioGraphAsync();
+                        }
+                    }
+                }
+            };
         }
 
         private async Task RegenerateAudioGraphAsync()
         {
             using (await this.graphSemaphore.AutoReleaseWaitAsync())
             {
-                // Optimization: don't recreate if the default output device didn't
-                // change.
-                if (await this.IsDefaultDeviceSameAsGraphAsync())
+                // End any playback already happening and dispose existing resources
+                this.graph?.Stop();
+
+                var graphSettings = new AudioGraphSettings(AudioRenderCategory.Speech);
+                var graphCreationResult = await AudioGraph.CreateAsync(graphSettings);
+                if (graphCreationResult.Status != AudioGraphCreationStatus.Success)
                 {
+                    var statusText = graphCreationResult.Status.ToString();
+                    var errorText = graphCreationResult.ExtendedError.ToString();
+                    this.log.Error($"Unable to create AudioGraph: {statusText}: {errorText}");
                     return;
                 }
 
-                // End any playback already happening
-                this.StopOutputInternal();
+                this.graph = graphCreationResult.Graph;
 
-                var graphSettings = new AudioGraphSettings(AudioRenderCategory.Speech)
-                {
-                    QuantumSizeSelectionMode = QuantumSizeSelectionMode.LowestLatency,
-                };
+                this.frameInputNode = this.graph.CreateFrameInputNode(this.OutputEncoding);
+                this.frameInputNode.QuantumStarted += this.OnFrameInputQuantumStartedAsync;
+                this.frameInputNode.Stop();
 
-                var creationResult = await AudioGraph.CreateAsync(graphSettings);
-                if (creationResult.Status != AudioGraphCreationStatus.Success)
+                var outputNodeCreationResult = await this.graph.CreateDeviceOutputNodeAsync();
+                if (outputNodeCreationResult.Status != AudioDeviceNodeCreationStatus.Success)
                 {
-                    Debug.WriteLine($"Unable to create AudioGraph for output to default device: {creationResult.ExtendedError.ToString()}");
+                    var statusText = outputNodeCreationResult.Status.ToString();
+                    var errorText = outputNodeCreationResult.ExtendedError.ToString();
+                    this.log.Error($"Unable to create DeviceOutputNode: {statusText}: {errorText}");
                     return;
                 }
 
-                this.graph = creationResult.Graph;
+                this.deviceOutputNode = outputNodeCreationResult.DeviceOutputNode;
+                this.lastOutputDeviceId = MediaDevice.GetDefaultAudioRenderId(AudioDeviceRole.Communications);
+                this.frameInputNode.AddOutgoingConnection(this.deviceOutputNode);
+                this.deviceOutputNode.Start();
 
-                this.frameInputNode = this.graph.CreateFrameInputNode(AudioEncodingProperties.CreatePcm(16000, 1, 16));
-                this.frameInputNode.QuantumStarted += this.FrameInputNode_QuantumStarted;
-                this.frameInputNode.AudioFrameCompleted += async (s, e) =>
+                this.graph.Start();
+
+                if (this.IsPlaying)
                 {
-                    this.activeUtterances -= 1;
-
-                    if (this.audioOutputStreams.Count == 0 && this.activeUtterances == 0)
-                    {
-                        await this.StopPlaybackAsync();
-                    }
-                };
-                this.frameInputNode.Start();
-
-                var nodeResult = await this.graph.CreateDeviceOutputNodeAsync();
-                if (nodeResult.Status == AudioDeviceNodeCreationStatus.Success)
-                {
-                    Debug.WriteLine($"Generating audio device output node for default device");
-                    this.deviceOutputNode = nodeResult.DeviceOutputNode;
-                    this.frameInputNode.AddOutgoingConnection(this.deviceOutputNode);
-                    this.deviceOutputNode.Start();
+                    this.frameInputNode.Start();
                 }
             }
         }
 
-        private async Task<bool> IsDefaultDeviceSameAsGraphAsync()
+        private async void OnFrameInputQuantumStartedAsync(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
         {
-            if (this.deviceOutputNode == null)
-            {
-                return false;
-            }
-
-            var lastDevice = this.deviceOutputNode.Device;
-
-            var allCurrentDevices = await DeviceInformation.FindAllAsync(DeviceClass.AudioRender);
-            DeviceInformation defaultDevice = null;
-
-            for (int i = 0; i < allCurrentDevices.Count; i++)
-            {
-                var device = allCurrentDevices[i];
-                if (device.IsDefault)
-                {
-                    defaultDevice = device;
-                    break;
-                }
-            }
-
-            return defaultDevice == lastDevice;
-        }
-
-        // Internal implementation to stop the audio graph shared along a few code
-        // paths.
-        // Precondition: graphSemaphore has been acquired (exactly once)
-        private void StopOutputInternal()
-        {
-            this.graph?.Stop();
-            if (this.IsPlaying)
-            {
-                this.IsPlaying = false;
-                this.outputEndedEvent.Set();
-                this.OutputEnded?.Invoke();
-            }
-        }
-
-        private void FrameInputNode_QuantumStarted(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
-        {
-            if (args.RequiredSamples == 0)
-            {
-                // If no samples are actually requested, no work is needed.
-                return;
-            }
-
-            var encoding = this.frameInputNode.EncodingProperties;
-            var byteRate = encoding.Bitrate / 8;
-            var bytesRequested = args.RequiredSamples * byteRate;
+            var bytesPerSample = this.OutputEncoding.BitsPerSample / 8;
+            var bytesRequested = args.RequiredSamples * bytesPerSample;
 
             var requestBuffer = new byte[bytesRequested];
-            var requestBytesRead = 0;
+            var bytesActuallyRead = this.activeOutputStream.Read(requestBuffer, 0, requestBuffer.Length);
 
-            lock (this.audioOutputStreamsLock)
+            if (bytesActuallyRead > 0)
             {
-                if (this.audioOutputStreams.Count == 0)
+                using (var frameToAdd = DialogAudioOutputUnsafeMethods.CreateFrameFromBytes(requestBuffer, bytesActuallyRead))
                 {
-                    return;
-                }
-
-                var currentStream = this.audioOutputStreams.Peek();
-                requestBytesRead = currentStream.Read(requestBuffer, 0, requestBuffer.Length);
-
-                if (requestBytesRead < bytesRequested)
-                {
-                    this.activeUtterances += 1;
-
-                    // As current sources are exhausted, remove them from the queue.
-                    this.audioOutputStreams.Dequeue();
+                    this.frameInputNode.AddFrame(frameToAdd);
                 }
             }
 
-            if (requestBytesRead == 0)
+            // If fewer than the requested number of bytes were read, the source stream is exhausted and this playback
+            // is complete.
+            if (bytesActuallyRead < bytesRequested)
             {
-                return;
+                await this.StopPlaybackAsync();
             }
-
-            using (var frameToPush = new AudioFrame((uint)requestBytesRead))
-            {
-                this.FrameInputNode_PushFrame(frameToPush, requestBuffer);
-            }
-        }
-
-        private unsafe void FrameInputNode_PushFrame(AudioFrame frame, byte[] frameData)
-        {
-            using (var audioBuffer = frame.LockBuffer(AudioBufferAccessMode.Write))
-
-            // TODO: using (Windows.Storage.Streams.Buffer.) -- way to do this without unsafe?
-            using (var bufferReference = audioBuffer.CreateReference())
-            {
-                var bufferAccess = (IMemoryBufferByteAccess)bufferReference;
-                bufferAccess.GetBuffer(out byte* unsafeBuffer, out uint unsafeBufferCapacity);
-
-                for (uint i = 0; i < unsafeBufferCapacity; i++)
-                {
-                    unsafeBuffer[i] = frameData[i];
-                }
-            }
-
-            this.frameInputNode.AddFrame(frame);
         }
     }
 }

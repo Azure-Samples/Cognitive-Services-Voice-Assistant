@@ -77,7 +77,7 @@ namespace UWPVoiceAssistantSample
                     if (nextResponse.MessageMedia != null)
                     {
                         this.operationInProgress = true;
-                        this.outputAdapter.EnqueueDialogAudio(nextResponse.MessageMedia);
+                        _ = this.outputAdapter.PlayAudioAsync(nextResponse.MessageMedia);
                     }
                     else
                     {
