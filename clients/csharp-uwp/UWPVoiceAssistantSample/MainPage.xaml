@@ -22,6 +22,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -48,6 +49,14 @@
                 </Button>
             </StackPanel>
         </Grid>
+        <Button x:Name="DismissButton"
+                FontFamily="Segoe MDL2 Assets"
+                Grid.Row="0" Grid.Column="4"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Content="&#xE106;"
+                Visibility="Visible"/>
         <Grid x:Name="ApplicationStateGrid" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -72,10 +81,8 @@
                         Margin="10,0,10,0"
                         Content="Microphone Privacy Settings"
                         NavigateUri="ms-settings:privacy-microphone" 
-                                 HorizontalAlignment="Left"/>
-                <!--<TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="0,0,0,0" TextWrapping="Wrap"></TextBlock>-->
+                        HorizontalAlignment="Left"/>
             </StackPanel>
-            <!--<TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="30,0,0,0"></TextBlock>-->
             <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Green" Margin="10,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
                 <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="0,5,0,0"></TextBlock>
@@ -174,28 +181,6 @@
                         Content="Load Config"
                         Click="LoadConfigClick"
                          />
-            </StackPanel>
-            <!--<StackPanel
-                    Orientation="Horizontal"
-                    Grid.Row="9"
-                    Grid.ColumnSpan="3"
-                    Margin="5,0,10,0">
-                <FontIcon x:Name="MicrophoneInfoIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
-                <HyperlinkButton x:Name="MicrophoneLinkButton"
-                        Margin="10,0,0,0"
-                        Content="Microphone Privacy Settings"
-                        NavigateUri="ms-settings:privacy-microphone" />
-            </StackPanel>-->
-            <StackPanel
-                    Orientation="Horizontal"
-                    Grid.Row="10"
-                    Grid.ColumnSpan="3"
-                    Margin="5,0,10,0">
-                <!--<FontIcon x:Name="VAStatusIcon" FontFamily="Segoe MDL2 Assets" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
-                <HyperlinkButton x:Name="VoiceActivationLinkButton"
-                        Margin="10,0,0,0"
-                        Content="Voice Activation Privacy Settings"
-                        NavigateUri="ms-settings:privacy-voiceactivation" />-->
             </StackPanel>
         </Grid>
 

@@ -5,12 +5,9 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.IO;
-    using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
-    using NLog.Fluent;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Security.Authorization.AppCapabilityAccess;
@@ -46,7 +43,6 @@ namespace UWPVoiceAssistantSample
         public MainPage()
         {
             this.logger = LogRouter.GetClassLogger();
-            //this.logger.Log(LogMessageLevel.Noise, "Main page created, UI rendering");
 
             this.InitializeComponent();
 
@@ -98,10 +94,10 @@ namespace UWPVoiceAssistantSample
             this.AddSystemAvailabilityHandlers();
             this.AddDialogHandlersAsync();
 
-            //this.DismissButton.Click += (_, __) =>
-            //{
-            //    WindowService.CloseWindow();
-            //};
+            this.DismissButton.Click += (_, __) =>
+            {
+                WindowService.CloseWindow();
+            };
             this.MicrophoneButton.Click += async (_, __) =>
             {
                 this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
@@ -243,6 +239,8 @@ namespace UWPVoiceAssistantSample
                 this.VAStatusIcon.Glyph = voiceActivationStatusInfo.Glyph;
                 this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
                 this.VoiceActivationLinkButton.Content = voiceActivationStatusInfo.Status;
+
+                this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
             });
         }
 
