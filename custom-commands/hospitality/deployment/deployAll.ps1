@@ -1,3 +1,5 @@
+#Requires -Version 6
+
 Param(
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
     [string] $region = $(Read-Host -prompt "region")
