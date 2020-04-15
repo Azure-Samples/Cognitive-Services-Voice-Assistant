@@ -269,6 +269,13 @@ namespace UWPVoiceAssistantSample
                 this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
                 this.VoiceActivationLinkButton.Content = voiceActivationStatusInfo.Status;
 
+                this.MicrophoneSettingsFontIcon.Glyph = this.MicrophoneInfoIcon.Glyph;
+                this.MicrophoneSettingsFontIcon.Foreground = new SolidColorBrush(microphoneStatusInfo.Color);
+                this.MicrophoneSettingsTextBlock.Text = $"Microphone: {microphoneStatusInfo.Status}";
+
+                this.VoiceSettingsFontIcon.Glyph = this.VAStatusIcon.Glyph;
+                this.VoiceSettingsFontIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
+                this.VoiceSettingsTextBlock.Text = $"Voice: {voiceActivationStatusInfo.Status}";
                 //this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
             });
         }
@@ -280,7 +287,7 @@ namespace UWPVoiceAssistantSample
             var session = await this.agentSessionManager.GetSessionAsync().ConfigureAwait(false);
             var agentStatusMessage = session == null ?
                "No current agent session"
-               : $"Current session state: {session.AgentState.ToString()} {(this.app.InvokedViaSignal ? "[via signal]" : string.Empty)}";
+               : $"{session.AgentState.ToString()} {(this.app.InvokedViaSignal ? "[via signal]" : string.Empty)}";
 
             // This is throwing an error on conversation state change
             for (int i = 0; i < itemsInQueue; i++)
@@ -304,6 +311,7 @@ namespace UWPVoiceAssistantSample
             {
                 this.ChatHistoryTextBlock.Text = newText;
                 //this.ConversationState.Text = agentStatusMessage;
+                this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
             });
         }
 
@@ -520,6 +528,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumnSpan(this.ChatGrid, 1);
                 Grid.SetColumn(this.ApplicationStateGrid, 0);
                 Grid.SetColumn(this.HelpButtonGrid, 0);
+                //Grid.SetRowSpan(this.ApplicationStateGrid, 3);
+                //Grid.SetRow(this.MicrophoneSettingsStackPanel, 1);
+                //Grid.SetRow(this.ConversationStateStackPanel, 2);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
                 this.HelpButtonGrid.HorizontalAlignment = HorizontalAlignment.Right;
                 //this.MainWindowGrid.Width = this.ChatGrid.ActualWidth;

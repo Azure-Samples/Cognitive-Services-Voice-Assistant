@@ -28,9 +28,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button x:Name="WindowFilterButton" Content="Windows" Grid.Column="0">
                     <Button.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem Text="Windows"/>
-                            <MenuFlyoutSeparator/>
+                        <MenuFlyout Placement="Bottom">
                             <ToggleMenuFlyoutItem x:Name="WindowsContolFlyoutItem" Text="Controls" IsChecked="True"  Click="ToggleControls"/>
                             <ToggleMenuFlyoutItem x:Name="WindowsLogFlyoutItem" Text="Logs" IsChecked="True" Click="ToggleControls"/>
                             <ToggleMenuFlyoutItem x:Name="WindowsChatFlyoutItem" Text="Chat" IsChecked="True" Click="ToggleControls"/>
@@ -43,7 +41,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="HelpButton" Content="Help">
                     <Button.Flyout>
-                        <MenuFlyout>
+                        <MenuFlyout Placement="Bottom">
                             <MenuFlyoutItem x:Name="HelpFlyoutItem" Text="Help" Click="HelpFlyoutItemClick"/>
                             <MenuFlyoutItem x:Name="DocumentationFlyoutItem" Text="Documentation" Click="DocumentationFlyoutItemClick"/>
                         </MenuFlyout>
@@ -54,15 +52,28 @@
         <Grid x:Name="ApplicationStateGrid" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="VoiceSettingsTextBlock" Text="Voice: " Grid.Column="0" Margin="30,0,0,0"></TextBlock>
-            <TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="30,0,0,0"></TextBlock>
-            <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="30,0,0,0"></TextBlock>
+            <StackPanel x:Name="VoiceSettingsStackPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                <FontIcon x:Name="VoiceSettingsFontIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Green" Margin="10,0,0,0" Glyph=""/>
+                <TextBlock x:Name="VoiceSettingsTextBlock" Text="Voice: " Grid.Column="0" Margin="0,0,0,0"></TextBlock>
+            </StackPanel>
+            <StackPanel x:Name="MicrophoneSettingsStackPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Left">
+                <FontIcon x:Name="MicrophoneSettingsFontIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Green" Margin="10,0,0,0" Glyph=""/>
+                <TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="0,0,0,0" TextWrapping="Wrap"></TextBlock>
+            </StackPanel>
+            <!--<TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="30,0,0,0"></TextBlock>-->
+            <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
+                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Green" Margin="10,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
+                <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="0,0,0,0"></TextBlock>
+            </StackPanel>
+            
         </Grid>
         <Grid x:Name="ControlsGrid" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1">
             <Grid.RowDefinitions>

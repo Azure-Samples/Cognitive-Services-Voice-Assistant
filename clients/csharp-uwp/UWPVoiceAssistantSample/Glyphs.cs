@@ -48,5 +48,7 @@ namespace UWPVoiceAssistantSample
         public static readonly string MicrophoneListening = "\uF12E";
 
         public static readonly string MicrophoneOff = "\uEC54";
+
+        public static readonly string CircleCheckMark = "\uF13E";
     }
 }
