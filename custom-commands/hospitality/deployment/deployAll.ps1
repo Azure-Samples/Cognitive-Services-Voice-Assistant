@@ -46,7 +46,6 @@ $luisAuthoringKey = $luisAuthoringKey.key1
 $visualizationEndpoint = "https://$resourceName.blob.core.windows.net/www/demo.html?room=test1"
 
 Write-Host "    Speech Region = $region"
-Write-Host "    Speech Region = $region"
 Write-Host "***********************"
 Write-Host "To view your visualization go to this link."
 Write-Host "    Visualization Endpoint = $visualizationEndpoint"

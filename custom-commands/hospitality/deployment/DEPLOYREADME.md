@@ -32,3 +32,6 @@ Then the [../storage files](../storage-files) were deployed into the storage res
 After that the azure function project located in [../skill](../skill) was built using the command line .NET tool and deployed to the Azure function resource.
 
 The Custom Commands application was created from the json file [../skill/hospitalityCustomCommands.json](../skill/hospitalityCustomCommands.json) and deployed to your Azure subscription. You can view that in the [Microsoft Speech portal](https://speech.microsoft.com/).
+
+If you would like to dig deeper into the powershell scripts you will see there are some simple string replacements we do to update the links between the azure function and the html file in the storage account that is ultimatly the web page you see.
+
