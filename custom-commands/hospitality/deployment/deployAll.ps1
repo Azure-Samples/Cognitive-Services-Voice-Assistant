@@ -5,6 +5,11 @@ Param(
     [string] $region = $(Read-Host -prompt "region")
 )
 
+if( $resourceName.Length -gt 23 ){
+    Write-Output "Resource Name cannot be longer than 23 characters, this is a requirement for storage accounts. Please enter a shorter name."
+    exit
+}
+
 # get the current default subscription ID 
 $defaultSubscription = az account list --output json | ConvertFrom-Json | where { $_.isDefault -eq "true" }
 
@@ -38,13 +43,11 @@ $luisAuthoringKey = $luisAuthoringKey.key1
 -CustomCommandsRegion $CustomCommandsRegion `
 -websiteAddress $websiteAddress
 
-# $visualizationEndpoint = "https://$resourceName.blob.core.windows.net/www/demo.html?room=test1"
+$visualizationEndpoint = "https://$resourceName.blob.core.windows.net/www/demo.html?room=test1"
 
-# [string] $speechResourceKey = $(Read-Host -prompt "speechResourceKey"),
-# [string] $resourceName = $(Read-Host -prompt "resourceName"),
-# [string] $azureSubscriptionId = $(Read-Host -prompt "azureSubscriptionId"),
-# [string] $resourceGroup,
-# [string] $luisAuthoringKey = $(Read-Host -prompt "luisAuthoringKey"),
-# [string] $luisAuthoringRegion = "westus",
-# [string] $CustomCommandsRegion = "westus2",
-# [string] $websiteAddress = $(Read-Host -prompt "websiteAddress")
+Write-Host "    Speech Region = $region"
+Write-Host "    Speech Region = $region"
+Write-Host "***********************"
+Write-Host "To view your visualization go to this link."
+Write-Host "    Visualization Endpoint = $visualizationEndpoint"
+Write-Host "***********************"

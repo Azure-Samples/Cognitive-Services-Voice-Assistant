@@ -3,46 +3,32 @@ This README is under development and not guaranteed to be accurate or functional
 ## Things you will need
 * An Azure subscription. [Azure](https://portal.azure.com)
 * Powershell 6.0 or greater [Download Powershell](https://github.com/PowerShell/PowerShell/releases)
+* .Net Core SDK [Install SDK](https://docs.microsoft.com/en-us/dotnet/core/install/sdk?pivots=os-windows)
 
 ## Deploying Azure Resources
-1. Click the button below:<br/>
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2FCognitive-Services-Voice-Assistant%2Fmaster%2Fcustom-commands%2Fhospitality%2Fdeployment%2Fazuredeploy.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/></a>
+Clone the repository and change directory so you are in the root/custom-commands/hospitality/deployment folder.
 
-2. A new window should pop up that prompts you to log into your Azure account. 
+Call az login to log your powershell into Azure. Run the powershell script. Replace "mynewresource" with the name you would like. Note: This will use your default Azure subscription if you have more than one.
 
-3. Once logged in, you should see a page similar to this. Select the subscription you want to use. I have chosen to create a new resource group titled "CognitiveServices12345" and selected West US 2 for the Location. Decide on a "Resource Name" for your resources. This will be prepended to the names of the resources created. Keep track of this name as we will use it later.![DeployPage](../../../docs/images/DeployPage.png)<br/>
+    ./az login
+    ./deployAll.ps1 -resourceName mynewresource -region westus2
 
-4. Check the box to agree to the terms and conditions
+wait...
 
-5. Click "Purchase"
+You should be good to go! The script will print out some resources you will need to start using your hospitality deployment.
 
-6. You're resources should be deployed after a minute or two.
+* Speech resource key
+* Custom Commands App ID
+* Visualization Endpoint
 
-7. You should now have a resource group and some resources underneath it. 
-Here is what mine looks like:
-![DeployPage](../../../docs/images/Resources.png)<br/>
-You'll notice how the resource name was used.
-You will also need the following strings to use further down.
-    * LUIS authoring key.
-    * speech subscription key.
-    * azure subscription key. - look for Subscriptions in Azure and you should be able to find it.
-    * website for task completion. In our case this is the hospitality room website.
-    
+## What just happened...
 
+There should be a set of azure resources created in your azure subscription. In the Azure portal is should look something like this:
 
-## Deploying your Custom Commands Application
-1. Open a powershell window and cd into the custom-commands/scripts directory
-2. run .\deployCustomCommands.ps1 with the following parameters:
-* -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY
-* -resourceName RESOURCENAME_USED_IN_DEPLOYING
-* -azureSubscriptionId AZURE_SUBSCRIPTION_ID 
-* -luisAuthoringKey LUIS_AUTHORING_KEY
-* -websiteAddress WEBSITE_FOR_TASK_COMPLETION
-* -resourceGroup RESOURCE_GROUP
+![Resources](../../../docs/images/Resources.png)
 
-It should look something like this:
+The resources were created using an azure template which is stored in the [./azuredeploy.json](./azuredeploy.json) file.</br>
+Then the [../storage files](../storage-files) were deployed into the storage resource.</br>
+After that the azure function project located in [../skill](../skill) was built using the command line .NET tool and deployed to the Azure function resource.
 
-    .\deployCustomCommands.ps1 -speechResourceKey YOUR_SPEECH_SUBSCRIPTION_KEY -websiteAddress WEBSITE_FOR_TASK_COMPLETION -resourceName RESOURCENAME_USED_IN_DEPLOYING -azureSubscriptionId AZURE_SUBSCRIPTION_ID  -luisAuthoringKey LUIS_AUTHORING_KEY -resourceGroup RESOURCE_GROUP
-
-Once complete you will be able to see your new Custom Commands application in the [Speech Studio](https://speech.microsoft.com) by selecting your "Speech Resource". In the example above it would be MyNewResources-speech. Click on "Go To Studio" and then "Custom Commands".
+The Custom Commands application was created from the json file [../skill/hospitalityCustomCommands.json](../skill/hospitalityCustomCommands.json) and deployed to your Azure subscription. You can view that in the [Microsoft Speech portal](https://speech.microsoft.com/).
