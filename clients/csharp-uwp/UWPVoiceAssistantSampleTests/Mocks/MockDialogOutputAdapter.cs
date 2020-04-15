@@ -7,10 +7,14 @@ namespace UWPVoiceAssistantSampleTests
     using UWPVoiceAssistantSample;
     using System;
     using System.Threading.Tasks;
+    using Windows.Media.MediaProperties;
 
     public class MockDialogOutputAdapter : IDialogAudioOutputAdapter
     {
         public static int PlayLength = 3000;
+
+        public AudioEncodingProperties OutputEncoding { get; set; }
+            = AudioEncodingProperties.CreatePcm(16000, 1, 16);
 
         public bool IsPlaying { get; set; }
 
