@@ -210,9 +210,8 @@ steps:
     targetArgument: '$(Build.SourcesDirectory)'
     result: 'PoliCheck.xml'
 
-# This does not work on self-hosted agent for some reason
-#- task: notice@0
-#  inputs:
-#    outputformat: 'text'
+- task: notice@0
+  inputs:
+    outputformat: 'text'
 
 
