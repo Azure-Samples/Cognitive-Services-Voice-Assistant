@@ -44,5 +44,9 @@ namespace UWPVoiceAssistantSample
         /// Gets the Unicode point for an upload icon.
         /// </summary>
         public static readonly string Load = "\uE898";
+
+        public static readonly string MicrophoneListening = "\uF12E";
+
+        public static readonly string MicrophoneOff = "\uEC54";
     }
 }

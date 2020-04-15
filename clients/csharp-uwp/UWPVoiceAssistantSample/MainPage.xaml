@@ -7,9 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    x:Name="MainPageWindow">
+    x:Name="MainPageWindow"
+    Width="1400">
 
-    <Grid x:Name="MainWindowGrid">
+    <Grid x:Name="MainWindowGrid" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -31,7 +32,6 @@
                             <MenuFlyoutItem Text="Windows"/>
                             <MenuFlyoutSeparator/>
                             <ToggleMenuFlyoutItem x:Name="WindowsContolFlyoutItem" Text="Controls" IsChecked="True"  Click="ToggleControls"/>
-                            <ToggleMenuFlyoutItem x:Name="WindowsInteractionFlyoutItem" Text="Interaction" IsChecked="True" Click="ToggleControls"/>
                             <ToggleMenuFlyoutItem x:Name="WindowsLogFlyoutItem" Text="Logs" IsChecked="True" Click="ToggleControls"/>
                             <ToggleMenuFlyoutItem x:Name="WindowsChatFlyoutItem" Text="Chat" IsChecked="True" Click="ToggleControls"/>
                         </MenuFlyout>
@@ -41,7 +41,14 @@
         </Grid>
         <Grid x:Name="HelpButtonGrid" Grid.Row="0" Grid.Column="1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="HelpButton" Content="Help"/>
+                <Button x:Name="HelpButton" Content="Help">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Name="HelpFlyoutItem" Text="Help" Click="HelpFlyoutItemClick"/>
+                            <MenuFlyoutItem x:Name="DocumentationFlyoutItem" Text="Documentation" Click="DocumentationFlyoutItemClick"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
             </StackPanel>
         </Grid>
         <Grid x:Name="ApplicationStateGrid" Grid.Row="1" Grid.ColumnSpan="2">
@@ -80,7 +87,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Controls" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2"/>
-            <Button x:Name="CollpaseControlsPane" Grid.Column="2" HorizontalAlignment="Right" Content="X" Click="CollapseControls"/>
+            <Button x:Name="CollpaseControlsPane" Grid.Column="2" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" Click="CollapseControls"/>
             <ToggleSwitch x:Name="BackgroundTaskToggle"
                 IsOn="{x:Bind BackgroundTaskRegistered, Mode=TwoWay}"
                 Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
@@ -123,6 +130,7 @@
                     OffContent="Speech SDK file logging is OFF" />
             <ToggleSwitch x:Name="EnableSecondStageKwsToggle"
                     IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSecondStageKws, Mode=TwoWay}"
+                    Margin="5,0,0,0"
                     Grid.Row="6"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
@@ -189,7 +197,7 @@
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Logs" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
                 <HyperlinkButton x:Name="OpenLogLocationButton" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
-                <Button x:Name="CollapseLogPane" Content="X" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CollapseLogs"/>
+                <Button x:Name="CollapseLogPane" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CollapseLogs"/>
             </StackPanel>
 
             <ScrollViewer x:Name="ChangeLogScrollViewer"
@@ -202,30 +210,30 @@
         </Grid>
         <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="3" Grid.RowSpan="6" Margin="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20.619"/>
-                <RowDefinition Height="19.284"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Chat" TextAlignment="Left" VerticalAlignment="Top" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2" Margin="0,0,259,0" Grid.RowSpan="3"/>
-            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,229" Grid.RowSpan="3">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Chat" TextAlignment="Left" VerticalAlignment="Top" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2" Grid.RowSpan="3"/>
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="3">
                 <HyperlinkButton Name="DownloadChatHistory" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <Button x:Name="ResetChatHistory" Content="Reset"/>
             </StackPanel>
             <ScrollViewer x:Name="ChatHistoryScollViewer"
                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom" BorderBrush="Black" BorderThickness="2"
-                          Margin="5,5,5,5"
-                          Grid.Row="2" Grid.Column="0" 
-                          Grid.RowSpan="3" Grid.ColumnSpan="2">
-                <RichTextBlock x:Name="ChatHistoryTextBlock" FontWeight="Bold"/>
+                          Margin="5,50,5,5"
+                          Grid.Row="1" Grid.Column="0" 
+                          Grid.RowSpan="4" Grid.ColumnSpan="2">
+                <TextBox x:Name="ChatHistoryTextBlock" FontWeight="Bold" IsReadOnly="True" TextWrapping="Wrap" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
             </ScrollViewer>
 
             <Border Grid.Row="5" Grid.ColumnSpan="2" BorderBrush="White" BorderThickness="2" Margin="40,20,40,20"/>
@@ -238,8 +246,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="StatusTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="400" Width="Auto" VerticalAlignment="Stretch"></TextBox>
-                <Button Content="Mic" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right"></Button>
+                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="400" Width="Auto" VerticalAlignment="Stretch"></TextBox>
+                <Button x:Name="MicrophoneButton" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right" Margin="0,0,10,10" FontFamily="Segoe MDL2 Assets" Content="" FontSize="25" Background="#0078D4">
+                </Button>
             </Grid>
 
         </Grid>

@@ -30,7 +30,7 @@ namespace UWPVoiceAssistantSample
     public sealed partial class MainPage : Page
     {
         private readonly Queue<(string, bool)> statusBuffer;
-        private readonly int statusBufferSize = 8;
+        private readonly int statusBufferSize = 50;
         private readonly ServiceProvider services;
         private readonly ILogProvider logger;
         private readonly IKeywordRegistration keywordRegistration;
@@ -81,6 +81,10 @@ namespace UWPVoiceAssistantSample
 
             // Ensure consistency between a few dependent controls and their settings
             this.UpdateUIBasedOnToggles();
+
+            ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(1400, 800);
+            //ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
+            //ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
         }
 
         private bool BackgroundTaskRegistered
@@ -102,11 +106,11 @@ namespace UWPVoiceAssistantSample
             //{
             //    WindowService.CloseWindow();
             //};
-            //this.StartListeningButton.Click += async (_, __) =>
-            //{
-            //    this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
-            //    await this.UpdateUIForSharedStateAsync();
-            //};
+            this.MicrophoneButton.Click += async (_, __) =>
+            {
+                this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
+                await this.UpdateUIForSharedStateAsync();
+            };
             //this.StopListeningButton.Click += async (_, __) =>
             //{
             //    await this.dialogManager.FinishConversationAsync();
@@ -226,6 +230,8 @@ namespace UWPVoiceAssistantSample
             // UI changes must be performed on the UI thread.
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
+                //ApplicationView.PreferredLaunchViewSize = new Windows.Foundation.Size(1400, 800);
+
                 this.RefreshStatus();
 
                 var session = await this.agentSessionManager.GetSessionAsync();
@@ -243,8 +249,8 @@ namespace UWPVoiceAssistantSample
                     : "App voice activation status unknown: configuration not yet queried";
                 this.AppVoiceActivationEnabledToggle.IsOn = keywordConfig != null && keywordConfig.AvailabilityInfo.IsEnabled;
 
-                //this.StartListeningButton.IsEnabled = agentIdle && micReady;
-                //this.StartListeningButton.Content = micReady ? "Start Listening" : "No mic";
+                this.MicrophoneButton.IsEnabled = agentIdle && micReady;
+                this.MicrophoneButton.Content = micReady ? Glyphs.Microphone : Glyphs.MicrophoneOff;
                 //this.SpeechKeyTextBox.IsEnabled = agentIdle;
                 //this.SpeechRegionTextBox.IsEnabled = agentIdle;
                 //this.CustomSpeechIdTextBox.IsEnabled = agentIdle;
@@ -296,7 +302,7 @@ namespace UWPVoiceAssistantSample
 
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                //this.StatusText.Text = newText;
+                this.ChatHistoryTextBlock.Text = newText;
                 //this.ConversationState.Text = agentStatusMessage;
             });
         }
@@ -442,85 +448,73 @@ namespace UWPVoiceAssistantSample
 
         private void CollapseControls(object sender, RoutedEventArgs e)
         {
-            this.ControlsGrid.Visibility = Visibility.Collapsed;
             this.WindowsContolFlyoutItem.IsChecked = false;
-            if (this.LogGrid.Visibility != Visibility.Collapsed)
-            {
-                Grid.SetColumn(this.LogGrid, 0);
-                Grid.SetColumn(this.ChatGrid, 1);
-                Grid.SetRow(this.ChatGrid, 2);
-            }
-            else
-            {
-                Grid.SetColumn(this.ChatGrid, 0);
-                Grid.SetRow(this.ChatGrid, 2);
-            }
-
+            this.ToggleControls(sender, e);
         }
 
         private void CollapseLogs(object sender, RoutedEventArgs e)
         {
-            this.LogGrid.Visibility = Visibility.Collapsed;
             this.WindowsLogFlyoutItem.IsChecked = false;
-            if (this.ControlsGrid.Visibility != Visibility.Collapsed)
-            {
-                Grid.SetColumn(this.ControlsGrid, 0);
-                Grid.SetRow(this.ControlsGrid, 2);
-                Grid.SetColumn(this.ChatGrid, 1);
-                Grid.SetRow(this.ChatGrid, 2);
-            }
-            else
-            {
-                Grid.SetColumn(this.ChatGrid, 0);
-                Grid.SetRow(this.ChatGrid, 2);
-            }
+            this.ToggleControls(sender, e);
         }
 
         private void ToggleControls(object sender, RoutedEventArgs e)
         {
-            var controlFlyoutItem = this.WindowsContolFlyoutItem.IsChecked ? this.ControlsGrid.Visibility = Visibility.Visible : this.ControlsGrid.Visibility = Visibility.Collapsed;
 
-            if (this.WindowsContolFlyoutItem.IsChecked == false)
-            {
-                this.CollapseControls(sender, e);
-            }
-
-            if (this.WindowsContolFlyoutItem.IsChecked == true && this.WindowsLogFlyoutItem.IsChecked == true)
+            if (this.WindowsContolFlyoutItem.IsChecked == true && this.WindowsLogFlyoutItem.IsChecked == true && this.WindowsChatFlyoutItem.IsChecked == false)
             {
                 this.ControlsGrid.Visibility = Visibility.Visible;
                 this.LogGrid.Visibility = Visibility.Visible;
+                this.ChatGrid.Visibility = Visibility.Collapsed;
                 Grid.SetColumn(this.ControlsGrid, 0);
-                //Grid.SetColumnSpan(this.ControlsGrid, 2);
                 Grid.SetColumn(this.LogGrid, 1);
                 Grid.SetRow(this.LogGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 2);
                 Grid.SetRow(this.ChatGrid, 0);
+                Grid.SetColumn(this.HelpButtonGrid, 1);
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
 
             if (this.WindowsContolFlyoutItem.IsChecked == true && this.WindowsLogFlyoutItem.IsChecked == false && this.WindowsChatFlyoutItem.IsChecked == true)
             {
-                this.CollapseLogs(sender, e);
-                //Grid.SetColumnSpan(this.ControlsGrid, 1);
+                //this.CollapseLogs(sender, e);
+                this.ControlsGrid.Visibility = Visibility.Visible;
+                this.LogGrid.Visibility = Visibility.Collapsed;
+                this.ChatGrid.Visibility = Visibility.Visible;
+                Grid.SetColumn(this.ControlsGrid, 0);
+                Grid.SetRow(this.ControlsGrid, 2);
+                Grid.SetColumn(this.ChatGrid, 1);
+                Grid.SetRow(this.ChatGrid, 2);
+                Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
+                Grid.SetColumn(this.HelpButtonGrid, 1);
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
+                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
             }
 
             if (this.WindowsContolFlyoutItem.IsChecked == false && this.WindowsLogFlyoutItem.IsChecked == true && this.WindowsChatFlyoutItem.IsChecked == true)
             {
+                this.ControlsGrid.Visibility = Visibility.Collapsed;
                 this.LogGrid.Visibility = Visibility.Visible;
+                this.ChatGrid.Visibility = Visibility.Visible;
                 Grid.SetColumn(this.LogGrid, 0);
                 Grid.SetRow(this.LogGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 1);
                 Grid.SetRow(this.ChatGrid, 2);
+                Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
+                Grid.SetColumn(this.HelpButtonGrid, 1);
+                var chatAndLogGrid = ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth);
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
+                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
             }
 
             if (this.WindowsContolFlyoutItem.IsChecked == false && this.WindowsLogFlyoutItem.IsChecked == false && this.WindowsChatFlyoutItem.IsChecked == true)
             {
-                this.logger.Log($" before Width: {this.ChatGrid.Width}");
-                this.logger.Log($" before ActualWidth: {this.ChatGrid.ActualWidth}");
                 this.ControlsGrid.Visibility = Visibility.Collapsed;
                 this.LogGrid.Visibility = Visibility.Collapsed;
-                Grid.SetColumn(MainWindowGrid, 0);
-                Grid.SetColumnSpan(MainWindowGrid, 1);
-                Grid.SetColumnSpan(ApplicationStateGrid, 1);
+                this.ChatGrid.Visibility = Visibility.Visible;
+                //Grid.SetColumn(MainWindowGrid, 0);
+                //Grid.SetColumnSpan(MainWindowGrid, 1);
+                //Grid.SetColumnSpan(ApplicationStateGrid, 1);
                 Grid.SetColumn(this.ChatGrid, 0);
                 Grid.SetRow(this.ChatGrid, 2);
                 Grid.SetColumnSpan(this.ChatGrid, 1);
@@ -528,7 +522,7 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.HelpButtonGrid, 0);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
                 this.HelpButtonGrid.HorizontalAlignment = HorizontalAlignment.Right;
-                this.MainWindowGrid.Width = this.ChatGrid.ActualWidth;
+                //this.MainWindowGrid.Width = this.ChatGrid.ActualWidth;
                 var resize = ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth, Height = 800 });
                 this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
                 this.logger.Log($" After Width: {this.ChatGrid.Width}");
@@ -536,23 +530,41 @@ namespace UWPVoiceAssistantSample
                 this.logger.Log($"{resize}");
             }
 
-
             if (this.WindowsContolFlyoutItem.IsChecked == true && this.WindowsLogFlyoutItem.IsChecked == true && this.WindowsChatFlyoutItem.IsChecked == true)
             {
                 this.ControlsGrid.Visibility = Visibility.Visible;
                 this.LogGrid.Visibility = Visibility.Visible;
+                this.ChatGrid.Visibility = Visibility.Visible;
                 Grid.SetColumn(this.ControlsGrid, 0);
                 Grid.SetRow(this.ControlsGrid, 2);
                 Grid.SetColumn(this.LogGrid, 1);
                 Grid.SetRow(this.LogGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 2);
                 Grid.SetRow(this.ChatGrid, 0);
+                Grid.SetRow(this.ApplicationStateGrid, 1);
+                Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
+                Grid.SetColumn(this.HelpButtonGrid, 1);
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
+                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
         }
 
-        private void ToggleLogs(object sender, RoutedEventArgs e)
+        private async void HelpFlyoutItemClick(object sender, RoutedEventArgs e)
         {
+            string githubReadme = @"https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/README.md";
 
+            var uri = new Uri(githubReadme);
+
+            await Launcher.LaunchUriAsync(uri);
+        }
+
+        private async void DocumentationFlyoutItemClick(object sender, RoutedEventArgs e)
+        {
+            string mvaDocumentation = @"https://docs.microsoft.com/en-us/uwp/api/windows.applicationmodel.conversationalagent?view=winrt-18362";
+
+            var uri = new Uri(mvaDocumentation);
+
+            await Launcher.LaunchUriAsync(uri);
         }
     }
 }
