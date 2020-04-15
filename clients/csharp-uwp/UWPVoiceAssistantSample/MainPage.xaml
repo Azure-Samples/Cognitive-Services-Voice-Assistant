@@ -7,10 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    x:Name="MainPageWindow"
-    Width="1400">
+    x:Name="MainPageWindow">
 
-    <Grid x:Name="MainWindowGrid" >
+    <Grid x:Name="MainWindowGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -26,7 +25,7 @@
         </Grid.ColumnDefinitions>
         <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button x:Name="WindowFilterButton" Content="Windows" Grid.Column="0">
+                <Button x:Name="WindowFilterButton" Content="Filter View" Grid.Column="0">
                     <Button.Flyout>
                         <MenuFlyout Placement="Bottom">
                             <ToggleMenuFlyoutItem x:Name="WindowsContolFlyoutItem" Text="Controls" IsChecked="True"  Click="ToggleControls"/>
@@ -60,37 +59,40 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel x:Name="VoiceSettingsStackPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
-                <FontIcon x:Name="VoiceSettingsFontIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Green" Margin="10,0,0,0" Glyph=""/>
-                <TextBlock x:Name="VoiceSettingsTextBlock" Text="Voice: " Grid.Column="0" Margin="0,0,0,0"></TextBlock>
+            <StackPanel x:Name="VoiceSettingsStackPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left" Margin="10,0,0,0">
+                <FontIcon x:Name="VAStatusIcon" FontFamily="Segoe MDL2 Assets" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
+                <HyperlinkButton x:Name="VoiceActivationLinkButton"
+                        Margin="10,0,0,0"
+                        Content="Voice Activation Privacy Settings"
+                        NavigateUri="ms-settings:privacy-voiceactivation" />
             </StackPanel>
-            <StackPanel x:Name="MicrophoneSettingsStackPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Left">
-                <FontIcon x:Name="MicrophoneSettingsFontIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Green" Margin="10,0,0,0" Glyph=""/>
-                <TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="0,0,0,0" TextWrapping="Wrap"></TextBlock>
+            <StackPanel x:Name="MicrophoneSettingsStackPanel" Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Left" Margin="10,0,0,0">
+                <FontIcon x:Name="MicrophoneInfoIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
+                <HyperlinkButton x:Name="MicrophoneLinkButton"
+                        Margin="10,0,10,0"
+                        Content="Microphone Privacy Settings"
+                        NavigateUri="ms-settings:privacy-microphone" 
+                                 HorizontalAlignment="Left"/>
+                <!--<TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="0,0,0,0" TextWrapping="Wrap"></TextBlock>-->
             </StackPanel>
             <!--<TextBlock x:Name="MicrophoneSettingsTextBlock" Text="Microphone: " Grid.Column="1" Margin="30,0,0,0"></TextBlock>-->
             <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Green" Margin="10,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
-                <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="0,0,0,0"></TextBlock>
+                <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="0,5,0,0"></TextBlock>
             </StackPanel>
             
         </Grid>
         <Grid x:Name="ControlsGrid" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -173,7 +175,7 @@
                         Click="LoadConfigClick"
                          />
             </StackPanel>
-            <StackPanel
+            <!--<StackPanel
                     Orientation="Horizontal"
                     Grid.Row="9"
                     Grid.ColumnSpan="3"
@@ -183,17 +185,17 @@
                         Margin="10,0,0,0"
                         Content="Microphone Privacy Settings"
                         NavigateUri="ms-settings:privacy-microphone" />
-            </StackPanel>
+            </StackPanel>-->
             <StackPanel
                     Orientation="Horizontal"
                     Grid.Row="10"
                     Grid.ColumnSpan="3"
                     Margin="5,0,10,0">
-                <FontIcon x:Name="VAStatusIcon" FontFamily="Segoe MDL2 Assets" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
+                <!--<FontIcon x:Name="VAStatusIcon" FontFamily="Segoe MDL2 Assets" Glyph="{x:Bind mvadls:Glyphs.Cancel}"/>
                 <HyperlinkButton x:Name="VoiceActivationLinkButton"
                         Margin="10,0,0,0"
                         Content="Voice Activation Privacy Settings"
-                        NavigateUri="ms-settings:privacy-voiceactivation" />
+                        NavigateUri="ms-settings:privacy-voiceactivation" />-->
             </StackPanel>
         </Grid>
 
@@ -207,7 +209,7 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Logs" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
-                <HyperlinkButton x:Name="OpenLogLocationButton" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
+                <HyperlinkButton x:Name="OpenLogLocationButton" Content="Open Logs" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <Button x:Name="CollapseLogPane" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CollapseLogs"/>
             </StackPanel>
 
@@ -228,7 +230,6 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -237,7 +238,7 @@
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Chat" TextAlignment="Left" VerticalAlignment="Top" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2" Grid.RowSpan="3"/>
             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="3">
                 <HyperlinkButton Name="DownloadChatHistory" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
-                <Button x:Name="ResetChatHistory" Content="Reset"/>
+                <Button x:Name="ResetButton" Content="Reset"/>
             </StackPanel>
             <ScrollViewer x:Name="ChatHistoryScollViewer"
                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom" BorderBrush="Black" BorderThickness="2"

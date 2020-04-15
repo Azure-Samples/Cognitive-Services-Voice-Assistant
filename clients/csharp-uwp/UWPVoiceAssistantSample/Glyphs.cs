@@ -45,10 +45,14 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public static readonly string Load = "\uE898";
 
-        public static readonly string MicrophoneListening = "\uF12E";
-
+        /// <summary>
+        /// Gets the Unicode point for a microphone off icon.
+        /// </summary>
         public static readonly string MicrophoneOff = "\uEC54";
 
+        /// <summary>
+        /// Gets the Unicode point for a check mark icon.
+        /// </summary>
         public static readonly string CircleCheckMark = "\uF13E";
     }
 }
