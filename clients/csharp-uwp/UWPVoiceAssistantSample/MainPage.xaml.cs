@@ -106,13 +106,7 @@ namespace UWPVoiceAssistantSample
             this.ResetButton.Click += async (_, __) =>
             {
                 await this.dialogManager.FinishConversationAsync();
-            };
-            this.ResetButton.Click += async (_, __) =>
-            {
                 await this.dialogManager.StopAudioPlaybackAsync();
-            };
-            this.ResetButton.Click += (_, __) =>
-            {
                 this.statusBuffer.Clear();
                 this.RefreshStatus();
             };
