@@ -1,10 +1,18 @@
-$resourceGroup="TestGroup2"
-$functionAppName="mynewResource-virtualroommanager"
+Param(
+    [string] $resourceName = $(Read-Host -prompt "resourceName")
+)
+
+$resourceGroup= $resourceName
+$functionAppName="$resourceName-virtualroommanager"
 $publishZip="publish.zip"
 $publishFolder="../skill/VirtualRoomApp/bin/Release/netcoreapp2.1/publish"
+$sln = "../skill/VirtualRoomApp.sln"
 
-dotnet publish ../skill/VirtualRoomApp.sln -c Release
+dotnet clean $sln -c Release
 
+dotnet publish $sln -c Release
+
+#zip up the publish folder
 $absolutePublishFolder=Convert-Path($publishFolder)
 $absoluteCurrentFolder=Convert-Path(".")
 if(Test-path "$publishZip") {Remove-item "$publishZip"}

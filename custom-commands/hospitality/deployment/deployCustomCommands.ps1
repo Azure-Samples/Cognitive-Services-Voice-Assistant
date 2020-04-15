@@ -61,7 +61,7 @@ write-host "Created project Id $appId"
 
 # get the current model so that we can modify it
 
-write-host "getting the initial $speechAppName inventory commands model"
+write-host "getting the initial $speechAppName hospitality commands model"
 try {
     $model = invoke-restmethod -Method GET -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Header $headers
 } catch {
@@ -76,7 +76,7 @@ try {
 $model | ConvertTo-Json -depth 100 | Out-File "initialModel.json"
 
 
-write-host "patching the $speechAppName inventory commands model"
+write-host "patching the $speechAppName hospitality commands model"
 
 # change the model based on the local json file
 
@@ -90,7 +90,7 @@ $model.commands = $newModel.commands
 
 # send the updated model up to the application
 
-write-host "updating $speechAppName with the new inventory commands model"
+write-host "updating $speechAppName with the new hospitality commands model"
 try {
     $response = invoke-restmethod -Method PUT -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Body ($model | ConvertTo-Json  -depth 100) -Header $headers
 } catch {
