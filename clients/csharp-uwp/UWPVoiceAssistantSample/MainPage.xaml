@@ -24,6 +24,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 1 0 1"/>
         <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button x:Name="WindowFilterButton" Content="Filter View" Grid.Column="0">
@@ -57,7 +58,7 @@
                 VerticalAlignment="Top"
                 Content="&#xE106;"
                 Visibility="Visible"/>
-        <Grid x:Name="ApplicationStateGrid" Grid.Row="1" Grid.ColumnSpan="2">
+        <Grid x:Name="ApplicationStateGrid" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 0 0 1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -199,10 +200,10 @@
             </StackPanel>
 
             <ScrollViewer x:Name="ChangeLogScrollViewer"
-                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom" BorderBrush="Black" BorderThickness="2"
-                          Margin="5"
-                          Grid.Row="1" Grid.Column="1" 
-                          Grid.RowSpan="4" Grid.ColumnSpan="2">
+                    HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom"
+                    Margin="5"
+                    Grid.Row="1" Grid.Column="1" 
+                    Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <RichTextBlock x:Name="ChangeLogTextBlock" Width="500" FontWeight="Bold"/>
             </ScrollViewer>
         </Grid>
@@ -226,14 +227,14 @@
                 <Button x:Name="ResetButton" Content="Reset"/>
             </StackPanel>
             <ScrollViewer x:Name="ChatHistoryScollViewer"
-                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom" BorderBrush="Black" BorderThickness="2"
+                HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom"
                           Margin="5,50,5,5"
                           Grid.Row="1" Grid.Column="0" 
                           Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox x:Name="ChatHistoryTextBlock" FontWeight="Bold" IsReadOnly="True" TextWrapping="Wrap" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
             </ScrollViewer>
 
-            <Border Grid.Row="5" Grid.ColumnSpan="2" BorderBrush="White" BorderThickness="2" Margin="40,20,40,20"/>
+            <Border Grid.Row="5" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1" Margin="40,20,40,20"/>
 
             <Grid Grid.Row="6" Grid.ColumnSpan="2" Grid.RowSpan="2">
                 <Grid.RowDefinitions>

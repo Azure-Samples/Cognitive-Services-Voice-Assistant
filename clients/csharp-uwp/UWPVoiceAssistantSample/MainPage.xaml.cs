@@ -235,6 +235,27 @@ namespace UWPVoiceAssistantSample
                 this.VoiceActivationLinkButton.Content = voiceActivationStatusInfo.Status;
 
                 this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
+
+                if (!this.BackgroundTaskRegistered && !micReady)
+                {
+                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
+                }
+
+                if (!this.BackgroundTaskRegistered && micReady)
+                {
+                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1535, Height = 800 });
+                }
+
+                if (this.BackgroundTaskRegistered && !micReady)
+                {
+                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
+                }
+
+                if (this.BackgroundTaskRegistered && micReady)
+                {
+                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1400, Height = 800 });
+                }
+
             });
         }
 
@@ -418,7 +439,6 @@ namespace UWPVoiceAssistantSample
 
         private void ToggleControls(object sender, RoutedEventArgs e)
         {
-
             if (this.WindowsContolFlyoutItem.IsChecked && this.WindowsLogFlyoutItem.IsChecked && !this.WindowsChatFlyoutItem.IsChecked)
             {
                 this.ControlsGrid.Visibility = Visibility.Visible;
