@@ -47,7 +47,7 @@
             "name": "[variables('cognitiveservice_speech_name')]",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "S0"
+                "name": "F0"
             },
             "kind": "SpeechServices",
             "properties": {}
