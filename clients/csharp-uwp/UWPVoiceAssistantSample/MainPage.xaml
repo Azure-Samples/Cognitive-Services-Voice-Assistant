@@ -84,8 +84,8 @@
                         HorizontalAlignment="Left"/>
             </StackPanel>
             <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="Green" Margin="10,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
-                <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="0,5,0,0"></TextBlock>
+                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="35" Foreground="Green" Margin="5,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
+                <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="1,9,0,0"></TextBlock>
             </StackPanel>
             
         </Grid>
