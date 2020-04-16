@@ -182,6 +182,10 @@
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"  
                 Text="Status"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="Black">
+                <TextBlock Text="Audio Output Format" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
+                <ComboBox x:Name="OutputFormatComboBox" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
+            </StackPanel>
             <TextBlock x:Name="ChangeLogTextHeader"
                 Grid.Row="12" Grid.Column="1"
                 HorizontalAlignment="Left"

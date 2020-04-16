@@ -40,6 +40,21 @@ namespace UWPVoiceAssistantSample
             return wrapper;
         }
 
+        /// <summary>
+        /// Synchronously acquires the provided SemaphoreSlim and returns an IDisposable interface
+        /// that, when disposed, will release the underlying semaphore.
+        /// </summary>
+        /// <param name="semaphore"> The semaphore to acquire and release. </param>
+        /// <returns> A task that completes once the semaphore has been acquired. </returns>
+        public static IDisposable AutoReleaseWait(
+            this SemaphoreSlim semaphore)
+        {
+            Contract.Requires(semaphore != null);
+            var wrapper = new ReleaseableSemaphoreSlimWrapper(semaphore);
+            semaphore.Wait();
+            return wrapper;
+        }
+
         private class ReleaseableSemaphoreSlimWrapper
             : IDisposable
         {
@@ -61,7 +76,7 @@ namespace UWPVoiceAssistantSample
                 {
                     if (disposeActuallyCalled)
                     {
-                        this.semaphore.Release();
+                        this.semaphore?.Release();
                     }
 
                     this.alreadyDisposed = true;

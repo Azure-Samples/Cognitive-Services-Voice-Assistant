@@ -3,14 +3,21 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using System.Globalization;
+    using System.Runtime.CompilerServices;
+    using UWPVoiceAssistantSample.AudioCommon;
+    using Windows.Devices.SmartCards;
+    using Windows.Media.MediaProperties;
     using Windows.Storage;
 
     /// <summary>
-    /// A convenience wrapper for getting and setting well-known properties from app-local
-    /// settings.
+    /// A convenience wrapper for getting and setting well-known properties from AppLocal settings.
     /// </summary>
     public static class LocalSettingsHelper
     {
+        private static readonly ILogProvider log = LogRouter.GetClassLogger();
+        private static DialogAudio cachedOutputFormat;
+
         /// <summary>
         /// Gets or sets a value indicating whether the Speech SDK (Direct Line Speech) should be
         /// used as the selected dialog backend.
@@ -96,6 +103,41 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("DialogServiceConnector_botID", value);
         }
 
+        public static DialogAudio OutputFormat
+        {
+            get
+            {
+                if (cachedOutputFormat == null)
+                {
+                    var serialized = ReadValueWithDefault<ApplicationDataCompositeValue>("AudioOutputFormat", null);
+                    if (serialized != null
+                        && DialogAudio.TryGetFromSettingsValue(serialized, out DialogAudio audioFromSettings))
+                    {
+                        cachedOutputFormat = audioFromSettings;
+                    }
+                    else
+                    {
+                        cachedOutputFormat = DirectLineSpeechAudio.DefaultOutput;
+                    }
+                }
+
+                return cachedOutputFormat;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    WriteValue("AudioOutputFormat", value.SerializeToSettingsValue());
+                    cachedOutputFormat = value;
+                    log.Log(LogMessageLevel.Noise, $"AudioOutputFormat updated to {value.Label}");
+                }
+                else if (value == null && ApplicationData.Current.LocalSettings.Values.ContainsKey("AudioOutputFormat"))
+                {
+                    ApplicationData.Current.LocalSettings.Values.Remove("AudioOutputFormat");
+                }
+            }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether audio capture should emit files recording
         /// all incoming audio, including 1st-stage activations. Used for diagnostic purposes only.
@@ -111,9 +153,9 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <param name="key"> The key under which the setting is to be stored. </param>
         /// <param name="value"> The object (string-serializable) to be recorded. </param>
-        public static void WriteValue(string key, object value)
+        public static void WriteValue(string key, object newValue)
         {
-            ApplicationData.Current.LocalSettings.Values[key] = value;
+            ApplicationData.Current.LocalSettings.Values[key] = newValue;
         }
 
         /// <summary>
