@@ -90,7 +90,7 @@ namespace UWPVoiceAssistantSample
             else
             {
                 glyph = Glyphs.Microphone;
-                color = Colors.Black;
+                color = Colors.Green;
                 statusText = "Microphone is available.";
             }
 
@@ -162,7 +162,7 @@ namespace UWPVoiceAssistantSample
             else
             {
                 glyph = Glyphs.FeedbackApp;
-                color = Colors.Black;
+                color = Colors.Green;
                 status = "Voice activation is configured and available.";
             }
 
