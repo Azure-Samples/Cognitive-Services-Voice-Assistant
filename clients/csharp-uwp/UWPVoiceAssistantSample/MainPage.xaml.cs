@@ -336,7 +336,7 @@ namespace UWPVoiceAssistantSample
                             paragraph.Inlines.Add(run);
                             this.ChangeLogTextBlock.Blocks.Add(paragraph);
                         }
-                        else if (text.Contains("Information"))
+                        else if (text.Contains("Information", StringComparison.OrdinalIgnoreCase))
                         {
                             string[] split = text.Split("Information");
                             Paragraph paragraph = new Paragraph();
@@ -346,7 +346,7 @@ namespace UWPVoiceAssistantSample
                             paragraph.Foreground = new SolidColorBrush(Colors.Blue);
                             this.ChangeLogTextBlock.Blocks.Add(paragraph);
                         }
-                        else if (text.Contains("Error"))
+                        else if (text.Contains("Error", StringComparison.OrdinalIgnoreCase))
                         {
                             string[] split = text.Split("Error");
                             Paragraph paragraph = new Paragraph();
@@ -356,7 +356,7 @@ namespace UWPVoiceAssistantSample
                             paragraph.Foreground = new SolidColorBrush(Colors.Red);
                             this.ChangeLogTextBlock.Blocks.Add(paragraph);
                         }
-                        else if (text.Contains("Noise"))
+                        else if (text.Contains("Noise", StringComparison.OrdinalIgnoreCase))
                         {
                             string[] split = text.Split("Noise");
                             Paragraph paragraph = new Paragraph();
