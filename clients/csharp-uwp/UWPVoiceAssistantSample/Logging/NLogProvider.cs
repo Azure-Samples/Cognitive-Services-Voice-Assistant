@@ -90,7 +90,7 @@ namespace UWPVoiceAssistantSample
         public void Log(LogMessageLevel level, string message)
         {
             this.logger.Log(ConvertLogLevel(level), message);
-            LogBuffer.Add(message);
+            LogBuffer.Add($"{level + message}");
             this.OnLogAvailable();
         }
 
