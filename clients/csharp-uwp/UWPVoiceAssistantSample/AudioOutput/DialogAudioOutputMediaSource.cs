@@ -22,7 +22,6 @@ namespace UWPVoiceAssistantSample.AudioOutput
         private static readonly TimeSpan TimeToBuffer = TimeSpan.FromSeconds(1.5);
 
         private readonly DialogAudioOutputStream sourceStream;
-        private readonly byte[] sampleBuffer;
         private TimeSpan sampleDuration;
         private TimeSpan totalPlaybackDuration = TimeSpan.Zero;
 
@@ -37,11 +36,11 @@ namespace UWPVoiceAssistantSample.AudioOutput
             this.sourceStream = stream;
 
             // Here we precompute constants for the duration of this source to avoid doing it every sample
-            this.sampleDuration = SampleDurationForEncoding(stream.Encoding);
-            var bytesInSample = (uint)(this.sampleDuration.TotalSeconds * stream.Encoding.Bitrate / 8);
-            this.sampleBuffer = new byte[bytesInSample];
+            var encoding = stream.Format.Encoding;
+            this.sampleDuration = SampleDurationForEncoding(encoding);
+            var bytesInSample = (uint)(this.sampleDuration.TotalSeconds * encoding.Bitrate / 8);
 
-            var sourceDescriptor = new AudioStreamDescriptor(stream.Encoding);
+            var sourceDescriptor = new AudioStreamDescriptor(stream.Format.Encoding);
             var mediaStreamSource = new MediaStreamSource(sourceDescriptor)
             {
                 IsLive = true,
@@ -80,10 +79,13 @@ namespace UWPVoiceAssistantSample.AudioOutput
             var request = args.Request;
             var deferral = request.GetDeferral();
 
-            var bytesRetrieved = this.sourceStream.Read(this.sampleBuffer, 0, this.sampleBuffer.Length);
-            if (bytesRetrieved == this.sampleBuffer.Length)
+            var encoding = this.sourceStream.Format.Encoding;
+            var bytesForBuffer = new byte[(uint)(this.sampleDuration.TotalSeconds * encoding.Bitrate / 8)];
+
+            var bytesRetrieved = this.sourceStream.Read(bytesForBuffer, 0, bytesForBuffer.Length);
+            if (bytesRetrieved == bytesForBuffer.Length)
             {
-                var mediaSampleBuffer = CryptographicBuffer.CreateFromByteArray(this.sampleBuffer);
+                var mediaSampleBuffer = CryptographicBuffer.CreateFromByteArray(bytesForBuffer);
                 var mediaSample = MediaStreamSample.CreateFromBuffer(mediaSampleBuffer, this.totalPlaybackDuration);
                 mediaSample.KeyFrame = true;
                 mediaSample.Duration = this.sampleDuration;

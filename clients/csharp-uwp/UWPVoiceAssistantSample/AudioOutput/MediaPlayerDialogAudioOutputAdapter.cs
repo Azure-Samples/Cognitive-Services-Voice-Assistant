@@ -38,6 +38,7 @@ namespace UWPVoiceAssistantSample.AudioOutput
                 {
                     this.OutputEnded?.Invoke();
                 }
+
                 this.lastPlaybackState = session.PlaybackState;
             };
         }
@@ -79,6 +80,7 @@ namespace UWPVoiceAssistantSample.AudioOutput
         public Task PlayAudioAsync(DialogAudioOutputStream stream)
         {
             this.mediaPlayer.Pause();
+            this.OutputEncoding = LocalSettingsHelper.OutputFormat.Encoding;
             this.mediaSource = new DialogAudioOutputMediaSource(stream);
             this.mediaPlayer.Source = this.mediaSource.WindowsMediaSource;
             this.mediaPlayer.Play();

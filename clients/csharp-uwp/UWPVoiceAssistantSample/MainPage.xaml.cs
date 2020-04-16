@@ -3,13 +3,13 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Reflection;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
-    using NLog.Fluent;
+    using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Security.Authorization.AppCapabilityAccess;
@@ -73,6 +73,16 @@ namespace UWPVoiceAssistantSample
 
             // Kick off the registration and/or retrieval of the 1st-stage keyword information
             _ = this.DoKeywordSetupAsync();
+
+            // Populate the drop-down list for TTS audio output formats and select the current choice
+            var supportedFormats = DirectLineSpeechAudio.SupportedOutputFormats;
+            foreach (var entry in supportedFormats)
+            {
+                this.OutputFormatComboBox.Items.Add(entry.Label);
+            }
+
+            this.OutputFormatComboBox.SelectedItem = this.OutputFormatComboBox.Items.FirstOrDefault(item =>
+                item.ToString() == LocalSettingsHelper.OutputFormat.Label);
 
             // Wire a few pieces of UI handling that aren't trivially handled by XAML bindings
             this.AddUIHandlersAsync();
@@ -439,6 +449,16 @@ namespace UWPVoiceAssistantSample
             {
                 this.logger.Log("No changes in config");
             }
+        }
+
+        private void OutputFormatComboBox_SelectionChanged(object s, SelectionChangedEventArgs e)
+        {
+            _ = s;
+            _ = e;
+
+            var selectedLabel = this.OutputFormatComboBox.SelectedItem.ToString();
+            var selectedFormat = DialogAudio.GetMatchFromLabel(selectedLabel);
+            LocalSettingsHelper.OutputFormat = selectedFormat;
         }
     }
 }

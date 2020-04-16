@@ -138,6 +138,9 @@
     <Compile Include="AgentSessionWrapper.cs" />
     <Compile Include="AppSettings.cs" />
     <Compile Include="AgentSessionManager.cs" />
+    <Compile Include="AudioCommon\DialogAudio.cs" />
+    <Compile Include="AudioCommon\DirectLineSpeechAudio.cs" />
+    <Compile Include="AudioCommon\WaveHeader.cs" />
     <Compile Include="AudioInput\AgentAudioInputProvider.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -147,7 +150,6 @@
     <Compile Include="AudioOutput\DialogAudioOutputStream.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\DialogAudioOutputUnsafeMethods.cs" />
-    <Compile Include="AudioOutput\DirectLineSpeechAudioOutputFormat.cs" />
     <Compile Include="AudioOutput\DirectLineSpeechAudioOutputStream.cs" />
     <Compile Include="AudioOutput\IDialogAudioOutputAdapter.cs" />
     <Compile Include="AudioOutput\MediaPlayerDialogAudioOutputAdapter.cs" />
@@ -162,7 +164,7 @@
     <Compile Include="AudioInput\IDialogAudioInputProvider.cs" />
     <Compile Include="Glyphs.cs" />
     <Compile Include="IDialogBackend.cs" />
-    <Compile Include="AudioInput\IMemoryBufferByteAccess.cs" />
+    <Compile Include="AudioCommon\IMemoryBufferByteAccess.cs" />
     <Compile Include="IKeywordRegistration.cs" />
     <Compile Include="KeywordRegistration.cs" />
     <Compile Include="LocalSettingsHelper.cs" />

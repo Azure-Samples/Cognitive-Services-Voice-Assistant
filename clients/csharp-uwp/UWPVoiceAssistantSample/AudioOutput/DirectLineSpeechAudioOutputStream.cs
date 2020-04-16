@@ -3,11 +3,9 @@
 
 namespace UWPVoiceAssistantSample
 {
-    using System;
-    using System.Diagnostics.Contracts;
-    using System.Runtime.CompilerServices;
     using Microsoft.CognitiveServices.Speech.Audio;
-    using Windows.Media.MediaProperties;
+    using System.Diagnostics.Contracts;
+    using UWPVoiceAssistantSample.AudioCommon;
 
     /// <summary>
     /// A derived specialization of the DialogAudioOutputStream abstract class that provides the
@@ -23,29 +21,24 @@ namespace UWPVoiceAssistantSample
         /// Initializes a new instance of the <see cref="DirectLineSpeechAudioOutputStream"/> class.
         /// </summary>
         /// <param name="audioSource"> The PullAudioOutputStream that should be read from. </param>
-        public DirectLineSpeechAudioOutputStream(PullAudioOutputStream audioSource, AudioEncodingProperties encoding)
+        public DirectLineSpeechAudioOutputStream(PullAudioOutputStream audioSource, DialogAudio format)
+            : base(format)
         {
             this.audioSource = audioSource;
-            this.Encoding = encoding;
         }
 
         /// <summary>
         /// Reads audio from the underlying PullAudioOutputStream into the provided buffer.
         /// </summary>
         /// <param name="buffer"> The buffer to read the data into. </param>
-        /// <param name="offset"> The offset to read from. Must be 0. </param>
         /// <param name="count"> The number of bytes to read. Must be equal to buffer.Length. </param>
         /// <returns> The count of bytes successfully read into the provided buffer. </returns>
-        public override int Read(byte[] buffer, int offset, int count)
+        protected override uint ReadFromRealDialogSource(byte[] buffer, uint count)
         {
             Contract.Requires(buffer != null);
+            Contract.Requires(buffer.Length == count);
 
-            if (offset != 0 || count != buffer.Length)
-            {
-                throw new NotSupportedException();
-            }
-
-            return (int)this.audioSource.Read(buffer);
+            return this.audioSource.Read(buffer);
         }
     }
 }
