@@ -7,6 +7,7 @@ namespace UWPVoiceAssistantSample
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using UWPVoiceAssistantSample.AudioOutput;
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
     using Windows.ApplicationModel.Background;
@@ -21,13 +22,13 @@ namespace UWPVoiceAssistantSample
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public sealed partial class App : Application
+    public sealed partial class App : Application, IDisposable
     {
-        private ServiceProvider services;
+        private readonly ILogProvider logger;
+        private readonly IDialogManager dialogManager;
+        private readonly IAgentSessionManager agentSessionManager;
         private BackgroundTaskDeferral deferral;
-        private ILogProvider logger;
-        private IDialogManager dialogManager;
-        private IAgentSessionManager agentSessionManager;
+        private bool alreadyDisposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="App"/> class.
@@ -60,13 +61,14 @@ namespace UWPVoiceAssistantSample
                 new DirectLineSpeechDialogBackend(),
                 keywordRegistration,
                 new AgentAudioInputProvider(),
-                this.agentSessionManager);
+                this.agentSessionManager,
+                new MediaPlayerDialogAudioOutputAdapter());
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton(this.dialogManager);
             serviceCollection.AddSingleton<IKeywordRegistration>(keywordRegistration);
             serviceCollection.AddSingleton(this.agentSessionManager);
-            this.services = serviceCollection.BuildServiceProvider();
+            this.Services = serviceCollection.BuildServiceProvider();
 
             CoreApplication.Exiting += async (object sender, object args) =>
             {
@@ -96,12 +98,15 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets service provider that contains services shared across views.
         /// </summary>
-        public ServiceProvider Services
+        public ServiceProvider Services { get; }
+
+        /// <summary>
+        /// Disposes of underlying managed resources. Standard implementation of IDisposable.
+        /// </summary>
+        public void Dispose()
         {
-            get
-            {
-                return this.services;
-            }
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -194,6 +199,20 @@ namespace UWPVoiceAssistantSample
                 // NOTE: this will be restored in a future OS update.
                 // this.deferral.Complete();
                 // this.deferral = null;
+            }
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!this.alreadyDisposed)
+            {
+                if (disposing)
+                {
+                    this.dialogManager?.Dispose();
+                    this.Services?.Dispose();
+                }
+
+                this.alreadyDisposed = true;
             }
         }
 

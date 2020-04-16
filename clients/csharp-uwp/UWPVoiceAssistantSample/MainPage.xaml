@@ -101,6 +101,8 @@
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -183,6 +185,8 @@
                         Click="LoadConfigClick"
                          />
             </StackPanel>
+            <TextBlock Text="Audio Output Format" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
+            <ComboBox x:Name="OutputFormatComboBox" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
         </Grid>
 
         <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4">

@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Threading.Tasks;
+    using Windows.Media.MediaProperties;
 
     /// <summary>
     /// Responsible for Creating and maintaining the Audio Graph for comminucation with Direct Line Speech.
@@ -22,18 +23,16 @@ namespace UWPVoiceAssistantSample
         bool IsPlaying { get; }
 
         /// <summary>
-        /// Enqueues a new audio output source for the adapter and begins playback if
-        /// it has not already begun.
+        /// Gets or sets the encoding to be used for output. Should match the expected format of data being provided.
         /// </summary>
-        /// <param name="audioData"> The output stream to enqueue. </param>
-        void EnqueueDialogAudio(DialogAudioOutputStream audioData);
+        AudioEncodingProperties OutputEncoding { get; set; }
 
         /// <summary>
-        /// Cancels any current playback on the adapter and asynchronously begins playback of the
-        /// provided Speech SDK dialog output audio.
+        /// Cancels any current playback on the adapter and asynchronously begins playback of the provided Speech SDK
+        /// dialog output audio.
         /// </summary>
         /// <param name="stream"> The output stream to play. </param>
-        /// <returns> A task that completes once all pending output is completed. </returns>
+        /// <returns> A task that completes once the pending output is completed. </returns>
         Task PlayAudioAsync(DialogAudioOutputStream stream);
 
         /// <summary>

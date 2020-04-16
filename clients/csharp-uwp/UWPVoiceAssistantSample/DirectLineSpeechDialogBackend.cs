@@ -7,10 +7,14 @@ namespace UWPVoiceAssistantSample
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Threading.Tasks;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
+    using UWPVoiceAssistantSample.AudioCommon;
+    using UWPVoiceAssistantSample.AudioOutput;
+    using Windows.Media.MediaProperties;
     using Windows.Storage;
 
     /// <summary>
@@ -91,8 +95,10 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <param name="keywordFile"> The keyword file to be loaded as part of initialization.</param>
         /// <returns> A task that completes once initialization is complete. </returns>
-        public async Task InitializeAsync(StorageFile keywordFile)
+        public Task InitializeAsync(StorageFile keywordFile)
         {
+            Contract.Requires(keywordFile != null);
+
             // Default values -- these can be updated
             this.ConnectorConfiguration = this.CreateConfiguration();
             this.ConfirmationModel = KeywordRecognitionModel.FromFile(keywordFile.Path);
@@ -153,12 +159,14 @@ namespace UWPVoiceAssistantSample
                 var wrapper = new ActivityWrapper(e.Activity);
                 var payload = new DialogResponse(
                     messageBody: e.Activity,
-                    messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio) : null,
+                    messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio, LocalSettingsHelper.OutputFormat) : null,
                     shouldEndTurn: e.Audio == null && wrapper.Type == ActivityWrapper.ActivityType.Message,
                     shouldStartNewTurn: wrapper.InputHint == ActivityWrapper.InputHintType.ExpectingInput);
                 Debug.WriteLine($"Connector activity received");
                 this.DialogResponseReceived?.Invoke(payload);
             };
+
+            return Task.FromResult(0);
         }
 
         /// <summary>
@@ -287,6 +295,9 @@ namespace UWPVoiceAssistantSample
             // Disable throttling of input audio (send it as fast as we can!)
             config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "9999");
             config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "10000");
+
+            var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
+            config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
 
             if (!string.IsNullOrEmpty(customSpeechId))
             {
