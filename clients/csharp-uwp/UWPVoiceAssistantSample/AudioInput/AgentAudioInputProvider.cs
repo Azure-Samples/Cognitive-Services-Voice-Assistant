@@ -30,8 +30,6 @@ namespace UWPVoiceAssistantSample
         protected static readonly AudioEncodingProperties DefaultEncoding = AudioEncodingProperties.CreatePcm(16000, 1, 16);
         protected AudioEncodingProperties outputEncoding;
         protected IAgentSessionWrapper agentSession;
-        private int bytesToSkip;
-        private int bytesAlreadySkipped;
         protected AudioGraph inputGraph;
         protected AudioDeviceInputNode inputNode;
         protected AudioFrameOutputNode outputNode;
@@ -40,6 +38,8 @@ namespace UWPVoiceAssistantSample
         protected SemaphoreSlim debugAudioOutputFileSemaphore;
         protected Stream debugAudioOutputFileStream;
         private bool dataAvailableInitialized = false;
+        private int bytesToSkip;
+        private int bytesAlreadySkipped;
 
         /// <summary>
         /// Raised when new audio data is available from the producer.
@@ -180,6 +180,50 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
+        /// Called upon every frame quantum while the AudioGraph is running, requesting that data is provided to the
+        /// calling AudioGraph.
+        /// </summary>
+        /// <param name="sender"> The AudioGraph associated with the quantum request. </param>
+        public void OnQuantumStarted(AudioGraph sender, object _)
+        {
+            var newData = new List<byte>();
+            var discardedData = new List<byte>();
+
+            using (var frame = this.outputNode.GetFrame())
+            using (var buffer = frame.LockBuffer(AudioBufferAccessMode.Read))
+            {
+                var memBuffer = Windows.Storage.Streams.Buffer.CreateCopyFromMemoryBuffer(buffer);
+                memBuffer.Length = buffer.Length;
+                using (var reader = DataReader.FromBuffer(memBuffer))
+                {
+                    // AudioGraph produces 32-bit floating point samples. This typically needs to be
+                    // converted to another format for consumption. Most agents use 16khz, 16-bit mono
+                    // audio frames
+                    if (this.outputEncoding == DefaultEncoding)
+                    {
+                        this.OnQuantumStarted_Process16khzMonoPCM(reader, newData, discardedData);
+                    }
+
+                    // (More encoding support may be added here as needed)
+                    else
+                    {
+                        throw new FormatException($"Unsupported format for agent audio conversion: {this.outputEncoding.ToString()}");
+                    }
+                }
+            }
+
+            if (discardedData.Count > 0)
+            {
+                this.DataDiscarded?.Invoke(discardedData);
+            }
+
+            if (newData.Count > 0)
+            {
+                this.DataAvailable?.Invoke(newData);
+            }
+        }
+
+        /// <summary>
         /// Default Dispose implementation.
         /// </summary>
         public void Dispose()
@@ -219,9 +263,7 @@ namespace UWPVoiceAssistantSample
                 var nodeResult = await this.inputGraph.CreateDeviceInputNodeAsync(MediaCategory.Speech);
                 if (nodeResult.Status != AudioDeviceNodeCreationStatus.Success)
                 {
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
                     throw new InvalidOperationException($"Cannot make a real-time device input node.", nodeResult.ExtendedError);
-#pragma warning restore CA1303 // Do not pass literals as localized parameters
                 }
 
                 this.inputNode = nodeResult.DeviceInputNode;
@@ -241,45 +283,6 @@ namespace UWPVoiceAssistantSample
                         this.debugAudioOutputFileStream?.Write(bytes.ToArray(), 0, bytes.Count);
                     }
                 };
-            }
-        }
-
-        public void OnQuantumStarted(AudioGraph sender, object args)
-        {
-            var newData = new List<byte>();
-            var discardedData = new List<byte>();
-
-            using (var frame = this.outputNode.GetFrame())
-            using (var buffer = frame.LockBuffer(AudioBufferAccessMode.Read))
-            {
-                var memBuffer = Windows.Storage.Streams.Buffer.CreateCopyFromMemoryBuffer(buffer);
-                memBuffer.Length = buffer.Length;
-                using (var reader = DataReader.FromBuffer(memBuffer))
-                {
-                    // AudioGraph produces 32-bit floating point samples. This typically needs to be
-                    // converted to another format for consumption. Most agents use 16khz, 16-bit mono
-                    // audio frames
-                    if (this.outputEncoding == DefaultEncoding)
-                    {
-                        this.OnQuantumStarted_Process16khzMonoPCM(reader, newData, discardedData);
-                    }
-
-                    // (More encoding support may be added here as needed)
-                    else
-                    {
-                        throw new FormatException($"Unsupported format for agent audio conversion: {this.outputEncoding.ToString()}");
-                    }
-                }
-            }
-
-            if (discardedData.Count > 0)
-            {
-                this.DataDiscarded?.Invoke(discardedData);
-            }
-
-            if (newData.Count > 0)
-            {
-                this.DataAvailable?.Invoke(newData);
             }
         }
 

@@ -20,9 +20,6 @@ namespace UWPVoiceAssistantSample
     public class DialogAudioOutputAdapter
         : IDisposable, IDialogAudioOutputAdapter
     {
-        private static readonly AudioEncodingProperties DefaultEncoding
-            = AudioEncodingProperties.CreatePcm(16000, 1, 16);
-
         private readonly SemaphoreSlim graphSemaphore;
         private readonly AutoResetEvent outputEndedEvent;
         private readonly ILogProvider log = LogRouter.GetClassLogger();
@@ -41,7 +38,7 @@ namespace UWPVoiceAssistantSample
         {
             this.outputEndedEvent = new AutoResetEvent(false);
             this.graphSemaphore = new SemaphoreSlim(1, 1);
-            this.frameInputEncoding = DefaultEncoding;
+            this.frameInputEncoding = LocalSettingsHelper.OutputFormat.Encoding;
             this.ConfigureOutputDeviceWatching();
         }
 
