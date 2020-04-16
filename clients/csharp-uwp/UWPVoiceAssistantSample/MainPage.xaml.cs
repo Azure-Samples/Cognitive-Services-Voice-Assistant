@@ -424,12 +424,27 @@ namespace UWPVoiceAssistantSample
                 this.ControlsGrid.Visibility = Visibility.Visible;
                 this.LogGrid.Visibility = Visibility.Visible;
                 this.ChatGrid.Visibility = Visibility.Collapsed;
+                var logGridMargin = this.LogGrid.Margin;
+                logGridMargin.Top = 0;
+                this.LogGrid.Margin = logGridMargin;
+                var controlsGridMargin = this.ControlsGrid.Margin;
+                controlsGridMargin.Top = 0;
+                this.ControlsGrid.Margin = controlsGridMargin;
                 Grid.SetColumn(this.ControlsGrid, 0);
                 Grid.SetColumn(this.LogGrid, 1);
                 Grid.SetRow(this.LogGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 2);
                 Grid.SetRow(this.ChatGrid, 0);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
+                Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetRowSpan(this.ApplicationStateGrid, 1);
+                Grid.SetRow(this.VoiceSettingsStackPanel, 0);
+                Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
+                Grid.SetRow(this.MicrophoneSettingsStackPanel, 0);
+                Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
+                Grid.SetRow(this.ConversationStateStackPanel, 0);
+                Grid.SetColumn(this.ConversationStateStackPanel, 2);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
@@ -443,7 +458,20 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ControlsGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 1);
                 Grid.SetRow(this.ChatGrid, 2);
+                var margin = this.ChatGrid.Margin;
+                margin.Top = 0;
+                this.ChatGrid.Margin = margin;
+                var controlsGridMargin = this.ControlsGrid.Margin;
+                controlsGridMargin.Top = 0;
+                this.ControlsGrid.Margin = controlsGridMargin;
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
+                Grid.SetRowSpan(this.ApplicationStateGrid, 1);
+                Grid.SetRow(this.VoiceSettingsStackPanel, 0);
+                Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
+                Grid.SetRow(this.MicrophoneSettingsStackPanel, 0);
+                Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
+                Grid.SetRow(this.ConversationStateStackPanel, 0);
+                Grid.SetColumn(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
@@ -458,8 +486,21 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.LogGrid, 2);
                 Grid.SetColumn(this.ChatGrid, 1);
                 Grid.SetRow(this.ChatGrid, 2);
+                var chatGridMargin = this.ChatGrid.Margin;
+                chatGridMargin.Top = 0;
+                this.ChatGrid.Margin = chatGridMargin;
+                var margin = this.LogGrid.Margin;
+                margin.Top = 0;
+                this.LogGrid.Margin = margin;
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetRowSpan(this.ApplicationStateGrid, 1);
+                Grid.SetRow(this.VoiceSettingsStackPanel, 0);
+                Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
+                Grid.SetRow(this.MicrophoneSettingsStackPanel, 0);
+                Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
+                Grid.SetRow(this.ConversationStateStackPanel, 0);
+                Grid.SetColumn(this.ConversationStateStackPanel, 2);
                 var chatAndLogGrid = ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
@@ -472,13 +513,22 @@ namespace UWPVoiceAssistantSample
                 this.ChatGrid.Visibility = Visibility.Visible;
                 Grid.SetColumn(this.ChatGrid, 0);
                 Grid.SetRow(this.ChatGrid, 2);
+                var margin = this.ChatGrid.Margin;
+                margin.Top = 90;
+                this.ChatGrid.Margin = margin;
                 Grid.SetColumnSpan(this.ChatGrid, 1);
                 Grid.SetColumn(this.ApplicationStateGrid, 0);
                 Grid.SetColumn(this.HelpButtonGrid, 0);
-                this.HelpButtonGrid.HorizontalAlignment = HorizontalAlignment.Right;
+                Grid.SetRowSpan(this.ApplicationStateGrid, 3);
+                Grid.SetRow(this.VoiceSettingsStackPanel, 0);
+                Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
+                Grid.SetRow(this.MicrophoneSettingsStackPanel, 1);
+                Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
+                Grid.SetRow(this.ConversationStateStackPanel, 2);
+                Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth, Height = 800 });
-                this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
             }
 
             if (this.WindowsContolFlyoutItem.IsChecked && this.WindowsLogFlyoutItem.IsChecked && this.WindowsChatFlyoutItem.IsChecked)
@@ -486,6 +536,12 @@ namespace UWPVoiceAssistantSample
                 this.ControlsGrid.Visibility = Visibility.Visible;
                 this.LogGrid.Visibility = Visibility.Visible;
                 this.ChatGrid.Visibility = Visibility.Visible;
+                var controlsGridMargin = this.ControlsGrid.Margin;
+                controlsGridMargin.Top = 0;
+                this.ControlsGrid.Margin = controlsGridMargin;
+                var chatGridMargin = this.ChatGrid.Margin;
+                chatGridMargin.Top = 0;
+                this.ChatGrid.Margin = chatGridMargin;
                 Grid.SetColumn(this.ControlsGrid, 0);
                 Grid.SetRow(this.ControlsGrid, 2);
                 Grid.SetColumn(this.LogGrid, 1);
@@ -514,6 +570,19 @@ namespace UWPVoiceAssistantSample
                 this.LogGrid.Visibility = Visibility.Collapsed;
                 this.ChatGrid.Visibility = Visibility.Collapsed;
                 this.ControlsGrid.Visibility = Visibility.Visible;
+                var margin = this.ControlsGrid.Margin;
+                margin.Top = 90;
+                this.ControlsGrid.Margin = margin;
+                Grid.SetColumnSpan(this.ControlsGrid, 1);
+                Grid.SetColumn(this.ApplicationStateGrid, 0);
+                Grid.SetColumn(this.HelpButtonGrid, 0);
+                Grid.SetRowSpan(this.ApplicationStateGrid, 3);
+                Grid.SetRow(this.VoiceSettingsStackPanel, 0);
+                Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
+                Grid.SetRow(this.MicrophoneSettingsStackPanel, 1);
+                Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
+                Grid.SetRow(this.ConversationStateStackPanel, 2);
+                Grid.SetColumn(this.ConversationStateStackPanel, 0);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ControlsGrid.ActualWidth, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ControlsGrid.ActualWidth, Height = 800 });
             }
@@ -523,6 +592,19 @@ namespace UWPVoiceAssistantSample
                 this.ControlsGrid.Visibility = Visibility.Collapsed;
                 this.LogGrid.Visibility = Visibility.Visible;
                 this.ChatGrid.Visibility = Visibility.Collapsed;
+                var margin = this.LogGrid.Margin;
+                margin.Top = 90;
+                this.LogGrid.Margin = margin;
+                Grid.SetColumn(this.LogGrid, 0);
+                Grid.SetColumn(this.ApplicationStateGrid, 0);
+                Grid.SetColumn(this.HelpButtonGrid, 0);
+                Grid.SetRowSpan(this.ApplicationStateGrid, 3);
+                Grid.SetRow(this.VoiceSettingsStackPanel, 0);
+                Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
+                Grid.SetRow(this.MicrophoneSettingsStackPanel, 1);
+                Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
+                Grid.SetRow(this.ConversationStateStackPanel, 2);
+                Grid.SetColumn(this.ConversationStateStackPanel, 0);
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
             }
         }
