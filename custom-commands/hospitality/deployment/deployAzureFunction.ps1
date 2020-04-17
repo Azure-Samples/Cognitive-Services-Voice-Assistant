@@ -1,10 +1,10 @@
 Param(
-    [string] $resourceName = $(Read-Host -prompt "resourceName")
+    [string] $resourceName = $(Read-Host -prompt "resourceName"),
+    [string] $functionName = $(Read-Host -prompt "functionName")
 )
 
 $ErrorActionPreference = "Stop"
 $resourceGroup= $resourceName
-$functionAppName="$resourceName-virtualroommanager"
 $publishZip="publish.zip"
 $publishFolder="../skill/VirtualRoomApp/bin/Release/netcoreapp2.1/publish"
 $sln = "../skill/VirtualRoomApp.sln"
@@ -21,4 +21,4 @@ Add-Type -assembly "system.io.compression.filesystem"
 [io.compression.zipfile]::CreateFromDirectory($absolutePublishFolder, "$absoluteCurrentFolder/$publishZip")
 
 # deploy the zipped package
-az functionapp deployment source config-zip -g $resourceGroup -n $functionAppName --src $publishZip
+az functionapp deployment source config-zip -g $resourceGroup -n $functionName --src $publishZip

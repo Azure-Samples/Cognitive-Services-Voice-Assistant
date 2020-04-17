@@ -1,12 +1,12 @@
 Param(
-    [string] $resourceName = $(Read-Host -prompt "resourceName")
+    [string] $resourceName = $(Read-Host -prompt "resourceName"),
+    [string] $storageName = $(Read-Host -prompt "storageName"),
+    [string] $functionURL = $(Read-Host -prompt "functionURL")
 )
 
 $ErrorActionPreference = "Stop"
-$storageName = $resourceName
 $resourceGroup = $resourceName
 $containerName = "www"
-$functionURL = "https://$storageName-virtualroommanager.azurewebsites.net/api/RoomDemo"
 
 # get the current signed in user
 $signedInUser = az ad signed-in-user show | ConvertFrom-Json

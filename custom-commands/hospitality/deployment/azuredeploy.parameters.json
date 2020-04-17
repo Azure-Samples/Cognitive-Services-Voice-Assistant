@@ -3,13 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceName": {
-      "value": "test1resource"
+      "value": "test7resource"
     },
     "luisName": {
-      "value": "test1resource-9827"
+      "value": "test7resource-8070"
     },
     "functionName": {
-      "value": "test1resource-187"
+      "value": "test7resource-8070"
+    },
+    "storageName": {
+      "value": "test7resource8070"
     }
   }
 }

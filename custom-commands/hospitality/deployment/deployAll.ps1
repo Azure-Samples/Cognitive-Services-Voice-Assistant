@@ -14,44 +14,54 @@ if( $resourceName.Length -gt 23 ){
 
 $randomNumber = Get-Random -maximum 9999
 $functionName = "$resourceName-$randomNumber"
-
-$randomNumber = Get-Random -maximum 9999
 $luisName = "$resourceName-$randomNumber"
-
+$luisKeyName = "$luisName-authoringkey"
+$storageName = "$resourceName$randomNumber"
+$functionURL = "https://$functionName.azurewebsites.net/api/RoomDemo"
 # get the current default subscription ID 
 $defaultSubscription = az account list --output json | ConvertFrom-Json | Where-Object { $_.isDefault -eq "true" }
 
 $azureSubscriptionID = $defaultSubscription.id 
 $resourceGroup = $resourceName
 $cognitiveservice_speech_name = "$resourceName-speech"
-$cognitiveservice_luis_authoringkey_name = "$resourceName-luisauthoringkey"
 $luisAuthoringRegion = "westus"
 $CustomCommandsRegion = $region
 $websiteAddress = "https://$functionName.azurewebsites.net/api/RoomDemo"
 
-.\deployTemplate.ps1 -resourceName $resourceName -region $region -luisName $luisName -functionName $functionName
-.\deployContainerFiles.ps1 -resourceName $resourceName
-.\deployAzureFunction.ps1 -resourceName $resourceName
+Write-Host "Calling deployTemplate"
+.\deployTemplate.ps1 -resourceName $resourceName -region $region -luisName $luisName -functionName $functionName -storageName $storageName
+
+Write-Host "Calling deployContainerFiles"
+.\deployContainerFiles.ps1 -resourceName $resourceName -storageName $storageName -functionURL $functionURL
+
+Write-Host "Calling deployAzureFunction"
+.\deployAzureFunction.ps1 -resourceName $resourceName -functionName $functionName
 
 #get the keys we need for the custom command deployment
+Write-Host "Getting new keys"
+Write-Host "resource name = $resourceName"
+Write-Host "speech name = $cognitiveservice_speech_name"
+Write-Host "luis name = $luisKeyName"
 $speechResourceKey = az cognitiveservices account keys list -g $resourceName -n $cognitiveservice_speech_name | ConvertFrom-Json
 $speechResourceKey = $speechResourceKey.key1
 
-$luisAuthoringKey = az cognitiveservices account keys list -g $resourceName -n $cognitiveservice_luis_authoringkey_name | ConvertFrom-Json
+$luisAuthoringKey = az cognitiveservices account keys list -g $resourceName -n $luisKeyName | ConvertFrom-Json
 $luisAuthoringKey = $luisAuthoringKey.key1
 
+Write-Host "Calling deployCustomCommands"
 
 ./deployCustomCommands.ps1 `
 -speechResourceKey $speechResourceKey `
 -resourceName $resourceName `
 -azureSubscriptionId $azureSubscriptionID `
 -resourceGroup $resourceGroup `
+-luisKeyName $luisKeyName `
 -luisAuthoringKey $luisAuthoringKey `
 -luisAuthoringRegion $luisAuthoringRegion `
 -CustomCommandsRegion $CustomCommandsRegion `
 -websiteAddress $websiteAddress
 
-$visualizationEndpoint = "https://$resourceName.blob.core.windows.net/www/demo.html?room=test1"
+$visualizationEndpoint = "https://$storageName.blob.core.windows.net/www/demo.html?room=test1"
 
 Write-Host "    Speech Region = $region"
 Write-Host "***********************"

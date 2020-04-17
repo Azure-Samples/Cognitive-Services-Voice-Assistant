@@ -7,9 +7,11 @@ Param(
     [string] $resourceGroup,
     [string] $luisAuthoringKey = $(Read-Host -prompt "luisAuthoringKey"),
     [string] $luisAuthoringRegion = "westus",
+    [string] $luisKeyName = $(Read-Host -prompt "luisKeyName"),
     [string] $CustomCommandsRegion = "westus2",
     [string] $websiteAddress = $(Read-Host -prompt "websiteAddress")
 )
+
 $ErrorActionPreference = "Stop"
 
 if (-not $resourceGroup) {
@@ -17,7 +19,6 @@ if (-not $resourceGroup) {
 }
 
 $speechAppName = "$resourceName-commands"
-$luisResourceName = "$resourceName-luisauthoringkey"
 #$inventoryapiurl = "https://$resourceName.azurewebsites.net/api/Inventory/UpdateInventory"
 
 #
@@ -31,7 +32,7 @@ $body = @{
   culture = "en-us"
   description = "updating the speech solution accelerator"
   skillEnabled = "true"
-  luisAuthoringResourceId = "/subscriptions/$azureSubscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.CognitiveServices/accounts/$luisResourceName"
+  luisAuthoringResourceId = "/subscriptions/$azureSubscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.CognitiveServices/accounts/$luisKeyName"
   luisAuthoringKey = $luisAuthoringKey
   luisAuthoringRegion = $luisAuthoringRegion
 }

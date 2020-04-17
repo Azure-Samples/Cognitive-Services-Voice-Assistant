@@ -10,15 +10,18 @@
         },
         "functionName": {
             "type": "string"
+        },
+        "storageName": {
+            "type": "string"
         }
     },
     "variables": {
         "cognitiveservice_speech_name": "[concat(parameters('resourceName'),'-speech')]",
         "cognitiveservice_luis_name": "[parameters('luisName')]",
-        "cognitiveservice_luis_authoringkey_name": "[concat(parameters('resourceName'),'-luisauthoringkey')]",
+        "cognitiveservice_luis_authoringkey_name": "[concat(parameters('luisName'),'-authoringkey')]",
         "hospitality_server_farm_name": "[concat(parameters('resourceName'),'-serverfarm')]",
         "hospitality_virtualroommanager_name": "[parameters('functionName')]",
-        "hospitality_storage_name": "[toLower(parameters('resourceName'))]"
+        "hospitality_storage_name": "[toLower(parameters('storageName'))]"
     },
     "resources": [
         {
