@@ -260,7 +260,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir $(TargetDir)SDKKeywords
-copy ..\..\..\keyword-models\contoso.table $(TargetDir)SDKKeywords\</PostBuildEvent>
+copy /y $(SolutionDir)..\..\keyword-models\contoso.table $(TargetDir)SDKKeywords\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
