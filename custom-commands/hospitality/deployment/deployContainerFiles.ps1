@@ -3,6 +3,7 @@ Param(
     [string] $storageName = $(Read-Host -prompt "storageName"),
     [string] $functionURL = $(Read-Host -prompt "functionURL")
 )
+Write-Host "Deploy Container Files called`n resourceName = $resourceName`n storageName = $storageName`nfunctionURL = $functionURL"
 
 $ErrorActionPreference = "Stop"
 $resourceGroup = $resourceName
