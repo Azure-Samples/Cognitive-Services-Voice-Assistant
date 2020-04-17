@@ -53,7 +53,7 @@ namespace UWPVoiceAssistantSample
                 "MICROSOFT_KWSGRAPH_V1",
                 "ms-appx:///MVAKeywords/Contoso.bin",
                 new Version(1, 0, 0, 0),
-                "ms-appx:///SDKKeywords/Contoso.table");
+                "ms-appx:///SDKKeywords/contoso.table");
 
             this.agentSessionManager = new AgentSessionManager();
 
