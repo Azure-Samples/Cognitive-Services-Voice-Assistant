@@ -8,7 +8,7 @@ This README is under development and not guaranteed to be accurate or functional
 ## Deploying Azure Resources
 Clone the repository and change directory so you are in the root/custom-commands/hospitality/deployment folder.
 
-Call az login to log your powershell into Azure. Run the powershell script. Replace "mynewresource" with the name you would like. Note: This will use your default Azure subscription if you have more than one.
+Call az login to log your powershell into Azure. Run the powershell script. Replace "mynewresource" with the name you would like. Try to make this name unique as it is required to be GLOBALLY unique. It will be used to generate a url. Note: This will use your default Azure subscription if you have more than one.
 
     ./az login
     ./deployAll.ps1 -resourceName mynewresource -region westus2

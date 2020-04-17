@@ -2,6 +2,7 @@ Param(
     [string] $resourceName = $(Read-Host -prompt "resourceName")
 )
 
+$ErrorActionPreference = "Stop"
 $storageName = $resourceName
 $resourceGroup = $resourceName
 $containerName = "www"
@@ -31,7 +32,7 @@ $storageURL = $storageURL.Trim("`"")
 $storageURL = $storageURL.TrimEnd("/$storageName")
 
 
-$newFile = (Get-Content '../storage-files/demo-template.html')
+$newFile = (Get-Content '../storage-files/demo.html')
 $newFile = $newFile | Foreach-Object { $_ -replace "AZURE_STORAGE_URL", $storageURL }
 $newFile = $newFile | Foreach-Object { $_ -replace "AZURE_FUNCTION_URL", $functionURL }
 $newFile | Set-Content '../storage-files/demo.html'
@@ -42,6 +43,6 @@ az storage blob upload-batch -d $containerName -s ../storage-files --auth-mode l
 #update the Azure function project with the connection string for the storage
 $storageConnectionString = az storage account show-connection-string --resource-group $resourceGroup --name $storageName | ConvertFrom-Json
 
-$newFile = (Get-Content './RoomDemo-template.cs')
+$newFile = (Get-Content '../skill/VirtualRoomApp/RoomDemo.cs')
 $newFile = $newFile | Foreach-Object { $_ -replace "STORAGE_CONNECTION_STRING", $storageConnectionString.connectionString }
 $newFile | Set-Content '../skill/VirtualRoomApp/RoomDemo.cs'

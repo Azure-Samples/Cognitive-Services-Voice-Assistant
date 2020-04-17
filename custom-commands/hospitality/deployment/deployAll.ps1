@@ -5,41 +5,45 @@ Param(
     [string] $region = $(Read-Host -prompt "region")
 )
 
-if( $resourceName.Length -gt 19 ){
-    Write-Output "Resource Name cannot be longer than 19 characters, this is a requirement for storage accounts.`
-    Storage accounts are limited to 23 characters and we are appending 4 random numbers to help make our URL's unique. Please enter a shorter name."
+$ErrorActionPreference = "Stop"
+
+if( $resourceName.Length -gt 23 ){
+    Write-Output "Resource Name cannot be longer than 23 characters, this is a requirement for storage accounts. Please enter a shorter name."
     exit
 }
 
 $randomNumber = Get-Random -maximum 9999
-$uniqueResourceName = "$resourceName$randomNumber"
+$functionName = "$resourceName-$randomNumber"
+
+$randomNumber = Get-Random -maximum 9999
+$luisName = "$resourceName-$randomNumber"
 
 # get the current default subscription ID 
 $defaultSubscription = az account list --output json | ConvertFrom-Json | Where-Object { $_.isDefault -eq "true" }
 
 $azureSubscriptionID = $defaultSubscription.id 
-$resourceGroup = $uniqueResourceName
-$cognitiveservice_speech_name = "$uniqueResourceName-speech"
-$cognitiveservice_luis_authoringkey_name = "$uniqueResourceName-luisauthoringkey"
+$resourceGroup = $resourceName
+$cognitiveservice_speech_name = "$resourceName-speech"
+$cognitiveservice_luis_authoringkey_name = "$resourceName-luisauthoringkey"
 $luisAuthoringRegion = "westus"
 $CustomCommandsRegion = $region
-$websiteAddress = "https://$uniqueResourceName-virtualroommanager.azurewebsites.net/api/RoomDemo"
+$websiteAddress = "https://$functionName.azurewebsites.net/api/RoomDemo"
 
-.\deployTemplate.ps1 -resourceName $uniqueResourceName -region $region
-.\deployContainerFiles.ps1 -resourceName $uniqueResourceName
-.\deployAzureFunction.ps1 -resourceName $uniqueResourceName
+.\deployTemplate.ps1 -resourceName $resourceName -region $region -luisName $luisName -functionName $functionName
+.\deployContainerFiles.ps1 -resourceName $resourceName
+.\deployAzureFunction.ps1 -resourceName $resourceName
 
 #get the keys we need for the custom command deployment
-$speechResourceKey = az cognitiveservices account keys list -g $uniqueResourceName -n $cognitiveservice_speech_name | ConvertFrom-Json
+$speechResourceKey = az cognitiveservices account keys list -g $resourceName -n $cognitiveservice_speech_name | ConvertFrom-Json
 $speechResourceKey = $speechResourceKey.key1
 
-$luisAuthoringKey = az cognitiveservices account keys list -g $uniqueResourceName -n $cognitiveservice_luis_authoringkey_name | ConvertFrom-Json
+$luisAuthoringKey = az cognitiveservices account keys list -g $resourceName -n $cognitiveservice_luis_authoringkey_name | ConvertFrom-Json
 $luisAuthoringKey = $luisAuthoringKey.key1
 
 
 ./deployCustomCommands.ps1 `
 -speechResourceKey $speechResourceKey `
--resourceName $uniqueResourceName `
+-resourceName $resourceName `
 -azureSubscriptionId $azureSubscriptionID `
 -resourceGroup $resourceGroup `
 -luisAuthoringKey $luisAuthoringKey `
@@ -47,7 +51,7 @@ $luisAuthoringKey = $luisAuthoringKey.key1
 -CustomCommandsRegion $CustomCommandsRegion `
 -websiteAddress $websiteAddress
 
-$visualizationEndpoint = "https://$uniqueResourceName.blob.core.windows.net/www/demo.html?room=test1"
+$visualizationEndpoint = "https://$resourceName.blob.core.windows.net/www/demo.html?room=test1"
 
 Write-Host "    Speech Region = $region"
 Write-Host "***********************"

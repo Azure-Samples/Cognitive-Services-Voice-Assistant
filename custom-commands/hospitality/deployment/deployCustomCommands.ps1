@@ -10,6 +10,7 @@ Param(
     [string] $CustomCommandsRegion = "westus2",
     [string] $websiteAddress = $(Read-Host -prompt "websiteAddress")
 )
+$ErrorActionPreference = "Stop"
 
 if (-not $resourceGroup) {
 	$resourceGroup = $resourceName

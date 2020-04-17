@@ -4,6 +4,12 @@
   "parameters": {
     "resourceName": {
       "value": "test1resource"
+    },
+    "luisName": {
+      "value": "test1resource-9827"
+    },
+    "functionName": {
+      "value": "test1resource-187"
     }
   }
 }

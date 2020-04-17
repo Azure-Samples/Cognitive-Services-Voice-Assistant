@@ -2,6 +2,7 @@ Param(
     [string] $resourceName = $(Read-Host -prompt "resourceName")
 )
 
+$ErrorActionPreference = "Stop"
 $resourceGroup= $resourceName
 $functionAppName="$resourceName-virtualroommanager"
 $publishZip="publish.zip"

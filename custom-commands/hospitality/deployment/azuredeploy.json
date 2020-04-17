@@ -3,15 +3,21 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "resourceName": {
-        "type": "string"
+            "type": "string"
+        },
+        "luisName": {
+            "type": "string"
+        },
+        "functionName": {
+            "type": "string"
         }
     },
     "variables": {
         "cognitiveservice_speech_name": "[concat(parameters('resourceName'),'-speech')]",
-        "cognitiveservice_luis_name": "[concat(parameters('resourceName'),'-luis')]",
+        "cognitiveservice_luis_name": "[parameters('luisName')]",
         "cognitiveservice_luis_authoringkey_name": "[concat(parameters('resourceName'),'-luisauthoringkey')]",
         "hospitality_server_farm_name": "[concat(parameters('resourceName'),'-serverfarm')]",
-        "hospitality_virtualroommanager_name": "[concat(parameters('resourceName'),'-virtualroommanager')]",
+        "hospitality_virtualroommanager_name": "[parameters('functionName')]",
         "hospitality_storage_name": "[toLower(parameters('resourceName'))]"
     },
     "resources": [
