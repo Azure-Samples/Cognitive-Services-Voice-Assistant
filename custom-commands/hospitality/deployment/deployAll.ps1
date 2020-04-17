@@ -12,6 +12,14 @@ if( $resourceName.Length -gt 23 ){
     exit
 }
 
+$supportedRegions = "westus", "westus2", "northeurope"
+$isRegionSupported = $supportedRegions -eq $region
+
+if("" -eq $isRegionSupported ){
+    Write-Output "Region is currently not supported for Custom Commands. Please choose a region from the following: $supportedRegions."
+    exit
+}
+
 $randomNumber = Get-Random -maximum 9999
 $functionName = "$resourceName-$randomNumber"
 $luisName = "$resourceName-$randomNumber"
