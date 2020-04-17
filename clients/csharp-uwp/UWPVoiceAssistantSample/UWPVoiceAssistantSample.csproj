@@ -259,8 +259,13 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir $(TargetDir)SDKKeywords
-copy /y $(SolutionDir)..\..\keyword-models\contoso.table $(TargetDir)SDKKeywords\</PostBuildEvent>
+    <PostBuildEvent>REM
+REM Copy Speech SDK keyword model file contoso.table from the repo's
+REM models folder into this project's output folder
+REM
+mkdir $(TargetDir)SDKKeywords
+copy /y $(SolutionDir)..\..\keyword-models\contoso.table $(TargetDir)SDKKeywords\
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
