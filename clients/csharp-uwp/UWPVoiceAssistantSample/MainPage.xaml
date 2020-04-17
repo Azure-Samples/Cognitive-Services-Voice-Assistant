@@ -250,7 +250,7 @@
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="10">
+                        <Grid Margin="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition Height="Auto" />
