@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mvadls="using:UWPVoiceAssistantSample"
+    xmlns:local="using:Messages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -230,13 +231,81 @@
                 <HyperlinkButton Name="DownloadChatHistory" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <Button x:Name="ResetButton" Content="Reset"/>
             </StackPanel>
-            <ScrollViewer x:Name="ChatHistoryScollViewer"
+            <!--<ScrollViewer x:Name="ChatHistoryScollViewer"
                 HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom"
                           Margin="5,50,5,5"
                           Grid.Row="1" Grid.Column="0" 
                           Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox x:Name="ChatHistoryTextBlock" FontWeight="Bold" IsReadOnly="True" TextWrapping="Wrap" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-            </ScrollViewer>
+
+            </ScrollViewer>-->
+
+            <!--<ListView Grid.Row="1" Grid.Column="0" 
+                          Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView">
+                <ListView.ItemsPanel >
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>-->
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Polygon
+                            Grid.Row="0"
+                            Points="0,0 0,18 18,18"
+                            Margin="10,0,10,0"/>
+
+                            <Grid
+                            Grid.Row="1"/>
+
+                            <Grid
+                            Grid.Row="1"/>
+
+                            <Grid
+                            Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock
+                                    x:Name="ChatHistoryTextBlock"
+                                
+                                TextWrapping="Wrap"
+                                MinWidth="300"
+                                MaxWidth="400"
+                                FontSize="20"
+                                Padding="10,10,5,0" />
+
+                                <TextBlock
+                                Grid.Row="1"
+                                FontSize="12"
+                                TextWrapping="Wrap"
+                                Opacity="0.7"
+                                Padding="10" />
+                            </Grid>
+
+                            <Polygon
+                            Grid.Row="2"
+                            HorizontalAlignment="Right"
+                            Points="0,0 18,0 18,18"
+                            Margin="0,0,10,0"/>
+                        </Grid>
+                    <!--</DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>-->
+            
+            
+                <!--<local:UWPVoiceAssistantSample.ConversationView x:Name="ConversationView"/>-->
+            <!--<ConversationView x:Name="ConversationView"/>-->
+
 
             <Border Grid.Row="5" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1" Margin="40,20,40,20"/>
 
