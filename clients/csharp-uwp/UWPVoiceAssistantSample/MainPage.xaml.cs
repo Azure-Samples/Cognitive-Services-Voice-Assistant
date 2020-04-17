@@ -301,7 +301,7 @@ namespace UWPVoiceAssistantSample
 
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                this.ChatHistoryTextBlock.Text = newText;
+                //this.ChatHistoryTextBlock.Text = newText;
                 this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
             });
         }

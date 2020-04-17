@@ -240,8 +240,8 @@
 
             </ScrollViewer>-->
 
-            <!--<ListView Grid.Row="1" Grid.Column="0" 
-                          Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView">
+            <ListView Grid.Row="1" Grid.Column="0" 
+                          Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView" ItemsSource="Messages">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
                         <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
@@ -249,7 +249,7 @@
                 </ListView.ItemsPanel>
 
                 <ListView.ItemTemplate>
-                    <DataTemplate>-->
+                    <DataTemplate>
                         <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -298,9 +298,9 @@
                             Points="0,0 18,0 18,18"
                             Margin="0,0,10,0"/>
                         </Grid>
-                    <!--</DataTemplate>
+                    </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>-->
+            </ListView>
             
             
                 <!--<local:UWPVoiceAssistantSample.ConversationView x:Name="ConversationView"/>-->
