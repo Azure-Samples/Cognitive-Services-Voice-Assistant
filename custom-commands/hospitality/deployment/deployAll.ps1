@@ -24,7 +24,7 @@ $randomNumber = Get-Random -maximum 9999
 $functionName = "$resourceName-$randomNumber"
 $luisName = "$resourceName-$randomNumber"
 $luisKeyName = "$luisName-authoringkey"
-$storageName = "$resourceName$randomNumber"
+$storageName = "$resourceName$randomNumber".ToLower()
 $functionURL = "https://$functionName.azurewebsites.net/api/RoomDemo"
 # get the current default subscription ID 
 $defaultSubscription = az account list --output json | ConvertFrom-Json | Where-Object { $_.isDefault -eq "true" }
