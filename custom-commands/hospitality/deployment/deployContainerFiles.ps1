@@ -19,9 +19,11 @@ $storageResource = az resource list --name $storageName | ConvertFrom-Json
 $storageResourceId = $storageResource.id
 
 #assign proper roles for this user
+Write-Host "Creating Blob Owner role assignee = $userName storageResourceId = $storageResourceId" 
 az role assignment create --role "Storage Blob Data Owner" --assignee $userName --scope $storageResourceId
     
 #create the actual container
+Write-Host "Creating container ContainerName = $containerName account-name = $storageName" 
 az storage container create --account-name $storageName --name $containerName --public-access container --auth-mode login
 
 #Update the demo.html file with the correct urls
