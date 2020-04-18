@@ -190,6 +190,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MVAKeywords\contosoInfo.txt" />
+    <Content Include="..\..\..\keyword-models\contoso.table">
+      <Link>SDKKeywords\contoso.table</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -258,15 +262,6 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>REM
-REM Copy Speech SDK keyword model file contoso.table from the repo's
-REM models folder into this project's output folder
-REM
-mkdir $(TargetDir)SDKKeywords
-copy /y $(SolutionDir)..\..\keyword-models\contoso.table $(TargetDir)SDKKeywords\
-</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
