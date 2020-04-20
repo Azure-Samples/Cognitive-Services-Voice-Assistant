@@ -58,6 +58,7 @@ while (-not $completed) {
     
     if( !$output ) {
         Write-Host ("Container upload command failed. Retrying.")
+        Start-Sleep -s 2
         $retrycount++
     } else {
         Write-Host "Uploading files completed!" 
