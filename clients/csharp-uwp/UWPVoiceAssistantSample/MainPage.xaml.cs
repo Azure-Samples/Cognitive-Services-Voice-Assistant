@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -29,8 +30,8 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private readonly Queue<(string, bool)> statusBuffer;
-        private readonly int statusBufferSize = 50;
+        //private readonly Queue<(string, bool)> statusBuffer;
+        //private readonly int statusBufferSize = 50;
         private readonly ServiceProvider services;
         private readonly ILogProvider logger;
         private readonly IKeywordRegistration keywordRegistration;
@@ -39,7 +40,7 @@ namespace UWPVoiceAssistantSample
         private App app;
         private int bufferIndex;
         private bool configModified;
-        public Conversation conversationHistory;
+        private Conversation conversationHistory;
         private bool hypotheizedSpeechToggle;
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace UWPVoiceAssistantSample
 
             // The "status buffer" merely exists so that we can have some structure in the
             // output log we display.
-            this.statusBuffer = new Queue<(string, bool)>(this.statusBufferSize);
+            //this.statusBuffer = new Queue<(string, bool)>(this.statusBufferSize);
 
             // Ensure that we restore the full view (not the compact mode) upon foreground launch
             _ = this.UpdateViewStateAsync();
@@ -97,7 +98,7 @@ namespace UWPVoiceAssistantSample
 
             this.ChatHistoryListView.ItemsSource = this.conversationHistory.conversations;
 
-            this.ChatHistoryListView.ContainerContentChanging += OnChatHistoryListViewContainerChanging;
+            this.ChatHistoryListView.ContainerContentChanging += this.OnChatHistoryListViewContainerChanging;
         }
 
         private bool BackgroundTaskRegistered
@@ -128,7 +129,7 @@ namespace UWPVoiceAssistantSample
             {
                 await this.dialogManager.FinishConversationAsync();
                 await this.dialogManager.StopAudioPlaybackAsync();
-                this.statusBuffer.Clear();
+                this.conversationHistory.conversations.Clear();
                 this.RefreshStatus();
             };
             this.OpenLogLocationButton.Click += async (_, __)
@@ -182,17 +183,11 @@ namespace UWPVoiceAssistantSample
             // TODO: This is probably too busy for hypothesis events; better way of showing intermediate results?
             this.dialogManager.SpeechRecognizing += (s, e) =>
             {
-                //this.AddMessageToStatus($"\"{e}\"");
                 this.AddHypothesizedSpeechToTextBox(e);
             };
             this.dialogManager.SpeechRecognized += (s, e) =>
             {
-                this.AddMessageToStatus($"User: \"{e}\"");
-                //this.conversationHistory.conversations.Add(new Conversation
-                //{
-                //    Body = e
-                //});
-                //this.conversationHistory.Body = e;
+                this.AddMessageToStatus(e);
             };
             this.dialogManager.DialogResponseReceived += (s, e) =>
             {
@@ -200,8 +195,7 @@ namespace UWPVoiceAssistantSample
                 var wrapper = new ActivityWrapper(e.MessageBody.ToString());
                 if (wrapper.Type == ActivityWrapper.ActivityType.Message)
                 {
-                    this.AddBotResponse($"Bot: \"{wrapper.Message}\"");
-                    //this.conversationHistory.Body = wrapper.Message;
+                    this.AddBotResponse(wrapper.Message);
                 }
             };
 
@@ -264,56 +258,56 @@ namespace UWPVoiceAssistantSample
 
                 this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
 
-                if (!this.BackgroundTaskRegistered && !micReady)
-                {
-                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
-                }
+                //if (!this.BackgroundTaskRegistered && !micReady)
+                //{
+                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
+                //}
 
-                if (!this.BackgroundTaskRegistered && micReady)
-                {
-                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1535, Height = 800 });
-                }
+                //if (!this.BackgroundTaskRegistered && micReady)
+                //{
+                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1535, Height = 800 });
+                //}
 
-                if (this.BackgroundTaskRegistered && !micReady)
-                {
-                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
-                }
+                //if (this.BackgroundTaskRegistered && !micReady)
+                //{
+                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
+                //}
 
-                if (this.BackgroundTaskRegistered && micReady)
-                {
-                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1400, Height = 800 });
-                }
+                //if (this.BackgroundTaskRegistered && micReady)
+                //{
+                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1400, Height = 800 });
+                //}
 
             });
         }
 
         private async void RefreshStatus()
         {
-            var itemsInQueue = this.statusBuffer.Count;
-            var statusStack = new Stack<(string, bool)>(itemsInQueue + 1);
+            //var itemsInQueue = this.statusBuffer.Count;
+            //var statusStack = new Stack<(string, bool)>(itemsInQueue + 1);
             var session = await this.agentSessionManager.GetSessionAsync().ConfigureAwait(false);
             var agentStatusMessage = session == null ?
                "No current agent session"
                : $"{session.AgentState.ToString()} {(this.app.InvokedViaSignal ? "[via signal]" : string.Empty)}";
 
             // This is throwing an error on conversation state change
-            for (int i = 0; i < itemsInQueue; i++)
-            {
-                statusStack.Push(this.statusBuffer.Peek());
-                this.statusBuffer.Enqueue(this.statusBuffer.Dequeue());
-            }
+            //for (int i = 0; i < itemsInQueue; i++)
+            //{
+            //    statusStack.Push(this.statusBuffer.Peek());
+            //    this.statusBuffer.Enqueue(this.statusBuffer.Dequeue());
+            //}
 
-            var newText = string.Empty;
+            //var newText = string.Empty;
 
-            while (statusStack.Count != 0)
-            {
-                // TODO: do something with alignment
-                var (text, alignToRight) = statusStack.Pop();
+            //while (statusStack.Count != 0)
+            //{
+            //    // TODO: do something with alignment
+            //    var (text, alignToRight) = statusStack.Pop();
 
-                newText += !string.IsNullOrEmpty(newText) ? "\r\n" : string.Empty;
-                newText += text;
+            //    newText += !string.IsNullOrEmpty(newText) ? "\r\n" : string.Empty;
+            //    newText += text;
 
-            }
+            //}
 
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -328,7 +322,7 @@ namespace UWPVoiceAssistantSample
                 this.conversationHistory.conversations.Add(new Conversation
                 {
                     Body = message,
-                    Time = DateTime.Now.ToString(),
+                    Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
                     Sent = false,
                 });
             });
@@ -345,39 +339,18 @@ namespace UWPVoiceAssistantSample
             });
         }
 
-        private void AddMessageToStatus(string message, bool alignToRight = false)
+        private void AddMessageToStatus(string message)
         {
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                //this.ChatHistoryListView.ItemsSource = this.statusBuffer;
-                //this.ChatHistoryListView.DataContext = this.statusBuffer;
-
-                //this.ChatHistoryTextBlock.Text = newText;
-                //this.conversationHistory.conversations.Add(new Conversation
-                //{
-                //    Body = newText
-                //});
                 this.conversationHistory.conversations.Add(new Conversation
                 {
                     Body = message,
-                    Time = DateTime.Now.ToString(),
-                    Sent = true
+                    Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
+                    Sent = true,
                 });
-
-
-                this.TextInputTextBox.Text = "";
-                //this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
+                this.TextInputTextBox.Text = string.Empty;
             });
-            //if (this.statusBuffer.Count == this.statusBufferSize)
-            //{
-            //    this.statusBuffer.Dequeue();
-            //}
-
-            //this.statusBuffer.Enqueue((message, alignToRight));
-            //this.conversationHistory.conversations.Add(new Conversation
-            //{
-            //    Body = message
-            //});
 
             this.RefreshStatus();
         }
@@ -656,6 +629,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                // come back
+                //Grid.SetColumn(this.ChatHistoryListView, 0);
+                //Grid.SetRow(this.ChatViewSeparator, 6);
                 this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth, Height = 800 });
