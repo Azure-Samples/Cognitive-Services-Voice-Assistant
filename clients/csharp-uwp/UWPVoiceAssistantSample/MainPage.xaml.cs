@@ -39,6 +39,7 @@ namespace UWPVoiceAssistantSample
         private App app;
         private int bufferIndex;
         private bool configModified;
+        public Conversation conversationHistory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -90,6 +91,10 @@ namespace UWPVoiceAssistantSample
 
             // Ensure consistency between a few dependent controls and their settings
             this.UpdateUIBasedOnToggles();
+
+            this.conversationHistory = new Conversation();
+
+            this.ChatHistoryListView.ItemsSource = this.conversationHistory.conversations;
         }
 
         private bool BackgroundTaskRegistered
@@ -179,6 +184,11 @@ namespace UWPVoiceAssistantSample
             this.dialogManager.SpeechRecognized += (s, e) =>
             {
                 this.AddMessageToStatus($"User: \"{e}\"");
+                this.conversationHistory.conversations.Add(new Conversation
+                {
+                    Body = e
+                });
+                //this.conversationHistory.Body = e;
             };
             this.dialogManager.DialogResponseReceived += (s, e) =>
             {
@@ -187,6 +197,7 @@ namespace UWPVoiceAssistantSample
                 if (wrapper.Type == ActivityWrapper.ActivityType.Message)
                 {
                     this.AddMessageToStatus($"Bot: \"{wrapper.Message}\"");
+                    this.conversationHistory.Body = wrapper.Message;
                 }
             };
 
@@ -297,12 +308,23 @@ namespace UWPVoiceAssistantSample
 
                 newText += !string.IsNullOrEmpty(newText) ? "\r\n" : string.Empty;
                 newText += text;
+
             }
 
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                this.ChatHistoryListView.ItemsSource = this.statusBuffer;
+                //this.ChatHistoryListView.ItemsSource = this.statusBuffer;
+                //this.ChatHistoryListView.DataContext = this.statusBuffer;
+
                 //this.ChatHistoryTextBlock.Text = newText;
+                //this.conversationHistory.conversations.Add(new Conversation
+                //{
+                //    Body = newText
+                //});
+                this.conversationHistory.conversations.Add(new Conversation
+                {
+                    Body = newText
+                });
                 this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
             });
         }

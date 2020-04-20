@@ -241,7 +241,7 @@
             </ScrollViewer>-->
 
             <ListView Grid.Row="1" Grid.Column="0" 
-                          Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView" ItemsSource="Messages">
+                      Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
                         <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
@@ -249,7 +249,7 @@
                 </ListView.ItemsPanel>
 
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="mvadls:Conversation">
                         <Grid Margin="0">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -277,7 +277,7 @@
 
                                 <TextBlock
                                     x:Name="ChatHistoryTextBlock"
-                                
+                                    Text="{x:Bind Body}"
                                 TextWrapping="Wrap"
                                 MinWidth="300"
                                 MaxWidth="400"
