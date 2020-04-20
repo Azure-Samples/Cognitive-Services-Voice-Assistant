@@ -123,6 +123,7 @@ namespace UWPVoiceAssistantSample
 
                 return cachedOutputFormat;
             }
+
             set
             {
                 if (value != null)

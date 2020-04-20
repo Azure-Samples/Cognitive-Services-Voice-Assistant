@@ -11,8 +11,8 @@ namespace UWPVoiceAssistantSample
     {
         public string Body { get; set; }
         public string Time { get; set; }
-        //public bool Sent { get; set; }
-        //public bool Received { get; set; }
+        public bool Sent { get; set; }
+        public bool Received { get { return !Sent; } }
 
         public ObservableCollection<Conversation> conversations = new ObservableCollection<Conversation>();
     }

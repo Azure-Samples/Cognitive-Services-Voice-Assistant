@@ -40,6 +40,7 @@ namespace UWPVoiceAssistantSample
         private int bufferIndex;
         private bool configModified;
         public Conversation conversationHistory;
+        private bool hypotheizedSpeechToggle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -95,6 +96,8 @@ namespace UWPVoiceAssistantSample
             this.conversationHistory = new Conversation();
 
             this.ChatHistoryListView.ItemsSource = this.conversationHistory.conversations;
+
+            this.ChatHistoryListView.ContainerContentChanging += OnChatHistoryListViewContainerChanging;
         }
 
         private bool BackgroundTaskRegistered
@@ -179,7 +182,8 @@ namespace UWPVoiceAssistantSample
             // TODO: This is probably too busy for hypothesis events; better way of showing intermediate results?
             this.dialogManager.SpeechRecognizing += (s, e) =>
             {
-                this.AddMessageToStatus($"\"{e}\"");
+                //this.AddMessageToStatus($"\"{e}\"");
+                this.AddHypothesizedSpeechToTextBox(e);
             };
             this.dialogManager.SpeechRecognized += (s, e) =>
             {
@@ -196,8 +200,8 @@ namespace UWPVoiceAssistantSample
                 var wrapper = new ActivityWrapper(e.MessageBody.ToString());
                 if (wrapper.Type == ActivityWrapper.ActivityType.Message)
                 {
-                    this.AddMessageToStatus($"Bot: \"{wrapper.Message}\"");
-                    this.conversationHistory.Body = wrapper.Message;
+                    this.AddBotResponse($"Bot: \"{wrapper.Message}\"");
+                    //this.conversationHistory.Body = wrapper.Message;
                 }
             };
 
@@ -313,19 +317,31 @@ namespace UWPVoiceAssistantSample
 
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                //this.ChatHistoryListView.ItemsSource = this.statusBuffer;
-                //this.ChatHistoryListView.DataContext = this.statusBuffer;
-
-                //this.ChatHistoryTextBlock.Text = newText;
-                //this.conversationHistory.conversations.Add(new Conversation
-                //{
-                //    Body = newText
-                //});
-                //this.conversationHistory.conversations.Add(new Conversation
-                //{
-                //    Body = newText
-                //});
                 this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
+            });
+        }
+
+        private void AddBotResponse(string message)
+        {
+            _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                this.conversationHistory.conversations.Add(new Conversation
+                {
+                    Body = message,
+                    Time = DateTime.Now.ToString(),
+                    Sent = false,
+                });
+            });
+        }
+
+        private void AddHypothesizedSpeechToTextBox(string message)
+        {
+            _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                if (this.hypotheizedSpeechToggle)
+                {
+                    this.TextInputTextBox.Text = message;
+                }
             });
         }
 
@@ -345,9 +361,11 @@ namespace UWPVoiceAssistantSample
                 {
                     Body = message,
                     Time = DateTime.Now.ToString(),
+                    Sent = true
                 });
 
-               //this.TextInputTextBox.Text = "";
+
+                this.TextInputTextBox.Text = "";
                 //this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
             });
             //if (this.statusBuffer.Count == this.statusBufferSize)
@@ -747,6 +765,17 @@ namespace UWPVoiceAssistantSample
             var selectedLabel = this.OutputFormatComboBox.SelectedItem.ToString();
             var selectedFormat = DialogAudio.GetMatchFromLabel(selectedLabel);
             LocalSettingsHelper.OutputFormat = selectedFormat;
+        }
+
+        private void OnChatHistoryListViewContainerChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (args.InRecycleQueue)
+            {
+                return;
+            }
+
+            Conversation message = (Conversation)args.Item;
+            args.ItemContainer.HorizontalAlignment = message.Sent ? Windows.UI.Xaml.HorizontalAlignment.Right : Windows.UI.Xaml.HorizontalAlignment.Left;
         }
     }
 }

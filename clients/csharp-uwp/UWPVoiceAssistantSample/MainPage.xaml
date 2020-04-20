@@ -9,6 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="MainPageWindow">
 
+    
     <Grid x:Name="MainWindowGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -103,6 +104,7 @@
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
+                <RowDefinition Height="Auto" MinHeight="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -159,9 +161,17 @@
                     Grid.ColumnSpan="2"
                     OnContent="Speech SDK 2nd Stage KWS is ON"
                     OffContent="Speech SDK 2nd Stage KWS is OFF"/>
+            <ToggleSwitch x:Name="HypothesizedSpeechToggle"
+                          IsOn="{x:Bind hypotheizedSpeechToggle, Mode=TwoWay}"
+                    Margin="5,0,0,0"
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    OnContent="Hypothesized Speech is ON"
+                    OffContent="Hypothesized Speech is OFF"/>
             <StackPanel
                     Orientation="Horizontal"
-                    Grid.Row="7"
+                    Grid.Row="8"
                 Grid.Column="0"
                     Grid.ColumnSpan="3"
                     Margin="5,0,10,0">
@@ -174,7 +184,7 @@
             </StackPanel>
             <StackPanel
                     Orientation="Horizontal"
-                    Grid.Row="8"
+                    Grid.Row="9"
                 Grid.Column="0"
                     Grid.ColumnSpan="3"
                     Margin="5,0,10,0">
@@ -185,8 +195,8 @@
                         Click="LoadConfigClick"
                          />
             </StackPanel>
-            <TextBlock Text="Audio Output Format" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
-            <ComboBox x:Name="OutputFormatComboBox" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
+            <TextBlock Text="Audio Output Format" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
+            <ComboBox x:Name="OutputFormatComboBox" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
         </Grid>
 
         <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4">
@@ -250,7 +260,7 @@
 
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="mvadls:Conversation">
-                        <Grid Margin="0">
+                        <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition Height="Auto" />
@@ -260,13 +270,19 @@
                             <Polygon
                             Grid.Row="0"
                             Points="0,0 0,18 18,18"
-                            Margin="10,0,10,0"/>
+                            Margin="10,0,10,0"
+                            Fill="Blue"
+                            Visibility="{x:Bind Received}"    />
 
                             <Grid
-                            Grid.Row="1"/>
+                            Grid.Row="1"
+                            Visibility="{x:Bind Received}"
+                                Background="Blue"/>
 
                             <Grid
-                            Grid.Row="1"/>
+                            Grid.Row="1"
+                            Visibility="{x:Bind Sent}"
+                                Background="Orange"/>
 
                             <Grid
                             Grid.Row="1">
@@ -282,7 +298,8 @@
                                 MinWidth="300"
                                 MaxWidth="400"
                                 FontSize="20"
-                                Padding="10,10,5,0" />
+                                Padding="10,10,5,0"
+                                    Margin="10,0,0,0"/>
 
                                 <TextBlock
                                 Grid.Row="1"
@@ -297,7 +314,9 @@
                             Grid.Row="2"
                             HorizontalAlignment="Right"
                             Points="0,0 18,0 18,18"
-                            Margin="0,0,10,0"/>
+                            Margin="0,0,10,0"
+                            Fill="Orange"
+                            Visibility="{x:Bind Sent}"    />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
