@@ -10,7 +10,7 @@ namespace UWPVoiceAssistantSample
     public class Conversation
     {
         public string Body { get; set; }
-        //public string Time { get; set; }
+        public string Time { get; set; }
         //public bool Sent { get; set; }
         //public bool Received { get; set; }
 

@@ -343,8 +343,11 @@ namespace UWPVoiceAssistantSample
                 //});
                 this.conversationHistory.conversations.Add(new Conversation
                 {
-                    Body = message
+                    Body = message,
+                    Time = DateTime.Now.ToString(),
                 });
+
+               //this.TextInputTextBox.Text = "";
                 //this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
             });
             //if (this.statusBuffer.Count == this.statusBufferSize)
