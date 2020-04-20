@@ -189,6 +189,14 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MVAKeywords\contosoInfo.txt" />
+    <Content Include="MVAKeywords\Contoso.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\keyword-models\contoso.table">
+      <Link>SDKKeywords\contoso.table</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -241,22 +249,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SDKKeywords\computer.table">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="SDKKeywords\xbox.table">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MVAKeywords\Contoso.bin">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="SDKKeywords\Contoso.table">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
