@@ -39,8 +39,8 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 * Create a link to the cpp-console folder, move the Speech SDK libraries and headers to their destination, and change into the cpp-console folder. These commands are for the Speech SDK version 1.10, change it to match the version downloaded.
 
   ```sh
-  ln -s Cognitive-Services-Voice-Assistant/samples/clients/cpp-console
-  ln -s Cognitive-Services-Voice-Assistant/samples/keyword-models
+  ln -s Cognitive-Services-Voice-Assistant/clients/cpp-console
+  ln -s Cognitive-Services-Voice-Assistant/keyword-models
   mv SpeechSDK-Linux-1.10.0/lib/arm32 cpp-console/lib/
   mv SpeechSDK-Linux-1.10.0/include/* cpp-console/include/
   cd cpp-console
