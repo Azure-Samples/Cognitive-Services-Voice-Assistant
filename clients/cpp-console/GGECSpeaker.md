@@ -8,7 +8,7 @@ This readme should go over setting up a Windows dev box to build an arm32 binary
 
 You will need the Android Debug Bridge (adb) which can be found [here](https://developer.android.com/studio/releases/platform-tools).
 
-An unboxed NightFury device will have a hidden USB port between the AUX out and power input connections points. You have to peel off the adhered label to reveal the USB port.
+An unboxed GGEC device will have a hidden USB port between the AUX out and power input connections points. You have to peel off the adhered label to reveal the USB port.
 
 ### Setting up the WiFi
 
@@ -40,7 +40,7 @@ To utilize the audio processing from the Microsoft Audio Stack, we will also nee
 
 Download the Speech SDK: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary). The headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api also copy the libaries to ./lib/arm32
 
-Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used
+Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword (.tabel file) being used.
 
 ## Building for Linux Arm32 with Docker
 

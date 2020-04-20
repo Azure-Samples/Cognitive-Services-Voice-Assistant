@@ -36,7 +36,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
   wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz
   ```  
 
-* Create a link to the cpp-console folder, move the Speech SDK libraries and headers to their destination, and change into the cpp-console folder. These commands are for the Speech SDK version 1.10, change it to match the version downloaded.
+* Create a link to the cpp-console and keyword-models folders. Move the Speech SDK libraries and headers to their destination, and change into the cpp-console folder. These commands are for the Speech SDK version 1.10, change it to match the version downloaded.
 
   ```sh
   ln -s Cognitive-Services-Voice-Assistant/clients/cpp-console
