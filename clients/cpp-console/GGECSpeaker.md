@@ -40,7 +40,7 @@ To utilize the audio processing from the Microsoft Audio Stack, we will also nee
 
 Download the Speech SDK: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary). The headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api also copy the libaries to ./lib/arm32
 
-Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword (.tabel file) being used.
+Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword (.table file) being used.
 
 ## Building for Linux Arm32 with Docker
 
