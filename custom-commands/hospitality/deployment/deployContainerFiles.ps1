@@ -22,7 +22,9 @@ $storageResourceId = $storageResource.id
 #assign proper roles for this user
 Write-Host "Creating Blob Owner role assignee = $userName storageResourceId = $storageResourceId" 
 az role assignment create --role "Storage Blob Data Owner" --assignee $userName --scope $storageResourceId
-    
+
+Start-Sleep -s 5
+
 #create the actual container
 Write-Host "Creating container ContainerName = $containerName account-name = $storageName" 
 az storage container create --account-name $storageName --name $containerName --public-access container --auth-mode login
