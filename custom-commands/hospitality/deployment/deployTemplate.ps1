@@ -19,4 +19,10 @@ $newFile | ConvertTo-Json -depth 100 | Set-Content './azuredeploy.parameters.jso
 
 az group create --name $resourceName --location $region
 
-az group deployment create --resource-group $resourceName --template-file ./azuredeploy.json --parameters './azuredeploy.parameters.json'
+$output = az group deployment create --resource-group $resourceName --template-file ./azuredeploy.json --parameters './azuredeploy.parameters.json' | ConvertFrom-Json
+
+if( !$output ){
+    Write-Error "Failed to deploy template"
+    Write-Error "$output"
+    exit
+}
