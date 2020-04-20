@@ -184,10 +184,10 @@ namespace UWPVoiceAssistantSample
             this.dialogManager.SpeechRecognized += (s, e) =>
             {
                 this.AddMessageToStatus($"User: \"{e}\"");
-                this.conversationHistory.conversations.Add(new Conversation
-                {
-                    Body = e
-                });
+                //this.conversationHistory.conversations.Add(new Conversation
+                //{
+                //    Body = e
+                //});
                 //this.conversationHistory.Body = e;
             };
             this.dialogManager.DialogResponseReceived += (s, e) =>
@@ -321,22 +321,42 @@ namespace UWPVoiceAssistantSample
                 //{
                 //    Body = newText
                 //});
-                this.conversationHistory.conversations.Add(new Conversation
-                {
-                    Body = newText
-                });
+                //this.conversationHistory.conversations.Add(new Conversation
+                //{
+                //    Body = newText
+                //});
                 this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
             });
         }
 
         private void AddMessageToStatus(string message, bool alignToRight = false)
         {
-            if (this.statusBuffer.Count == this.statusBufferSize)
+            _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                this.statusBuffer.Dequeue();
-            }
+                //this.ChatHistoryListView.ItemsSource = this.statusBuffer;
+                //this.ChatHistoryListView.DataContext = this.statusBuffer;
 
-            this.statusBuffer.Enqueue((message, alignToRight));
+                //this.ChatHistoryTextBlock.Text = newText;
+                //this.conversationHistory.conversations.Add(new Conversation
+                //{
+                //    Body = newText
+                //});
+                this.conversationHistory.conversations.Add(new Conversation
+                {
+                    Body = message
+                });
+                //this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
+            });
+            //if (this.statusBuffer.Count == this.statusBufferSize)
+            //{
+            //    this.statusBuffer.Dequeue();
+            //}
+
+            //this.statusBuffer.Enqueue((message, alignToRight));
+            //this.conversationHistory.conversations.Add(new Conversation
+            //{
+            //    Body = message
+            //});
 
             this.RefreshStatus();
         }

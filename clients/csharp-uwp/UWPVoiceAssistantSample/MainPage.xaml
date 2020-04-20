@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mvadls="using:UWPVoiceAssistantSample"
-    xmlns:local="using:Messages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -241,7 +240,8 @@
             </ScrollViewer>-->
 
             <ListView Grid.Row="1" Grid.Column="0" 
-                      Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView">
+                      Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView"
+                      Margin="0,40,0,0">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
                         <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
