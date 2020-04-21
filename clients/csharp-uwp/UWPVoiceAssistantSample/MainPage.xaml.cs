@@ -10,6 +10,7 @@ namespace UWPVoiceAssistantSample
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using Newtonsoft.Json;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
@@ -748,6 +749,13 @@ namespace UWPVoiceAssistantSample
 
             Conversation message = (Conversation)args.Item;
             args.ItemContainer.HorizontalAlignment = message.Sent ? Windows.UI.Xaml.HorizontalAlignment.Right : Windows.UI.Xaml.HorizontalAlignment.Left;
+        }
+
+        private async void DownloadChatHistoryClick(object sender, RoutedEventArgs e)
+        {
+            var json = JsonConvert.SerializeObject(this.Conversations);
+            var writeChatHistory = await ApplicationData.Current.LocalFolder.CreateFileAsync("chatHistory.json");
+            await File.WriteAllTextAsync(writeChatHistory.Path, json);
         }
     }
 }
