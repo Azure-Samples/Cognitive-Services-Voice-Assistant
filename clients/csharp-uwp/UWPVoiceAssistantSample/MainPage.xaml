@@ -262,15 +262,15 @@
                                 Grid.Row="0"
                                 Points="0,0 0,0, 0,0"
                                 Margin="10,0,10,0"
-                                Visibility="{x:Bind Received}"/>
+                                Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
                                 Grid.Row="1"
-                                Visibility="{x:Bind Received}"/>
+                                Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
                                 Grid.Row="1"
-                                Visibility="{x:Bind Sent}"/>
+                                Visibility="{x:Bind Sent, Mode=OneWay}"/>
 
                             <Grid Grid.Row="1">
                                 <Grid.RowDefinitions>
@@ -291,7 +291,7 @@
                                 <TextBlock
                                     Grid.Row="1"
                                     FontSize="12"
-                                    Text="{x:Bind Time}"
+                                    Text="{x:Bind Time, Mode=OneWay}"
                                     TextWrapping="Wrap"
                                     Opacity="0.7"
                                     Padding="10" />
@@ -301,7 +301,7 @@
                                 Grid.Row="2"
                                 HorizontalAlignment="Right"
                                 Margin="0,0,10,0"
-                                Visibility="{x:Bind Sent}"/>
+                                Visibility="{x:Bind Sent, Mode=OneWay}"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
