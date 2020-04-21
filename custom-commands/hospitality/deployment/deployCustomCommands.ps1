@@ -19,7 +19,7 @@ if (-not $resourceGroup) {
 }
 
 $speechAppName = "$resourceName-commands"
-#$inventoryapiurl = "https://$resourceName.azurewebsites.net/api/Inventory/UpdateInventory"
+$skillJson = "../skill/hospitalityCustomCommands.json"
 
 #
 # create the custom speech app
@@ -82,13 +82,12 @@ write-host "patching the $speechAppName hospitality commands model"
 
 # change the model based on the local json file
 
-$newModel = Get-Content '../skill/hospitalityCustomCommands.json' | Out-String | ConvertFrom-Json
+$newModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
 $model.httpEndpoints = $newModel.httpEndpoints
 $model.httpEndpoints[0].url = $websiteAddress
 $model.lgTemplates = $newModel.lgTemplates
 $model.globalParameters = $newModel.globalParameters
 $model.commands = $newModel.commands
-#$model | ConvertTo-Json -depth 100 | Out-File "newModel.json"
 
 # send the updated model up to the application
 

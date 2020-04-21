@@ -9,6 +9,7 @@ $publishZip="publish.zip"
 $publishFolder="../skill/VirtualRoomApp/bin/Release/netcoreapp2.1/publish"
 $sln = "../skill/VirtualRoomApp.sln"
 
+Write-Host "Cleaning and building solution at $sln"
 $output = dotnet clean $sln -c Release
 
 Write-Verbose "$output"
@@ -23,6 +24,7 @@ if(Test-path "$publishZip") {Remove-item "$publishZip"}
 Add-Type -assembly "system.io.compression.filesystem"
 [io.compression.zipfile]::CreateFromDirectory($absolutePublishFolder, "$absoluteCurrentFolder/$publishZip")
 
+Write-Host "Deploying zipped folder at $publishZip"
 # deploy the zipped package
 $output = az functionapp deployment source config-zip -g $resourceGroup -n $functionName --src $publishZip | ConvertFrom-Json
 

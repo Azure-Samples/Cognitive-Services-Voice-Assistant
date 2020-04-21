@@ -16,9 +16,15 @@ $newFile.parameters.functionName.value = $functionName
 $newFile.parameters.storageName.value = $storageName
 $newFile | ConvertTo-Json -depth 100 | Set-Content './azuredeploy.parameters.json'
 
+Write-Host "Creating resource group"
+$output = az group create --name $resourceName --location $region
+if( !$output ){
+    Write-Error "Failed to create resource group"
+    Write-Error "$output"
+    exit
+}
 
-az group create --name $resourceName --location $region
-
+Write-Host "Deploying azure template at ./azuredeploy.json"
 $output = az group deployment create --resource-group $resourceName --template-file ./azuredeploy.json --parameters './azuredeploy.parameters.json' | ConvertFrom-Json
 
 if( !$output ){
