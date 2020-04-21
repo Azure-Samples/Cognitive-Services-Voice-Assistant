@@ -1,4 +1,4 @@
-# Microsoft Cognitive Services - Voice Assistant Sample Code C++ console GGEC Speaker setup
+# Microsoft Cognitive Services - Voice Assistant C++ Console Sample - GGEC Speaker Setup
 
 ## Overview
 

@@ -16,7 +16,7 @@ Open a console Window in the project output folder, e.g. **clients\cpp-console\s
 
 ## Configure your client
 
-Copy the example configuration file **clients\configs\config.json** into your project output folder and update it as needed. Fill in your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword (.table file) being used.
+Copy the example configuration file **clients\configs\config.json** into your project output folder and update it as needed. Fill in your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword (.table file) being used. You can delete fields that are not required for your setup. Only the speech_subscription_key and speech_region are required.
 
 ## Run the code
 

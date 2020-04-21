@@ -1,4 +1,4 @@
-# Microsoft Cognitive Services - Voice Assistant Sample Code C++ console
+# Microsoft Cognitive Services - Voice Assistant C++ Console Sample
 
 ## Overview
 
