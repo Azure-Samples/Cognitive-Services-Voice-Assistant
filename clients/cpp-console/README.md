@@ -19,16 +19,13 @@ Replace the text in the configs/config.json file with your subscription key and 
 
 ## Build directly on Linux arm32
 
-Check out the [RaspberryPi.md](RaspberryPi.md) for detailed instructions.
+Check out the [RaspberryPi.md](docs/RaspberryPi.md) for detailed instructions.
 
 ## Building for Linux Arm32 with Docker
 
-Check out the [GGECSpeaker.md](GGECSpeaker.md) for detailed instructions.
+Check out the [GGECSpeaker.md](docs/GGECSpeaker.md) for detailed instructions.
 
-## Running the sample
+## Building for Windows
 
-### usage: sample.exe config-file
-example running from the out folder:
-    
-    export LD_LIBRARY_PATH="../lib/arm32"
-    sample.exe config.json
+Check out the [Windows.md](docs/Windows.md) for detailed instructions.
+
