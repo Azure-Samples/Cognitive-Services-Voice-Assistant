@@ -10,7 +10,7 @@
     x:Name="MainPageWindow">
 
     
-    <Grid x:Name="MainWindowGrid">
+    <Grid x:Name="MainWindowGrid" MaxWidth="1280">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -23,7 +23,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 1 0 1"/>
         <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1">
@@ -93,7 +93,7 @@
         </Grid>
 
         <Border x:Name="ApplicationStateGridBorder" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 0 0 1"/>
-        <Grid x:Name="ControlsGrid" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1">
+        <Grid x:Name="ControlsGrid" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1" Width="355">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
@@ -109,9 +109,9 @@
                 <RowDefinition Height="Auto" MinHeight="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Controls" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2"/>
             <Button x:Name="CollpaseControlsPane" Grid.Column="2" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" Click="CollapseControls"/>
@@ -119,8 +119,8 @@
                 IsOn="{x:Bind BackgroundTaskRegistered, Mode=TwoWay}"
                 Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                 Margin="5,0,0,0"       
-                OnContent="Background Task is Registered:"
-                OffContent="Background Task is Not Registered: "/>
+                OnContent="Background Task is Registered"
+                OffContent="Background Task is Not Registered"/>
             <ToggleSwitch x:Name="AppVoiceActivationEnabledToggle"
                 IsOn="{x:Bind keywordRegistration.KeywordEnabledByApp, Mode=TwoWay}"
                 IsEnabled="false"
@@ -128,7 +128,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Margin="5,0,0,0"
-                OnContent="Application has enabled voice activation (when available)"
+                OnContent="Application has enabled voice activation"
                 OffContent="" />
             <ToggleSwitch x:Name="EnableSpeechSDKToggle"
                 IsEnabled="False"
@@ -198,7 +198,7 @@
             <ComboBox x:Name="OutputFormatComboBox" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
         </Grid>
 
-        <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4">
+        <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Width="475">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -220,7 +220,7 @@
                 <RichTextBlock x:Name="ChangeLogTextBlock" Width="500" FontWeight="Bold"/>
             </ScrollViewer>
         </Grid>
-        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="3" Grid.RowSpan="6" Margin="0">
+        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6" Margin="0" Width="450">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -237,7 +237,7 @@
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Chat" TextAlignment="Left" VerticalAlignment="Top" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2" Grid.RowSpan="3"/>
             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="3">
                 <HyperlinkButton Name="DownloadChatHistory" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
-                <Button x:Name="ResetButton" Content="Reset"/>
+                <Button x:Name="ResetButton" Content="Reset" Margin="0,0,20,0"/>
             </StackPanel>
 
             <ListView Grid.Row="1" Grid.Column="0" 
@@ -267,8 +267,7 @@
                             <Grid
                                 Grid.Row="1"
                                 Visibility="{x:Bind Received}"
-                                BorderBrush="Blue"
-                                BorderThickness="1"/>
+/>
 
                             <Grid
                                 Grid.Row="1"
@@ -319,7 +318,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="400" Width="Auto" VerticalAlignment="Stretch"></TextBox>
+                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="375" Width="Auto" VerticalAlignment="Stretch"></TextBox>
                 <Button x:Name="MicrophoneButton" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right" Margin="0,0,10,10" FontFamily="Segoe MDL2 Assets" Content="" FontSize="25" Background="#0078D4">
                 </Button>
             </Grid>

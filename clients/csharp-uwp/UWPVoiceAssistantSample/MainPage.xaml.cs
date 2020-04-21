@@ -42,7 +42,6 @@ namespace UWPVoiceAssistantSample
         private bool configModified;
         private Conversation conversationHistory;
         private bool hypotheizedSpeechToggle;
-        private Conversation activeConversation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -259,25 +258,28 @@ namespace UWPVoiceAssistantSample
 
                 this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
 
-                if (!this.BackgroundTaskRegistered && !micReady)
-                {
-                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
-                }
+                //if (!this.BackgroundTaskRegistered && !micReady)
+                //{
+                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
+                //}
 
-                if (!this.BackgroundTaskRegistered && micReady)
-                {
-                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1535, Height = 800 });
-                }
+                //if (!this.BackgroundTaskRegistered && micReady)
+                //{
+                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
+                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30) , Height = 800 });
+                //}
 
-                if (this.BackgroundTaskRegistered && !micReady)
-                {
-                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
-                }
+                //if (this.BackgroundTaskRegistered && !micReady)
+                //{
+                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
+                //}
 
-                if (this.BackgroundTaskRegistered && micReady)
-                {
-                    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1400, Height = 800 });
-                }
+                //if (this.BackgroundTaskRegistered && micReady)
+                //{
+                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
+                //    //ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30) + ((int)this.LogGrid.ActualWidth), Height = 800 });
+                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
+                //}
 
             });
         }
@@ -335,21 +337,22 @@ namespace UWPVoiceAssistantSample
             {
                 if (this.hypotheizedSpeechToggle)
                 {
-                    if (this.activeConversation == null)
-                    {
-                        this.activeConversation = new Conversation
-                        {
-                            Body = message,
-                            Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
-                            Sent = true,
-                        };
+                    //if (this.activeConversation == null)
+                    //{
+                    //    this.activeConversation = new Conversation
+                    //    {
+                    //        Body = message,
+                    //        Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
+                    //        Sent = true,
+                    //    };
 
-                        this.conversationHistory.conversations.Add(this.activeConversation);
-                    }
+                    //    this.conversationHistory.conversations.Add(this.activeConversation);
+                    //}
 
-                    //this.activeConversation.Body = message;
-                    this.logger.Log("Speech Recognizing");
-                    this.conversationHistory.conversations.FirstOrDefault(item => true).Body = message;
+                    ////this.activeConversation.Body = message;
+                    //this.logger.Log("Speech Recognizing");
+                    //this.conversationHistory.conversations.FirstOrDefault(item => true).Body = message;
+                    this.TextInputTextBox.Text = message;
                 }
             });
         }
@@ -358,22 +361,33 @@ namespace UWPVoiceAssistantSample
         {
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (this.activeConversation == null)
+                //if (this.activeConversation == null)
+                //{
+                //    this.activeConversation = new Conversation
+                //    {
+                //        Body = message,
+                //        Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
+                //        Sent = true,
+                //    };
+
+                //    this.conversationHistory.conversations.Add(new Conversation
+                //    {
+                //        Body = message,
+                //        Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
+                //        Sent = true,
+                //    });
+
+                //}
+                //this.activeConversation.Body = message;
+                //this.activeConversation = null;
+                //this.logger.Log("Speech Recognized");
+                this.conversationHistory.conversations.Add(new Conversation
                 {
-                    this.activeConversation = new Conversation
-                    {
-                        Body = message,
-                        Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
-                        Sent = true,
-                    };
-
-                    this.conversationHistory.conversations.Add(this.activeConversation);
-
-                }
-                this.activeConversation.Body = message;
-                this.activeConversation = null;
-                this.logger.Log("Speech Recognized");
-                //this.TextInputTextBox.Text = this.activeConversation;
+                    Body = message,
+                    Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
+                    Sent = true,
+                });
+                this.TextInputTextBox.Text = "";
             });
 
             this.RefreshStatus();

@@ -116,7 +116,7 @@ namespace UWPVoiceAssistantSample
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1400, Height = 800 });
+            ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1280, Height = 800 });
 
             var rootFrame = Window.Current.Content as Frame;
 
