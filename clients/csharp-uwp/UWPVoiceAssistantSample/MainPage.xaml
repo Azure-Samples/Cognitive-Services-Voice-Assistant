@@ -9,7 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="MainPageWindow">
 
-    
     <Grid x:Name="MainWindowGrid" MaxWidth="1280">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -59,6 +58,7 @@
                 VerticalAlignment="Top"
                 Content="&#xE106;"
                 Visibility="Visible"/>
+
         <Grid x:Name="ApplicationStateGrid" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -89,12 +89,11 @@
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="35" Foreground="Green" Margin="5,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
                 <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="1,9,0,0"></TextBlock>
             </StackPanel>
-            
-        </Grid>
 
+        </Grid>
         <Border x:Name="ApplicationStateGridBorder" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 0 0 1"/>
-        <Grid x:Name="ControlsGrid" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1" Width="355">
-            <Grid.RowDefinitions>
+            <Grid x:Name="ControlsGrid" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1" Width="355">
+                <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
@@ -121,7 +120,7 @@
                 Margin="5,0,0,0"       
                 OnContent="Background Task is Registered"
                 OffContent="Background Task is Not Registered"/>
-            <ToggleSwitch x:Name="AppVoiceActivationEnabledToggle"
+                <ToggleSwitch x:Name="AppVoiceActivationEnabledToggle"
                 IsOn="{x:Bind keywordRegistration.KeywordEnabledByApp, Mode=TwoWay}"
                 IsEnabled="false"
                 Grid.Row="2"
@@ -171,30 +170,30 @@
                 Grid.ColumnSpan="2"
                 OnContent="Hypothesized Speech is ON"
                 OffContent="Hypothesized Speech is OFF"/>
-            <StackPanel
+                <StackPanel
                 Orientation="Horizontal"
                 Grid.Row="8"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 Margin="5,0,10,0">
-                <FontIcon x:Name="OpenConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Edit}"/>
-                <HyperlinkButton x:Name="OpenConfigButton"
+                    <FontIcon x:Name="OpenConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Edit}"/>
+                    <HyperlinkButton x:Name="OpenConfigButton"
                     Margin="10,0,0,0"
                     Content="Open Config"
                     Click="OpenConfigClick"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" 
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" 
                     Grid.Row="9"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     Margin="5,0,10,0">
-                <FontIcon x:Name="LoadConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Load}"/>
-                <HyperlinkButton x:Name="LoadConfigButton"
+                    <FontIcon x:Name="LoadConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Load}"/>
+                    <HyperlinkButton x:Name="LoadConfigButton"
                         Margin="10,0,0,0"
                         Content="Load Config"
                         Click="LoadConfigClick"/>
-            </StackPanel>
-            <TextBlock Text="Audio Output Format" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
+             </StackPanel>
+                    <TextBlock Text="Audio Output Format" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
             <ComboBox x:Name="OutputFormatComboBox" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
         </Grid>
 

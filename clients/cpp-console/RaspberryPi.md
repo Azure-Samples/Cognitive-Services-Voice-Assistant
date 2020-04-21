@@ -36,16 +36,17 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
   wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz
   ```  
 
-* Create a link to the cpp-console folder, move the Speech SDK libraries and headers to their destination, and change into the cpp-console folder. These commands are for the Speech SDK version 1.10, change it to match the version downloaded.
+* Create a link to the cpp-console and keyword-models folders. Move the Speech SDK libraries and headers to their destination, and change into the cpp-console folder. These commands are for the Speech SDK version 1.10, change it to match the version downloaded.
 
   ```sh
-  ln -s Cognitive-Services-Voice-Assistant/samples/clients/cpp-console
+  ln -s Cognitive-Services-Voice-Assistant/clients/cpp-console
+  ln -s Cognitive-Services-Voice-Assistant/keyword-models
   mv SpeechSDK-Linux-1.10.0/lib/arm32 cpp-console/lib/
   mv SpeechSDK-Linux-1.10.0/include/* cpp-console/include/
   cd cpp-console
   ```  
 
-* Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used, these are in /home/ubuntu/cpp-console/models
+* Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used (.table file), these are in /home/ubuntu/keyword-models
 
 ## Build directly on Linux arm32
 

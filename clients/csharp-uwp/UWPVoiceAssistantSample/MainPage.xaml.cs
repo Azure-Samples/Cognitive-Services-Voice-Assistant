@@ -4,7 +4,6 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Globalization;
     using System.IO;
@@ -31,6 +30,9 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        /// <summary>
+        /// Collection of utterances from user and bot.
+        /// </summary>
         public ObservableCollection<Conversation> Conversations;
         private readonly ServiceProvider services;
         private readonly ILogProvider logger;
