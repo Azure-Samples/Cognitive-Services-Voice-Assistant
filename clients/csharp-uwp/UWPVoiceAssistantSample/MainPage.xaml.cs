@@ -123,6 +123,12 @@ namespace UWPVoiceAssistantSample
                 this.statusBuffer.Clear();
                 this.RefreshStatus();
             };
+            this.ClearLogsButton.Click += async (_, __)
+                => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                {
+                    this.ChangeLogTextBlock.Blocks.Clear();
+                });
+
             this.OpenLogLocationButton.Click += async (_, __)
                 => await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
         }

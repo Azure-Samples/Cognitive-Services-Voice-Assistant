@@ -199,6 +199,7 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Logs" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
+                <HyperlinkButton x:Name="ClearLogsButton" Content="Clear Logs" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <HyperlinkButton x:Name="OpenLogLocationButton" Content="Open Logs" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <Button x:Name="CollapseLogPane" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CollapseLogs"/>
             </StackPanel>

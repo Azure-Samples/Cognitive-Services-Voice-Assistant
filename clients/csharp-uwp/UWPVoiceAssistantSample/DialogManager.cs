@@ -25,6 +25,7 @@ namespace UWPVoiceAssistantSample
     /// <typeparam name="TInputType">Input type of audio.</typeparam>
     public class DialogManager<TInputType> : IDialogManager, IDisposable
     {
+        private ILogProvider logger;
         private IDialogBackend<TInputType> dialogBackend;
         private IDialogAudioInputProvider<TInputType> dialogAudioInput;
         private IDialogAudioOutputAdapter dialogAudioOutput;
@@ -50,12 +51,12 @@ namespace UWPVoiceAssistantSample
         {
             Contract.Requires(dialogBackend != null);
             Contract.Requires(agentSessionManager != null);
-
+            this.logger = LogRouter.GetClassLogger();
             this.dialogBackend = dialogBackend;
             this.dialogBackend.SessionStarted += (id)
-                => Debug.WriteLine($"DialogManager: Session start: {id}");
+                => this.logger.Log($"DialogManager: Session start: {id}");
             this.dialogBackend.SessionStopped += (id)
-                => Debug.WriteLine($"DialogManager: Session stop: {id}");
+                => this.logger.Log($"DialogManager: Session stop: {id}");
             this.dialogBackend.KeywordRecognizing += this.OnKeywordRecognizing;
             this.dialogBackend.KeywordRecognized += this.OnKeywordRecognized;
             this.dialogBackend.SpeechRecognizing += this.OnSpeechRecognizing;
@@ -244,7 +245,7 @@ namespace UWPVoiceAssistantSample
             var setupSuccessful = await this.SetupConversationAsync(signalOrigin);
             if (!setupSuccessful)
             {
-                Debug.WriteLine($"DialogManager2::SetupConversationAsync didn't succeed in setting up a conversation (see earlier errors). Aborting conversation.");
+                this.logger.Log($"DialogManager2::SetupConversationAsync didn't succeed in setting up a conversation (see earlier errors). Aborting conversation.");
                 return;
             }
 
@@ -274,7 +275,7 @@ namespace UWPVoiceAssistantSample
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Unable to acquire MVA 1st-pass audio. Rejecting signal.\n{ex.HResult}: {ex.Message}");
+                this.logger.Log($"Unable to acquire MVA 1st-pass audio. Rejecting signal.\n{ex.HResult}: {ex.Message}");
                 await this.FinishConversationAsync();
                 return false;
             }
@@ -300,7 +301,7 @@ namespace UWPVoiceAssistantSample
                 ? ConversationalAgentState.Detecting
                 : ConversationalAgentState.Listening;
             await this.ChangeAgentStateAsync(newState);
-
+            
             await this.dialogBackend.StartAudioTurnAsync(signalVerificationRequired);
 
             var audioToSkip = signalVerificationRequired
@@ -361,7 +362,7 @@ namespace UWPVoiceAssistantSample
         {
             var session = await this.agentSessionManager.GetSessionAsync();
             var oldState = session.AgentState;
-            Debug.WriteLine($"Changing agent state: [{oldState.ToString()}] -> [{newState.ToString()}]");
+            this.logger.Log($"Changing agent state: [{oldState.ToString()}] -> [{newState.ToString()}]");
             await session.RequestAgentStateChangeAsync(newState);
             this.signalDetectionHelper.DialogStateChangeDuringSignalVerification(oldState, newState);
             this.DialogStateChanged?.Invoke(oldState, newState);
@@ -382,7 +383,7 @@ namespace UWPVoiceAssistantSample
             {
                 await this.dialogBackend.CancelSignalVerification();
                 await this.StopAudioCaptureAsync();
-                Debug.WriteLine($"Failsafe timer expired; rejecting");
+                this.logger.Log($"Failsafe timer expired; rejecting");
                 await this.FinishConversationAsync();
 
                 this.SignalRejected.Invoke(origin);
@@ -425,7 +426,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task OnErrorReceivedAsync(DialogErrorInformation errorInformation)
         {
-            Debug.WriteLine($"DialogManager: error received: {errorInformation.ErrorDetails}");
+            this.logger.Log($"DialogManager: error received: {errorInformation.ErrorDetails}");
             await this.ChangeAgentStateAsync(ConversationalAgentState.Inactive);
             await this.dialogResponseQueue.AbortAsync();
         }
