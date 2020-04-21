@@ -754,7 +754,7 @@ namespace UWPVoiceAssistantSample
         private async void DownloadChatHistoryClick(object sender, RoutedEventArgs e)
         {
             var json = JsonConvert.SerializeObject(this.Conversations);
-            var writeChatHistory = await ApplicationData.Current.LocalFolder.CreateFileAsync("chatHistory.json");
+            var writeChatHistory = await ApplicationData.Current.LocalFolder.CreateFileAsync($"chatHistory_{DateTime.Now.ToString("yyyyMMdd_HHmmss", null)}.json", CreationCollisionOption.ReplaceExisting);
             await File.WriteAllTextAsync(writeChatHistory.Path, json);
         }
     }
