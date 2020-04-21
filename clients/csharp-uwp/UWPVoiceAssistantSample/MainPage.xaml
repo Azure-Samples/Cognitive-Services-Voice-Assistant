@@ -242,7 +242,8 @@
 
             <ListView Grid.Row="1" Grid.Column="0" 
                       Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView"
-                      Margin="0,0,0,0">
+                      Margin="0,40,0,0"
+                      ItemsSource="{x:Bind conversations, Mode=OneWay}">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
                         <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
@@ -281,7 +282,7 @@
 
                                 <TextBlock
                                     x:Name="ChatHistoryTextBlock"
-                                    Text="{x:Bind Body}"
+                                    Text="{x:Bind Body, Mode=OneWay}"
                                     TextWrapping="Wrap"
                                     MinWidth="300"
                                     MaxWidth="400"
