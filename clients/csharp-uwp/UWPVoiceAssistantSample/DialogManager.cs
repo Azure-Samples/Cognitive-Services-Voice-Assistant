@@ -193,6 +193,11 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task that completes once the activity is sent. </returns>
         public async Task<string> SendActivityAsync(string activityJson)
         {
+            if (!this.ConversationContinuationRequested)
+            {
+                await this.dialogBackend.InitializeAsync(await this.keywordRegistration.GetConfirmationKeywordFileAsync());
+            }
+
             var id = await this.dialogBackend.SendDialogMessageAsync(activityJson);
             return id;
         }
