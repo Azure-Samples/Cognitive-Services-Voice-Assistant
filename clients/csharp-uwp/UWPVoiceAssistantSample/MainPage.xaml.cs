@@ -665,7 +665,15 @@ namespace UWPVoiceAssistantSample
                 this.ChatGrid.Visibility = Visibility.Collapsed;
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
-                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ApplicationStateGrid.ActualWidth, Height = (int)this.ApplicationStateGrid.ActualHeight + 100 });
+                Grid.SetRowSpan(this.ApplicationStateGrid, 1);
+                Grid.SetRow(this.VoiceSettingsStackPanel, 0);
+                Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
+                Grid.SetRow(this.MicrophoneSettingsStackPanel, 0);
+                Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
+                Grid.SetRow(this.ConversationStateStackPanel, 0);
+                Grid.SetColumn(this.ConversationStateStackPanel, 2);
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = 675, Height = 65 });
+                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 675, Height = 65 });
             }
 
             if (this.WindowsContolFlyoutItem.IsChecked && !this.WindowsLogFlyoutItem.IsChecked && !this.WindowsChatFlyoutItem.IsChecked)
@@ -708,6 +716,7 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
             }
         }
@@ -753,9 +762,21 @@ namespace UWPVoiceAssistantSample
 
         private async void DownloadChatHistoryClick(object sender, RoutedEventArgs e)
         {
-            var json = JsonConvert.SerializeObject(this.Conversations);
-            var writeChatHistory = await ApplicationData.Current.LocalFolder.CreateFileAsync($"chatHistory_{DateTime.Now.ToString("yyyyMMdd_HHmmss", null)}.json", CreationCollisionOption.ReplaceExisting);
-            await File.WriteAllTextAsync(writeChatHistory.Path, json);
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var fileName = $"chatHistory_{DateTime.Now.ToString("yyyyMMdd_HHmmss", null)}.txt";
+            var writeChatHistory = await localFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+            foreach (var message in this.Conversations)
+            {
+                await File.AppendAllTextAsync(writeChatHistory.Path, "\r\n" + "Text: " + message.Body + "\r\n" + "BotReply: " + message.Received + "\r\n" + "Timestamp: " + message.Time + "\r\n" + "========");
+            }
+
+            var launchOption = new FolderLauncherOptions();
+
+            var fileToSelect = await localFolder.GetFileAsync(fileName);
+            launchOption.ItemsToSelect.Add(fileToSelect);
+
+            await Launcher.LaunchFolderAsync(localFolder, launchOption);
         }
     }
 }

@@ -190,7 +190,7 @@
                     <FontIcon x:Name="LoadConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Load}"/>
                     <HyperlinkButton x:Name="LoadConfigButton"
                         Margin="10,0,0,0"
-                        Content="Load Config"
+                        Content="Apply Config"
                         Click="LoadConfigClick"/>
              </StackPanel>
                     <TextBlock Text="Audio Output Format" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
@@ -235,7 +235,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Chat" TextAlignment="Left" VerticalAlignment="Top" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2" Grid.RowSpan="3"/>
             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="3">
-                <HyperlinkButton Name="DownloadChatHistory" Click="DownloadChatHistoryClick" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
+                <HyperlinkButton Name="DownloadChatHistory" Click="DownloadChatHistoryClick" Content="Save" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <Button x:Name="ResetButton" Content="Reset" Margin="0,0,20,0"/>
             </StackPanel>
 
