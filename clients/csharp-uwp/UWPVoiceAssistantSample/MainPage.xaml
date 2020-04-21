@@ -260,16 +260,17 @@
 
                             <Polygon
                                 Grid.Row="0"
-                                Points="0,0 0,0, 0,0"
                                 Margin="10,0,10,0"
                                 Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
                                 Grid.Row="1"
+                                Background="Green"
                                 Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
                                 Grid.Row="1"
+                                Background="SteelBlue"
                                 Visibility="{x:Bind Sent, Mode=OneWay}"/>
 
                             <Grid Grid.Row="1">
@@ -282,6 +283,7 @@
                                     x:Name="ChatHistoryTextBlock"
                                     Text="{x:Bind Body, Mode=OneWay}"
                                     TextWrapping="Wrap"
+                                    Foreground="White"
                                     MinWidth="300"
                                     MaxWidth="400"
                                     FontSize="15"

@@ -758,6 +758,7 @@ namespace UWPVoiceAssistantSample
 
             Conversation message = (Conversation)args.Item;
             args.ItemContainer.HorizontalAlignment = message.Sent ? Windows.UI.Xaml.HorizontalAlignment.Right : Windows.UI.Xaml.HorizontalAlignment.Left;
+            //args.ItemContainer.Foreground = message.Sent ? new SolidColorBrush(Colors.SteelBlue) : new SolidColorBrush(Colors.AliceBlue);
         }
 
         private async void DownloadChatHistoryClick(object sender, RoutedEventArgs e)
