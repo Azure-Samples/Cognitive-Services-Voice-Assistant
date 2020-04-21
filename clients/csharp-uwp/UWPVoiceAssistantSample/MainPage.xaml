@@ -243,7 +243,7 @@
             <ListView Grid.Row="1" Grid.Column="0" 
                       Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView"
                       Margin="0,40,0,0"
-                      ItemsSource="{x:Bind conversations, Mode=OneWay}">
+                      ItemsSource="{x:Bind Conversations, Mode=OneWay}">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
                         <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
@@ -267,8 +267,7 @@
 
                             <Grid
                                 Grid.Row="1"
-                                Visibility="{x:Bind Received}"
-/>
+                                Visibility="{x:Bind Received}"/>
 
                             <Grid
                                 Grid.Row="1"

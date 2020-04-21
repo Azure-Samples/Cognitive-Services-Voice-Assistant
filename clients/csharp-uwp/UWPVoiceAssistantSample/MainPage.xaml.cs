@@ -31,8 +31,7 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        //private readonly Queue<(string, bool)> statusBuffer;
-        //private readonly int statusBufferSize = 50;
+        public ObservableCollection<Conversation> Conversations;
         private readonly ServiceProvider services;
         private readonly ILogProvider logger;
         private readonly IKeywordRegistration keywordRegistration;
@@ -41,11 +40,8 @@ namespace UWPVoiceAssistantSample
         private App app;
         private int bufferIndex;
         private bool configModified;
-        private Conversation conversationHistory;
         private bool hypotheizedSpeechToggle;
         private Conversation activeConversation;
-
-        public ObservableCollection<Conversation> conversations;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -63,10 +59,6 @@ namespace UWPVoiceAssistantSample
             this.dialogManager = this.services.GetRequiredService<IDialogManager>();
             this.keywordRegistration = this.services.GetRequiredService<IKeywordRegistration>();
             this.agentSessionManager = this.services.GetRequiredService<IAgentSessionManager>();
-
-            // The "status buffer" merely exists so that we can have some structure in the
-            // output log we display.
-            //this.statusBuffer = new Queue<(string, bool)>(this.statusBufferSize);
 
             // Ensure that we restore the full view (not the compact mode) upon foreground launch
             _ = this.UpdateViewStateAsync();
@@ -98,7 +90,7 @@ namespace UWPVoiceAssistantSample
             // Ensure consistency between a few dependent controls and their settings
             this.UpdateUIBasedOnToggles();
 
-            this.conversations = new ObservableCollection<Conversation>();
+            this.Conversations = new ObservableCollection<Conversation>();
 
             this.ChatHistoryListView.ContainerContentChanging += this.OnChatHistoryListViewContainerChanging;
         }
@@ -131,7 +123,7 @@ namespace UWPVoiceAssistantSample
             {
                 await this.dialogManager.FinishConversationAsync();
                 await this.dialogManager.StopAudioPlaybackAsync();
-                this.conversations.Clear();
+                this.Conversations.Clear();
                 this.RefreshStatus();
             };
             this.OpenLogLocationButton.Click += async (_, __)
@@ -288,31 +280,10 @@ namespace UWPVoiceAssistantSample
 
         private async void RefreshStatus()
         {
-            //var itemsInQueue = this.statusBuffer.Count;
-            //var statusStack = new Stack<(string, bool)>(itemsInQueue + 1);
             var session = await this.agentSessionManager.GetSessionAsync().ConfigureAwait(false);
             var agentStatusMessage = session == null ?
                "No current agent session"
                : $"{session.AgentState.ToString()} {(this.app.InvokedViaSignal ? "[via signal]" : string.Empty)}";
-
-            // This is throwing an error on conversation state change
-            //for (int i = 0; i < itemsInQueue; i++)
-            //{
-            //    statusStack.Push(this.statusBuffer.Peek());
-            //    this.statusBuffer.Enqueue(this.statusBuffer.Dequeue());
-            //}
-
-            //var newText = string.Empty;
-
-            //while (statusStack.Count != 0)
-            //{
-            //    // TODO: do something with alignment
-            //    var (text, alignToRight) = statusStack.Pop();
-
-            //    newText += !string.IsNullOrEmpty(newText) ? "\r\n" : string.Empty;
-            //    newText += text;
-
-            //}
 
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -324,7 +295,7 @@ namespace UWPVoiceAssistantSample
         {
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                this.conversations.Add(new Conversation
+                this.Conversations.Add(new Conversation
                 {
                     Body = message,
                     Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
@@ -348,12 +319,12 @@ namespace UWPVoiceAssistantSample
                             Sent = true,
                         };
 
-                        this.conversations.Add(this.activeConversation);
+                        this.Conversations.Add(this.activeConversation);
                     }
 
                     this.activeConversation.Body = message;
 
-                    this.conversations.Last().Body = message;
+                    this.Conversations.Last().Body = message;
                 }
             });
         }
@@ -371,7 +342,7 @@ namespace UWPVoiceAssistantSample
                         Sent = true,
                     };
 
-                    this.conversations.Add(this.activeConversation);
+                    this.Conversations.Add(this.activeConversation);
                 }
 
                 this.activeConversation.Body = message;
@@ -655,9 +626,6 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
-                // come back
-                //Grid.SetColumn(this.ChatHistoryListView, 0);
-                //Grid.SetRow(this.ChatViewSeparator, 6);
                 this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth, Height = 800 });
