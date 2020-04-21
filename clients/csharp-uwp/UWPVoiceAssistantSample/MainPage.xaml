@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="MainPageWindow">
 
-    <Grid x:Name="MainWindowGrid" MaxWidth="1280">
+    <Grid x:Name="MainWindowGrid" MaxWidth="1280" MinWidth="1280">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -92,7 +92,7 @@
 
         </Grid>
         <Border x:Name="ApplicationStateGridBorder" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 0 0 1"/>
-            <Grid x:Name="ControlsGrid" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1" Width="355">
+            <Grid x:Name="ControlsGrid" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="4" Grid.Row="2" Grid.ColumnSpan="1" Width="355" BorderBrush="LightGray" BorderThickness="0,0,1,0">
                 <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
@@ -113,7 +113,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Controls" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2"/>
-            <Button x:Name="CollpaseControlsPane" Grid.Column="2" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" Click="CollapseControls"/>
+            <Button x:Name="CollpaseControlsPane" Grid.Column="2" Margin="45,0,0,0" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" Click="CollapseControls"/>
             <ToggleSwitch x:Name="BackgroundTaskToggle"
                 IsOn="{x:Bind BackgroundTaskRegistered, Mode=TwoWay}"
                 Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
@@ -193,11 +193,11 @@
                         Content="Apply Config"
                         Click="LoadConfigClick"/>
              </StackPanel>
-                    <TextBlock Text="Audio Output Format" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
-            <ComboBox x:Name="OutputFormatComboBox" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
+                    <TextBlock Text="Audio Output Format" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="10,5,5,5" FontFamily="Consolas"/>
+            <ComboBox x:Name="OutputFormatComboBox" Grid.Row="11" Margin="5,0,0,0" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
         </Grid>
 
-        <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Width="475">
+        <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Width="475" BorderBrush="LightGray" BorderThickness="0,0,1,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -216,7 +216,7 @@
                     Margin="5"
                     Grid.Row="1" Grid.Column="1" 
                     Grid.RowSpan="4" Grid.ColumnSpan="2">
-                <RichTextBlock x:Name="ChangeLogTextBlock" Width="500" FontWeight="Bold"/>
+                <RichTextBlock x:Name="ChangeLogTextBlock" Width="470" FontWeight="Bold"/>
             </ScrollViewer>
         </Grid>
         <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6" Margin="0" Width="450">
@@ -242,6 +242,7 @@
             <ListView Grid.Row="1" Grid.Column="0" 
                       Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView"
                       Margin="0,40,0,0"
+                      Background="LightGray"
                       ItemsSource="{x:Bind Conversations, Mode=OneWay}">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
@@ -265,12 +266,12 @@
 
                             <Grid
                                 Grid.Row="1"
-                                Background="Green"
+                                BorderBrush="blue"
+                                BorderThickness="1"
                                 Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
                                 Grid.Row="1"
-                                Background="SteelBlue"
                                 Visibility="{x:Bind Sent, Mode=OneWay}"/>
 
                             <Grid Grid.Row="1">
@@ -283,7 +284,6 @@
                                     x:Name="ChatHistoryTextBlock"
                                     Text="{x:Bind Body, Mode=OneWay}"
                                     TextWrapping="Wrap"
-                                    Foreground="White"
                                     MinWidth="300"
                                     MaxWidth="400"
                                     FontSize="15"
