@@ -364,52 +364,61 @@ namespace UWPVoiceAssistantSample
                     if (this.bufferIndex < this.logger.LogBuffer.Count)
                     {
                         string text = this.logger.LogBuffer[this.bufferIndex];
-                        if (text.Contains(" : ", StringComparison.OrdinalIgnoreCase))
+
+                        if (this.LogInformationFlyoutItem.IsChecked)
                         {
-                            string[] split = text.Split(" : ");
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = split[1];
-                            paragraph.Inlines.Add(run);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                            if (text.Contains("Information", StringComparison.OrdinalIgnoreCase))
+                            {
+                                string[] split = text.Split("Information");
+
+                                if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    string[] removeColon = split[1].Split(" : ");
+                                    Paragraph paragraph = new Paragraph();
+                                    Run run = new Run();
+                                    run.Text = removeColon[1];
+                                    paragraph.Inlines.Add(run);
+                                    paragraph.Foreground = new SolidColorBrush(Colors.Blue);
+                                    this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                                }
+                                else
+                                {
+                                    Paragraph paragraph = new Paragraph();
+                                    Run run = new Run();
+                                    run.Text = split[1];
+                                    paragraph.Inlines.Add(run);
+                                    paragraph.Foreground = new SolidColorBrush(Colors.Blue);
+                                    this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                                }
+                            }
                         }
-                        else if (text.Contains("Information", StringComparison.OrdinalIgnoreCase))
+
+                        if (this.LogErrorFlyoutItem.IsChecked)
                         {
-                            string[] split = text.Split("Information");
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = split[1];
-                            paragraph.Inlines.Add(run);
-                            paragraph.Foreground = new SolidColorBrush(Colors.Blue);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                            if (text.Contains("Error", StringComparison.OrdinalIgnoreCase))
+                            {
+                                string[] split = text.Split("Error");
+                                Paragraph paragraph = new Paragraph();
+                                Run run = new Run();
+                                run.Text = split[1];
+                                paragraph.Inlines.Add(run);
+                                paragraph.Foreground = new SolidColorBrush(Colors.Red);
+                                this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                            }
                         }
-                        else if (text.Contains("Error", StringComparison.OrdinalIgnoreCase))
+
+                        if (this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            string[] split = text.Split("Error");
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = split[1];
-                            paragraph.Inlines.Add(run);
-                            paragraph.Foreground = new SolidColorBrush(Colors.Red);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                        }
-                        else if (text.Contains("Noise", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string[] split = text.Split("Noise");
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = split[1];
-                            paragraph.Inlines.Add(run);
-                            paragraph.Foreground = new SolidColorBrush(Colors.Gray);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                        }
-                        else
-                        {
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = text;
-                            paragraph.Inlines.Add(run);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                            if (text.Contains("Noise", StringComparison.OrdinalIgnoreCase))
+                            {
+                                string[] split = text.Split("Noise");
+                                Paragraph paragraph = new Paragraph();
+                                Run run = new Run();
+                                run.Text = split[1];
+                                paragraph.Inlines.Add(run);
+                                paragraph.Foreground = new SolidColorBrush(Colors.Gray);
+                                this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                            }
                         }
 
                         this.bufferIndex++;
