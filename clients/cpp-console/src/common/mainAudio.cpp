@@ -36,7 +36,7 @@ using namespace AudioPlayer;
 
 enum class KeywordActivationState
 {
-    // Initial value, before reading the input configuration file or user selection via keyboard.
+    // Initial value, before reading the input configuration file.
     Undefined, 
 
     // Configuration file did not specify a keyword mode. Keyword activation not possible on this device.
@@ -310,11 +310,11 @@ int main(int argc, char** argv)
             log_t("Now listening...");
             auto future = dialogServiceConnector->ListenOnceAsync();
         }
-        if(s == "2"){
+        if(s == "2" && keywordActivationState != KeywordActivationState::NotSupported){
             keywordActivationState = KeywordActivationState::Paused;
             StartKws();
         }
-        if(s == "3"){
+        if(s == "3" && keywordActivationState != KeywordActivationState::NotSupported){
             StopKws();
         }
 
