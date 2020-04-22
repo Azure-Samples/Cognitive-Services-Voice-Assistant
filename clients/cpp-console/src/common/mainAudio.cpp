@@ -37,19 +37,19 @@ using namespace AudioPlayer;
 enum class KeywordActivationState
 {
     // Initial value, before reading the input configuration file.
-    Undefined, 
+    Undefined = 0, 
 
     // Configuration file did not specify a keyword mode. Keyword activation not possible on this device.
-    NotSupported, 
+    NotSupported = 1, 
 
     // Keyword model exists on the device, user selected keyword activation, but the device is currently not listening for the keyword (e.g. since TTS playback is in progress and barge-in is not supported).
-    Paused,
+    Paused = 2,
 
     // Keyword model exists on the device, user selected keyword activation and the device is currently listening for the keyword.
-    Listening,  
+    Listening = 3,  
 
     // Keyword model exists on the device but the user has selected not to listen for keyword.
-    NotListening 
+    NotListening = 4 
 };
 
 void log()
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
     
     auto StartKws = [&]()
     {
-        log_t("startKwsIfApplicable called");
+        log_t("Enter StartKws (state = ", uint32_t(keywordActivationState), ")");
 
         if (KeywordActivationState::Paused == keywordActivationState)
         {
@@ -104,11 +104,13 @@ int main(int argc, char** argv)
             keywordActivationState = KeywordActivationState::Listening;
             log_t("KWS initialized");
         }
+
+        log_t("Exit StartKws (state = ", uint32_t(keywordActivationState), ")");
     };
 
     auto PauseKws = [&]()
     {
-        log_t("PauseKws called");
+        log_t("Enter PauseKws (state = ", uint32_t(keywordActivationState), ")");
 
         if (KeywordActivationState::Listening == keywordActivationState)
         {
@@ -116,11 +118,13 @@ int main(int argc, char** argv)
             auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
             keywordActivationState = KeywordActivationState::Paused;
         }
+
+        log_t("Exit PauseKws (state = ", uint32_t(keywordActivationState), ")");
     };
 
     auto StopKws = [&]()
     {
-        log_t("StopKws called");
+        log_t("Enter StopKws (state = ", uint32_t(keywordActivationState), ")");
 
         if (KeywordActivationState::Listening == keywordActivationState ||
             KeywordActivationState::Paused == keywordActivationState)
@@ -133,6 +137,8 @@ int main(int argc, char** argv)
 
             keywordActivationState = KeywordActivationState::NotListening;
         }
+
+        log_t("Exit StopKws (state = ", uint32_t(keywordActivationState), ")");
     };
     
     DeviceStatusIndicators::SetStatus(DeviceStatus::Initializing);
