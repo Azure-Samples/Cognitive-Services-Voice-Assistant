@@ -8,8 +8,17 @@ Param(
 
 $ErrorActionPreference = "Stop"
 
-if( $resourceName.Length -gt 23 ){
-    Write-Output "Resource Name cannot be longer than 23 characters, this is a requirement for storage accounts. Please enter a shorter name."
+if( $resourceName.Length -gt 19 ){
+    Write-Output "Resource Name cannot be longer than 19 characters. This is a requirement because we add up to 4 digits of a random number to try to keep the names unique and the storage resource has a limit of 23 characters. Please enter a shorter name."
+    exit
+}
+
+$FreeAppServiceSupportedRegions = "westus", "northeurope"
+
+$isRegionSupported = $FreeAppServiceSupportedRegions -eq $region
+
+if("" -eq $isRegionSupported ){
+    Write-Output "Region '$region' is currently not supported for free app service place. Please choose a region from the following: $FreeAppServiceSupportedRegions."
     exit
 }
 
