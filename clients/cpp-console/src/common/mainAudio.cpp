@@ -34,6 +34,18 @@ using namespace Microsoft::CognitiveServices::Speech;
 using namespace Microsoft::CognitiveServices::Speech::Audio;
 using namespace AudioPlayer;
 
+enum class KeywordActivationState
+{
+    // Initial value, before reading the input configuration file
+    Undefined = 0,   
+    // Configuration file did not specify a keyword mode. Keyword activation not possible
+    Disabled = 1,    
+    // Keyword model exists and device is listening for keyword activation
+    Listening = 2,   
+    // Keyword model exists but device is not listening for keyword activation
+    NotListening = 3 
+};
+
 void log()
 {
     cout << endl;
@@ -66,7 +78,7 @@ int main(int argc, char** argv)
     string configFilePath = argv[1];
     string s;
     const char * device = "default";
-    bool keywordListeningEnabled = false;
+    KeywordActivationState keywordActivationState = KeywordActivationState::Undefined;
     bool volumeOn = false;
     
     IAudioPlayer* player;
@@ -76,16 +88,51 @@ int main(int argc, char** argv)
     auto startKwsIfApplicable = [&]()
     {
         log_t("startKWS called");
-        if (keywordListeningEnabled)
+
+        if (KeywordActivationState::Disabled == keywordActivationState)
+        {
+            log_t("No model file specified. Cannot start keyword listening");
+        }
+        else if (KeywordActivationState::Listening == keywordActivationState)
+        {
+            log_t("Already listening to keyword");
+        }
+        else if (KeywordActivationState::NotListening == keywordActivationState)
         {
             auto modelPath = agentConfig->KeywordModel();
             log_t("Initializing keyword recognition with: ", modelPath);
             auto model = KeywordRecognitionModel::FromFile(modelPath);
             auto _ = dialogServiceConnector->StartKeywordRecognitionAsync(model);
+            keywordActivationState = KeywordActivationState::Listening;
             log_t("KWS initialized");
         }
-        else {
-            log_t("no model file specified. Cannot start keyword listening");
+        else
+        {
+            log_t("Should not reach here");
+        }
+    };
+
+    auto stopKwsIfApplicable = [&]()
+    {
+        log_t("stopKWS called");
+
+        if (KeywordActivationState::Disabled == keywordActivationState)
+        {
+            log_t("No model path specified. Cannot stop keyword listening");
+        }
+        else if (KeywordActivationState::Listening == keywordActivationState)
+        {
+            log_t("Stopping keyword recognition");
+            auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
+            keywordActivationState = KeywordActivationState::NotListening;
+        }
+        else if (KeywordActivationState::NotListening == keywordActivationState)
+        {
+            log_t("Was not listening to keyword");
+        }
+        else
+        {
+            log_t("Should not reach here");
         }
     };
     
@@ -131,11 +178,7 @@ int main(int argc, char** argv)
     auto stringFuture = dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
 
     log_t("Connector successfully initialized!");
-    
-    if(agentConfig->KeywordModel().length() > 0){
-        keywordListeningEnabled = true;
-    }
-    
+
     // Signals that indicates the start of a listening session.
     dialogServiceConnector->SessionStarted += [&](const SessionEventArgs& event) {
         printf("SESSION STARTED: %s ...\n", event.SessionId.c_str());
@@ -234,8 +277,18 @@ int main(int argc, char** argv)
             startKwsIfApplicable();
         }
     };
-    
-    startKwsIfApplicable();
+
+    // Activate keyword listening if keyword model file exists
+    if (agentConfig->KeywordModel().length() > 0)
+    {
+        keywordActivationState = KeywordActivationState::NotListening;
+        startKwsIfApplicable();
+    }
+    else
+    {
+        keywordActivationState = KeywordActivationState::Disabled;
+    }
+
     DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
     
     cout << "Commands:" << endl;
@@ -256,13 +309,7 @@ int main(int argc, char** argv)
             startKwsIfApplicable();
         }
         if(s == "3"){
-            if(keywordListeningEnabled){
-                log_t("Stopping keyword recognition");
-                auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
-            }
-            else{
-                cout << "No model path specified. Cannot stop keyword listening.\n";
-            }
+            stopKwsIfApplicable();
         }
         cout << "Commands:" << endl;
         cout << "1 [listen once]" << endl;
