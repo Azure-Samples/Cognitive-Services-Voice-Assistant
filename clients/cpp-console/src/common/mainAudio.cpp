@@ -40,7 +40,7 @@ enum class KeywordActivationState
     Undefined, 
 
     // Configuration file did not specify a keyword mode. Keyword activation not possible on this device.
-    Disabled, 
+    NotSupported, 
 
     // Keyword model exists on the device, user selected keyword activation, but the device is currently not listening for the keyword (e.g. since TTS playback is in progress and barge-in is not supported).
     Paused,
@@ -186,7 +186,6 @@ int main(int argc, char** argv)
     // Signals that indicates the end of a listening session.
     dialogServiceConnector->SessionStopped += [&](const SessionEventArgs& event) {
         printf("SESSION STOPPED: %s ...\n", event.SessionId.c_str());
-        printf("Press ENTER to acknowledge...\n");
     };
 
     // Signal for events containing intermediate recognition results.
@@ -284,7 +283,7 @@ int main(int argc, char** argv)
     }
     else
     {
-        keywordActivationState = KeywordActivationState::Disabled;
+        keywordActivationState = KeywordActivationState::NotSupported;
     }
 
     DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
@@ -293,7 +292,7 @@ int main(int argc, char** argv)
     {
         cout << "Commands:" << endl;
         cout << "1 [listen once]" << endl;
-        if (keywordActivationState != KeywordActivationState::Disabled)
+        if (keywordActivationState != KeywordActivationState::NotSupported)
         {
             cout << "2 [start keyword listening]" << endl;
             cout << "3 [stop keyword listening]" << endl;
