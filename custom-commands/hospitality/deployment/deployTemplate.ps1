@@ -25,7 +25,7 @@ if( !$output ){
 }
 
 Write-Host "Deploying azure template at ./azuredeploy.json"
-$output = az group deployment create --resource-group $resourceName --template-file ./azuredeploy.json --parameters './azuredeploy.parameters.json' | ConvertFrom-Json
+$output = az deployment group create --resource-group $resourceName --template-file ./azuredeploy.json --parameters './azuredeploy.parameters.json' | ConvertFrom-Json
 
 if( !$output ){
     Write-Error "Failed to deploy template"

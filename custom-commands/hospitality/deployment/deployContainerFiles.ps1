@@ -21,7 +21,9 @@ $storageResourceId = $storageResource.id
 
 #assign proper roles for this user
 Write-Host "Creating Blob Owner role assignee = $userName storageResourceId = $storageResourceId" 
-az role assignment create --role "Storage Blob Data Owner" --assignee $userName --scope $storageResourceId
+#az role assignment create --role "Storage Blob Data Owner" --assignee $userName --scope $storageResourceId
+az role assignment create --role "Storage Blob Data Reader" --assignee $userName --scope $storageResourceId
+az role assignment create --role "Storage Blob Data Contributor" --assignee $userName --scope $storageResourceId
 
 #Start-Sleep -s 5
 

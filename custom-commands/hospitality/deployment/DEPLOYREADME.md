@@ -3,6 +3,7 @@ This README is under development and not guaranteed to be accurate or functional
 ## Things you will need
 * An Azure subscription. [Azure](https://portal.azure.com)
 * Powershell 6.0 or greater [Download Powershell](https://github.com/PowerShell/PowerShell/releases)
+* Azure CLI [Download Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest). This was made using version 2.4.0
 * .Net Core SDK [Install SDK](https://docs.microsoft.com/en-us/dotnet/core/install/sdk?pivots=os-windows)
 
 ## Deploying Azure Resources
@@ -14,7 +15,7 @@ This will reset the policy once this powershell session has ended.
 
 Call az login to log your powershell into Azure. Run the powershell script. Replace "mynewresource" with the name you would like. Try to make this name unique as it is required to be GLOBALLY unique. It will be used to generate a url. Note: This will use your default Azure subscription if you have more than one.
 
-    ./az login
+    az login
     ./deployAll.ps1 -resourceName mynewresource -region westus2
 
 wait...
