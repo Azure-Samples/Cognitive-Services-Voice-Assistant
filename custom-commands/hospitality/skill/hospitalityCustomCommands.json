@@ -2,10 +2,10 @@
   "type": "CommandsDialogModel",
   "culture": "en-us",
   "recognizer": {
-    "application": "c2c5220e-875c-4677-8ca9-8b30c392f2a2",
+    "application": "",
     "isStaging": false,
     "versionId": "1.0",
-    "endpointKey": "cbf13bc3072d45c98b6f403b5b76f72c",
+    "endpointKey": "",
     "region": "westeurope",
     "type": "luis"
   },

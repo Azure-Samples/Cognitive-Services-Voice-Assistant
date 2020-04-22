@@ -7,17 +7,19 @@ Param(
     [string] $resourceGroup,
     [string] $luisAuthoringKey = $(Read-Host -prompt "luisAuthoringKey"),
     [string] $luisAuthoringRegion = "westus",
+    [string] $luisKeyName = $(Read-Host -prompt "luisKeyName"),
     [string] $CustomCommandsRegion = "westus2",
     [string] $websiteAddress = $(Read-Host -prompt "websiteAddress")
 )
+
+$ErrorActionPreference = "Stop"
 
 if (-not $resourceGroup) {
 	$resourceGroup = $resourceName
 }
 
 $speechAppName = "$resourceName-commands"
-$luisResourceName = "$resourceName-luisauthoringkey"
-#$inventoryapiurl = "https://$resourceName.azurewebsites.net/api/Inventory/UpdateInventory"
+$skillJson = "../skill/hospitalityCustomCommands.json"
 
 #
 # create the custom speech app
@@ -30,7 +32,7 @@ $body = @{
   culture = "en-us"
   description = "updating the speech solution accelerator"
   skillEnabled = "true"
-  luisAuthoringResourceId = "/subscriptions/$azureSubscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.CognitiveServices/accounts/$luisResourceName"
+  luisAuthoringResourceId = "/subscriptions/$azureSubscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.CognitiveServices/accounts/$luisKeyName"
   luisAuthoringKey = $luisAuthoringKey
   luisAuthoringRegion = $luisAuthoringRegion
 }
@@ -61,7 +63,7 @@ write-host "Created project Id $appId"
 
 # get the current model so that we can modify it
 
-write-host "getting the initial $speechAppName inventory commands model"
+write-host "getting the initial $speechAppName hospitality commands model"
 try {
     $model = invoke-restmethod -Method GET -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Header $headers
 } catch {
@@ -76,21 +78,20 @@ try {
 $model | ConvertTo-Json -depth 100 | Out-File "initialModel.json"
 
 
-write-host "patching the $speechAppName inventory commands model"
+write-host "patching the $speechAppName hospitality commands model"
 
 # change the model based on the local json file
 
-$newModel = Get-Content '../skill/hospitalityCustomCommands.json' | Out-String | ConvertFrom-Json
+$newModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
 $model.httpEndpoints = $newModel.httpEndpoints
 $model.httpEndpoints[0].url = $websiteAddress
 $model.lgTemplates = $newModel.lgTemplates
 $model.globalParameters = $newModel.globalParameters
 $model.commands = $newModel.commands
-#$model | ConvertTo-Json -depth 100 | Out-File "newModel.json"
 
 # send the updated model up to the application
 
-write-host "updating $speechAppName with the new inventory commands model"
+write-host "updating $speechAppName with the new hospitality commands model"
 try {
     $response = invoke-restmethod -Method PUT -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Body ($model | ConvertTo-Json  -depth 100) -Header $headers
 } catch {
@@ -165,4 +166,3 @@ Write-Host "Custom commands has been published."
 Write-Host "Update these parameters in your client to use the Custom Commands Application"
 Write-Host "    CustomCommandsId   = $appId"
 Write-Host "    SpeechSubscriptionKey = $speechResourceKey"
-Write-Host "***********************"
