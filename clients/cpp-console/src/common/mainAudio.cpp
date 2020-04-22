@@ -36,14 +36,20 @@ using namespace AudioPlayer;
 
 enum class KeywordActivationState
 {
-    // Initial value, before reading the input configuration file
-    Undefined = 0,   
-    // Configuration file did not specify a keyword mode. Keyword activation not possible
-    Disabled = 1,    
-    // Keyword model exists and device is listening for keyword activation
-    Listening = 2,   
-    // Keyword model exists but device is not listening for keyword activation
-    NotListening = 3 
+    // Initial value, before reading the input configuration file or user selection via keyboard.
+    Undefined, 
+
+    // Configuration file did not specify a keyword mode. Keyword activation not possible on this device.
+    Disabled, 
+
+    // Keyword model exists on the device, user selected keyword activation, but the device is currently not listening for the keyword (e.g. since TTS playback is in progress and barge-in is not supported).
+    Paused,
+
+    // Keyword model exists on the device, user selected keyword activation and the device is currently listening for the keyword.
+    Listening,  
+
+    // Keyword model exists on the device but the user has selected not to listen for keyword.
+    NotListening 
 };
 
 void log()
@@ -85,19 +91,11 @@ int main(int argc, char** argv)
     shared_ptr<AgentConfiguration> agentConfig;
     shared_ptr<DialogServiceConnector> dialogServiceConnector;
     
-    auto startKwsIfApplicable = [&]()
+    auto StartKws = [&]()
     {
-        log_t("startKWS called");
+        log_t("startKwsIfApplicable called");
 
-        if (KeywordActivationState::Disabled == keywordActivationState)
-        {
-            log_t("No model file specified. Cannot start keyword listening");
-        }
-        else if (KeywordActivationState::Listening == keywordActivationState)
-        {
-            log_t("Already listening to keyword");
-        }
-        else if (KeywordActivationState::NotListening == keywordActivationState)
+        if (KeywordActivationState::Paused == keywordActivationState)
         {
             auto modelPath = agentConfig->KeywordModel();
             log_t("Initializing keyword recognition with: ", modelPath);
@@ -106,33 +104,34 @@ int main(int argc, char** argv)
             keywordActivationState = KeywordActivationState::Listening;
             log_t("KWS initialized");
         }
-        else
-        {
-            log_t("Should not reach here");
-        }
     };
 
-    auto stopKwsIfApplicable = [&]()
+    auto PauseKws = [&]()
     {
-        log_t("stopKWS called");
+        log_t("PauseKws called");
 
-        if (KeywordActivationState::Disabled == keywordActivationState)
-        {
-            log_t("No model path specified. Cannot stop keyword listening");
-        }
-        else if (KeywordActivationState::Listening == keywordActivationState)
+        if (KeywordActivationState::Listening == keywordActivationState)
         {
             log_t("Stopping keyword recognition");
             auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
+            keywordActivationState = KeywordActivationState::Paused;
+        }
+    };
+
+    auto StopKws = [&]()
+    {
+        log_t("StopKws called");
+
+        if (KeywordActivationState::Listening == keywordActivationState ||
+            KeywordActivationState::Paused == keywordActivationState)
+        {
+            if (KeywordActivationState::Listening == keywordActivationState)
+            {
+                log_t("Stopping keyword recognition");
+                auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
+            }
+
             keywordActivationState = KeywordActivationState::NotListening;
-        }
-        else if (KeywordActivationState::NotListening == keywordActivationState)
-        {
-            log_t("Was not listening to keyword");
-        }
-        else
-        {
-            log_t("Should not reach here");
         }
     };
     
@@ -217,7 +216,7 @@ int main(int argc, char** argv)
         {
             printf("CANCELED: ErrorDetails=%s\n", event.ErrorDetails.c_str());
             printf("CANCELED: Did you update the subscription info?\n");
-            startKwsIfApplicable();
+            StartKws();
         }
     };
 
@@ -242,10 +241,9 @@ int main(int argc, char** argv)
             log_t("Activity has audio, playing synchronously.");
 
             // TODO: AEC + Barge-in
-            // For now: no KWS during playback
-            log_t("stopping KWS for playback");
-            auto future = dialogServiceConnector->StopKeywordRecognitionAsync();
-            log_t("KWS stopped");
+            // For now: no KWS during playback            
+            log_t("Pausing KWS during TTS playback");
+            PauseKws();
 
             auto audio = event.GetAudio();
             int play_result = 0;
@@ -274,15 +272,15 @@ int main(int argc, char** argv)
             //TODO remove once we have echo cancellation
             int secondsOfAudio = total_bytes_read / 32000;
             std::this_thread::sleep_for(std::chrono::milliseconds(secondsOfAudio*1000));
-            startKwsIfApplicable();
+            StartKws();
         }
     };
 
-    // Activate keyword listening if keyword model file exists
+    // Activate keyword listening on start up if keyword model file exists
     if (agentConfig->KeywordModel().length() > 0)
     {
-        keywordActivationState = KeywordActivationState::NotListening;
-        startKwsIfApplicable();
+        keywordActivationState = KeywordActivationState::Paused;
+        StartKws();
     }
     else
     {
@@ -290,13 +288,21 @@ int main(int argc, char** argv)
     }
 
     DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
-    
-    cout << "Commands:" << endl;
-    cout << "1 [listen once]" << endl;
-    cout << "2 [start keyword listening]" << endl;
-    cout << "3 [stop keyword listening]" << endl;
-    cout << "x [exit]" << endl;
-    
+
+    auto DisplayKeystrokeOptions = [&]()
+    {
+        cout << "Commands:" << endl;
+        cout << "1 [listen once]" << endl;
+        if (keywordActivationState != KeywordActivationState::Disabled)
+        {
+            cout << "2 [start keyword listening]" << endl;
+            cout << "3 [stop keyword listening]" << endl;
+        }
+        cout << "x [exit]" << endl;
+    };
+
+    DisplayKeystrokeOptions();
+
     s = "";
     while(s != "x")
     {
@@ -306,16 +312,14 @@ int main(int argc, char** argv)
             auto future = dialogServiceConnector->ListenOnceAsync();
         }
         if(s == "2"){
-            startKwsIfApplicable();
+            keywordActivationState = KeywordActivationState::Paused;
+            StartKws();
         }
         if(s == "3"){
-            stopKwsIfApplicable();
+            StopKws();
         }
-        cout << "Commands:" << endl;
-        cout << "1 [listen once]" << endl;
-        cout << "2 [start keyword listening]" << endl;
-        cout << "3 [stop keyword listening]" << endl;
-        cout << "x [exit]" << endl;
+
+        DisplayKeystrokeOptions();
     }
 
     cout << "Closing down and freeing variables." << endl;
