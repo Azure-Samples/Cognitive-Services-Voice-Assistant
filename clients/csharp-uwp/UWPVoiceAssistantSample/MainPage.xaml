@@ -113,7 +113,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Controls" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2"/>
-            <Button x:Name="CollpaseControlsPane" Grid.Column="2" Margin="45,0,0,0" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" Click="CollapseControls"/>
+            <Button x:Name="CollpaseControlsPane" Grid.Column="2" Margin="0,0,-45,0" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" Click="CollapseControls"/>
             <ToggleSwitch x:Name="BackgroundTaskToggle"
                 IsOn="{x:Bind BackgroundTaskRegistered, Mode=TwoWay}"
                 Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
