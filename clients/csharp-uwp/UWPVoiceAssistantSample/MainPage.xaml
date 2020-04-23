@@ -5,10 +5,11 @@
     xmlns:mvadls="using:UWPVoiceAssistantSample"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="MainPageWindow">
-
+    
     <Grid x:Name="MainWindowGrid" MaxWidth="1280" MinWidth="1280">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -85,6 +86,37 @@
                         NavigateUri="ms-settings:privacy-microphone" 
                         HorizontalAlignment="Left"/>
             </StackPanel>
+            <Button
+                x:Name="ApplicationStateBadge"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center" 
+                Click="ApplicationStateBadgeClick"
+                Grid.Column="3"
+                Padding="10"
+                Margin="0,0,5,0">
+                <Border HorizontalAlignment="Right" CornerRadius="9"
+                        VerticalAlignment="Top" Width="25" Height="15"
+                        Grid.Row="2"  Margin="0,0,-15,-10" 
+                        Background="Black"
+                        BorderThickness="2" BorderBrush="White">
+                    <TextBlock x:Name="ErrorCount" FontSize="10" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Foreground="White">    
+                    </TextBlock>
+                </Border>
+            </Button>
+
+            <muxc:TeachingTip x:Name="AutoSaveTip"
+                    IsLightDismissEnabled="True"
+                    PreferredPlacement="Top">
+                <muxc:TeachingTip.Content>
+                    <RichTextBlock x:Name="TeachingTipTextblock" Padding="5" Margin="5" Foreground="LightGray">
+                        
+                    </RichTextBlock>
+                </muxc:TeachingTip.Content>
+            </muxc:TeachingTip>
+
+
             <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="35" Foreground="Green" Margin="5,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
                 <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="1,9,0,0"></TextBlock>

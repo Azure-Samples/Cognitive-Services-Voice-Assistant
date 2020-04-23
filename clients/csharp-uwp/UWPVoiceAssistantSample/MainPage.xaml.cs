@@ -9,7 +9,9 @@ namespace UWPVoiceAssistantSample
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Xml;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.UI.Xaml.Controls;
     using Newtonsoft.Json;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
@@ -20,6 +22,7 @@ namespace UWPVoiceAssistantSample
     using Windows.System.Power;
     using Windows.UI;
     using Windows.UI.Core;
+    using Windows.UI.Notifications;
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -246,38 +249,55 @@ namespace UWPVoiceAssistantSample
                 var microphoneStatusInfo = await UIAudioStatus.GetMicrophoneStatusAsync();
                 this.MicrophoneInfoIcon.Glyph = microphoneStatusInfo.Glyph;
                 this.MicrophoneInfoIcon.Foreground = new SolidColorBrush(microphoneStatusInfo.Color);
-                this.MicrophoneLinkButton.Content = microphoneStatusInfo.Status;
+                if (microphoneStatusInfo.Status[0] == "Microphone is available.")
+                {
+                    this.MicrophoneLinkButton.Content = "Microphone is available.";
+                    this.TeachingTipTextblock.Blocks.Clear();
+                }
+                else
+                {
+                    this.MicrophoneLinkButton.Content = "Microphone is not available.";
+                    this.TeachingTipTextblock.Blocks.Clear();
+                }
 
                 var voiceActivationStatusInfo = await UIAudioStatus.GetVoiceActivationStatusAsync();
                 this.VAStatusIcon.Glyph = voiceActivationStatusInfo.Glyph;
                 this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
-                this.VoiceActivationLinkButton.Content = voiceActivationStatusInfo.Status;
+                if (voiceActivationStatusInfo.Status[0] == "Voice activation is configured and available.")
+                {
+                    this.VoiceActivationLinkButton.Content = "Voice activation is configured and available.";
+                    this.TeachingTipTextblock.Blocks.Clear();
+                }
+                else
+                {
+                    this.VoiceActivationLinkButton.Content = "Voice activation is not available";
+                    this.TeachingTipTextblock.Blocks.Clear();
+                }
+
+                foreach (var item in microphoneStatusInfo.Status)
+                {
+                    Paragraph paragraph = new Paragraph();
+                    Run run = new Run();
+                    run.Text = item;
+                    paragraph.Inlines.Add(run);
+                    paragraph.Foreground = new SolidColorBrush(Colors.Blue);
+                    this.TeachingTipTextblock.Blocks.Add(paragraph);
+                }
+
+                foreach (var item in voiceActivationStatusInfo.Status)
+                {
+                    Paragraph paragraph = new Paragraph();
+                    Run run = new Run();
+                    run.Text = item;
+                    paragraph.Inlines.Add(run);
+                    paragraph.Foreground = new SolidColorBrush(Colors.Blue);
+                    run.Foreground = new SolidColorBrush(Colors.LightGray);
+                    this.TeachingTipTextblock.Blocks.Add(paragraph);
+                }
+
+                this.ErrorCount.Text = this.TeachingTipTextblock.Blocks.Count().ToString();
 
                 this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
-
-                //if (!this.BackgroundTaskRegistered && !micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
-                //}
-
-                //if (!this.BackgroundTaskRegistered && micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30) , Height = 800 });
-                //}
-
-                //if (this.BackgroundTaskRegistered && !micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
-                //}
-
-                //if (this.BackgroundTaskRegistered && micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //    //ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30) + ((int)this.LogGrid.ActualWidth), Height = 800 });
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //}
-
             });
         }
 
@@ -786,6 +806,43 @@ namespace UWPVoiceAssistantSample
             launchOption.ItemsToSelect.Add(fileToSelect);
 
             await Launcher.LaunchFolderAsync(localFolder, launchOption);
+        }
+
+        private async void ApplicationStateBadgeClick(object sender, RoutedEventArgs e)
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                this.TeachingTipTextblock.Blocks.Clear();
+                this.AutoSaveTip.IsOpen = true;
+                var microphoneStatusInfo = await UIAudioStatus.GetMicrophoneStatusAsync();
+                this.MicrophoneInfoIcon.Glyph = microphoneStatusInfo.Glyph;
+                this.MicrophoneInfoIcon.Foreground = new SolidColorBrush(microphoneStatusInfo.Color);
+
+                foreach (var item in microphoneStatusInfo.Status)
+                {
+                    Paragraph paragraph = new Paragraph();
+                    Run run = new Run();
+                    run.Text = item;
+                    paragraph.Inlines.Add(run);
+                    paragraph.Foreground = new SolidColorBrush(Colors.Blue);
+                    this.TeachingTipTextblock.Blocks.Add(paragraph);
+                }
+
+                var voiceActivationStatusInfo = await UIAudioStatus.GetVoiceActivationStatusAsync();
+                this.VAStatusIcon.Glyph = voiceActivationStatusInfo.Glyph;
+                this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
+
+                foreach (var item in voiceActivationStatusInfo.Status)
+                {
+                    Paragraph paragraph = new Paragraph();
+                    Run run = new Run();
+                    run.Text = item;
+                    paragraph.Inlines.Add(run);
+                    paragraph.Foreground = new SolidColorBrush(Colors.Blue);
+                    this.TeachingTipTextblock.Blocks.Add(paragraph);
+                }
+                this.ErrorCount.Text = this.TeachingTipTextblock.Blocks.Count().ToString();
+            });
         }
     }
 }
