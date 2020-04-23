@@ -291,11 +291,10 @@ namespace UWPVoiceAssistantSample
                     run.Text = item;
                     paragraph.Inlines.Add(run);
                     paragraph.Foreground = new SolidColorBrush(Colors.Blue);
-                    run.Foreground = new SolidColorBrush(Colors.LightGray);
                     this.TeachingTipTextblock.Blocks.Add(paragraph);
                 }
 
-                this.ErrorCount.Text = this.TeachingTipTextblock.Blocks.Count().ToString();
+                this.ApplicationStateBadge.Content = $"{this.TeachingTipTextblock.Blocks.Count().ToString()} Messages";
 
                 this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
             });
@@ -841,7 +840,7 @@ namespace UWPVoiceAssistantSample
                     paragraph.Foreground = new SolidColorBrush(Colors.Blue);
                     this.TeachingTipTextblock.Blocks.Add(paragraph);
                 }
-                this.ErrorCount.Text = this.TeachingTipTextblock.Blocks.Count().ToString();
+                this.ApplicationStateBadge.Content = $"{this.TeachingTipTextblock.Blocks.Count().ToString()} Messages";
             });
         }
     }

@@ -128,45 +128,45 @@ namespace UWPVoiceAssistantSample
             {
                 status.Add("Unable to obtain agent session. Please verify registration.");
             }
-            else if (config == null)
+            if (config == null)
             {
                 status.Add("No valid keyword configuration. Please check your source code configuration.");
             }
-            else if (!config.AvailabilityInfo.HasPermission)
+            if (!config.AvailabilityInfo.HasPermission)
             {
                 status.Add("Voice activation permissions are currently denied. Click here to view settings.");
             }
-            else if (!config.AvailabilityInfo.HasSystemResourceAccess)
+            if (!config.AvailabilityInfo.HasSystemResourceAccess)
             {
                 status.Add("Voice activation is unavailable. Please verify against keyword conflicts.");
             }
-            else if (!config.AvailabilityInfo.IsEnabled)
+            if (!config.AvailabilityInfo.IsEnabled)
             {
                 status.Add("Voice activation is programmatically disabled by the app.");
             }
-            else if (!config.IsActive)
+            if (!config.IsActive)
             {
                 status.Add("Voice activation is unavailable for an unknown reason.");
             }
-            else if (audioControl.CaptureMuted || audioControl.CaptureVolumeLevel < 5f)
+            if (audioControl.CaptureMuted || audioControl.CaptureVolumeLevel < 5f)
             {
                 glyph = Glyphs.Warning;
                 color = Colors.DarkOrange;
                 status.Add("Voice activation is available but may be degraded due to microphone state.");
             }
-            else if (!MVARegistrationHelpers.IsBackgroundTaskRegistered)
+            if (!MVARegistrationHelpers.IsBackgroundTaskRegistered)
             {
                 glyph = Glyphs.Warning;
                 color = Colors.DarkOrange;
                 status.Add("Background task is not configured and voice activation will only work while the application is already active.");
             }
-            else if (VoiceActivationIsPowerRestricted())
+            if (VoiceActivationIsPowerRestricted())
             {
                 glyph = Glyphs.Warning;
                 color = Colors.DarkOrange;
                 status.Add("The system is currently power restricted and voice activation may not be available.");
             }
-            else
+            if (config.AvailabilityInfo.IsEnabled)
             {
                 glyph = Glyphs.FeedbackApp;
                 color = Colors.Green;
