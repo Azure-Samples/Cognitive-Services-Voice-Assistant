@@ -12,6 +12,7 @@ namespace UWPVoiceAssistantSample
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
+    using Newtonsoft.Json.Linq;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioOutput;
     using Windows.Media.MediaProperties;
@@ -108,7 +109,10 @@ namespace UWPVoiceAssistantSample
                 this.ConnectorConfiguration,
                 AudioConfig.FromStreamInput(this.connectorInputStream));
 
-            this.connector.SessionStarted += (s, e) => this.SessionStarted?.Invoke(e.SessionId);
+            this.connector.SessionStarted += (s, e) =>
+            {
+                this.SessionStarted?.Invoke(e.SessionId);
+            };
             this.connector.SessionStopped += (s, e) => this.SessionStopped?.Invoke(e.SessionId);
             this.connector.Recognizing += (s, e) =>
             {
@@ -179,7 +183,10 @@ namespace UWPVoiceAssistantSample
         /// </returns>
         public async Task<string> SendDialogMessageAsync(string message)
         {
-            var id = await this.connector.SendActivityAsync(message);
+            var activityJson = new JObject();
+            activityJson["type"] = "message";
+            activityJson["text"] = message;
+            var id = await this.connector.SendActivityAsync(activityJson.ToString());
             return id;
         }
 

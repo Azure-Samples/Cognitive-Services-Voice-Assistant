@@ -198,6 +198,9 @@ namespace UWPVoiceAssistantSample
                 await this.dialogBackend.InitializeAsync(await this.keywordRegistration.GetConfirmationKeywordFileAsync());
             }
 
+            await this.StopAudioCaptureAsync();
+            await this.StopAudioPlaybackAsync();
+
             var id = await this.dialogBackend.SendDialogMessageAsync(activityJson);
             return id;
         }
@@ -220,7 +223,6 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task that completes once playback is stopped. </returns>
         public async Task StopAudioPlaybackAsync()
         {
-            await this.dialogAudioOutput?.StopPlaybackAsync();
             await this.dialogResponseQueue.AbortAsync();
         }
 

@@ -119,8 +119,13 @@ namespace UWPVoiceAssistantSample
             };
             this.MicrophoneButton.Click += async (_, __) =>
             {
-                this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
-                await this.UpdateUIForSharedStateAsync();
+                //this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
+                //await this.UpdateUIForSharedStateAsync();
+
+                var message = this.TextInputTextBox.Text;
+                this.TextInputTextBox.Text = string.Empty;
+                this.AddMessageToStatus(message);
+                await this.dialogManager.SendActivityAsync(message);
             };
             this.ResetButton.Click += async (_, __) =>
             {
