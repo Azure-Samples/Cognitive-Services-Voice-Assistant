@@ -364,7 +364,6 @@ namespace UWPVoiceAssistantSample
             var oldState = session.AgentState;
             this.logger.Log($"Changing agent state: [{oldState.ToString()}] -> [{newState.ToString()}]");
             await session.RequestAgentStateChangeAsync(newState);
-            this.signalDetectionHelper.DialogStateChangeDuringSignalVerification(oldState, newState);
             this.DialogStateChanged?.Invoke(oldState, newState);
         }
 
