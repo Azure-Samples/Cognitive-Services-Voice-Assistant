@@ -127,7 +127,7 @@ namespace UWPVoiceAssistantSample
             var signalName = (detectionOrigin == DetectionOrigin.FromPushToTalk)
                 ? "Push to talk" : session.SignalName;
 
-            this.logger.Log($"{Environment.TickCount} : HandleSignalDetection: '{signalName}', {detectionOrigin.ToString()}");
+            this.logger.Log($"HandleSignalDetection, '{signalName}', {detectionOrigin.ToString()}");
 
             var canSkipVerification =
                 detectionOrigin == DetectionOrigin.FromPushToTalk
