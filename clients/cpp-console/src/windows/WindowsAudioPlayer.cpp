@@ -137,9 +137,9 @@ exit:
 
 void WindowsAudioPlayer::PlayerThreadMain() {
     HRESULT hr = S_OK;
-    m_canceled = false;
+    m_shuttingDown = false;
 
-    while (m_canceled == false) {
+    while (m_shuttingDown == false) {
         // here we will wait to be woken up since there is no audio left to play
         std::unique_lock<std::mutex> lk{ m_threadMutex };
         m_conditionVariable.wait(lk);
@@ -147,7 +147,18 @@ void WindowsAudioPlayer::PlayerThreadMain() {
 
         while (m_audioQueue.size() > 0) {
             m_isPlaying = true;
+            
             std::shared_ptr<AudioPlayerEntry> entry = std::make_shared<AudioPlayerEntry>(m_audioQueue.front());
+            m_queueMutex.lock();
+            if (!m_audioQueue.empty())
+            {
+                //remove the item we just used.
+                m_audioQueue.pop_front();
+            }
+            m_queueMutex.unlock();
+            if (entry == nullptr) {
+                continue;
+            }
             switch(entry->m_entryType){
                 case PlayerEntryType::BYTE_ARRAY:
                     PlayByteBuffer(entry);
@@ -158,9 +169,7 @@ void WindowsAudioPlayer::PlayerThreadMain() {
                 default:
                     fprintf(stderr, "Unknown Audio Player Entry type\n");   
             }
-            m_queueMutex.lock();
-            m_audioQueue.pop_front();
-            m_queueMutex.unlock();
+            
         }
         m_isPlaying = false;
     }
@@ -223,7 +232,7 @@ void WindowsAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEn
 
 freeBeforeContinue:
         free(pStreamData);
-    } while(bytesRead > 0);
+    } while(bytesRead > 0 && m_canceled == false);
 
 }
 
@@ -242,12 +251,8 @@ void WindowsAudioPlayer::PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry
         return;
     }
 
-    while (bufferLeft > 0) {
-        
-
-        //
+    while (bufferLeft > 0 && m_canceled == false) {
         //  We want to find out how much of the buffer *isn't* available (is padding).
-        //
 
         hr = m_pAudioClient->GetCurrentPadding(&paddingFrames);
         if(FAILED(hr)){
@@ -288,7 +293,10 @@ int WindowsAudioPlayer::Play(uint8_t* buffer, size_t bufferSize) {
     m_queueMutex.lock();
     m_audioQueue.push_back(entry);
     m_queueMutex.unlock();
-
+    
+    //make sure the canceled variable is not set
+    m_canceled = false;
+    
     if (!m_isPlaying) {
         //wake up the audio thread
         m_conditionVariable.notify_one();
@@ -303,7 +311,10 @@ int WindowsAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speec
     m_queueMutex.lock();
     m_audioQueue.push_back(entry);
     m_queueMutex.unlock();
-
+    
+    //make sure the canceled variable is not set
+    m_canceled = false;
+    
     if (!m_isPlaying) {
         //wake up the audio thread
         m_conditionVariable.notify_one();
@@ -312,11 +323,23 @@ int WindowsAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speec
     return rc;
 }
 
+int WindowsAudioPlayer::StopAllPlayback(){
+    //set the canceled flag to stop playback
+    m_canceled = true;
+    
+    //clear the audio queue safely
+    m_queueMutex.lock();
+    m_audioQueue.clear();
+    m_queueMutex.unlock();
+
+    return 0;
+}
+
 int WindowsAudioPlayer::SetVolume(unsigned int percent){
     return 0;
 }
 
 int WindowsAudioPlayer::Close() {
-
+    m_shuttingDown = true;
     return 0;
 }

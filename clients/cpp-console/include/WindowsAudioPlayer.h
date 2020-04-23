@@ -157,6 +157,21 @@ namespace AudioPlayer
             int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream);
             
             /// <summary>
+            /// This method is used to stop all playback. This will clear any queued audio meaning that any audio yet to play will be lost.
+            /// </summary>
+            /// <returns>A return code with < 0 as an error and any other int as success</returns>
+            /// <example>
+            /// <code>
+            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
+            /// audioPlayer->Play(...);
+            /// audioPlayer->StopAllPlayback();
+            /// </example>
+            /// <remarks>
+            /// In our implementation we assume Open is called before playing.
+            /// </remarks>
+            int StopAllPlayback();
+            
+            /// <summary>
             /// This function is a no-op
             /// </summary>
             /// <returns>A return code with < 0 as an error and any other int as success</returns>
@@ -195,6 +210,7 @@ namespace AudioPlayer
             bool                    m_isPlaying = false;
             bool                    m_canceled = false;
             bool                    m_opened = false;
+            bool                    m_shuttingDown = false;
             std::string             m_device;
             std::mutex              m_queueMutex;
             std::mutex              m_threadMutex;

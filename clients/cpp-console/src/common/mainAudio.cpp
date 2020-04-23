@@ -91,6 +91,14 @@ int main(int argc, char** argv)
     shared_ptr<AgentConfiguration> agentConfig;
     shared_ptr<DialogServiceConnector> dialogServiceConnector;
     
+    auto StartListening = [&]()
+    {
+        log_t("Now listening...");
+        player->StopAllPlayback();
+        DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
+        auto future = dialogServiceConnector->ListenOnceAsync();
+    };
+    
     auto StartKws = [&]()
     {
         log_t("Enter StartKws (state = ", uint32_t(keywordActivationState), ")");
@@ -204,12 +212,23 @@ int main(int argc, char** argv)
     dialogServiceConnector->Recognized += [&](const SpeechRecognitionEventArgs& event) {
         printf("FINAL RESULT: '%s'\n", event.Result->Text.c_str());
         auto&& reason = event.Result->Reason;
-        auto newStatus = reason == ResultReason::RecognizedKeyword
-                ? DeviceStatus::Listening
-                : reason == ResultReason::RecognizedSpeech
-                ? DeviceStatus::Thinking
-                : DeviceStatus::Idle;
-            DeviceStatusIndicators::SetStatus(newStatus);
+        
+        DeviceStatus newStatus;
+        
+        switch(reason){
+            case ResultReason::RecognizedKeyword:
+                newStatus = DeviceStatus::Listening;
+                player->StopAllPlayback();
+                break;
+            case ResultReason::RecognizedSpeech:
+                newStatus = DeviceStatus::Listening;
+                break;
+            default:
+                newStatus = DeviceStatus::Idle;
+        }
+        
+        //update the device status
+        DeviceStatusIndicators::SetStatus(newStatus);
     };
 
     // Signal for events relating to the cancellation of an interaction. The event indicates if the reason is a direct cancellation or an error.
@@ -247,8 +266,8 @@ int main(int argc, char** argv)
 
             // TODO: AEC + Barge-in
             // For now: no KWS during playback            
-            log_t("Pausing KWS during TTS playback");
-            PauseKws();
+            //log_t("Pausing KWS during TTS playback");
+            //PauseKws();
 
             auto audio = event.GetAudio();
             int play_result = 0;
@@ -269,15 +288,14 @@ int main(int argc, char** argv)
         if (continue_multiturn)
         {
             log_t("Activity requested a continuation (ExpectingInput) -- listening again");
-            DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
-            auto future = dialogServiceConnector->ListenOnceAsync();
+            StartListening();
         }
         else
         {
             //TODO remove once we have echo cancellation
-            int secondsOfAudio = total_bytes_read / 32000;
+            /*int secondsOfAudio = total_bytes_read / 32000;
             std::this_thread::sleep_for(std::chrono::milliseconds(secondsOfAudio*1000));
-            StartKws();
+            StartKws();*/
         }
     };
 
@@ -313,8 +331,7 @@ int main(int argc, char** argv)
     {
         cin >> s;
         if(s == "1"){
-            log_t("Now listening...");
-            auto future = dialogServiceConnector->ListenOnceAsync();
+            StartListening();
         }
         if(s == "2" && keywordActivationState != KeywordActivationState::NotSupported){
             keywordActivationState = KeywordActivationState::Paused;
@@ -323,7 +340,6 @@ int main(int argc, char** argv)
         if(s == "3" && keywordActivationState != KeywordActivationState::NotSupported){
             StopKws();
         }
-
         DisplayKeystrokeOptions();
     }
 
