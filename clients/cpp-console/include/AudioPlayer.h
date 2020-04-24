@@ -14,12 +14,12 @@ class IAudioPlayer{
     public:
         /// <summary>
         /// AudioPlayerFormat is an enum that can be used in the AudioPlayer
-        /// implementation. It is passed in as a parameter to the Open and Play functions.
+        /// implementation. It is passed in as a parameter to the Initialize and Play functions.
         /// </summary>
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Open("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
+        /// audioPlayer->Initialize("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
         /// audioPlayer->Play("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
         /// </code>
         /// </example>
@@ -39,7 +39,7 @@ class IAudioPlayer{
         virtual ~IAudioPlayer() = default;
         
         /// <summary>
-        /// Open will initialize the audio player with any specific OS dependent 
+        /// Initialize will initialize the audio player with any specific OS dependent 
         /// settings. If called without parameters it should assume some appropriate
         /// defaults.
         /// </summary>
@@ -47,16 +47,16 @@ class IAudioPlayer{
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Open();
+        /// audioPlayer->Initialize();
         /// </code>
         /// </example>
         /// <remarks>
         /// Here we use the LinuxAudioPlayer as an example
         /// </remarks>
-        virtual int Open() = 0;
+        virtual int Initialize() = 0;
         
         /// <summary>
-        /// Open will initialize the audio player with any specific OS dependent 
+        /// Initialize will initialize the audio player with any specific OS dependent 
         /// settings. This implementation should take a device name if necessary 
         /// and an AudioPlayFormat enum to be used in setting up the AudioPlayer
         /// </summary>
@@ -66,13 +66,13 @@ class IAudioPlayer{
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Open("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
+        /// audioPlayer->Initialize("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
         /// </code>
         /// </example>
         /// <remarks>
         /// Here we use the LinuxAudioPlayer as an example
         /// </remarks>
-        virtual int Open(const std::string& device, AudioPlayerFormat format) = 0;
+        virtual int Initialize(const std::string& device, AudioPlayerFormat format) = 0;
 
         /// <summary>
         /// This method is used to actually play the audio. The buffer passed in 
@@ -84,16 +84,19 @@ class IAudioPlayer{
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Open();
+        /// audioPlayer->Initialize();
         /// int bufferSize = 1024;
         /// unsigned char * buffer = (unsigned char *)malloc(bufferSize);
         /// // fill buffer with audio from somewhere
-        /// audioPLayer->Play(buffer, bufferSize);
+        /// int result = audioPLayer->Play(buffer, bufferSize);
+        /// if(result < 0){
+        ///     //error
+        /// }
         /// </code>
         /// </example>
         /// <remarks>
         /// Here we use the LinuxAudioPlayer as an example.
-        /// In our implementation we assume Open is called before playing.
+        /// In our implementation we assume Initialize is called before playing.
         /// </remarks>
         virtual int Play(uint8_t* buffer, size_t bufferSize) = 0;
 
@@ -106,20 +109,23 @@ class IAudioPlayer{
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Open();
+        /// audioPlayer->Initialize();
         /// ... 
         ///
         /// //In the Activity received callback
         /// if (event.HasAudio()){
         ///     std::shared_ptr<Audio::PullAudioOutputStream> stream = event.GetAudio();
-        ///     audioPLayer->Play(stream);
+        ///     int result = audioPLayer->Play(stream);
+        ///     if(result < 0){
+        ///         //error
+        ///     }
         /// }
         /// </code>
         /// </example>
         /// <remarks>
         /// Here we use the LinuxAudioPlayer as an example. This is preferred to the Byte array if possible
         /// since this will not cause copies of the buffer to be stored at runtime.
-        /// In our implementation we assume Open is called before playing.
+        /// In our implementation we assume Initialize is called before playing.
         /// </remarks>
         virtual int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream) = 0;
         
@@ -131,13 +137,43 @@ class IAudioPlayer{
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
         /// audioPlayer->Play(...);
-        /// audioPlayer->StopAllPlayback();
+        /// audioPlayer->Stop();
         /// </example>
         /// <remarks>
-        /// In our implementation we assume Open is called before playing.
+        /// In our implementation we assume Initialize is called before playing.
         /// </remarks>
-        virtual int StopAllPlayback() = 0;
+        virtual int Stop() = 0;
     
+        /// <summary>
+        /// This method is used to pause all playback. Any queued audio should remain queued and be played upon resume.
+        /// </summary>
+        /// <returns>A return code with < 0 as an error and any other int as success</returns>
+        /// <example>
+        /// <code>
+        /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
+        /// audioPlayer->Play(...);
+        /// audioPlayer->Pause();
+        /// </example>
+        /// <remarks>
+        /// In our implementation we assume Initialize is called before playing.
+        /// </remarks>
+        virtual int Pause() = 0;
+        
+        /// <summary>
+        /// This method is used to resume any playback.
+        /// </summary>
+        /// <returns>A return code with < 0 as an error and any other int as success</returns>
+        /// <example>
+        /// <code>
+        /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
+        /// audioPlayer->Play(...);
+        /// audioPlayer->Resume();
+        /// </example>
+        /// <remarks>
+        /// In our implementation we assume Initialize is called before playing.
+        /// </remarks>
+        virtual int Resume() = 0;
+        
         /// <summary>
         /// This function is used to programmatically set the volume of the audio player
         /// </summary>
@@ -145,7 +181,7 @@ class IAudioPlayer{
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Open();
+        /// audioPlayer->Initialize();
         /// audioPlayer->SetVolume(50);
         /// </code>
         /// </example>
@@ -161,7 +197,7 @@ class IAudioPlayer{
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Open();
+        /// audioPlayer->Initialize();
         /// audioPlayer->GetState();
         /// </code>
         /// </example>
@@ -169,24 +205,4 @@ class IAudioPlayer{
         /// Here we use the LinuxAudioPlayer as an example.
         /// </remarks>
         virtual AudioPlayer::AudioPlayerState GetState() = 0;
-        
-        /// <summary>
-        /// This function is used to clean up the audio players resources.
-        /// </summary>
-        /// <returns>A return code with < 0 as an error and any other int as success</returns>
-        /// <example>
-        /// <code>
-        /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Open();
-        /// int bufferSize = 1024;
-        /// unsigned char * buffer = (unsigned char *)malloc(bufferSize);
-        /// // fill buffer with audio from somewhere
-        /// audioPLayer->Play(buffer, bufferSize, IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
-        /// audioPlayer->Close();
-        /// </code>
-        /// </example>
-        /// <remarks>
-        /// Here we use the LinuxAudioPlayer as an example.
-        /// </remarks>
-        virtual int Close() = 0;
 };

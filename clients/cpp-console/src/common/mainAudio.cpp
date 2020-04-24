@@ -92,7 +92,7 @@ int main(int argc, char** argv)
     auto StartListening = [&]()
     {
         log_t("Now listening...");
-        player->StopAllPlayback();
+        player->Stop();
         DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
         auto future = dialogServiceConnector->ListenOnceAsync();
     };
@@ -167,6 +167,7 @@ int main(int argc, char** argv)
         player = new WindowsAudioPlayer();
 #endif
         player->SetVolume(agentConfig->_volume);
+        player->Initialize();
     }
     
     log_t("Configuration loaded. Creating connector...");
@@ -216,7 +217,7 @@ int main(int argc, char** argv)
         switch(reason){
             case ResultReason::RecognizedKeyword:
                 newStatus = DeviceStatus::Listening;
-                player->StopAllPlayback();
+                player->Stop();
                 break;
             case ResultReason::RecognizedSpeech:
                 newStatus = DeviceStatus::Listening;
@@ -263,7 +264,6 @@ int main(int argc, char** argv)
             log_t("Activity has audio, playing synchronously.");
 
             // TODO: AEC + Barge-in
-            // For now: no KWS during playback            
             //log_t("Pausing KWS during TTS playback");
             //PauseKws();
 
@@ -342,10 +342,6 @@ int main(int argc, char** argv)
     }
 
     cout << "Closing down and freeing variables." << endl;
-    
-    if(volumeOn){
-        player->Close();
-    }
     
     return 0;
 }

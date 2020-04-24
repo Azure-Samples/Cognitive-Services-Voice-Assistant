@@ -13,8 +13,7 @@
 using namespace AudioPlayer;
 
 LinuxAudioPlayer::LinuxAudioPlayer(){
-    m_state = AudioPlayerState::INITIALIZING;
-    Open();
+    m_state = AudioPlayerState::UNINITIALIZED;
     SetVolume(25);
     m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
 }
@@ -23,13 +22,14 @@ LinuxAudioPlayer::~LinuxAudioPlayer(){
     Close();
 }
 
-int LinuxAudioPlayer::Open(){
+int LinuxAudioPlayer::Initialize(){
     int rc;
-    rc = Open("default", AudioPlayerFormat::Mono16khz16bit);
+    rc = Initialize("default", AudioPlayerFormat::Mono16khz16bit);
     return rc;
 }
 
-int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
+int LinuxAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat format){
+    m_state = AudioPlayerState::INITIALIZING;
     //PCM variables
     int rc;
     int err;
@@ -197,17 +197,23 @@ void LinuxAudioPlayer::PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry){
 
 int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
     int rc = 0;
-    AudioPlayerEntry entry(buffer, bufferSize);
-    m_queueMutex.lock();
-    m_audioQueue.push_back(entry);
-    m_queueMutex.unlock();
     
-    //make sure the canceled variable is not set
-    m_canceled = false;
-    
-    if(m_state != AudioPlayerState::PLAYING){
-        //wake up the audio thread
-        m_conditionVariable.notify_one();
+    if(m_state == AudioPlayerState::UNINITIALIZED){
+        rc = -1;
+    }
+    else{
+        AudioPlayerEntry entry(buffer, bufferSize);
+        m_queueMutex.lock();
+        m_audioQueue.push_back(entry);
+        m_queueMutex.unlock();
+        
+        //make sure the canceled variable is not set
+        m_canceled = false;
+        
+        if(m_state != AudioPlayerState::PLAYING){
+            //wake up the audio thread
+            m_conditionVariable.notify_one();
+        }
     }
     
     return rc;
@@ -215,23 +221,29 @@ int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
 
 int LinuxAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream){
     int rc = 0;
-    AudioPlayerEntry entry(pStream);
-    m_queueMutex.lock();
-    m_audioQueue.push_back(entry);
-    m_queueMutex.unlock();
     
-    //make sure the canceled variable is not set
-    m_canceled = false;
-    
-    if(m_state != AudioPlayerState::PLAYING){
-        //wake up the audio thread
-        m_conditionVariable.notify_one();
+    if(m_state == AudioPlayerState::UNINITIALIZED){
+        rc = -1;
+    }
+    else{
+        AudioPlayerEntry entry(pStream);
+        m_queueMutex.lock();
+        m_audioQueue.push_back(entry);
+        m_queueMutex.unlock();
+        
+        //make sure the canceled variable is not set
+        m_canceled = false;
+        
+        if(m_state != AudioPlayerState::PLAYING){
+            //wake up the audio thread
+            m_conditionVariable.notify_one();
+        }
     }
     
     return rc;
 }
 
-int LinuxAudioPlayer::StopAllPlayback(){
+int LinuxAudioPlayer::Stop(){
     //set the canceled flag to stop playback
     m_canceled = true;
     
@@ -244,6 +256,16 @@ int LinuxAudioPlayer::StopAllPlayback(){
     m_audioQueue.clear();
     m_queueMutex.unlock();
 
+    return 0;
+}
+
+int LinuxAudioPlayer::Pause(){
+    //TODO implement
+    return 0;
+}
+
+int LinuxAudioPlayer::Resume(){
+    //TODO implement
     return 0;
 }
 
