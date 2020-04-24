@@ -335,12 +335,13 @@ namespace UWPVoiceAssistantSample
             this.RefreshStatus();
         }
 
-        private void logInformation(string information)
+        private void LogInformation(string information)
         {
             this.filterInformationLog = true;
             if (information.Contains("Information", StringComparison.OrdinalIgnoreCase))
                 {
                 TextBlock informationTextBlock = new TextBlock();
+                informationTextBlock.Foreground = new SolidColorBrush(Colors.Blue);
                 string[] split = information.Split("Information");
                 if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
                 {
@@ -356,22 +357,24 @@ namespace UWPVoiceAssistantSample
             }
         }
 
-        private void logNoise(string noise)
+        private void LogNoise(string noise)
         {
             if (noise.Contains("Noise", StringComparison.OrdinalIgnoreCase))
             {
                 TextBlock noiseTextBlock = new TextBlock();
+                noiseTextBlock.Foreground = new SolidColorBrush(Colors.Gray);
                 string[] split = noise.Split("Noise");
                 noiseTextBlock.Text = split[1];
                 this.ChangeLogStackPanel.Children.Add(noiseTextBlock);
             }
         }
 
-        private void logErrors(string error)
+        private void LogErrors(string error)
         {
             if (error.Contains("Error", StringComparison.OrdinalIgnoreCase))
             {
                 TextBlock errorTextBlock = new TextBlock();
+                errorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
                 string[] split = error.Split("Error");
                 errorTextBlock.Text = split[1];
                 this.ChangeLogStackPanel.Children.Add(errorTextBlock);
@@ -394,7 +397,7 @@ namespace UWPVoiceAssistantSample
                             this.ChangeLogStackPanel.Children.Clear();
                             foreach (var item in this.logger.LogBuffer)
                             {
-                                this.logInformation(item);
+                                this.LogInformation(item);
                                 this.bufferIndex++;
                             }
 
@@ -407,7 +410,7 @@ namespace UWPVoiceAssistantSample
                             this.ChangeLogStackPanel.Children.Clear();
                             foreach (var item in this.logger.LogBuffer)
                             {
-                                this.logErrors(item);
+                                this.LogErrors(item);
                                 this.bufferIndex++;
                             }
 
@@ -420,7 +423,7 @@ namespace UWPVoiceAssistantSample
                             this.ChangeLogStackPanel.Children.Clear();
                             foreach (var item in this.logger.LogBuffer)
                             {
-                                this.logNoise(item);
+                                this.LogNoise(item);
                                 this.bufferIndex++;
                             }
 
@@ -433,8 +436,8 @@ namespace UWPVoiceAssistantSample
                             this.ChangeLogStackPanel.Children.Clear();
                             foreach (var item in this.logger.LogBuffer)
                             {
-                                this.logInformation(item);
-                                this.logErrors(item);
+                                this.LogInformation(item);
+                                this.LogErrors(item);
                                 this.bufferIndex++;
                             }
 
@@ -447,8 +450,8 @@ namespace UWPVoiceAssistantSample
                             this.ChangeLogStackPanel.Children.Clear();
                             foreach (var item in this.logger.LogBuffer)
                             {
-                                this.logInformation(item);
-                                this.logNoise(item);
+                                this.LogInformation(item);
+                                this.LogNoise(item);
                                 this.bufferIndex++;
                             }
 
@@ -461,28 +464,28 @@ namespace UWPVoiceAssistantSample
                             this.ChangeLogStackPanel.Children.Clear();
                             foreach (var item in this.logger.LogBuffer)
                             {
-                                this.logErrors(item);
-                                this.logNoise(item);
+                                this.LogErrors(item);
+                                this.LogNoise(item);
                                 this.bufferIndex++;
                             }
 
                             return;
                         }
+
                         if (this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
                         {
                             this.bufferIndex = 0;
                             this.ChangeLogStackPanel.Children.Clear();
                             foreach (var item in this.logger.LogBuffer)
                             {
-                                this.logInformation(item);
-                                this.logErrors(item);
-                                this.logNoise(item);
+                                this.LogInformation(item);
+                                this.LogErrors(item);
+                                this.LogNoise(item);
                                 this.bufferIndex++;
                             }
+
                             return;
                         }
-
-                        //this.bufferIndex++;
                     }
                 }
 
@@ -849,10 +852,13 @@ namespace UWPVoiceAssistantSample
             await Launcher.LaunchFolderAsync(localFolder, launchOption);
         }
 
-        private void TriggerLogAvailable(object sender, RoutedEventArgs e)
+        private async void TriggerLogAvailable(object sender, RoutedEventArgs e)
         {
-            ReadLogBuffer();
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                this.bufferIndex = 0;
+                this.ReadLogBuffer();
+            });
         }
-
     }
 }

@@ -214,8 +214,8 @@
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
                         <ToggleMenuFlyoutItem x:Name="LogInformationFlyoutItem" Text="Information" IsChecked="True" Click="TriggerLogAvailable"/>
-                        <ToggleMenuFlyoutItem x:Name="LogNoiseFlyoutItem" Text="Noise" IsChecked="True"/>
-                        <ToggleMenuFlyoutItem x:Name="LogErrorFlyoutItem" Text="Errors" IsChecked="True"/>
+                        <ToggleMenuFlyoutItem x:Name="LogNoiseFlyoutItem" Text="Noise" IsChecked="True" Click="TriggerLogAvailable"/>
+                        <ToggleMenuFlyoutItem x:Name="LogErrorFlyoutItem" Text="Errors" IsChecked="True" Click="TriggerLogAvailable"/>
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>
@@ -229,7 +229,6 @@
                     Margin="5"
                     Grid.Row="1" Grid.Column="0" 
                     Grid.RowSpan="4" Grid.ColumnSpan="2">
-                <!--<RichTextBlock x:Name="ChangeLogTextBlock" Width="470" FontWeight="Bold"/>-->
                 <StackPanel x:Name="ChangeLogStackPanel" Width="470" Orientation="Vertical">
                     
                 </StackPanel>
