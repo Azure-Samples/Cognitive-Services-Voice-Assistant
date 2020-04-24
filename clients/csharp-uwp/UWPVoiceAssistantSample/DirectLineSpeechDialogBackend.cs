@@ -36,6 +36,7 @@ namespace UWPVoiceAssistantSample
         private string customCommandsAppId;
         private string botId;
         private bool enableSdkLogging;
+        private string keywordFilePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
@@ -99,8 +100,6 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public object ConfirmationModel { get; set; }
 
-        private string keywordFilePath;
-
         /// <summary>
         /// Gets or sets the configuration object that will be used when creating the
         /// DialogServiceConnector object for Direct Line Speech.
@@ -117,7 +116,7 @@ namespace UWPVoiceAssistantSample
         {
             Contract.Requires(keywordFile != null);
 
-            var configRefreshRequired = this.RefreshConfigValues();
+            var configRefreshRequired = this.TryRefreshConfigValues();
 
             var refreshConnector = configRefreshRequired || (this.keywordFilePath != keywordFile.Path);
 
@@ -126,15 +125,11 @@ namespace UWPVoiceAssistantSample
                 var newConnectorConfiguration = this.CreateConfiguration();
 
                 this.ConfirmationModel = KeywordRecognitionModel.FromFile(keywordFile.Path);
-
                 this.keywordFilePath = keywordFile.Path;
-
                 this.ConnectorConfiguration = newConnectorConfiguration;
-
                 this.connectorInputStream = AudioInputStream.CreatePushStream();
 
                 this.connector.Dispose();
-
                 this.connector = new DialogServiceConnector(
                     this.ConnectorConfiguration,
                     AudioConfig.FromStreamInput(this.connectorInputStream));
@@ -261,9 +256,7 @@ namespace UWPVoiceAssistantSample
         /// If the current turn is confirming a signal, abort the verfication.
         /// </summary>
         /// <returns> A task that completes when the in-progress turn has been aborted. </returns>
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task CancelSignalVerification()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task CancelSignalVerificationAsync()
         {
             await this.connector.StopKeywordRecognitionAsync();
         }
@@ -303,9 +296,9 @@ namespace UWPVoiceAssistantSample
             //  <sub_key>#<bot_id>     use a specific bot within the subscription
             DialogServiceConfig config;
 
-            if (!string.IsNullOrEmpty(speechKey) && !string.IsNullOrEmpty(speechRegion) && !string.IsNullOrEmpty(customCommandsAppId))
+            if (!string.IsNullOrEmpty(this.speechKey) && !string.IsNullOrEmpty(this.speechRegion) && !string.IsNullOrEmpty(this.customCommandsAppId))
             {
-                config = CustomCommandsConfig.FromSubscription(customCommandsAppId, speechKey, speechRegion);
+                config = CustomCommandsConfig.FromSubscription(this.customCommandsAppId, this.speechKey, this.speechRegion);
             }
 
             // else if (!string.IsNullOrEmpty(speechKey) && !string.IsNullOrEmpty(speechRegion) && !string.IsNullOrEmpty(botId))
@@ -315,8 +308,8 @@ namespace UWPVoiceAssistantSample
             else
             {
                 config = BotFrameworkConfig.FromSubscription(
-                    speechKey,
-                    speechRegion);
+                    this.speechKey,
+                    this.speechRegion);
             }
 
             // Disable throttling of input audio (send it as fast as we can!)
@@ -326,20 +319,20 @@ namespace UWPVoiceAssistantSample
             var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
             config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
 
-            if (!string.IsNullOrEmpty(customSpeechId))
+            if (!string.IsNullOrEmpty(this.customSpeechId))
             {
-                config.SetServiceProperty("cid", customSpeechId, ServicePropertyChannel.UriQueryParameter);
+                config.SetServiceProperty("cid", this.customSpeechId, ServicePropertyChannel.UriQueryParameter);
 
                 // Custom Speech does not support Keyword Verification - Remove line below when supported.
                 config.SetProperty("KeywordConfig_EnableKeywordVerification", "false");
             }
 
-            if (!string.IsNullOrEmpty(customVoiceIds))
+            if (!string.IsNullOrEmpty(this.customVoiceIds))
             {
-                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, customVoiceIds);
+                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.customVoiceIds);
             }
 
-            if (enableSdkLogging)
+            if (this.enableSdkLogging)
             {
                 var logPath = $"{ApplicationData.Current.LocalFolder.Path}\\sdklog.txt";
                 config.SetProperty(PropertyId.Speech_LogFilename, logPath);
@@ -348,7 +341,7 @@ namespace UWPVoiceAssistantSample
             return config;
         }
 
-        private bool RefreshConfigValues()
+        private bool TryRefreshConfigValues()
         {
             var speechKey = LocalSettingsHelper.SpeechSubscriptionKey;
             var speechRegion = LocalSettingsHelper.AzureRegion;
