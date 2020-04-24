@@ -132,6 +132,9 @@ namespace UWPVoiceAssistantSample
                 this.ConnectorConfiguration = newConnectorConfiguration;
 
                 this.connectorInputStream = AudioInputStream.CreatePushStream();
+
+                this.connector.Dispose();
+
                 this.connector = new DialogServiceConnector(
                     this.ConnectorConfiguration,
                     AudioConfig.FromStreamInput(this.connectorInputStream));
