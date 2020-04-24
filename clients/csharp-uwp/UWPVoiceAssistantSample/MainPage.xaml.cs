@@ -137,6 +137,7 @@ namespace UWPVoiceAssistantSample
                 => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     this.ChangeLogStackPanel.Children.Clear();
+                    this.bufferIndex = this.logger.LogBuffer.Count;
                 });
 
             this.OpenLogLocationButton.Click += async (_, __)
@@ -399,96 +400,60 @@ namespace UWPVoiceAssistantSample
 
                         if (this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            this.bufferIndex = 0;
-                            this.ChangeLogStackPanel.Children.Clear();
-                            foreach (var item in this.logger.LogBuffer)
-                            {
-                                this.LogInformation(item);
-                                this.bufferIndex++;
-                            }
+                            this.LogInformation(text);
+                            this.bufferIndex++;
 
                             return;
                         }
 
                         if (!this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            this.bufferIndex = 0;
-                            this.ChangeLogStackPanel.Children.Clear();
-                            foreach (var item in this.logger.LogBuffer)
-                            {
-                                this.LogErrors(item);
-                                this.bufferIndex++;
-                            }
+                            this.LogErrors(text);
+                            this.bufferIndex++;
 
                             return;
                         }
 
                         if (!this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            this.bufferIndex = 0;
-                            this.ChangeLogStackPanel.Children.Clear();
-                            foreach (var item in this.logger.LogBuffer)
-                            {
-                                this.LogNoise(item);
-                                this.bufferIndex++;
-                            }
+                            this.LogNoise(text);
+                            this.bufferIndex++;
 
                             return;
                         }
 
                         if (this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            this.bufferIndex = 0;
-                            this.ChangeLogStackPanel.Children.Clear();
-                            foreach (var item in this.logger.LogBuffer)
-                            {
-                                this.LogInformation(item);
-                                this.LogErrors(item);
-                                this.bufferIndex++;
-                            }
-
+                            this.LogInformation(text);
+                            this.LogErrors(text);
+                            this.bufferIndex++;
                             return;
                         }
 
                         if (this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            this.bufferIndex = 0;
-                            this.ChangeLogStackPanel.Children.Clear();
-                            foreach (var item in this.logger.LogBuffer)
-                            {
-                                this.LogInformation(item);
-                                this.LogNoise(item);
-                                this.bufferIndex++;
-                            }
+                            this.LogInformation(text);
+                            this.LogNoise(text);
+                            this.bufferIndex++;
 
                             return;
                         }
 
                         if (!this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            this.bufferIndex = 0;
-                            this.ChangeLogStackPanel.Children.Clear();
-                            foreach (var item in this.logger.LogBuffer)
-                            {
-                                this.LogErrors(item);
-                                this.LogNoise(item);
-                                this.bufferIndex++;
-                            }
+                            this.LogErrors(text);
+                            this.LogNoise(text);
+                            this.bufferIndex++;
 
                             return;
                         }
 
                         if (this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            this.bufferIndex = 0;
-                            this.ChangeLogStackPanel.Children.Clear();
-                            foreach (var item in this.logger.LogBuffer)
-                            {
-                                this.LogInformation(item);
-                                this.LogErrors(item);
-                                this.LogNoise(item);
-                                this.bufferIndex++;
-                            }
+                            this.LogInformation(text);
+                            this.LogErrors(text);
+                            this.LogNoise(text);
+                            this.bufferIndex++;
 
                             return;
                         }
@@ -862,7 +827,7 @@ namespace UWPVoiceAssistantSample
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                this.bufferIndex = 0;
+                this.bufferIndex = this.logger.LogBuffer.Count;
                 this.ReadLogBuffer();
             });
         }
