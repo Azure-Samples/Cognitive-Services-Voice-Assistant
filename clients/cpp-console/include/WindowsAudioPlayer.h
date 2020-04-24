@@ -162,7 +162,7 @@ namespace AudioPlayer
             /// <returns>A return code with < 0 as an error and any other int as success</returns>
             /// <example>
             /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
+            /// IAudioPlayer *audioPlayer = new WindowsAudioPlayer();
             /// audioPlayer->Play(...);
             /// audioPlayer->StopAllPlayback();
             /// </example>

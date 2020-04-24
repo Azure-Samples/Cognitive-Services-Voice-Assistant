@@ -60,7 +60,7 @@ namespace AudioPlayer
             /// </example>
             /// <remarks>
             /// </remarks>
-            int Open();
+            virtual int Open() final;
             
             /// <summary>
             /// Open will initialize the audio player with any specific OS dependent 
@@ -77,7 +77,7 @@ namespace AudioPlayer
             /// <remarks>
             /// This will force the audio device to be closed and reopened to ensure the specified format.
             /// </remarks>
-            int Open(const std::string& device, AudioPlayerFormat format);
+            virtual int Open(const std::string& device, AudioPlayerFormat format) final;
             
             /// <summary>
             /// ALSA expects audio to be sent in periods defined by frames. This function will compute the
@@ -92,9 +92,7 @@ namespace AudioPlayer
             /// </example>
             /// <remarks>
             /// </remarks>
-            int GetBufferSize();
-            
-            void SetAlsaMasterVolume(long volume);
+            virtual int GetBufferSize() final;
             
             /// <summary>
             /// This method is used to actually play the audio. The buffer passed in 
@@ -117,7 +115,7 @@ namespace AudioPlayer
             /// The method returns the number of frames written to ALSA.
             /// We assume Open has already been called.
             /// </remarks>
-            int Play(uint8_t* buffer, size_t bufferSize);
+            virtual int Play(uint8_t* buffer, size_t bufferSize) final;
             
             /// <summary>
             /// This method is used to actually play the audio. The PullAudioOutputStream
@@ -143,7 +141,22 @@ namespace AudioPlayer
             /// since this will not cause copies of the buffer to be stored at runtime.
             /// In our implementation we assume Open is called before playing.
             /// </remarks>
-            int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream);
+            virtual int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream) final;
+
+            /// <summary>
+            /// This method is used to stop all playback. This will clear any queued audio meaning that any audio yet to play will be lost.
+            /// </summary>
+            /// <returns>A return code with < 0 as an error and any other int as success</returns>
+            /// <example>
+            /// <code>
+            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
+            /// audioPlayer->Play(...);
+            /// audioPlayer->StopAllPlayback();
+            /// </example>
+            /// <remarks>
+            /// In our implementation we assume Open is called before playing.
+            /// </remarks>
+            virtual int StopAllPlayback() final;
 
             /// <summary>
             /// This function is used to programmatically set the volume of the audio player
@@ -159,7 +172,24 @@ namespace AudioPlayer
             /// <remarks>
             /// Here we use the LinuxAudioPlayer as an example. Though not all players will support this. See the cpp file for details.
             /// </remarks>
-            int SetVolume(unsigned int percent);
+            virtual int SetVolume(unsigned int percent) final;
+            
+            /// <summary>
+            /// This function is used to retrieve the current state of the player.
+            /// </summary>
+            /// <returns>An AudioPlayerState Enum</returns>
+            /// <example>
+            /// <code>
+            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
+            /// audioPlayer->Open();
+            /// audioPlayer->GetState();
+            /// </code>
+            /// </example>
+            /// <remarks>
+            /// Here we use the LinuxAudioPlayer as an example.
+            /// States are defined in AudioPlayerState.h
+            /// </remarks>
+            virtual AudioPlayerState GetState() final;
             
             /// <summary>
             /// This function is used to clean up the audio players resources.
@@ -179,7 +209,7 @@ namespace AudioPlayer
             /// <remarks>
             /// The ALSA library is drained and closed.
             /// </remarks>
-            int Close();
+            virtual int Close() final;
         
         private:
             
@@ -189,13 +219,14 @@ namespace AudioPlayer
             unsigned int            m_numChannels;
             unsigned int            m_bytesPerSample;
             unsigned int            m_bitsPerSecond;
-            bool                    m_isPlaying = false;
             bool                    m_canceled = false;
-            bool                    m_opened = false;
+            bool                    m_shuttingDown;
             std::string             m_device;
             std::mutex              m_queueMutex;
             std::mutex              m_threadMutex;
             std::condition_variable m_conditionVariable;
+            
+            AudioPlayerState m_state = AudioPlayerState::UNINITIALIZED;
             
             std::list<AudioPlayerEntry> m_audioQueue;
 
@@ -204,5 +235,6 @@ namespace AudioPlayer
             void PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry);
             void PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry);
             int WriteToALSA(uint8_t* buffer);
+            void SetAlsaMasterVolume(long volume);
     };
 }

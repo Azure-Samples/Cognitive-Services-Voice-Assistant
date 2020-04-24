@@ -79,8 +79,6 @@ int main(int argc, char** argv)
         return 0;
     }
     
-    int bufferSize = 1024;
-    unsigned char * buffer = (unsigned char *)malloc(bufferSize);
     string configFilePath = argv[1];
     string s;
     const char * device = "default";
@@ -348,7 +346,6 @@ int main(int argc, char** argv)
     if(volumeOn){
         player->Close();
     }
-    free(buffer);
     
     return 0;
 }
