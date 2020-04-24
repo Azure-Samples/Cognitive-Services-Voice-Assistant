@@ -166,8 +166,9 @@ int main(int argc, char** argv)
 #ifdef WINDOWS
         player = new WindowsAudioPlayer();
 #endif
-        player->SetVolume(agentConfig->_volume);
+        log_t("Initializing Audio Player...");
         player->Initialize();
+        player->SetVolume(agentConfig->_volume);
     }
     
     log_t("Configuration loaded. Creating connector...");

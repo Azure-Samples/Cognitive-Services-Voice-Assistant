@@ -14,7 +14,6 @@ using namespace AudioPlayer;
 
 LinuxAudioPlayer::LinuxAudioPlayer(){
     m_state = AudioPlayerState::UNINITIALIZED;
-    SetVolume(25);
     m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
 }
 
@@ -139,7 +138,7 @@ void LinuxAudioPlayer::PlayerThreadMain(){
         
         if(m_state == AudioPlayerState::PAUSED)
         {
-            Open();
+            Initialize();
         }
         while (m_audioQueue.size() > 0) {
             m_state = AudioPlayerState::PLAYING;

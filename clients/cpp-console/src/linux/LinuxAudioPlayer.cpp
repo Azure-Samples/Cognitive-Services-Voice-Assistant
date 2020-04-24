@@ -23,7 +23,7 @@ LinuxAudioPlayer::~LinuxAudioPlayer(){
 
 int LinuxAudioPlayer::Initialize(){
     int rc;
-    rc = Open("default", AudioPlayerFormat::Mono16khz16bit);
+    rc = Initialize("default", AudioPlayerFormat::Mono16khz16bit);
     return rc;
 }
 
