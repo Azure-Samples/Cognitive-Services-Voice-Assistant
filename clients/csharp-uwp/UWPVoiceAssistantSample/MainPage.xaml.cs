@@ -136,7 +136,7 @@ namespace UWPVoiceAssistantSample
             this.ClearLogsButton.Click += async (_, __)
                 => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    this.ChangeLogTextBlock.Blocks.Clear();
+                    this.ChangeLogStackPanel.Children.Clear();
                 });
 
             this.OpenLogLocationButton.Click += async (_, __)
