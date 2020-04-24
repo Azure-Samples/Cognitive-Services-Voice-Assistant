@@ -129,7 +129,7 @@ namespace UWPVoiceAssistantSample
                 this.ConnectorConfiguration = newConnectorConfiguration;
                 this.connectorInputStream = AudioInputStream.CreatePushStream();
 
-                this.connector.Dispose();
+                this.connector?.Dispose();
                 this.connector = new DialogServiceConnector(
                     this.ConnectorConfiguration,
                     AudioConfig.FromStreamInput(this.connectorInputStream));
@@ -258,7 +258,7 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task that completes when the in-progress turn has been aborted. </returns>
         public async Task CancelSignalVerificationAsync()
         {
-            await this.connector.StopKeywordRecognitionAsync();
+            await this.connector?.StopKeywordRecognitionAsync();
         }
 
         /// <summary>

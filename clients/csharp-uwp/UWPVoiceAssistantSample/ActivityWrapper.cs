@@ -4,6 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using Newtonsoft.Json.Linq;
+    using System.Diagnostics;
 
     /// <summary>
     /// Class determines the activity received from the Bot and deserializes the response.
@@ -18,7 +19,9 @@ namespace UWPVoiceAssistantSample
         {
             var activityObj = JObject.Parse(activityJson);
 
-            switch (activityObj["type"]?.ToString())
+            Debug.WriteLine(activityObj["type"]?.ToString());
+
+            switch (activityObj["type"]?.ToString().ToLower())
             {
                 case "trace":
                     this.Type = ActivityType.Trace;
@@ -26,20 +29,23 @@ namespace UWPVoiceAssistantSample
                 case "message":
                     this.Type = ActivityType.Message;
                     break;
+                case "event":
+                    this.Type = ActivityType.Event;
+                    break;
                 default:
                     this.Type = ActivityType.Unrecognized;
                     break;
             }
 
-            switch (activityObj["inputHint"]?.ToString())
+            switch (activityObj["inputHint"]?.ToString().ToLower())
             {
-                case "IgnoringInput":
+                case "ignoringinput":
                     this.InputHint = InputHintType.IgnoringInput;
                     break;
-                case "AcceptingInput":
+                case "acceptinginput":
                     this.InputHint = InputHintType.AcceptingInput;
                     break;
-                case "ExpectingInput":
+                case "expectinginput":
                     this.InputHint = InputHintType.ExpectingInput;
                     break;
                 default:
@@ -66,9 +72,14 @@ namespace UWPVoiceAssistantSample
             Message,
 
             /// <summary>
-            /// Trace Key is LUIS Activity JSON.
+            /// Trace Key in LUIS Activity JSON.
             /// </summary>
             Trace,
+
+            /// <summary>
+            /// Event Key in Bot Activity JSON
+            /// </summary>
+            Event,
         }
 
         /// <summary>

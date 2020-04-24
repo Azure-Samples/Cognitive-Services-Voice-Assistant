@@ -148,7 +148,10 @@ namespace UWPVoiceAssistantSample
                 {
                     await this.ChangeAgentStateAsync(ConversationalAgentState.Speaking);
                 }
+            };
 
+            this.dialogResponseQueue.ResponseExecuted += async (DialogResponse response) =>
+            {
                 if (response.TurnEndIndicated)
                 {
                     await this.FinishTurnAsync();
