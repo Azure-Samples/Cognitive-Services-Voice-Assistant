@@ -28,6 +28,15 @@ namespace UWPVoiceAssistantSample
         private DialogServiceConnector connector;
         private PushAudioInputStream connectorInputStream;
         private bool alreadyDisposed = false;
+        private ILogProvider logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
+        /// </summary>
+        public DirectLineSpeechDialogBackend()
+        {
+            this.logger = LogRouter.GetClassLogger();
+        }
 
         /// <summary>
         /// Raised when audio has begun flowing to Direct Line Speech and returns the interaction
@@ -112,13 +121,14 @@ namespace UWPVoiceAssistantSample
             this.connector.SessionStopped += (s, e) => this.SessionStopped?.Invoke(e.SessionId);
             this.connector.Recognizing += (s, e) =>
             {
-                Debug.WriteLine($"Connector recognizing: {e.Result.Text}");
                 switch (e.Result.Reason)
                 {
                     case ResultReason.RecognizingKeyword:
+                        this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
                         this.KeywordRecognizing?.Invoke(e.Result.Text);
                         break;
                     case ResultReason.RecognizingSpeech:
+                        this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
                         this.SpeechRecognizing?.Invoke(e.Result.Text);
                         break;
                     default:
@@ -127,18 +137,20 @@ namespace UWPVoiceAssistantSample
             };
             this.connector.Recognized += (s, e) =>
             {
-                Debug.WriteLine($"Connector recognized: {e.Result.Text}");
                 switch (e.Result.Reason)
                 {
                     case ResultReason.RecognizedKeyword:
+                        this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                         this.KeywordRecognized?.Invoke(e.Result.Text);
                         break;
                     case ResultReason.RecognizedSpeech:
+                        this.logger.Log($"Recognized final speech: \"{e.Result.Text}\"");
                         this.SpeechRecognized?.Invoke(e.Result.Text);
                         break;
                     case ResultReason.NoMatch:
                         // If a KeywordRecognized handler is available, this is a final stage
                         // keyword verification rejection.
+                        this.logger.Log($"Cloud model rejected keyword");
                         this.KeywordRecognized?.Invoke(null);
                         break;
                     default:
@@ -162,7 +174,7 @@ namespace UWPVoiceAssistantSample
                     messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio, LocalSettingsHelper.OutputFormat) : null,
                     shouldEndTurn: e.Audio == null && wrapper.Type == ActivityWrapper.ActivityType.Message,
                     shouldStartNewTurn: wrapper.InputHint == ActivityWrapper.InputHintType.ExpectingInput);
-                Debug.WriteLine($"Connector activity received");
+                this.logger.Log($"Connector activity received");
                 this.DialogResponseReceived?.Invoke(payload);
             };
 
@@ -230,7 +242,6 @@ namespace UWPVoiceAssistantSample
         public async Task CancelSignalVerification()
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            Debug.WriteLine("\n\n\n\ncancel\n\n\n\n");
             _ = this.connector.StopKeywordRecognitionAsync();
         }
 
