@@ -136,6 +136,7 @@ void LinuxAudioPlayer::PlayerThreadMain(){
         std::unique_lock<std::mutex> lk{ m_threadMutex };
         m_conditionVariable.wait(lk);
         lk.unlock();
+        
         if(m_state == AudioPlayerState::PAUSED)
         {
             Open();

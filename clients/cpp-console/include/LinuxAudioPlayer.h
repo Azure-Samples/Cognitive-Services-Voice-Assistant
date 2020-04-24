@@ -23,8 +23,7 @@ namespace AudioPlayer
         public:
         
             /// <summary>
-            /// Default constructor for the LinuxAudioPlayer. Here we will start a thread
-            /// to play audio and open the default audio device in Mono16khz16bit
+            /// Default constructor for the LinuxAudioPlayer.
             /// </summary>
             /// <returns>a LinuxAudioPlayer object</returns>
             /// <example>

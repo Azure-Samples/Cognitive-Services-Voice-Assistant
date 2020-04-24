@@ -31,6 +31,11 @@ class IAudioPlayer{
             Stereo48khz16bit
         };
         
+        /// <summary>
+        /// The destructor should be defined to clean up any variables or resources.
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
         virtual ~IAudioPlayer() = default;
         
         /// <summary>

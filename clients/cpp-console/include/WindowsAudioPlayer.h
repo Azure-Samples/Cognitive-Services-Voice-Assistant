@@ -35,8 +35,7 @@ namespace AudioPlayer
         public:
         
             /// <summary>
-            /// Default constructor for the WindowsAudioPlayer. Here we will start a thread
-            /// to play audio and open the default audio device in Mono16khz16bit
+            /// Default constructor for the WindowsAudioPlayer.
             /// </summary>
             /// <returns>a WindowsAudioPlayer object</returns>
             /// <example>
@@ -72,7 +71,7 @@ namespace AudioPlayer
             /// </example>
             /// <remarks>
             /// </remarks>
-            int Open();
+            virtual int Open() final;
             
             /// <summary>
             /// Open will initialize the audio player with any specific OS dependent 
@@ -89,23 +88,7 @@ namespace AudioPlayer
             /// <remarks>
             /// This will force the audio device to be closed and reopened to ensure the specified format.
             /// </remarks>
-            int Open(const std::string& device, AudioPlayerFormat format);
-            
-            
-            /// <summary>
-            /// ALSA expects audio to be sent in periods defined by frames. This function will compute the
-            /// buffer size based on the channels, bytes per sample, and frames per period.
-            /// </summary>
-            /// <returns>An integer representing the expected buffer size in bytes</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new WindowsAudioPlayer();
-            /// int bufferSize = audioPlayer->GetBufferSize();
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// </remarks>
-            int GetBufferSize();
+            virtual int Open(const std::string& device, AudioPlayerFormat format) final;
             
             /// <summary>
             /// This method is used to actually play the audio. The buffer passed in 
@@ -128,7 +111,7 @@ namespace AudioPlayer
             /// The method returns the number of frames written to ALSA.
             /// We assume Open has already been called.
             /// </remarks>
-            int Play(uint8_t* buffer, size_t bufferSize);
+            virtual int Play(uint8_t* buffer, size_t bufferSize) final;
             
             /// <summary>
             /// This method is used to actually play the audio. The PullAudioOutputStream
@@ -154,7 +137,7 @@ namespace AudioPlayer
             /// since this will not cause copies of the buffer to be stored at runtime.
             /// In our implementation we assume Open is called before playing.
             /// </remarks>
-            int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream);
+            virtual int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream) final;
             
             /// <summary>
             /// This method is used to stop all playback. This will clear any queued audio meaning that any audio yet to play will be lost.
@@ -169,7 +152,7 @@ namespace AudioPlayer
             /// <remarks>
             /// In our implementation we assume Open is called before playing.
             /// </remarks>
-            int StopAllPlayback();
+            virtual int StopAllPlayback() final;
             
             /// <summary>
             /// This function is a no-op
@@ -185,7 +168,23 @@ namespace AudioPlayer
             /// <remarks>
             /// In this case volume is handled by windows and not set here
             /// </remarks>
-            int SetVolume(unsigned int percent);
+            virtual int SetVolume(unsigned int percent) final;
+            
+            /// <summary>
+            /// This function is used to retrieve the current state of the player.
+            /// </summary>
+            /// <returns>An AudioPlayerState Enum</returns>
+            /// <example>
+            /// <code>
+            /// IAudioPlayer *audioPlayer = new WindowsAudioPlayer();
+            /// audioPlayer->Open();
+            /// audioPlayer->GetState();
+            /// </code>
+            /// </example>
+            /// <remarks>
+            /// States are defined in AudioPlayerState.h
+            /// </remarks>
+            virtual AudioPlayerState GetState() final;
             
             /// <summary>
             /// This function is used to clean up the audio players resources.
@@ -204,12 +203,10 @@ namespace AudioPlayer
             /// </example>
             /// <remarks>
             /// </remarks>
-            int Close();
+            virtual int Close() final;
         
         private:
-            bool                    m_isPlaying = false;
             bool                    m_canceled = false;
-            bool                    m_opened = false;
             bool                    m_shuttingDown = false;
             std::string             m_device;
             std::mutex              m_queueMutex;
@@ -217,6 +214,8 @@ namespace AudioPlayer
             std::condition_variable m_conditionVariable;
             
             std::list<AudioPlayerEntry> m_audioQueue;
+
+            AudioPlayerState m_state = AudioPlayerState::UNINITIALIZED;
 
             ATL::CComAutoCriticalSection m_cs;
 

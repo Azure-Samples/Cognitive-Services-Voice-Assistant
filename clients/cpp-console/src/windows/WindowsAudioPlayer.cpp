@@ -24,6 +24,7 @@ void SAFE_CLOSEHANDLE(HANDLE _handle_) {
 }
 
 WindowsAudioPlayer::WindowsAudioPlayer() {
+    m_state = AudioPlayerState::INITIALIZING;
     m_hAudioClientEvent = NULL;
     m_hRenderThread = NULL;
     m_hStartEvent = NULL;
@@ -46,15 +47,6 @@ WindowsAudioPlayer::WindowsAudioPlayer() {
 
 WindowsAudioPlayer::~WindowsAudioPlayer() {
     Close();
-    m_canceled = true;
-    m_threadMutex.unlock();
-    m_conditionVariable.notify_one();
-    m_playerThread.join();
-
-    CoUninitialize();
-    SAFE_CLOSEHANDLE(m_hAudioClientEvent);
-    SAFE_RELEASE(m_pRenderClient);
-    SAFE_RELEASE(m_pAudioClient);
 }
 
 int WindowsAudioPlayer::Open() {
@@ -129,7 +121,7 @@ int WindowsAudioPlayer::Open(const std::string& device, AudioPlayerFormat format
         goto exit;
     }
     hr = m_pAudioClient->Start();
-
+    m_state = AudioPlayerState::PAUSED;
 exit:
 
     return hr;
@@ -146,7 +138,7 @@ void WindowsAudioPlayer::PlayerThreadMain() {
         lk.unlock();
 
         while (m_audioQueue.size() > 0) {
-            m_isPlaying = true;
+            m_state = AudioPlayerState::PLAYING;
             
             std::shared_ptr<AudioPlayerEntry> entry = std::make_shared<AudioPlayerEntry>(m_audioQueue.front());
             m_queueMutex.lock();
@@ -171,7 +163,7 @@ void WindowsAudioPlayer::PlayerThreadMain() {
             }
             
         }
-        m_isPlaying = false;
+        m_state = AudioPlayerState::PAUSED;
     }
 }
 
@@ -297,7 +289,7 @@ int WindowsAudioPlayer::Play(uint8_t* buffer, size_t bufferSize) {
     //make sure the canceled variable is not set
     m_canceled = false;
     
-    if (!m_isPlaying) {
+    if (m_state != AudioPlayerState::PLAYING) {
         //wake up the audio thread
         m_conditionVariable.notify_one();
     }
@@ -315,7 +307,7 @@ int WindowsAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speec
     //make sure the canceled variable is not set
     m_canceled = false;
     
-    if (!m_isPlaying) {
+    if (m_state != AudioPlayerState::PLAYING) {
         //wake up the audio thread
         m_conditionVariable.notify_one();
     }
@@ -339,7 +331,19 @@ int WindowsAudioPlayer::SetVolume(unsigned int percent){
     return 0;
 }
 
+AudioPlayerState WindowsAudioPlayer::GetState(){
+    return m_state;
+}
+
 int WindowsAudioPlayer::Close() {
     m_shuttingDown = true;
+    m_canceled = true;
+    m_conditionVariable.notify_one();
+    m_playerThread.join();
+
+    CoUninitialize();
+    SAFE_CLOSEHANDLE(m_hAudioClientEvent);
+    SAFE_RELEASE(m_pRenderClient);
+    SAFE_RELEASE(m_pAudioClient);
     return 0;
 }
