@@ -4,6 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Globalization;
     using System.IO;
@@ -45,6 +46,7 @@ namespace UWPVoiceAssistantSample
         private bool configModified;
         private bool hypotheizedSpeechToggle;
         private Conversation activeConversation;
+        private bool filterInformationLog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -96,6 +98,8 @@ namespace UWPVoiceAssistantSample
             this.Conversations = new ObservableCollection<Conversation>();
 
             this.ChatHistoryListView.ContainerContentChanging += this.OnChatHistoryListViewContainerChanging;
+
+            this.filterInformationLog = true;
         }
 
         private bool BackgroundTaskRegistered
@@ -254,30 +258,6 @@ namespace UWPVoiceAssistantSample
                 this.VoiceActivationLinkButton.Content = voiceActivationStatusInfo.Status;
 
                 this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
-
-                //if (!this.BackgroundTaskRegistered && !micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
-                //}
-
-                //if (!this.BackgroundTaskRegistered && micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30) , Height = 800 });
-                //}
-
-                //if (this.BackgroundTaskRegistered && !micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
-                //}
-
-                //if (this.BackgroundTaskRegistered && micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //    //ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30) + ((int)this.LogGrid.ActualWidth), Height = 800 });
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //}
-
             });
         }
 
@@ -355,6 +335,49 @@ namespace UWPVoiceAssistantSample
             this.RefreshStatus();
         }
 
+        private void logInformation(string information)
+        {
+            this.filterInformationLog = true;
+            if (information.Contains("Information", StringComparison.OrdinalIgnoreCase))
+                {
+                TextBlock informationTextBlock = new TextBlock();
+                string[] split = information.Split("Information");
+                if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
+                {
+                    string[] removeColon = split[1].Split(" : ");
+                    informationTextBlock.Text = removeColon[1];
+                    this.ChangeLogStackPanel.Children.Add(informationTextBlock);
+                }
+                else
+                {
+                    informationTextBlock.Text = split[1];
+                    this.ChangeLogStackPanel.Children.Add(informationTextBlock);
+                }
+            }
+        }
+
+        private void logNoise(string noise)
+        {
+            if (noise.Contains("Noise", StringComparison.OrdinalIgnoreCase))
+            {
+                TextBlock noiseTextBlock = new TextBlock();
+                string[] split = noise.Split("Noise");
+                noiseTextBlock.Text = split[1];
+                this.ChangeLogStackPanel.Children.Add(noiseTextBlock);
+            }
+        }
+
+        private void logErrors(string error)
+        {
+            if (error.Contains("Error", StringComparison.OrdinalIgnoreCase))
+            {
+                TextBlock errorTextBlock = new TextBlock();
+                string[] split = error.Split("Error");
+                errorTextBlock.Text = split[1];
+                this.ChangeLogStackPanel.Children.Add(errorTextBlock);
+            }
+        }
+
         private async void ReadLogBuffer()
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
@@ -365,63 +388,101 @@ namespace UWPVoiceAssistantSample
                     {
                         string text = this.logger.LogBuffer[this.bufferIndex];
 
-                        if (this.LogInformationFlyoutItem.IsChecked)
+                        if (this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            if (text.Contains("Information", StringComparison.OrdinalIgnoreCase))
+                            this.bufferIndex = 0;
+                            this.ChangeLogStackPanel.Children.Clear();
+                            foreach (var item in this.logger.LogBuffer)
                             {
-                                string[] split = text.Split("Information");
-
-                                if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    string[] removeColon = split[1].Split(" : ");
-                                    Paragraph paragraph = new Paragraph();
-                                    Run run = new Run();
-                                    run.Text = removeColon[1];
-                                    paragraph.Inlines.Add(run);
-                                    paragraph.Foreground = new SolidColorBrush(Colors.Blue);
-                                    this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                                }
-                                else
-                                {
-                                    Paragraph paragraph = new Paragraph();
-                                    Run run = new Run();
-                                    run.Text = split[1];
-                                    paragraph.Inlines.Add(run);
-                                    paragraph.Foreground = new SolidColorBrush(Colors.Blue);
-                                    this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                                }
+                                this.logInformation(item);
+                                this.bufferIndex++;
                             }
+
+                            return;
                         }
 
-                        if (this.LogErrorFlyoutItem.IsChecked)
+                        if (!this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            if (text.Contains("Error", StringComparison.OrdinalIgnoreCase))
+                            this.bufferIndex = 0;
+                            this.ChangeLogStackPanel.Children.Clear();
+                            foreach (var item in this.logger.LogBuffer)
                             {
-                                string[] split = text.Split("Error");
-                                Paragraph paragraph = new Paragraph();
-                                Run run = new Run();
-                                run.Text = split[1];
-                                paragraph.Inlines.Add(run);
-                                paragraph.Foreground = new SolidColorBrush(Colors.Red);
-                                this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                                this.logErrors(item);
+                                this.bufferIndex++;
                             }
+
+                            return;
                         }
 
-                        if (this.LogNoiseFlyoutItem.IsChecked)
+                        if (!this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
                         {
-                            if (text.Contains("Noise", StringComparison.OrdinalIgnoreCase))
+                            this.bufferIndex = 0;
+                            this.ChangeLogStackPanel.Children.Clear();
+                            foreach (var item in this.logger.LogBuffer)
                             {
-                                string[] split = text.Split("Noise");
-                                Paragraph paragraph = new Paragraph();
-                                Run run = new Run();
-                                run.Text = split[1];
-                                paragraph.Inlines.Add(run);
-                                paragraph.Foreground = new SolidColorBrush(Colors.Gray);
-                                this.ChangeLogTextBlock.Blocks.Add(paragraph);
+                                this.logNoise(item);
+                                this.bufferIndex++;
                             }
+
+                            return;
                         }
 
-                        this.bufferIndex++;
+                        if (this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
+                        {
+                            this.bufferIndex = 0;
+                            this.ChangeLogStackPanel.Children.Clear();
+                            foreach (var item in this.logger.LogBuffer)
+                            {
+                                this.logInformation(item);
+                                this.logErrors(item);
+                                this.bufferIndex++;
+                            }
+
+                            return;
+                        }
+
+                        if (this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
+                        {
+                            this.bufferIndex = 0;
+                            this.ChangeLogStackPanel.Children.Clear();
+                            foreach (var item in this.logger.LogBuffer)
+                            {
+                                this.logInformation(item);
+                                this.logNoise(item);
+                                this.bufferIndex++;
+                            }
+
+                            return;
+                        }
+
+                        if (!this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
+                        {
+                            this.bufferIndex = 0;
+                            this.ChangeLogStackPanel.Children.Clear();
+                            foreach (var item in this.logger.LogBuffer)
+                            {
+                                this.logErrors(item);
+                                this.logNoise(item);
+                                this.bufferIndex++;
+                            }
+
+                            return;
+                        }
+                        if (this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
+                        {
+                            this.bufferIndex = 0;
+                            this.ChangeLogStackPanel.Children.Clear();
+                            foreach (var item in this.logger.LogBuffer)
+                            {
+                                this.logInformation(item);
+                                this.logErrors(item);
+                                this.logNoise(item);
+                                this.bufferIndex++;
+                            }
+                            return;
+                        }
+
+                        //this.bufferIndex++;
                     }
                 }
 
@@ -787,5 +848,11 @@ namespace UWPVoiceAssistantSample
 
             await Launcher.LaunchFolderAsync(localFolder, launchOption);
         }
+
+        private void TriggerLogAvailable(object sender, RoutedEventArgs e)
+        {
+            ReadLogBuffer();
+        }
+
     }
 }
