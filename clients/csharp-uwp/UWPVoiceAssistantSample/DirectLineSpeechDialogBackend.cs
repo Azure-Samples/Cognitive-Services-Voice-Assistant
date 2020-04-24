@@ -117,13 +117,14 @@ namespace UWPVoiceAssistantSample
         {
             Contract.Requires(keywordFile != null);
 
-            // Default values -- these can be updated
-            var newConnectorConfiguration = this.CreateConfiguration();
+            var configRefreshRequired = this.RefreshConfigValues();
 
-            var refreshConnector = (newConnectorConfiguration != null) || (this.keywordFilePath != keywordFile.Path);
+            var refreshConnector = configRefreshRequired || (this.keywordFilePath != keywordFile.Path);
 
             if (refreshConnector)
             {
+                var newConnectorConfiguration = this.CreateConfiguration();
+
                 this.ConfirmationModel = KeywordRecognitionModel.FromFile(keywordFile.Path);
 
                 this.keywordFilePath = keywordFile.Path;
@@ -183,10 +184,10 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.ActivityReceived += (s, e) =>
                 {
-                // Note: the contract of when to end a turn is unique to your dialog system. In this sample,
-                // it's assumed that receiving a message activity without audio marks the end of a turn. Your
-                // dialog system may have a different contract!
-                var wrapper = new ActivityWrapper(e.Activity);
+                    // Note: the contract of when to end a turn is unique to your dialog system. In this sample,
+                    // it's assumed that receiving a message activity without audio marks the end of a turn. Your
+                    // dialog system may have a different contract!
+                    var wrapper = new ActivityWrapper(e.Activity);
                     var payload = new DialogResponse(
                         messageBody: e.Activity,
                         messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio, LocalSettingsHelper.OutputFormat) : null,
@@ -261,7 +262,7 @@ namespace UWPVoiceAssistantSample
         public async Task CancelSignalVerification()
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            _ = this.connector.StopKeywordRecognitionAsync();
+            await this.connector.StopKeywordRecognitionAsync();
         }
 
         /// <summary>
@@ -293,33 +294,6 @@ namespace UWPVoiceAssistantSample
 
         private DialogServiceConfig CreateConfiguration()
         {
-            var speechKey = LocalSettingsHelper.SpeechSubscriptionKey;
-            var speechRegion = LocalSettingsHelper.AzureRegion;
-            var customSpeechId = LocalSettingsHelper.CustomSpeechId;
-            var customVoiceIds = LocalSettingsHelper.CustomVoiceIds;
-            var customCommandsAppId = LocalSettingsHelper.CustomCommandsAppId;
-            var botId = LocalSettingsHelper.BotId;
-            var enableSdkLogging = LocalSettingsHelper.EnableSdkLogging;
-
-            if (this.speechKey == speechKey
-                && this.speechRegion == speechRegion
-                && this.customSpeechId == customSpeechId
-                && this.customVoiceIds == customVoiceIds
-                && this.customCommandsAppId == customCommandsAppId
-                && this.botId == botId
-                && this.enableSdkLogging == enableSdkLogging)
-            {
-                return null;
-            }
-
-            this.speechKey = speechKey;
-            this.speechRegion = speechRegion;
-            this.customSpeechId = customSpeechId;
-            this.customVoiceIds = customVoiceIds;
-            this.customCommandsAppId = customCommandsAppId;
-            this.botId = botId;
-            this.enableSdkLogging = enableSdkLogging;
-
             // Subscription information is supported in multiple formats:
             //  <subscription_key>     use the default bot associated with the subscription
             //  <sub_key>:<app_id>     use a specified Custom Commands application
@@ -369,6 +343,38 @@ namespace UWPVoiceAssistantSample
             }
 
             return config;
+        }
+
+        private bool RefreshConfigValues()
+        {
+            var speechKey = LocalSettingsHelper.SpeechSubscriptionKey;
+            var speechRegion = LocalSettingsHelper.AzureRegion;
+            var customSpeechId = LocalSettingsHelper.CustomSpeechId;
+            var customVoiceIds = LocalSettingsHelper.CustomVoiceIds;
+            var customCommandsAppId = LocalSettingsHelper.CustomCommandsAppId;
+            var botId = LocalSettingsHelper.BotId;
+            var enableSdkLogging = LocalSettingsHelper.EnableSdkLogging;
+
+            if (this.speechKey == speechKey
+                && this.speechRegion == speechRegion
+                && this.customSpeechId == customSpeechId
+                && this.customVoiceIds == customVoiceIds
+                && this.customCommandsAppId == customCommandsAppId
+                && this.botId == botId
+                && this.enableSdkLogging == enableSdkLogging)
+            {
+                return false;
+            }
+
+            this.speechKey = speechKey;
+            this.speechRegion = speechRegion;
+            this.customSpeechId = customSpeechId;
+            this.customVoiceIds = customVoiceIds;
+            this.customCommandsAppId = customCommandsAppId;
+            this.botId = botId;
+            this.enableSdkLogging = enableSdkLogging;
+
+            return true;
         }
     }
 }
