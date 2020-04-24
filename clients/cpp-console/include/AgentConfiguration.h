@@ -31,7 +31,6 @@ enum class AgentConfigurationLoadResult
     ConfigFileNotParsed,
     KWFileNotFound,
     KWFileWrongExtension,
-    BadDialogType,
     BadSpeechKey,
     MissingRegion,
     RegionWithCustom,

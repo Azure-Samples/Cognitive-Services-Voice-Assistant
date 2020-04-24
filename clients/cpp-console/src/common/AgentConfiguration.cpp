@@ -115,8 +115,6 @@ std::string AgentConfiguration::LoadMessage()
 		return "Keyword file is not found.";
 	case AgentConfigurationLoadResult::KWFileWrongExtension:
 		return "Keyword file extension is not \".table\".";
-	case AgentConfigurationLoadResult::BadDialogType:
-		return "Dialog type is bad.";
 	case AgentConfigurationLoadResult::BadSpeechKey:
 		return "Speech key is missing.";
 	case AgentConfigurationLoadResult::MissingRegion:
