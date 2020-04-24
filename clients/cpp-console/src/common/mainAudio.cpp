@@ -67,8 +67,15 @@ void log(T v, Args... args)
 template<typename T, typename... Args>
 void log_t(T v, Args... args)
 {
-    cout << chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count() % 10000000 << "  ";
-    log(v, args...);
+	char buff[9];
+	std::chrono::system_clock::time_point now = chrono::system_clock::now();
+	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+	std::tm now_tm;
+	localtime_s(&now_tm, &now_c);
+	strftime(buff, sizeof buff, "%H:%M:%S", &now_tm);
+
+	cout << buff << "." << chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count() % 1000 << "  ";
+	log(v, args...);
 }
 
 int main(int argc, char** argv)
@@ -148,7 +155,7 @@ int main(int argc, char** argv)
     
     if (agentConfig->LoadResult() != AgentConfigurationLoadResult::Success)
     {
-        log_t("Unable to load config file.");
+        log_t(agentConfig->LoadMessage());
         return (int)agentConfig->LoadResult();
     }
     
