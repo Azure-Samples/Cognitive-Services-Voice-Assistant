@@ -27,9 +27,10 @@ enum class AgentConfigurationLoadResult
 {
     Undefined,
     Success,
-    FileNotFound,
-    FileNotParsed,
-    BadDialogType,
+    ConfigFileNotFound,
+    ConfigFileNotParsed,
+    KWFileNotFound,
+    KWFileWrongExtension,
     BadSpeechKey,
     MissingRegion,
     RegionWithCustom,
@@ -57,6 +58,7 @@ public:
     const AgentConfigurationLoadResult LoadResult() { return _loadResult; }
     const std::string KeywordModel() { return _keywordModelPath; }
     const std::string KeywordDisplayName() { return _keywordDisplayName; }
+    std::string LoadMessage();
     std::shared_ptr<Microsoft::CognitiveServices::Speech::Dialog::DialogServiceConfig> AsDialogServiceConfig();
     std::shared_ptr<Microsoft::CognitiveServices::Speech::Dialog::DialogServiceConfig> CreateDialogServiceConfig();
 
