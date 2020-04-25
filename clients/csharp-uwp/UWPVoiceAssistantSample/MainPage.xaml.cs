@@ -6,6 +6,7 @@ namespace UWPVoiceAssistantSample
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -41,12 +42,14 @@ namespace UWPVoiceAssistantSample
         private readonly IKeywordRegistration keywordRegistration;
         private readonly IDialogManager dialogManager;
         private readonly IAgentSessionManager agentSessionManager;
-        private App app;
-        private int bufferIndex;
+        private readonly HashSet<TextBlock> informationLogs;
+        private readonly HashSet<TextBlock> errorLogs;
+        private readonly HashSet<TextBlock> noiseLogs;
+        private readonly App app;
         private bool configModified;
         private bool hypotheizedSpeechToggle;
         private Conversation activeConversation;
-        private bool filterInformationLog;
+        private int logBufferIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -64,6 +67,10 @@ namespace UWPVoiceAssistantSample
             this.dialogManager = this.services.GetRequiredService<IDialogManager>();
             this.keywordRegistration = this.services.GetRequiredService<IKeywordRegistration>();
             this.agentSessionManager = this.services.GetRequiredService<IAgentSessionManager>();
+
+            this.informationLogs = new HashSet<TextBlock>();
+            this.errorLogs = new HashSet<TextBlock>();
+            this.noiseLogs = new HashSet<TextBlock>();
 
             // Ensure that we restore the full view (not the compact mode) upon foreground launch
             _ = this.UpdateViewStateAsync();
@@ -98,8 +105,6 @@ namespace UWPVoiceAssistantSample
             this.Conversations = new ObservableCollection<Conversation>();
 
             this.ChatHistoryListView.ContainerContentChanging += this.OnChatHistoryListViewContainerChanging;
-
-            this.filterInformationLog = true;
         }
 
         private bool BackgroundTaskRegistered
@@ -137,7 +142,6 @@ namespace UWPVoiceAssistantSample
                 => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     this.ChangeLogStackPanel.Children.Clear();
-                    this.bufferIndex = this.logger.LogBuffer.Count;
                 });
 
             this.OpenLogLocationButton.Click += async (_, __)
@@ -209,7 +213,7 @@ namespace UWPVoiceAssistantSample
 
             this.logger.LogAvailable += (s, e) =>
             {
-                this.ReadLogBuffer();
+                this.WriteLog();
             };
             this.logger.Log(LogMessageLevel.Noise, "Main page created, UI rendering");
         }
@@ -342,11 +346,10 @@ namespace UWPVoiceAssistantSample
             this.RefreshStatus();
         }
 
-        private void LogInformation(string information)
+        private bool LogInformation(string information)
         {
-            this.filterInformationLog = true;
             if (information.Contains("Information", StringComparison.OrdinalIgnoreCase))
-                {
+            {
                 TextBlock informationTextBlock = new TextBlock();
                 informationTextBlock.Foreground = new SolidColorBrush(Colors.Blue);
                 string[] split = information.Split("Information");
@@ -354,17 +357,26 @@ namespace UWPVoiceAssistantSample
                 {
                     string[] removeColon = split[1].Split(" : ");
                     informationTextBlock.Text = removeColon[1];
-                    this.ChangeLogStackPanel.Children.Add(informationTextBlock);
                 }
                 else
                 {
                     informationTextBlock.Text = split[1];
+                }
+
+                this.informationLogs.Add(informationTextBlock);
+
+                if (this.LogInformationFlyoutItem.IsChecked)
+                {
                     this.ChangeLogStackPanel.Children.Add(informationTextBlock);
                 }
+
+                return true;
             }
+
+            return false;
         }
 
-        private void LogNoise(string noise)
+        private bool LogNoise(string noise)
         {
             if (noise.Contains("Noise", StringComparison.OrdinalIgnoreCase))
             {
@@ -372,11 +384,21 @@ namespace UWPVoiceAssistantSample
                 noiseTextBlock.Foreground = new SolidColorBrush(Colors.Gray);
                 string[] split = noise.Split("Noise");
                 noiseTextBlock.Text = split[1];
-                this.ChangeLogStackPanel.Children.Add(noiseTextBlock);
+
+                this.noiseLogs.Add(noiseTextBlock);
+
+                if (this.LogNoiseFlyoutItem.IsChecked)
+                {
+                    this.ChangeLogStackPanel.Children.Add(noiseTextBlock);
+                }
+
+                return true;
             }
+
+            return false;
         }
 
-        private void LogErrors(string error)
+        private bool LogErrors(string error)
         {
             if (error.Contains("Error", StringComparison.OrdinalIgnoreCase))
             {
@@ -384,80 +406,64 @@ namespace UWPVoiceAssistantSample
                 errorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
                 string[] split = error.Split("Error");
                 errorTextBlock.Text = split[1];
-                this.ChangeLogStackPanel.Children.Add(errorTextBlock);
+
+                this.errorLogs.Add(errorTextBlock);
+
+                if (this.LogErrorFlyoutItem.IsChecked)
+                {
+                    this.ChangeLogStackPanel.Children.Add(errorTextBlock);
+                }
+
+                return true;
             }
+
+            return false;
         }
 
-        private async void ReadLogBuffer()
+        private async void WriteLog()
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                for (var i = 0; i < this.logger.LogBuffer.Count; i++)
+                int nextLogIndex = this.logBufferIndex;
+                for (; nextLogIndex < this.logger.LogBuffer.Count; nextLogIndex++)
                 {
-                    if (this.bufferIndex < this.logger.LogBuffer.Count)
+                    var text = this.logger.LogBuffer[nextLogIndex];
+
+                    if (this.LogInformation(text))
                     {
-                        string text = this.logger.LogBuffer[this.bufferIndex];
-
-                        if (this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
-                        {
-                            this.LogInformation(text);
-                            this.bufferIndex++;
-
-                            return;
-                        }
-
-                        if (!this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
-                        {
-                            this.LogErrors(text);
-                            this.bufferIndex++;
-
-                            return;
-                        }
-
-                        if (!this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
-                        {
-                            this.LogNoise(text);
-                            this.bufferIndex++;
-
-                            return;
-                        }
-
-                        if (this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && !this.LogNoiseFlyoutItem.IsChecked)
-                        {
-                            this.LogInformation(text);
-                            this.LogErrors(text);
-                            this.bufferIndex++;
-                            return;
-                        }
-
-                        if (this.LogInformationFlyoutItem.IsChecked && !this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
-                        {
-                            this.LogInformation(text);
-                            this.LogNoise(text);
-                            this.bufferIndex++;
-
-                            return;
-                        }
-
-                        if (!this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
-                        {
-                            this.LogErrors(text);
-                            this.LogNoise(text);
-                            this.bufferIndex++;
-
-                            return;
-                        }
-
-                        if (this.LogInformationFlyoutItem.IsChecked && this.LogErrorFlyoutItem.IsChecked && this.LogNoiseFlyoutItem.IsChecked)
-                        {
-                            this.LogInformation(text);
-                            this.LogErrors(text);
-                            this.LogNoise(text);
-                            this.bufferIndex++;
-
-                            return;
-                        }
                     }
+                    else if (this.LogErrors(text))
+                    {
+                    }
+                    else
+                    {
+                        this.LogNoise(text);
+                    }
+                }
+
+                this.logBufferIndex = nextLogIndex;
+
+                this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
+            });
+        }
+
+        private async void FilterLogs()
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                foreach (TextBlock textBlock in this.informationLogs)
+                {
+                    textBlock.Visibility = this.LogInformationFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                foreach (TextBlock textBlock in this.noiseLogs)
+                {
+                    textBlock.Visibility = this.LogNoiseFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                foreach (TextBlock textBlock in this.errorLogs)
+                {
+                    textBlock.Visibility = this.LogErrorFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
                 }
 
                 this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
@@ -827,8 +833,7 @@ namespace UWPVoiceAssistantSample
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                this.bufferIndex = this.logger.LogBuffer.Count;
-                this.ReadLogBuffer();
+                this.FilterLogs();
             });
         }
     }
