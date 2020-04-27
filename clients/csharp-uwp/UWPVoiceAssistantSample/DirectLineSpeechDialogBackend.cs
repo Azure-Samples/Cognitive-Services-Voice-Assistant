@@ -37,6 +37,7 @@ namespace UWPVoiceAssistantSample
         private string botId;
         private bool enableSdkLogging;
         private string keywordFilePath;
+        private bool startEventReceived;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
@@ -165,9 +166,9 @@ namespace UWPVoiceAssistantSample
                             this.SpeechRecognized?.Invoke(e.Result.Text);
                             break;
                         case ResultReason.NoMatch:
-                        // If a KeywordRecognized handler is available, this is a final stage
-                        // keyword verification rejection.
-                        this.logger.Log($"Cloud model rejected keyword");
+                            // If a KeywordRecognized handler is available, this is a final stage
+                            // keyword verification rejection.
+                            this.logger.Log($"Cloud model rejected keyword");
                             this.KeywordRecognized?.Invoke(null);
                             break;
                         default:
@@ -186,12 +187,26 @@ namespace UWPVoiceAssistantSample
                     // it's assumed that receiving a message activity without audio marks the end of a turn. Your
                     // dialog system may have a different contract!
                     var wrapper = new ActivityWrapper(e.Activity);
+
+                    if (wrapper.Type == ActivityWrapper.ActivityType.Event)
+                    {
+                        if (!this.startEventReceived)
+                        {
+                            this.startEventReceived = true;
+                            return;
+                        }
+                        else
+                        {
+                            this.startEventReceived = false;
+                        }
+                    }
+
                     var payload = new DialogResponse(
                         messageBody: e.Activity,
                         messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio, LocalSettingsHelper.OutputFormat) : null,
-                        shouldEndTurn: e.Audio == null && wrapper.Type == ActivityWrapper.ActivityType.Message,
+                        shouldEndTurn: (e.Audio == null && wrapper.Type == ActivityWrapper.ActivityType.Message) || wrapper.Type == ActivityWrapper.ActivityType.Event,
                         shouldStartNewTurn: wrapper.InputHint == ActivityWrapper.InputHintType.ExpectingInput);
-                    this.logger.Log($"Connector activity received");
+
                     this.DialogResponseReceived?.Invoke(payload);
                 };
             }

@@ -152,10 +152,7 @@ namespace UWPVoiceAssistantSample
 
             this.dialogResponseQueue.ResponseExecuted += async (DialogResponse response) =>
             {
-                if (response.TurnEndIndicated)
-                {
-                    await this.FinishTurnAsync();
-                }
+                await this.FinishTurnAsync();
             };
 
             if (this.dialogAudioOutput != null)
@@ -304,7 +301,7 @@ namespace UWPVoiceAssistantSample
                 ? ConversationalAgentState.Detecting
                 : ConversationalAgentState.Listening;
             await this.ChangeAgentStateAsync(newState);
-            
+
             await this.dialogBackend.StartAudioTurnAsync(signalVerificationRequired);
 
             var audioToSkip = signalVerificationRequired
@@ -322,6 +319,8 @@ namespace UWPVoiceAssistantSample
         {
             if (this.ConversationContinuationRequested)
             {
+                this.ConversationContinuationRequested = false;
+                await this.dialogAudioInput.InitializeFromNowAsync();
                 await this.StartTurnAsync(signalVerificationRequired: false);
             }
             else
@@ -403,9 +402,18 @@ namespace UWPVoiceAssistantSample
             this.signalDetectionHelper.KeywordRecognitionDuringSignalVerification(recognitionText, isFinal: false);
         }
 
-        private void OnKeywordRecognized(string recognitionText)
+        private async void OnKeywordRecognized(string recognitionText)
         {
-            _ = this.dialogResponseQueue.AbortAsync();
+            await this.dialogResponseQueue.AbortAsync();
+
+            var session = await this.agentSessionManager.GetSessionAsync();
+
+            if (session.AgentState == ConversationalAgentState.Listening)
+            {
+                await this.FinishConversationAsync();
+                return;
+            } 
+
             this.signalDetectionHelper.KeywordRecognitionDuringSignalVerification(recognitionText, isFinal: true);
         }
 
@@ -421,7 +429,11 @@ namespace UWPVoiceAssistantSample
 
         private void OnActivityReceived(DialogResponse dialogResponse)
         {
-            this.ConversationContinuationRequested = dialogResponse.FollowupTurnIndicated;
+            if (!dialogResponse.TurnEndIndicated)
+            {
+                this.ConversationContinuationRequested = dialogResponse.FollowupTurnIndicated;
+            }
+
             this.DialogResponseReceived?.Invoke(this, dialogResponse);
             this.dialogResponseQueue?.Enqueue(dialogResponse);
         }
