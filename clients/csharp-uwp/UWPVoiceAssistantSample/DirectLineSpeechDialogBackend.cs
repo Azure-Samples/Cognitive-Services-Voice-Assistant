@@ -5,16 +5,12 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Threading.Tasks;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
-    using UWPVoiceAssistantSample.AudioCommon;
-    using UWPVoiceAssistantSample.AudioOutput;
-    using Windows.Media.MediaProperties;
     using Windows.Storage;
 
     /// <summary>
