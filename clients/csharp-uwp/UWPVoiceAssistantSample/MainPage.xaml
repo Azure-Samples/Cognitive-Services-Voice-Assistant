@@ -283,7 +283,7 @@
 
                             <Grid
                                 Grid.Row="1"
-                                BorderBrush="blue"
+                                BorderBrush="#0078D4"
                                 BorderThickness="1"
                                 Visibility="{x:Bind Received, Mode=OneWay}"/>
 
