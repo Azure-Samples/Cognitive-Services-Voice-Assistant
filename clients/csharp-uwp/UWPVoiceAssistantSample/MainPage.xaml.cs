@@ -265,6 +265,8 @@ namespace UWPVoiceAssistantSample
                 this.MicrophoneInfoIcon.Glyph = microphoneStatusInfo.Glyph;
                 this.MicrophoneInfoIcon.Foreground = new SolidColorBrush(microphoneStatusInfo.Color);
 
+                int teachingTipCount = 0;
+
                 if (microphoneStatusInfo.Status[0] == "Microphone is available.")
                 {
                     this.MicrophoneLinkButton.Content = "Microphone is available.";
@@ -273,6 +275,7 @@ namespace UWPVoiceAssistantSample
                 else
                 {
                     this.MicrophoneLinkButton.Content = "Microphone is not available.";
+                    this.VAStatusIcon.Glyph = Glyphs.Warning;
                     this.TeachingTipStackPanel.Children.Clear();
                 }
 
@@ -294,30 +297,52 @@ namespace UWPVoiceAssistantSample
                 foreach (var item in microphoneStatusInfo.Status)
                 {
                     TextBlock microphoneStatusTextBlock = new TextBlock();
+                    TextBlock emptyTextBlock = new TextBlock();
+                    Border border = new Border();
                     microphoneStatusTextBlock.Text = item;
                     microphoneStatusTextBlock.TextWrapping = TextWrapping.WrapWholeWords;
-
+                    emptyTextBlock.Text = string.Empty;
+                    emptyTextBlock.Height = 5;
+                    border.BorderBrush = new SolidColorBrush(Colors.LightGray);
+                    border.BorderThickness = new Thickness(1);
                     this.TeachingTipStackPanel.Children.Add(microphoneStatusTextBlock);
+                    this.TeachingTipStackPanel.Children.Add(emptyTextBlock);
+                    this.TeachingTipStackPanel.Children.Add(border);
+                    teachingTipCount++;
+
                     if (item == "Microphone is available.")
                     {
                         this.TeachingTipStackPanel.Children.Remove(microphoneStatusTextBlock);
+                        this.TeachingTipStackPanel.Children.Remove(border);
+                        teachingTipCount--;
                     }
                 }
 
                 foreach (var item in voiceActivationStatusInfo.Status)
                 {
                     TextBlock voiceActivationStatusTextBlock = new TextBlock();
+                    TextBlock emptyTextBlock = new TextBlock();
                     Border border = new Border();
                     voiceActivationStatusTextBlock.Text = item;
                     voiceActivationStatusTextBlock.TextWrapping = TextWrapping.WrapWholeWords;
+                    emptyTextBlock.Text = string.Empty;
+                    emptyTextBlock.Height = 5;
+                    border.BorderBrush = new SolidColorBrush(Colors.LightGray);
+                    border.BorderThickness = new Thickness(1);
                     this.TeachingTipStackPanel.Children.Add(voiceActivationStatusTextBlock);
+                    this.TeachingTipStackPanel.Children.Add(emptyTextBlock);
+                    this.TeachingTipStackPanel.Children.Add(border);
+                    teachingTipCount++;
+
                     if (item == "Voice activation is configured and available.")
                     {
                         this.TeachingTipStackPanel.Children.Remove(voiceActivationStatusTextBlock);
+                        this.TeachingTipStackPanel.Children.Remove(border);
+                        teachingTipCount--;
                     }
                 }
 
-                if (this.TeachingTipStackPanel.Children.Count == 0)
+                if (teachingTipCount == 0)
                 {
                     this.ApplicationStateBadgeIcon.Glyph = Glyphs.CircleCheckMark;
                     this.ApplicationStateBadgeIcon.Foreground = new SolidColorBrush(Colors.Green);
@@ -332,7 +357,7 @@ namespace UWPVoiceAssistantSample
                     this.ApplicationStateBadge.IsEnabled = true;
                 }
 
-                this.ApplicationStateBadge.Content = $"{this.TeachingTipStackPanel.Children.Count} Warnings";
+                this.ApplicationStateBadge.Content = $"{teachingTipCount} Warnings";
 
                 this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
             });

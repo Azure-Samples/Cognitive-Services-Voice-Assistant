@@ -102,7 +102,7 @@
                     IsLightDismissEnabled="True"
                     PreferredPlacement="Top">
                     <muxc:TeachingTip.Content>
-                        <StackPanel x:Name="TeachingTipStackPanel" Orientation="Vertical" Margin="5,-5,-5,25" Padding="0,0,20,0">
+                        <StackPanel x:Name="TeachingTipStackPanel" Orientation="Vertical" Margin="5,-18,-5,5" Padding="0,15,20,25">
 
                         </StackPanel>
                     </muxc:TeachingTip.Content>
@@ -260,7 +260,7 @@
                 </StackPanel>
             </ScrollViewer>
         </Grid>
-        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6" Margin="0" Width="450">
+        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6" Margin="0" Width="450" Background="WhiteSmoke">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -283,7 +283,7 @@
             <ListView Grid.Row="1" Grid.Column="0" 
                       Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView"
                       Margin="0,40,0,0"
-                      Background="LightGray"
+                      Background="WhiteSmoke"
                       ItemsSource="{x:Bind Conversations, Mode=OneWay}">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
@@ -309,11 +309,12 @@
                                 Grid.Row="1"
                                 BorderBrush="#0078D4"
                                 BorderThickness="1"
-                                Background="LightBlue"
+                                Background="White"
                                 Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
                                 Grid.Row="1"
+                                Background="LightSkyBlue"
                                 Visibility="{x:Bind Sent, Mode=OneWay}"/>
 
                             <Grid Grid.Row="1">
@@ -351,7 +352,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Grid Grid.Row="5" Grid.ColumnSpan="2" Grid.RowSpan="3" Background="LightGray">
+            <Grid Grid.Row="5" Grid.ColumnSpan="2" Grid.RowSpan="3" Background="WhiteSmoke">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
