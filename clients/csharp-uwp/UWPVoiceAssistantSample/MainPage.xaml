@@ -86,7 +86,9 @@
                         NavigateUri="ms-settings:privacy-microphone" 
                         HorizontalAlignment="Left"/>
             </StackPanel>
-            <HyperlinkButton
+            <StackPanel x:Name="ApplicationStateBadgeStackPanel" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                <FontIcon x:Name="ApplicationStateBadgeIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Warning}"/>
+                <HyperlinkButton
                 x:Name="ApplicationStateBadge"
                 HorizontalAlignment="Right" 
                 VerticalAlignment="Center" 
@@ -94,31 +96,21 @@
                 Grid.Column="3"
                 Padding="10"
                 Margin="0,0,5,0">
-                <!--<Border HorizontalAlignment="Right" CornerRadius="9"
-                        VerticalAlignment="Top" Width="25" Height="15"
-                        Grid.Row="2"  Margin="0,0,-15,-10" 
-                        Background="Black"
-                        BorderThickness="2" BorderBrush="White">
-                    <TextBlock x:Name="ErrorCount" FontSize="10" 
-                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                               Foreground="White">    
-                    </TextBlock>
-                </Border>-->
-            </HyperlinkButton>
+                </HyperlinkButton>
 
-            <muxc:TeachingTip x:Name="AutoSaveTip"
+                <muxc:TeachingTip x:Name="ApplicationStateTeachingTip"
                     IsLightDismissEnabled="True"
                     PreferredPlacement="Top">
-                <muxc:TeachingTip.Content>
-                    <RichTextBlock x:Name="TeachingTipTextblock" Padding="5" Margin="5" Foreground="LightGray">
-                        
-                    </RichTextBlock>
-                </muxc:TeachingTip.Content>
-            </muxc:TeachingTip>
+                    <muxc:TeachingTip.Content>
+                        <StackPanel x:Name="TeachingTipStackPanel" Orientation="Vertical" Margin="5,-5,-5,25" Padding="0,0,20,0">
 
+                        </StackPanel>
+                    </muxc:TeachingTip.Content>
+                </muxc:TeachingTip>
+            </StackPanel>
 
-            <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="35" Foreground="Green" Margin="5,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
+            <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" Margin="-30,0,0,0">
+                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="35" Foreground="Green" Margin="5,0,10,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
                 <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="1,9,0,0"></TextBlock>
             </StackPanel>
 
@@ -317,6 +309,7 @@
                                 Grid.Row="1"
                                 BorderBrush="blue"
                                 BorderThickness="1"
+                                Background="LightBlue"
                                 Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
@@ -357,19 +350,19 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            
-            <Border x:Name="ChatViewSeparator" Grid.Row="5" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1" Margin="40,20,40,20"/>
 
-            <Grid Grid.Row="6" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <Grid Grid.Row="5" Grid.ColumnSpan="2" Grid.RowSpan="3" Background="LightGray">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="375" Width="Auto" VerticalAlignment="Stretch"></TextBox>
-                <Button x:Name="MicrophoneButton" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right" Margin="0,0,10,10" FontFamily="Segoe MDL2 Assets" Content="" FontSize="25" Background="#0078D4">
+                <Border x:Name="ChatViewSeparator" Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="1" Margin="40,20,40,20" Background="LightGray"/>
+                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="1" MinWidth="375" Width="Auto" VerticalAlignment="Stretch"></TextBox>
+                <Button x:Name="MicrophoneButton" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,10,10" FontFamily="Segoe MDL2 Assets" Content="" FontSize="25" Background="#0078D4">
                 </Button>
             </Grid>
 
