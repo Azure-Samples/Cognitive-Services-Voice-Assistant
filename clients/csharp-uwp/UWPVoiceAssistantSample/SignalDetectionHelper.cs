@@ -127,7 +127,7 @@ namespace UWPVoiceAssistantSample
             var signalName = (detectionOrigin == DetectionOrigin.FromPushToTalk)
                 ? "Push to talk" : session.SignalName;
 
-            this.logger.Log($"{Environment.TickCount} : HandleSignalDetection: '{signalName}', {detectionOrigin.ToString()}");
+            this.logger.Log($"HandleSignalDetection, '{signalName}', {detectionOrigin.ToString()}");
 
             var canSkipVerification =
                 detectionOrigin == DetectionOrigin.FromPushToTalk
@@ -144,21 +144,6 @@ namespace UWPVoiceAssistantSample
             else
             {
                 this.OnSessionSignalConfirmed(session, detectionOrigin);
-            }
-        }
-
-        /// <summary>
-        /// Fires rejected event if state change to inactive occurs during verification.
-        /// </summary>
-        /// <param name="oldState"> The old session state. </param>
-        /// <param name="newState"> The new session state. </param>
-        public void DialogStateChangeDuringSignalVerification(ConversationalAgentState oldState, ConversationalAgentState newState)
-        {
-            if (this.signalNeedsVerification
-                && oldState == ConversationalAgentState.Detecting
-                && newState == ConversationalAgentState.Inactive)
-            {
-                this.OnSessionSignalRejected(this.LastDetectedSignalOrigin);
             }
         }
 

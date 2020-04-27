@@ -4,7 +4,6 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
@@ -25,6 +24,7 @@ namespace UWPVoiceAssistantSample
     /// <typeparam name="TInputType">Input type of audio.</typeparam>
     public class DialogManager<TInputType> : IDialogManager, IDisposable
     {
+        private ILogProvider logger;
         private IDialogBackend<TInputType> dialogBackend;
         private IDialogAudioInputProvider<TInputType> dialogAudioInput;
         private IDialogAudioOutputAdapter dialogAudioOutput;
@@ -50,12 +50,12 @@ namespace UWPVoiceAssistantSample
         {
             Contract.Requires(dialogBackend != null);
             Contract.Requires(agentSessionManager != null);
-
+            this.logger = LogRouter.GetClassLogger();
             this.dialogBackend = dialogBackend;
             this.dialogBackend.SessionStarted += (id)
-                => Debug.WriteLine($"DialogManager: Session start: {id}");
+                => this.logger.Log($"DialogManager: Session start: {id}");
             this.dialogBackend.SessionStopped += (id)
-                => Debug.WriteLine($"DialogManager: Session stop: {id}");
+                => this.logger.Log($"DialogManager: Session stop: {id}");
             this.dialogBackend.KeywordRecognizing += this.OnKeywordRecognizing;
             this.dialogBackend.KeywordRecognized += this.OnKeywordRecognized;
             this.dialogBackend.SpeechRecognizing += this.OnSpeechRecognizing;
@@ -147,11 +147,11 @@ namespace UWPVoiceAssistantSample
                 {
                     await this.ChangeAgentStateAsync(ConversationalAgentState.Speaking);
                 }
+            };
 
-                if (response.TurnEndIndicated)
-                {
-                    await this.FinishTurnAsync();
-                }
+            this.dialogResponseQueue.ResponseExecuted += async (DialogResponse response) =>
+            {
+                await this.FinishTurnAsync();
             };
 
             if (this.dialogAudioOutput != null)
@@ -251,7 +251,7 @@ namespace UWPVoiceAssistantSample
             var setupSuccessful = await this.SetupConversationAsync(signalOrigin);
             if (!setupSuccessful)
             {
-                Debug.WriteLine($"DialogManager2::SetupConversationAsync didn't succeed in setting up a conversation (see earlier errors). Aborting conversation.");
+                this.logger.Log($"DialogManager2::SetupConversationAsync didn't succeed in setting up a conversation (see earlier errors). Aborting conversation.");
                 return;
             }
 
@@ -281,7 +281,7 @@ namespace UWPVoiceAssistantSample
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Unable to acquire MVA 1st-pass audio. Rejecting signal.\n{ex.HResult}: {ex.Message}");
+                this.logger.Log($"Unable to acquire MVA 1st-pass audio. Rejecting signal.\n{ex.HResult}: {ex.Message}");
                 await this.FinishConversationAsync();
                 return false;
             }
@@ -325,6 +325,8 @@ namespace UWPVoiceAssistantSample
         {
             if (this.ConversationContinuationRequested)
             {
+                this.ConversationContinuationRequested = false;
+                await this.dialogAudioInput.InitializeFromNowAsync();
                 await this.StartTurnAsync(signalVerificationRequired: false);
             }
             else
@@ -368,9 +370,8 @@ namespace UWPVoiceAssistantSample
         {
             var session = await this.agentSessionManager.GetSessionAsync();
             var oldState = session.AgentState;
-            Debug.WriteLine($"Changing agent state: [{oldState.ToString()}] -> [{newState.ToString()}]");
+            this.logger.Log($"Changing agent state: [{oldState.ToString()}] -> [{newState.ToString()}]");
             await session.RequestAgentStateChangeAsync(newState);
-            this.signalDetectionHelper.DialogStateChangeDuringSignalVerification(oldState, newState);
             this.DialogStateChanged?.Invoke(oldState, newState);
         }
 
@@ -387,9 +388,9 @@ namespace UWPVoiceAssistantSample
 
             this.signalDetectionHelper.SignalRejected += async (DetectionOrigin origin) =>
             {
-                await this.dialogBackend.CancelSignalVerification();
+                await this.dialogBackend.CancelSignalVerificationAsync();
                 await this.StopAudioCaptureAsync();
-                Debug.WriteLine($"Failsafe timer expired; rejecting");
+                this.logger.Log($"Failsafe timer expired; rejecting");
                 await this.FinishConversationAsync();
 
                 this.SignalRejected.Invoke(origin);
@@ -407,9 +408,18 @@ namespace UWPVoiceAssistantSample
             this.signalDetectionHelper.KeywordRecognitionDuringSignalVerification(recognitionText, isFinal: false);
         }
 
-        private void OnKeywordRecognized(string recognitionText)
+        private async void OnKeywordRecognized(string recognitionText)
         {
-            _ = this.dialogResponseQueue.AbortAsync();
+            await this.dialogResponseQueue.AbortAsync();
+
+            var session = await this.agentSessionManager.GetSessionAsync();
+
+            if (session.AgentState == ConversationalAgentState.Listening)
+            {
+                await this.FinishConversationAsync();
+                return;
+            } 
+
             this.signalDetectionHelper.KeywordRecognitionDuringSignalVerification(recognitionText, isFinal: true);
         }
 
@@ -425,14 +435,18 @@ namespace UWPVoiceAssistantSample
 
         private void OnActivityReceived(DialogResponse dialogResponse)
         {
-            this.ConversationContinuationRequested = dialogResponse.FollowupTurnIndicated;
+            if (!dialogResponse.TurnEndIndicated)
+            {
+                this.ConversationContinuationRequested = dialogResponse.FollowupTurnIndicated;
+            }
+
             this.DialogResponseReceived?.Invoke(this, dialogResponse);
             this.dialogResponseQueue?.Enqueue(dialogResponse);
         }
 
         private async Task OnErrorReceivedAsync(DialogErrorInformation errorInformation)
         {
-            Debug.WriteLine($"DialogManager: error received: {errorInformation.ErrorDetails}");
+            this.logger.Log($"DialogManager: error received: {errorInformation.ErrorDetails}");
             await this.ChangeAgentStateAsync(ConversationalAgentState.Inactive);
             await this.dialogResponseQueue.AbortAsync();
         }

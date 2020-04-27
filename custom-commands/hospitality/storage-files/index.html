@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Virtual Room</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+
+    <style>
+        #hotel-room-img {
+            width: 840px;
+            height: 472px;
+        }
+
+        #tv-frame-img {
+            width: 300px;
+            height: 195px;
+        }
+
+        #room-default {
+            position: fixed;
+            top: 180px;
+            left: calc(50% - 360px);
+            background-color: black;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.3;
+            opacity: 0.3;
+            z-index: 10000;
+            width: 470px;
+            height: 320px;
+        }
+
+        #room-light {
+            position: fixed;
+            top: 180px;
+            left: calc(50% - 360px);
+            background-color: transparent;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            z-index: 10000;
+            width: 470px;
+            height: 320px;
+            background-image: radial-gradient(white 0%, yellow 10%, transparent 70%);
+        }
+
+        #bathroom-light {
+            position: fixed;
+            top: 280px;
+            left: calc(50% + 120px);
+            background-color: transparent;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            z-index: 10000;
+            width: 275px;
+            height: 210px;
+            background-image: radial-gradient(white 0%, yellow 10%, transparent 70%);
+        }
+
+        #bathroom-default {
+            position: fixed;
+            top: 280px;
+            left: calc(50% + 120px);
+            background-color: black;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.3;
+            opacity: 0.3;
+            z-index: 10000;
+            width: 275px;
+            height: 210px;
+        }
+
+        #left-bed-light {
+            position: fixed;
+            top: 450px;
+            left: calc(50% - 187px);
+            background-color: transparent;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            z-index: 10000;
+            width: 50px;
+            height: 50px;
+            background-image: radial-gradient(white 0%, yellow 10%, transparent 70%);
+        }
+
+        #right-bed-light {
+            position: fixed;
+            top: 450px;
+            left: calc(50% + 12px);
+            background-color: transparent;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            z-index: 10000;
+            width: 50px;
+            height: 50px;
+            background-image: radial-gradient(white 0%, yellow 10%, transparent 70%);
+        }
+
+        #currently-playing {
+            position: fixed;
+            top: 678px;
+            left: calc(50% - 145px);
+            background-color: transparent;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            z-index: 10000;
+            width: 290px;
+            height: 166px;
+            background-image: radial-gradient(white 0%, black 100%, transparent 0%);
+        }
+
+        #tv-light {
+            position: fixed;
+            top: 170px;
+            left: calc(50% - 160px);
+            background-color: transparent;
+            filter: alpha(opacity=50);
+            -moz-opacity: 0.3;
+            opacity: 0.5;
+            z-index: 10000;
+            width: 200px;
+            height: 90px;
+            background-image: radial-gradient(white 0%, lightcyan 30%, transparent 50%);
+        }
+
+        .list {
+            background-image: repeating-linear-gradient(180deg, lightyellow, lightyellow 40px, lemonchiffon 40px, lemonchiffon 80px);
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="collapse bg-dark" id="navbarHeader">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-12 py-4">
+                    <h4 class="text-white">About</h4>
+                    <p class="text-muted">This is a sample virtual room to demostrate the IoT capabilities of Speech
+                        Commands.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-home">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <strong>&nbsp;Virtual Room</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
+                    aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main role="main">
+
+    <section class="py-5 bg-white text-center">
+        <div id="hotel-room" class="container">
+            <img id="hotel-room-img" src="HotelRoom.jpg" alt="Room"/>
+        </div>
+    </section>
+
+    <div class="py-5 bg-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm list border rounded">
+                    <p class="pt-3 lead"><span id="item-ordered"></span></p>
+                </div>
+                <div id="tv" class="col-sm text-center">
+                    <img id="tv-frame-img" src="TvFrame.png" alt="Room"/>
+                </div>
+                <div class="col-sm border rounded bg-light text-center pt-5">
+                    <h1>Temperature</h1>
+                    <h1><span id="temperature"></span>&deg;</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        crossorigin="anonymous"></script>
+
+<script>
+    $(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var jsonUrl = "https://virtualroommanager.azurewebsites.net/api/ConciergeFunction";
+        var room = urlParams.get("room");
+        if (urlParams.has("room")) {
+            jsonUrl = jsonUrl + "?room=" + room;
+        }
+
+        var hotelRoom = $("#hotel-room");
+        var tv = $("#tv");
+
+        hotelRoom.append("<div id='room-default'></div>");
+        hotelRoom.append("<div id='bathroom-default'></div>");
+        hotelRoom.append("<div id='room-light' class='d-none'></div>");
+        hotelRoom.append("<div id='bathroom-light' class='d-none'></div>");
+        hotelRoom.append("<div id='left-bed-light' class='d-none'></div>");
+        hotelRoom.append("<div id='right-bed-light' class='d-none'></div>");
+        hotelRoom.append("<div id='tv-light' class='d-none'></div>");
+        tv.append("<div id='currently-playing'></div>");
+
+        setInterval(function () {
+            $.getJSON(jsonUrl, function (globalConfiguration) {
+                configuration = globalConfiguration[room];
+                clear();
+                apply(configuration);
+                console.log(configuration);
+            });
+        }, 1000);
+
+        function apply(configuration) {
+            $("#temperature").html(configuration.temperature);
+
+            configuration.lightsOn.forEach(function (name) {
+                if (name === "bed") {
+                    $("#left-" + name + "-light").removeClass("d-none");
+                    $("#right-" + name + "-light").removeClass("d-none");
+                } else {
+                    $("#" + name + "-default").addClass("d-none");
+                    $("#" + name + "-light").removeClass("d-none");
+                }
+            });
+
+            if (configuration.justOrdered != null) {
+                $("#item-ordered").html(configuration.justOrdered);
+            } else {
+                $("#item-ordered").html("");
+            }
+
+            var currentlyPlaying = $("#currently-playing");
+            if (configuration.currentlyPlaying != null) {
+                currentlyPlaying.css("background-image", "url('" + configuration.currentlyPlaying + "')");
+                currentlyPlaying.css("background-size", "290px 166px");
+                currentlyPlaying.css("opacity", "1")
+                $("#tv-light").removeClass("d-none");
+            } else {
+                currentlyPlaying.css("background-image", "radial-gradient(white 0%, black 100%, transparent 0%)");
+                currentlyPlaying.css("background-size", "");
+                currentlyPlaying.css("opacity", "0.5")
+                $("#tv-light").addClass("d-none");
+            }
+        }
+
+        function clear() {
+            $("#room-default").removeClass("d-none");
+            $("#bathroom-default").removeClass("d-none");
+
+            $("#tv-light").addClass("d-none");
+            $("#room-light").addClass("d-none");
+            $("#bathroom-light").addClass("d-none");
+            $("#left-bed-light").addClass("d-none");
+            $("#right-bed-light").addClass("d-none");
+        }
+    });
+</script>
+
+</body>
+</html>
+

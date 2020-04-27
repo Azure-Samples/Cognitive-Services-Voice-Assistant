@@ -4,15 +4,11 @@
 namespace UWPVoiceAssistantSample.AudioInput
 {
     using System;
-    using System.Diagnostics;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
     using Windows.Devices.Enumeration;
-    using Windows.Media.Audio;
     using Windows.Media.Capture;
-    using Windows.Media.Devices;
     using Windows.Security.Authorization.AppCapabilityAccess;
 
     /// <summary>
