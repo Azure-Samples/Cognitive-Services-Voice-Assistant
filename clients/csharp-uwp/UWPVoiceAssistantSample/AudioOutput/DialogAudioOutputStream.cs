@@ -225,7 +225,7 @@ namespace UWPVoiceAssistantSample
         /// the buffer.
         /// </summary>
         /// <param name="newPosition">
-        ///     The position to which the buffer stream will be filled, beginning at the end of the stream. 
+        /// The position to which the buffer stream will be filled, beginning at the end of the stream.
         /// </param>
         private void EnsureDataInBufferUpToPosition(uint newPosition)
         {
