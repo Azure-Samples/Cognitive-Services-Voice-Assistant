@@ -147,9 +147,9 @@ void LinuxAudioPlayer::PlayerThreadMain(){
         m_conditionVariable.wait(lk);
         lk.unlock();
         
-        if(!m_state == AudioPlayerState::PAUSED)
+        if(m_state == AudioPlayerState::PAUSED)
         {
-            Open();
+            Initialize();
         }
         
         while (m_audioQueue.size() > 0) {
