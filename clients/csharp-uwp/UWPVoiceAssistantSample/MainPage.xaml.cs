@@ -119,13 +119,8 @@ namespace UWPVoiceAssistantSample
             };
             this.MicrophoneButton.Click += async (_, __) =>
             {
-                //this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
-                //await this.UpdateUIForSharedStateAsync();
-
-                var message = this.TextInputTextBox.Text;
-                this.TextInputTextBox.Text = string.Empty;
-                this.AddMessageToStatus(message);
-                await this.dialogManager.SendActivityAsync(message);
+                this.dialogManager.HandleSignalDetection(DetectionOrigin.FromPushToTalk);
+                await this.UpdateUIForSharedStateAsync();
             };
             this.ResetButton.Click += async (_, __) =>
             {
@@ -761,6 +756,19 @@ namespace UWPVoiceAssistantSample
             var json = JsonConvert.SerializeObject(this.Conversations);
             var writeChatHistory = await ApplicationData.Current.LocalFolder.CreateFileAsync($"chatHistory_{DateTime.Now.ToString("yyyyMMdd_HHmmss", null)}.json", CreationCollisionOption.ReplaceExisting);
             await File.WriteAllTextAsync(writeChatHistory.Path, json);
+        }
+
+        private async void TextInputTextBoxKeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key != VirtualKey.Enter)
+            {
+                return;
+            }
+
+            var message = this.TextInputTextBox.Text;
+            this.TextInputTextBox.Text = string.Empty;
+            this.AddMessageToStatus(message);
+            await this.dialogManager.SendActivityAsync(message);
         }
     }
 }

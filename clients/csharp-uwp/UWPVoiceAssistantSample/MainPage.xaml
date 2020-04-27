@@ -317,7 +317,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="375" Width="Auto" VerticalAlignment="Stretch"></TextBox>
+                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="375" Width="Auto" VerticalAlignment="Stretch" KeyUp="TextInputTextBoxKeyUp"></TextBox>
                 <Button x:Name="MicrophoneButton" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right" Margin="0,0,10,10" FontFamily="Segoe MDL2 Assets" Content="" FontSize="25" Background="#0078D4">
                 </Button>
             </Grid>
