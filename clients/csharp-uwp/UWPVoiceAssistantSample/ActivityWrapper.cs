@@ -4,7 +4,6 @@
 namespace UWPVoiceAssistantSample
 {
     using Newtonsoft.Json.Linq;
-    using System.Diagnostics;
 
     /// <summary>
     /// Class determines the activity received from the Bot and deserializes the response.
@@ -18,8 +17,6 @@ namespace UWPVoiceAssistantSample
         public ActivityWrapper(string activityJson)
         {
             var activityObj = JObject.Parse(activityJson);
-
-            Debug.WriteLine(activityObj["type"]?.ToString());
 
             switch (activityObj["type"]?.ToString().ToLower())
             {
