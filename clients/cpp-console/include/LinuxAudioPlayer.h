@@ -251,5 +251,6 @@ namespace AudioPlayer
             void PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry);
             int WriteToALSA(uint8_t* buffer);
             void SetAlsaMasterVolume(long volume);
+            int Close();
     };
 }

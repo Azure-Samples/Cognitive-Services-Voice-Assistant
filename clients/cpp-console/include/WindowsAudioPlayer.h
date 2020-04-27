@@ -264,5 +264,6 @@ namespace AudioPlayer
             void PlayerThreadMain();
             void PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry);
             void PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry);
+            int Close();
     };
 }
