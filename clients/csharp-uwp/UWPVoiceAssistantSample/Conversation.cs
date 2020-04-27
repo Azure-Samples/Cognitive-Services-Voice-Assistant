@@ -50,11 +50,14 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets a value indicating whether the message was sent from a bot.
         /// </summary>
-        public bool Received { get { return !this.Sent; } }
+        public bool Received
+        {
+            get { return !this.Sent; }
+        }
 
-        // This method is called by the Set accessor of each property.  
-        // The CallerMemberName attribute that is applied to the optional propertyName  
-        // parameter causes the property name of the caller to be substituted as an argument.  
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
