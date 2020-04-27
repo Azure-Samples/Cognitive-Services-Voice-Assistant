@@ -102,7 +102,7 @@
                     IsLightDismissEnabled="True"
                     PreferredPlacement="Top">
                     <muxc:TeachingTip.Content>
-                        <StackPanel x:Name="TeachingTipStackPanel" Orientation="Vertical" Margin="5,-18,-5,5" Padding="0,15,20,25">
+                        <StackPanel x:Name="TeachingTipStackPanel" Orientation="Vertical" Margin="5,-18,-5,5" Padding="0,0,20,25">
 
                         </StackPanel>
                     </muxc:TeachingTip.Content>

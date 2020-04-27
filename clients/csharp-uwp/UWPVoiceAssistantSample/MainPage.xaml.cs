@@ -267,9 +267,9 @@ namespace UWPVoiceAssistantSample
 
                 int teachingTipCount = 0;
 
-                if (microphoneStatusInfo.Status[0] == "Microphone is available.")
+                if (microphoneStatusInfo.Status[0] == UIAudioStatus.MicrophoneAvailable)
                 {
-                    this.MicrophoneLinkButton.Content = "Microphone is available.";
+                    this.MicrophoneLinkButton.Content = UIAudioStatus.MicrophoneAvailable;
                     this.TeachingTipStackPanel.Children.Clear();
                 }
                 else
@@ -283,9 +283,9 @@ namespace UWPVoiceAssistantSample
                 this.VAStatusIcon.Glyph = voiceActivationStatusInfo.Glyph;
                 this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
 
-                if (voiceActivationStatusInfo.Status[0] == "Voice activation is configured and available.")
+                if (voiceActivationStatusInfo.Status[0] == UIAudioStatus.VoiceActivationEnabledMessage)
                 {
-                    this.VoiceActivationLinkButton.Content = "Voice activation is configured and available.";
+                    this.VoiceActivationLinkButton.Content = UIAudioStatus.VoiceActivationEnabledMessage;
                     this.TeachingTipStackPanel.Children.Clear();
                 }
                 else
@@ -310,7 +310,7 @@ namespace UWPVoiceAssistantSample
                     this.TeachingTipStackPanel.Children.Add(border);
                     teachingTipCount++;
 
-                    if (item == "Microphone is available.")
+                    if (item == UIAudioStatus.MicrophoneAvailable)
                     {
                         this.TeachingTipStackPanel.Children.Remove(microphoneStatusTextBlock);
                         this.TeachingTipStackPanel.Children.Remove(border);
@@ -334,7 +334,7 @@ namespace UWPVoiceAssistantSample
                     this.TeachingTipStackPanel.Children.Add(border);
                     teachingTipCount++;
 
-                    if (item == "Voice activation is configured and available.")
+                    if (item == UIAudioStatus.VoiceActivationEnabledMessage)
                     {
                         this.TeachingTipStackPanel.Children.Remove(voiceActivationStatusTextBlock);
                         this.TeachingTipStackPanel.Children.Remove(border);

@@ -18,6 +18,16 @@ namespace UWPVoiceAssistantSample
     public class UIAudioStatus
     {
         /// <summary>
+        /// Constant indicating microphone is available.
+        /// </summary>
+        public static readonly string MicrophoneAvailable = "Microphone is available.";
+
+        /// <summary>
+        /// Constant indiciating voice activation is allowed.
+        /// </summary>
+        public static readonly string VoiceActivationEnabledMessage = "Voice activation is configured and available.";
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UIAudioStatus"/> class.
         /// </summary>
         /// <param name="symbol"> The visual symbol associated with the status. </param>
@@ -88,7 +98,7 @@ namespace UWPVoiceAssistantSample
             {
                 glyph = Glyphs.Microphone;
                 color = Colors.Green;
-                statusText.Add("Microphone is available.");
+                statusText.Add(MicrophoneAvailable);
             }
             else
             {
@@ -168,7 +178,7 @@ namespace UWPVoiceAssistantSample
             {
                 glyph = Glyphs.FeedbackApp;
                 color = Colors.Green;
-                status.Add("Voice activation is configured and available.");
+                status.Add(VoiceActivationEnabledMessage);
             }
             else
             {
