@@ -13,11 +13,11 @@
 
 ### How do I create a voice application using my own voice agent?
 
-The [UWP Sample Application]() was developed using Direct Line Speech and the Speech Services SDK as a demonstration of how to use a dialog service with MVA. However, the implementation of the dialog service in the application can be easily replaced by implementing the DialogBackend interface and replacing all instances of DirectLineSpeechDialogBackend with your new implementation.
+The UWP Sample Application was developed using Direct Line Speech and the Speech Services SDK as a demonstration of how to use a dialog service with MVA. However, the implementation of the dialog service in the application can be easily replaced by implementing the DialogBackend interface and replacing all instances of DirectLineSpeechDialogBackend with your new implementation.
 
 ## Debugging
 
-### How do I test the code path that starts when my app is closed, then receives a 1st stage activation signal?
+### How do I debug my app starting from when it is closed, then receives a 1st stage activation signal?
 
 Open Visual Studio's Debug->Other Debug Targets->Debug Installed App Package. Check the box that says "Do not launch, but debug my code when it starts". Find the app called "MVADLSSample" in the list of applications, click it, and click "Start" in the bottom right corner of the window. Now, when you voice activate the application while it is closed, the debugger will attach as soon as the app is activated and hit any breakpoints you have set.
 

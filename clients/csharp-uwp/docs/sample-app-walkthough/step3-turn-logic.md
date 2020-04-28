@@ -1,27 +1,26 @@
 # Turn Logic
 
-Once the activation signal has been verified, the next step is to begin a dialog between the voice agent and the user. A "turn" is a user input to the bot through voice or text and the corresponding response from the bot. Thus, a conversation between a user and a bot can be thought of as a sequence of turns. This document walks through how to complete a turn using Direct Line Speech and how to update the Windows Conversational Agent system with the state of the voice agent completing the turns.
+Once the activation signal has been verified, the next step is to begin a dialog between the voice agent and the user. A "turn" is one user input to the bot through voice or text as well as the corresponding response from the bot. Thus, a conversation between a user and a bot can be thought of as a sequence of turns. This document walks through how to complete a turn using Direct Line Speech and how to update the Windows Conversational Agent system with the state of the voice agent completing the turns.
 
-## 12. Bot interaction
-The IDialogBackend interface was designed to allow the use of any dialog service with the other components in the UWP Voice Assistant sample. It contains events for keyword signals, speech recognition output, and generic output in the form of the DialogResponse class. 
+## Bot interaction
+The IDialogBackend interface was designed to allow the use of any dialog service with the other components in the UWP Voice Assistant sample. It contains events for keyword signals, speech recognition output, and generic output in the form of the DialogResponse class.
 
-The sample app's implementation of this interface, DirectLineSpeechDialogBackend, uses the Speech Services SDK and Direct Line Speech which provide an easy way to build a dialog service and a straightforward library to interface with it.
+The sample app's implementation of this interface, DirectLineSpeechDialogBackend, uses Direct Line Speech (DLS) and the Speech Services SDK. DLS provides an easy way to build a dialog service and the Speech Services SDK provides a straightforward library to interface with it.
 
-The Speech Services SDK's DialogServiceConnector object invokes a sequence of events signaling each step of keyword verification, speech recognition, and agent responses. The events, the ResultReaon from the event arguments, and a short description are summarized in the following table.
+The Speech Services SDK's DialogServiceConnector object invokes a sequence of events signaling each step of keyword verification, speech recognition, and agent responses. The events, the ResultReason from the event arguments, and a short description are summarized in the following table.
 
 | Step | `DialogServiceConnector` event | `ResultReason` | Description |
 |---|---|---|---|
 | 1 | `SpeechRecognizing` | `RecognizingKeyword` | Keyword confirmed locally |
 | 2 | `SessionStarted` | | Audio begins flowing to the Speech Service
-| 3 | `SpeechRecognized` | `RecognizedKeyword` | Keyword verified in the cloud |
+| 3 (failure) | `SpeechRecognized` | `NoMatch` | Keyword verification failed in the cloud |
+| 3 (success) | `SpeechRecognized` | `RecognizedKeyword` | Keyword verified in the cloud |
 | 4 | `SpeechRecognizing` | `RecognizingSpeech` | In-progress speech-to-text as the user is speaking |
 | ... | * | * | Speech continues |
 | 5 | `SpeechRecognized` | `RecognizedSpeech` | Final speech-to-text result that is also sent to the bot |
+| 6 | `ActivityReceived` | Not applicable | Response from the bot with audio and text or other information |
 
-The following is a walkthrough of the code path to process an utterance from the user while the app is listening followed by a text and audio response from the bot, altogether referred to as a "turn".
-
-### Turn during first activation
-While completing 3rd stage keyword verification, Direct Line Speech will begin to convert the activation audio into text. This reduces latency between keyword confirmation and the bot response. In practice, this means that, after providing audio to the DialogServiceConnector, the expected result is a [DialogServiceConnector.SpeechRecognized event for the keyword confirmation](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DirectLineSpeechDialogBackend.cs#L127) followed by a [DialogServiceConnector.SpeechRecognized event with the text version of what the user said when they activated the voice agent](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DirectLineSpeechDialogBackend.cs#L131). Direct Line Speech also immediately sends this text to the configured bot and, upon receiving a response, converts the text response from the bot into audio before finally sending the full response back to the application through the [DialogServiceConnector.ActivityReceived](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DirectLineSpeechDialogBackend.cs#L148) event.
+Note: While completing cloud keyword verification, Direct Line Speech will begin to convert the activation audio into text. This reduces latency between keyword confirmation and the bot response.
 
 All of these events are surfaced by the DirectLineSpeechDialogBackend and handled in DialogManager. For activities, DialogManager uses a queue, the [DialogResponseQueue](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DialogResponseQueue.cs), to make sure activities are executed sequentially. For example, if a bot responded with two activities, the second activity's text and audio would be queued, then dequeued after the first activity finishes playing its audio and displaying its text.
 
