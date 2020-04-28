@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioOutput;
@@ -47,11 +48,11 @@ namespace UWPVoiceAssistantSample
             this.CopyConfigAndAssignValues().GetAwaiter();
 
             var keywordRegistration = new KeywordRegistration(
-                "Computer",
+                "Contoso",
                 "{C0F1842F-D389-44D1-8420-A32A63B35568}",
                 "1033",
                 "MICROSOFT_KWSGRAPH_V1",
-                LocalSettingsHelper.KeywordActivationModelPath,
+                LocalSettingsHelper.KeywordActivationPath,
                 new Version(1, 0, 0, 0),
                 LocalSettingsHelper.KeywordConfirmationModelPath);
 
@@ -298,6 +299,8 @@ namespace UWPVoiceAssistantSample
                 LocalSettingsHelper.CustomVoiceIds = appSettings.CustomVoiceIds;
                 LocalSettingsHelper.CustomCommandsAppId = appSettings.CustomCommandsAppId;
                 LocalSettingsHelper.BotId = appSettings.BotId;
+                LocalSettingsHelper.KeywordActivationPath = appSettings.KeywordActivationPath;
+                LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
             }
         }
     }

@@ -7,6 +7,7 @@ namespace UWPVoiceAssistantSample
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -46,7 +47,7 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public string BotId { get; set; }
 
-        public string KeywordActivationModelPath { get; set; }
+        public string KeywordActivationPath { get; set; }
         public string KeywordConfirmationModelPath { get; set; }
 
         /// <summary>
@@ -159,6 +160,16 @@ namespace UWPVoiceAssistantSample
                 {
                     logger.Log("Failed to validate Bot Id");
                 }
+            }
+
+            if (!string.IsNullOrWhiteSpace(instance.KeywordActivationPath))
+            {
+                
+            }
+
+            if (!string.IsNullOrWhiteSpace(instance.KeywordConfirmationModelPath))
+            {
+                logger.Log(instance.KeywordConfirmationModelPath);
             }
         }
     }

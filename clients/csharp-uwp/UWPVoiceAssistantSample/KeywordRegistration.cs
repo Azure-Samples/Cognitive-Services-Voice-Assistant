@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -81,7 +82,10 @@ namespace UWPVoiceAssistantSample
         /// When not provided, no attempt will be made to associate model data with the
         /// activation keyword.
         /// </summary>
-        public string KeywordActivationModelFilePath { get; private set; }
+        public string KeywordActivationModelFilePath
+        {
+            get; private set;
+        }
 
         /// <summary>
         /// Gets the available version of the model data associated with an activation keyword.
@@ -202,7 +206,11 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<StorageFile> GetActivationKeywordFileAsync()
-            => this.GetFileFromPathAsync(this.KeywordActivationModelFilePath);
+        {
+            this.CopyActivationFileFromPath(LocalSettingsHelper.KeywordActivationPath);
+            var fileName = Path.GetFileName(this.KeywordActivationModelFilePath);
+            return this.GetFileFromPathAsync(fileName);
+        }
 
         /// <summary>
         /// Gets an asynchronous task that will return a storage file to the confirmation
@@ -210,7 +218,11 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<StorageFile> GetConfirmationKeywordFileAsync()
-            => this.GetFileFromPathAsync(this.ConfirmationKeywordModelPath);
+        {
+            this.CopyConfirmationFileFromPath(LocalSettingsHelper.KeywordConfirmationModelPath);
+            var fileName = Path.GetFileName(this.ConfirmationKeywordModelPath);
+            return this.GetFileFromPathAsync(fileName);
+        }
 
         /// <summary>
         /// Default Dispose implementation.
@@ -333,5 +345,23 @@ namespace UWPVoiceAssistantSample
             => path.StartsWith("ms-appx", StringComparison.InvariantCultureIgnoreCase)
                 ? await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))
                 : await StorageFile.GetFileFromPathAsync(path);
+
+        private void CopyActivationFileFromPath(string path)
+        {
+            File.Copy(path, Directory.GetCurrentDirectory() + "//MVAKeywords//", true);
+        }
+
+        private void CopyConfirmationFileFromPath(string path)
+        {
+            //var fileName = Path.GetDirectoryName(path);
+            //var item = Directory.GetFiles(fileName);
+            File.Copy(path, Path.Combine(Directory.GetCurrentDirectory(), "SDKKeywords") + Path.GetFileName(path), true);
+            //foreach (var file in item)
+            //{
+            //    File.Copy(file, Path.Combine(Directory.GetCurrentDirectory(), "SDKKeywords"), true);
+            //}
+            
+            
+        }
     }
 }
