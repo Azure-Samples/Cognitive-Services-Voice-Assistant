@@ -48,6 +48,7 @@ public:
     std::string _customEndpoint;
     std::string _keywordModelPath;
     std::string _keywordDisplayName;
+    std::string _logFilePath;
     unsigned int _volume = 0;
 
     AgentConfiguration();
