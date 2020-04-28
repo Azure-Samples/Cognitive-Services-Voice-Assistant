@@ -283,6 +283,14 @@ namespace UWPVoiceAssistantSample
                 this.VAStatusIcon.Glyph = voiceActivationStatusInfo.Glyph;
                 this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
 
+                if ((string)this.MicrophoneLinkButton.Content == "Microphone is not available.")
+                {
+                    this.VoiceActivationLinkButton.Content = "Voice activation is not available.";
+                    this.VAStatusIcon.Glyph = Glyphs.Cancel;
+                    this.VAStatusIcon.Foreground = new SolidColorBrush(Colors.Red);
+                    this.TeachingTipStackPanel.Children.Clear();
+                }
+
                 if (voiceActivationStatusInfo.Status[0] == UIAudioStatus.VoiceActivationEnabledMessage)
                 {
                     this.VoiceActivationLinkButton.Content = UIAudioStatus.VoiceActivationEnabledMessage;
@@ -443,6 +451,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock informationTextBlock = new TextBlock();
                 informationTextBlock.Foreground = new SolidColorBrush(Colors.Blue);
+                informationTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = information.Split("Information");
                 if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
                 {
@@ -473,6 +482,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock noiseTextBlock = new TextBlock();
                 noiseTextBlock.Foreground = new SolidColorBrush(Colors.Gray);
+                noiseTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = noise.Split("Noise");
                 noiseTextBlock.Text = split[1];
 
@@ -495,6 +505,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock errorTextBlock = new TextBlock();
                 errorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                errorTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = error.Split("Error");
                 errorTextBlock.Text = split[1];
 
