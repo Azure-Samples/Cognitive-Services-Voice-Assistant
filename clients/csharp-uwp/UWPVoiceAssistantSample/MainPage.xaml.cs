@@ -451,6 +451,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock informationTextBlock = new TextBlock();
                 informationTextBlock.Foreground = new SolidColorBrush(Colors.Blue);
+                informationTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = information.Split("Information");
                 if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
                 {
@@ -481,6 +482,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock noiseTextBlock = new TextBlock();
                 noiseTextBlock.Foreground = new SolidColorBrush(Colors.Gray);
+                noiseTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = noise.Split("Noise");
                 noiseTextBlock.Text = split[1];
 
@@ -503,6 +505,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock errorTextBlock = new TextBlock();
                 errorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                errorTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = error.Split("Error");
                 errorTextBlock.Text = split[1];
 
