@@ -758,7 +758,7 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.ChatGrid, 0);
                 Grid.SetRow(this.ChatGrid, 2);
                 var margin = this.ChatGrid.Margin;
-                margin.Top = 90;
+                margin.Top = 100;
                 this.ChatGrid.Margin = margin;
                 Grid.SetColumnSpan(this.ChatGrid, 1);
                 Grid.SetColumn(this.ApplicationStateGrid, 0);
