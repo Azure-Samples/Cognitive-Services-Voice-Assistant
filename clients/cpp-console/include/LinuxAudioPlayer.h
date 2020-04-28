@@ -15,215 +15,34 @@ namespace AudioPlayer
     
     /// <summary>
     /// This object implemented the IAudioPlayer interface and handles the audio Playback for 
-    /// Linux using the ALSA library.
+    /// Linux using the ALSA library. See AudioPlayer.h for full documentation.
     /// </summary>
     /// <remarks>
     /// </remarks>
     class LinuxAudioPlayer :public IAudioPlayer{
         public:
-        
-            /// <summary>
-            /// Default constructor for the LinuxAudioPlayer.
-            /// </summary>
-            /// <returns>a LinuxAudioPlayer object</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer * audioPlayer = new LinuxAudioPlayer();
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// </remarks>
             LinuxAudioPlayer();
             
-            /// <summary>
-            /// Default destructor for the LinuxAudioPlayer. Closes the audio player and cleans up the thread
-            /// </summary>
-            /// <returns>a LinuxAudioPlayer object</returns>
-            /// <example>
-            /// <code>
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// </remarks>
             ~LinuxAudioPlayer();
             
-            /// <summary>
-            ///Initialize the default audio device for ALSA and uses the Mono16khz16bit format.
-            /// </summary>
-            /// <returns>A return code with < 0 as an error and any other int as success</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer * audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Initialize();
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// </remarks>
             virtual int Initialize() final;
             
-            /// <summary>
-            /// Initialize will initialize the audio player with any specific OS dependent 
-            /// settings. This implementation takes an ALSA device name and an AudioPlayFormat 
-            /// enum to be used in setting up the AudioPlayer.
-            /// </summary>
-            /// <returns>A return code with < 0 as an error and any other int as success</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Initialize("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// This will force the audio device to be closed and reopened to ensure the specified format.
-            /// </remarks>
             virtual int Initialize(const std::string& device, AudioPlayerFormat format) final;
             
-            /// <summary>
-            /// ALSA expects audio to be sent in periods defined by frames. This function will compute the
-            /// buffer size based on the channels, bytes per sample, and frames per period.
-            /// </summary>
-            /// <returns>An integer representing the expected buffer size in bytes</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// int bufferSize = audioPlayer->GetBufferSize();
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// </remarks>
             virtual int GetBufferSize() final;
             
-            /// <summary>
-            /// This method is used to actually play the audio. The buffer passed in 
-            /// should contain the raw audio bytes.
-            /// </summary>
-            /// <param name="buffer">A point to the buffer containing the audio bytes</param>
-            /// <param name="bufferSize">The size in bytes of the buffer being passed in.</param>
-            /// <returns>A return code with < 0 as an error and any other int as success</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Initialize();
-            /// int bufferSize = audioPlayer->GetBufferSize();
-            /// unsigned char * buffer = (unsigned char *)malloc(bufferSize);
-            /// // fill buffer with audio from somewhere
-            /// int result = audioPLayer->Play(buffer, bufferSize);
-            /// if(result < 0){
-            ///     //error
-            /// }
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// The method returns the number of frames written to ALSA.
-            /// We assume Initialize has already been called.
-            /// </remarks>
             virtual int Play(uint8_t* buffer, size_t bufferSize) final;
-            
-            /// <summary>
-            /// This method is used to actually play the audio. The PullAudioOutputStream
-            /// passed in should be taken from the GetAudio() call on the activity received event.
-            /// </summary>
-            /// <param name="pStream">A shared pointer to the PullAudioOutputStream</param>
-            /// <returns>A return code with < 0 as an error and any other int as success</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Initialize();
-            /// ... 
-            ///
-            /// //In the Activity received callback
-            /// if (event.HasAudio()){
-            ///     std::shared_ptr<Audio::PullAudioOutputStream> stream = event.GetAudio();
-            ///     int result = audioPLayer->Play(stream);
-            ///     if(result < 0){
-            ///         //error
-            ///     }
-            /// }
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// Here we use the LinuxAudioPlayer as an example. This is preferred to the Byte array if possible
-            /// since this will not cause copies of the buffer to be stored at runtime.
-            /// In our implementation we assume Initialize is called before playing.
-            /// </remarks>
-            virtual int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream) final;
 
-            /// <summary>
-            /// This method is used to stop all playback. This will clear any queued audio meaning that any audio yet to play will be lost.
-            /// </summary>
-            /// <returns>A return code with < 0 as an error and any other int as success</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Play(...);
-            /// audioPlayer->Stop();
-            /// </example>
-            /// <remarks>
-            /// In our implementation we assume Initialize is called before playing.
-            /// </remarks>
+            virtual int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream) final;
+            
             virtual int Stop() final;
 
-            /// <summary>
-            /// This method is used to pause all playback. Any queued audio should remain queued and be played upon resume.
-            /// </summary>
-            /// <returns>A return code with < 0 as an error and any other int as success</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Play(...);
-            /// audioPlayer->Pause();
-            /// </example>
-            /// <remarks>
-            /// In our implementation we assume Initialize is called before playing.
-            /// </remarks>
             virtual int Pause() final;
-            
-            /// <summary>
-            /// This method is used to resume any playback.
-            /// </summary>
-            /// <returns>A return code with < 0 as an error and any other int as success</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Play(...);
-            /// audioPlayer->Resume();
-            /// </example>
-            /// <remarks>
-            /// In our implementation we assume Initialize is called before playing.
-            /// </remarks>
+
             virtual int Resume() final;
 
-            /// <summary>
-            /// This function is used to programmatically set the volume of the audio player
-            /// </summary>
-            /// <returns>A return code with < 0 as an error and any other int as success</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Initialize();
-            /// audioPlayer->SetVolume(50);
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// Here we use the LinuxAudioPlayer as an example. Though not all players will support this. See the cpp file for details.
-            /// </remarks>
             virtual int SetVolume(unsigned int percent) final;
             
-            /// <summary>
-            /// This function is used to retrieve the current state of the player.
-            /// </summary>
-            /// <returns>An AudioPlayerState Enum</returns>
-            /// <example>
-            /// <code>
-            /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-            /// audioPlayer->Initialize();
-            /// audioPlayer->GetState();
-            /// </code>
-            /// </example>
-            /// <remarks>
-            /// Here we use the LinuxAudioPlayer as an example.
-            /// States are defined in AudioPlayerState.h
-            /// </remarks>
             virtual AudioPlayerState GetState() final;
         
         private:

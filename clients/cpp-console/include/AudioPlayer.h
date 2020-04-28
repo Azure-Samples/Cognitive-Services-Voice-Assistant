@@ -14,12 +14,12 @@ class IAudioPlayer{
     public:
         /// <summary>
         /// AudioPlayerFormat is an enum that can be used in the AudioPlayer
-        /// implementation. It is passed in as a parameter to the Initialize and Play functions.
+        /// implementation.
         /// </summary>
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Initialize("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
+        /// audioPlayer->Initialize("default", IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
         /// audioPlayer->Play("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
         /// </code>
         /// </example>
@@ -66,7 +66,7 @@ class IAudioPlayer{
         /// <example>
         /// <code>
         /// IAudioPlayer *audioPlayer = new LinuxAudioPlayer();
-        /// audioPlayer->Initialize("default",IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
+        /// audioPlayer->Initialize("default", IAudioPlayer::AudioPlayerFormat::Mono16khz16bit);
         /// </code>
         /// </example>
         /// <remarks>
