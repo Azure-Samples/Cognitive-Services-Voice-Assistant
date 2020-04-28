@@ -353,9 +353,15 @@ namespace UWPVoiceAssistantSample
 
         private void CopyConfirmationFileFromPath(string path)
         {
-            //var fileName = Path.GetDirectoryName(path);
+            File.Copy(path, Path.Combine(ApplicationData.Current.LocalFolder.Path, "SDKKeywords") + Path.GetFileName(path), true);
+
+            //var directory = ApplicationData.Current.LocalFolder.Path;
+            //foreach (var file in directory)
+            //{
+            //    var faToken = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add();
+            //}
             //var item = Directory.GetFiles(fileName);
-            File.Copy(path, Path.Combine(Directory.GetCurrentDirectory(), "SDKKeywords") + Path.GetFileName(path), true);
+            
             //foreach (var file in item)
             //{
             //    File.Copy(file, Path.Combine(Directory.GetCurrentDirectory(), "SDKKeywords"), true);
