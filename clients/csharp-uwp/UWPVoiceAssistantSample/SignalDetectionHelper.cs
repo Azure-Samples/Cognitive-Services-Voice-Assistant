@@ -148,21 +148,6 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Fires rejected event if state change to inactive occurs during verification.
-        /// </summary>
-        /// <param name="oldState"> The old session state. </param>
-        /// <param name="newState"> The new session state. </param>
-        public void DialogStateChangeDuringSignalVerification(ConversationalAgentState oldState, ConversationalAgentState newState)
-        {
-            if (this.signalNeedsVerification
-                && oldState == ConversationalAgentState.Detecting
-                && newState == ConversationalAgentState.Inactive)
-            {
-                this.OnSessionSignalRejected(this.LastDetectedSignalOrigin);
-            }
-        }
-
-        /// <summary>
         /// Takes the next step in keyword verfication or projects the result if the keyword is confirmed or rejected.
         /// </summary>
         /// <param name="recognitionText"> Keyword text, valid unless empty. </param>
