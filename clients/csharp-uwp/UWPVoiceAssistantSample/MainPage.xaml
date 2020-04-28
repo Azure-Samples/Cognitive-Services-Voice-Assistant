@@ -26,7 +26,7 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 1 0 1"/>
-        <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1">
+        <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Padding="5,5,0,5">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button x:Name="WindowFilterButton" Content="Filter View" Grid.Column="0">
                     <Button.Flyout>
@@ -39,7 +39,7 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <Grid x:Name="HelpButtonGrid" Grid.Row="0" Grid.Column="1">
+        <Grid x:Name="HelpButtonGrid" Grid.Row="0" Grid.Column="1" Padding="0,5,5,5">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="HelpButton" Content="Help">
                     <Button.Flyout>
@@ -260,7 +260,7 @@
                 </StackPanel>
             </ScrollViewer>
         </Grid>
-        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6" Margin="0" Width="450" Background="WhiteSmoke">
+        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6" Margin="0" Width="450" Background="WhiteSmoke" Padding="0,5,0,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
