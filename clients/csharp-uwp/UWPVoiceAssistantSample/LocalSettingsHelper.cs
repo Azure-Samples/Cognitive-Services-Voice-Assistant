@@ -103,6 +103,18 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("DialogServiceConnector_botID", value);
         }
 
+        public static string KeywordActivationModelPath
+        {
+            get => ReadValueWithDefault<string>("KeywordActivationModelPath", string.Empty);
+            set => WriteValue("KeywordActivationModelPath", string.Empty);
+        }
+
+        public static string KeywordConfirmationModelPath
+        {
+            get => ReadValueWithDefault<string>("KeywordConfirmationModelPath", string.Empty);
+            set => WriteValue("KeywordConfirmationModelPath", string.Empty);
+        }
+
         public static DialogAudio OutputFormat
         {
             get

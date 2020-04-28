@@ -46,6 +46,9 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public string BotId { get; set; }
 
+        public string KeywordActivationModelPath { get; set; }
+        public string KeywordConfirmationModelPath { get; set; }
+
         /// <summary>
         /// Reads and deserializes the configuration file.
         /// </summary>

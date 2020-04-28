@@ -4,5 +4,7 @@
   "CustomSpeechId": "",
   "CustomVoiceIds": "",
   "CustomCommandsAppId": "",
-  "BotId": ""
+  "BotId": "",
+  "KeywordActivationModelPath": "",
+  "KeywordConfirmationModelPath": ""
 }
