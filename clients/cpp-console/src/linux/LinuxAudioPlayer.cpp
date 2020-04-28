@@ -85,7 +85,7 @@ int LinuxAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat fo
     unsigned int bufferSize = 1024;
     snd_pcm_hw_params_set_buffer_size_near(m_playback_handle, m_params, (snd_pcm_uframes_t *)&bufferSize);
 
-    // /* Set period size to 256 frames. */
+    // /* Set period size to 512 frames. */
     m_frames = 512;
     rc = snd_pcm_hw_params_set_period_size_near(m_playback_handle, m_params, &m_frames, &dir);
     if(rc < 0){
@@ -146,7 +146,6 @@ void LinuxAudioPlayer::PlayerThreadMain(){
         std::unique_lock<std::mutex> lk{ m_threadMutex };
         m_conditionVariable.wait(lk);
         lk.unlock();
-        
         if(m_state == AudioPlayerState::PAUSED)
         {
             Initialize();
@@ -204,7 +203,9 @@ void LinuxAudioPlayer::PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry){
             memset(playBuffer.get() + bufferLeft, 0, playBufferSize - bufferLeft);
             bufferLeft = 0;
         }
-        WriteToALSA(playBuffer.get());
+        if( WriteToALSA(playBuffer.get()) != 0){
+            fprintf(stderr, "ERROR: Failed to write audio to ALSA\n");
+        }
     }
 }
 
@@ -234,7 +235,6 @@ int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
 
 int LinuxAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream){
     int rc = 0;
-    
     if(m_state == AudioPlayerState::UNINITIALIZED){
         rc = -1;
     }
