@@ -171,10 +171,7 @@ int main(int argc, char** argv)
     }
     
     log_t("Configuration loaded. Creating connector...");
-    
-    shared_ptr<DialogServiceConfig> config = agentConfig->CreateDialogServiceConfig();
-
-    dialogServiceConnector = DialogServiceConnector::FromConfig(config);
+    dialogServiceConnector = DialogServiceConnector::FromConfig(agentConfig->AsDialogServiceConfig());
     log_t("Connector created");
     auto future = dialogServiceConnector->ConnectAsync();
     
