@@ -144,10 +144,7 @@ namespace UWPVoiceAssistantSample
             {
                 await this.FinishDebugAudioDumpIfNeededAsync();
 
-                if (this.graphRunning)
-                {
-                    this.inputGraph.Stop();
-                }
+                this.inputGraph.Stop();
 
                 this.graphRunning = false;
                 this.inputGraph.QuantumStarted -= this.OnQuantumStarted;

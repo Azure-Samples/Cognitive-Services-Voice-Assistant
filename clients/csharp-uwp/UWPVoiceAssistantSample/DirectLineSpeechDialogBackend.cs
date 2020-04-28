@@ -224,8 +224,7 @@ namespace UWPVoiceAssistantSample
             var activityJson = new JObject();
             activityJson["type"] = "message";
             activityJson["text"] = message;
-            var id = await this.connector.SendActivityAsync(activityJson.ToString());
-            return id;
+            return await this.connector.SendActivityAsync(activityJson.ToString());
         }
 
         /// <summary>
