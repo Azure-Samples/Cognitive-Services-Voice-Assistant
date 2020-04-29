@@ -46,7 +46,6 @@ namespace UWPVoiceAssistantSample
 
             this.creatingKeywordConfigSemaphore = new SemaphoreSlim(1, 1);
 
-            LocalSettingsHelper.CopyConfigAndAssignValues().GetAwaiter();
             _ = this.GetOrCreateKeywordConfigurationAsync();
         }
 
@@ -163,6 +162,11 @@ namespace UWPVoiceAssistantSample
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
         public async Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync()
         {
+            if (string.IsNullOrWhiteSpace(this.KeywordActivationModelFilePath))
+            {
+                await LocalSettingsHelper.CopyConfigAndAssignValues();
+            }
+
             using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
             {
                 if (this.keywordConfiguration != null)
