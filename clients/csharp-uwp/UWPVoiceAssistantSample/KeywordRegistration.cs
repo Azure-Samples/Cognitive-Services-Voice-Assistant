@@ -315,7 +315,7 @@ namespace UWPVoiceAssistantSample
                     await configuration.SetEnabledAsync(false);
                 }
 
-                // await configuration.ClearModelDataAsync();
+                //await configuration.ClearModelDataAsync();
                 var modelDataFile = await this.GetActivationKeywordFileAsync();
                 using (var modelDataStream = await modelDataFile.OpenSequentialReadAsync())
                 {
