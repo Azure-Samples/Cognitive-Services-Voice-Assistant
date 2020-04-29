@@ -1,5 +1,3 @@
-This README is under development and not guaranteed to be accurate or functional.
-
 ## Things you will need
 * An Azure subscription. [Azure](https://portal.azure.com)
 * Powershell 6.0 or greater [Download Powershell](https://github.com/PowerShell/PowerShell/releases)
@@ -27,6 +25,8 @@ You should be good to go! The script will print out some resources you will need
 * Visualization Endpoint
 
 ## What just happened...
+>>This README is under development and not guaranteed to be accurate or functional.
+
 
 There should be a set of azure resources created in your azure subscription. In the Azure portal is should look something like this:
 
