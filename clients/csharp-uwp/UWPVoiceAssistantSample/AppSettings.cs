@@ -191,7 +191,7 @@ namespace UWPVoiceAssistantSample
             {
                 if (ValidateModelFilePath(instance.KeywordActivationModelPath) == false)
                 {
-                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordActivationModelPath. It is either not found or does not start with ms-appx:///");
+                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordActivationModelPath. Verify path starts with ms-appx:///");
                 }
             }
 
@@ -199,7 +199,7 @@ namespace UWPVoiceAssistantSample
             {
                 if (ValidateModelFilePath(instance.KeywordConfirmationModelPath) == false)
                 {
-                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordConfirmationModelPath. It is either not found or does not start with ms-appx:///");
+                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordConfirmationModelPath. Verify path starts with with ms-appx:///");
                 }
             }
         }

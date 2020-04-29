@@ -82,10 +82,7 @@ namespace UWPVoiceAssistantSample
         /// When not provided, no attempt will be made to associate model data with the
         /// activation keyword.
         /// </summary>
-        public string KeywordActivationModelFilePath
-        {
-            get; private set;
-        }
+        public string KeywordActivationModelFilePath { get; private set; }
 
         /// <summary>
         /// Gets the available version of the model data associated with an activation keyword.
