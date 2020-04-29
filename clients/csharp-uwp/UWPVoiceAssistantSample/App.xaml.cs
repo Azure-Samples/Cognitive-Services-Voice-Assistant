@@ -52,7 +52,7 @@ namespace UWPVoiceAssistantSample
                 "{C0F1842F-D389-44D1-8420-A32A63B35568}",
                 "1033",
                 "MICROSOFT_KWSGRAPH_V1",
-                LocalSettingsHelper.KeywordActivationPath,
+                LocalSettingsHelper.KeywordActivationModelPath,
                 new Version(1, 0, 0, 0),
                 LocalSettingsHelper.KeywordConfirmationModelPath);
 
@@ -299,7 +299,7 @@ namespace UWPVoiceAssistantSample
                 LocalSettingsHelper.CustomVoiceIds = appSettings.CustomVoiceIds;
                 LocalSettingsHelper.CustomCommandsAppId = appSettings.CustomCommandsAppId;
                 LocalSettingsHelper.BotId = appSettings.BotId;
-                LocalSettingsHelper.KeywordActivationPath = appSettings.KeywordActivationPath;
+                LocalSettingsHelper.KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
                 LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
             }
         }

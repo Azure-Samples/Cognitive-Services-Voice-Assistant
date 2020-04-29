@@ -47,7 +47,14 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public string BotId { get; set; }
 
-        public string KeywordActivationPath { get; set; }
+        /// <summary>
+        /// Gets or sets KeywordActivationModelPath.
+        /// </summary>
+        public string KeywordActivationModelPath { get; set; }
+
+        /// <summary>
+        /// Gets or sets KeywordConfirmationModelPath.
+        /// </summary>
         public string KeywordConfirmationModelPath { get; set; }
 
         /// <summary>
@@ -102,7 +109,7 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Verified if Custom Speech Id and Custom Voice Ids are provided and parses them to GUID's.
+        /// Verifies if Custom Speech Id and Custom Voice Ids provided are GUID's.
         /// </summary>
         /// <param name="id">Custom Speech Id or Custom Voice Id.</param>
         /// <returns>Bool - true if id is a valid Guid.</returns>
@@ -111,6 +118,24 @@ namespace UWPVoiceAssistantSample
             if (Guid.TryParse(id, out Guid parsedGuid))
             {
                 return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Verfies keyword activation and confirmation paths are not null and start with ms-appx:///.
+        /// </summary>
+        /// <param name="path">Keyword activation and confirmation file paths, relative to ms-appx:///.</param>
+        /// <returns>Bool - true if path is not null and starts with ms-appx:///.</returns>
+        public static bool ValidateModelFilePath(string path)
+        {
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                if (path.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -162,14 +187,20 @@ namespace UWPVoiceAssistantSample
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(instance.KeywordActivationPath))
+            if (!string.IsNullOrWhiteSpace(instance.KeywordActivationModelPath))
             {
-                
+                if (ValidateModelFilePath(instance.KeywordActivationModelPath) == false)
+                {
+                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordActivationModelPath. It is either not found or does not start with ms-appx:///");
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(instance.KeywordConfirmationModelPath))
             {
-                logger.Log(instance.KeywordConfirmationModelPath);
+                if (ValidateModelFilePath(instance.KeywordConfirmationModelPath) == false)
+                {
+                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordConfirmationModelPath. It is either not found or does not start with ms-appx:///");
+                }
             }
         }
     }

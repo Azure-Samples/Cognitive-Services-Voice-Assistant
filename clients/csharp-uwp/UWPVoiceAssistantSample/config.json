@@ -5,6 +5,6 @@
   "CustomVoiceIds": "",
   "CustomCommandsAppId": "",
   "BotId": "",
-  "KeywordActivationPath": "D:\\GitHub\\Cognitive-Services-Voice-Assistant\\clients\\csharp-uwp\\UWPVoiceAssistantSample\\MVAKeywords\\Contoso.bin",
-  "KeywordConfirmationModelPath": "D:\\GitHub\\Cognitive-Services-Voice-Assistant\\keyword-models\\contoso.table"
+  "KeywordActivationModelPath": "ms-appx:///MVAKeywords/Contoso.bin",
+  "KeywordConfirmationModelPath": "ms-appx:///SDKKeywords/Contoso.table"
 }

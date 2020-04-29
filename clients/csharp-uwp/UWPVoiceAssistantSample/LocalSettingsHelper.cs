@@ -103,12 +103,18 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("DialogServiceConnector_botID", value);
         }
 
-        public static string KeywordActivationPath
+        /// <summary>
+        /// Gets or sets the KeywordActivationModelPath.
+        /// </summary>
+        public static string KeywordActivationModelPath
         {
             get => ReadValueWithDefault<string>("keywordActivationModelPath", string.Empty);
             set => WriteValue("keywordActivationModelPath", value);
         }
 
+        /// <summary>
+        /// Gets or set the KeywordConfirmationModelPath.
+        /// </summary>
         public static string KeywordConfirmationModelPath
         {
             get => ReadValueWithDefault<string>("keywordConfirmationModelPath", string.Empty);

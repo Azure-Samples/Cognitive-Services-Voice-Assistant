@@ -206,11 +206,7 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<StorageFile> GetActivationKeywordFileAsync()
-        {
-            this.CopyActivationFileFromPath(LocalSettingsHelper.KeywordActivationPath);
-            var fileName = Path.GetFileName(this.KeywordActivationModelFilePath);
-            return this.GetFileFromPathAsync(fileName);
-        }
+            => this.GetFileFromPathAsync(this.KeywordActivationModelFilePath);
 
         /// <summary>
         /// Gets an asynchronous task that will return a storage file to the confirmation
@@ -218,11 +214,7 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task<StorageFile> GetConfirmationKeywordFileAsync()
-        {
-            this.CopyConfirmationFileFromPath(LocalSettingsHelper.KeywordConfirmationModelPath);
-            var fileName = Path.GetFileName(this.ConfirmationKeywordModelPath);
-            return this.GetFileFromPathAsync(fileName);
-        }
+            => this.GetFileFromPathAsync(this.ConfirmationKeywordModelPath);
 
         /// <summary>
         /// Default Dispose implementation.
@@ -345,29 +337,5 @@ namespace UWPVoiceAssistantSample
             => path.StartsWith("ms-appx", StringComparison.InvariantCultureIgnoreCase)
                 ? await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))
                 : await StorageFile.GetFileFromPathAsync(path);
-
-        private void CopyActivationFileFromPath(string path)
-        {
-            File.Copy(path, Directory.GetCurrentDirectory() + "//MVAKeywords//", true);
-        }
-
-        private void CopyConfirmationFileFromPath(string path)
-        {
-            File.Copy(path, Path.Combine(ApplicationData.Current.LocalFolder.Path, "SDKKeywords") + Path.GetFileName(path), true);
-
-            //var directory = ApplicationData.Current.LocalFolder.Path;
-            //foreach (var file in directory)
-            //{
-            //    var faToken = Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.Add();
-            //}
-            //var item = Directory.GetFiles(fileName);
-            
-            //foreach (var file in item)
-            //{
-            //    File.Copy(file, Path.Combine(Directory.GetCurrentDirectory(), "SDKKeywords"), true);
-            //}
-            
-            
-        }
     }
 }
