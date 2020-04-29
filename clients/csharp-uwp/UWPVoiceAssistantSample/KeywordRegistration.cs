@@ -162,7 +162,7 @@ namespace UWPVoiceAssistantSample
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
         public async Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync()
         {
-            if (string.IsNullOrWhiteSpace(this.KeywordActivationModelFilePath))
+            if (string.IsNullOrWhiteSpace(this.KeywordActivationModelFilePath) && string.IsNullOrWhiteSpace(this.ConfirmationKeywordModelPath))
             {
                 await LocalSettingsHelper.CopyConfigAndAssignValues();
             }
@@ -316,7 +316,7 @@ namespace UWPVoiceAssistantSample
                     await configuration.SetEnabledAsync(false);
                 }
 
-                //await configuration.ClearModelDataAsync();
+                // await configuration.ClearModelDataAsync();
                 var modelDataFile = await this.GetActivationKeywordFileAsync();
                 using (var modelDataStream = await modelDataFile.OpenSequentialReadAsync())
                 {
