@@ -6,5 +6,5 @@
   "CustomCommandsAppId": "",
   "BotId": "",
   "KeywordActivationModelPath": "ms-appx:///MVAKeywords/Contoso.bin",
-  "KeywordConfirmationModelPath": "ms-appx:///SDKKeywords/Contoso.table"
+  "KeywordConfirmationModelPath": "ms-appx:///SDKKeywords/contoso.table"
 }

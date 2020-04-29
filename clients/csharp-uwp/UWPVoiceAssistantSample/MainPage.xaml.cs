@@ -611,10 +611,8 @@ namespace UWPVoiceAssistantSample
             var customVoiceIdModified = LocalSettingsHelper.CustomVoiceIds != appSettings.CustomVoiceIds;
             var customCommandsAppIdModified = LocalSettingsHelper.CustomCommandsAppId != appSettings.CustomCommandsAppId;
             var botIdModified = LocalSettingsHelper.BotId != appSettings.BotId;
-            var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModelPath;
-            var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordConfirmationModelPath;
 
-            this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified || customVoiceIdModified || customCommandsAppIdModified || botIdModified || keywordActivationModelPathModified ||keywordActivationModelPathModified || keywordConfirmationModelPathModified;
+            this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified || customVoiceIdModified || customCommandsAppIdModified || botIdModified;
 
             if (this.configModified)
             {
@@ -654,18 +652,6 @@ namespace UWPVoiceAssistantSample
                 {
                     LocalSettingsHelper.BotId = appSettings.BotId;
                     this.logger.Log($"Bot Id: {LocalSettingsHelper.BotId}");
-                }
-
-                if (keywordActivationModelPathModified)
-                {
-                    LocalSettingsHelper.KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
-                    this.logger.Log($"Keyword Activation Model Path: {LocalSettingsHelper.KeywordActivationModelPath}");
-                }
-
-                if (keywordConfirmationModelPathModified)
-                {
-                    LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
-                    this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
                 }
             }
             else
