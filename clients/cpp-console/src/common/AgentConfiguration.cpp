@@ -30,6 +30,7 @@ namespace FieldNames
     constexpr auto CustomEndpoint = "custom_endpoint";
     constexpr auto KeywordDisplay = "keyword_display";
     constexpr auto Volume = "volume";
+    constexpr auto LogFilePath = "log_file_path";
 }
 
 AgentConfiguration::AgentConfiguration() : _loadResult(AgentConfigurationLoadResult::Undefined)
@@ -59,6 +60,7 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_customSpeechId = j.value(FieldNames::CustomSpeechDeploymentId, "");
     config->_keywordModelPath = j.value(FieldNames::KeywordModel, "");
     config->_keywordDisplayName = j.value(FieldNames::KeywordDisplay, "");
+    config->_logFilePath = j.value(FieldNames::LogFilePath, "");
     config->_volume = atoi(j.value(FieldNames::Volume, "").c_str());
 
 	if (config->_keywordModelPath.length() > 0)
@@ -152,6 +154,12 @@ shared_ptr<DialogServiceConfig> AgentConfiguration::CreateDialogServiceConfig()
     {
         config->SetProperty(PropertyId::Conversation_Custom_Voice_Deployment_Ids, _customVoiceIds);
     }
+
+    if (_logFilePath.length() > 0)
+    {
+        config->SetProperty(PropertyId::Speech_LogFilename, _logFilePath);
+    }
+
 
     if (_customSpeechId.length() > 0)
     {

@@ -13,28 +13,22 @@
 using namespace AudioPlayer;
 
 LinuxAudioPlayer::LinuxAudioPlayer(){
-    
-    Open();
-    SetVolume(25);
+    m_state = AudioPlayerState::UNINITIALIZED;
     m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
-    
 }
 
 LinuxAudioPlayer::~LinuxAudioPlayer(){
     Close();
-    m_canceled = true;
-    m_threadMutex.unlock();
-    m_conditionVariable.notify_one();
-    m_playerThread.join();
 }
 
-int LinuxAudioPlayer::Open(){
+int LinuxAudioPlayer::Initialize(){
     int rc;
-    rc = Open("default", AudioPlayerFormat::Mono16khz16bit);
+    rc = Initialize("default", AudioPlayerFormat::Mono16khz16bit);
     return rc;
 }
 
-int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
+int LinuxAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat format){
+    m_state = AudioPlayerState::INITIALIZING;
     //PCM variables
     int rc;
     int err;
@@ -97,7 +91,7 @@ int LinuxAudioPlayer::Open(const std::string& device, AudioPlayerFormat format){
     }
     
     //end PCM setup
-    m_opened = true;
+    m_state = AudioPlayerState::PAUSED;
     return rc;
 }
 
@@ -136,16 +130,26 @@ int LinuxAudioPlayer::GetBufferSize(){
 }
 
 void LinuxAudioPlayer::PlayerThreadMain(){
-    m_canceled = false;
-    while(m_canceled == false){
+    while(!m_shuttingDown){
         // here we will wait to be woken up since there is no audio left to play
         std::unique_lock<std::mutex> lk{ m_threadMutex };
         m_conditionVariable.wait(lk);
         lk.unlock();
         
+        if(m_state == AudioPlayerState::PAUSED)
+        {
+            Initialize();
+        }
         while (m_audioQueue.size() > 0) {
-            m_isPlaying = true;
+            m_state = AudioPlayerState::PLAYING;
             std::shared_ptr<AudioPlayerEntry> entry = std::make_shared<AudioPlayerEntry>(m_audioQueue.front());
+            m_queueMutex.lock();
+            if (!m_audioQueue.empty())
+            {
+                //remove the item we just used.
+                m_audioQueue.pop_front();
+            }
+            m_queueMutex.unlock();
             switch(entry->m_entryType){
                 case PlayerEntryType::BYTE_ARRAY:
                     PlayByteBuffer(entry);
@@ -156,11 +160,8 @@ void LinuxAudioPlayer::PlayerThreadMain(){
                 default:
                     fprintf(stderr, "Unknown Audio Player Entry type\n");   
             }
-            m_queueMutex.lock();
-            m_audioQueue.pop_front();
-            m_queueMutex.unlock();
         }
-        m_isPlaying = false;
+        m_state = AudioPlayerState::PAUSED;
     }
     
 }
@@ -172,14 +173,14 @@ void LinuxAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntr
     do{
         bytesRead = pEntry->m_pullStream->Read(playBuffer.get(), playBufferSize);
         WriteToALSA(playBuffer.get());
-    }while(bytesRead > 0);
+    }while(bytesRead > 0 && m_canceled == false);
 }
 
 void LinuxAudioPlayer::PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry){
     size_t playBufferSize = GetBufferSize();
     size_t bufferLeft = pEntry->m_size;
     std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
-    while(bufferLeft > 0){
+    while(bufferLeft > 0 && m_canceled == false){
         if(bufferLeft >= playBufferSize){
             memcpy(playBuffer.get(), &pEntry->m_data[pEntry->m_size - bufferLeft], playBufferSize);
             bufferLeft -= playBufferSize;
@@ -195,14 +196,23 @@ void LinuxAudioPlayer::PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry){
 
 int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
     int rc = 0;
-    AudioPlayerEntry entry(buffer, bufferSize);
-    m_queueMutex.lock();
-    m_audioQueue.push_back(entry);
-    m_queueMutex.unlock();
     
-    if(!m_isPlaying){
-        //wake up the audio thread
-        m_conditionVariable.notify_one();
+    if(m_state == AudioPlayerState::UNINITIALIZED){
+        rc = -1;
+    }
+    else{
+        AudioPlayerEntry entry(buffer, bufferSize);
+        m_queueMutex.lock();
+        m_audioQueue.push_back(entry);
+        m_queueMutex.unlock();
+        
+        //make sure the canceled variable is not set
+        m_canceled = false;
+        
+        if(m_state != AudioPlayerState::PLAYING){
+            //wake up the audio thread
+            m_conditionVariable.notify_one();
+        }
     }
     
     return rc;
@@ -210,17 +220,56 @@ int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
 
 int LinuxAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream){
     int rc = 0;
-    AudioPlayerEntry entry(pStream);
-    m_queueMutex.lock();
-    m_audioQueue.push_back(entry);
-    m_queueMutex.unlock();
     
-    if(!m_isPlaying){
-        //wake up the audio thread
-        m_conditionVariable.notify_one();
+    if(m_state == AudioPlayerState::UNINITIALIZED){
+        rc = -1;
+    }
+    else{
+        AudioPlayerEntry entry(pStream);
+        m_queueMutex.lock();
+        m_audioQueue.push_back(entry);
+        m_queueMutex.unlock();
+        
+        //make sure the canceled variable is not set
+        m_canceled = false;
+        
+        if(m_state != AudioPlayerState::PLAYING){
+            //wake up the audio thread
+            m_conditionVariable.notify_one();
+        }
     }
     
     return rc;
+}
+
+int LinuxAudioPlayer::Stop(){
+    //set the canceled flag to stop playback
+    m_canceled = true;
+    
+    //tell alsa to drop any frames in buffer
+    snd_pcm_drop(m_playback_handle);
+    m_state = AudioPlayerState::PAUSED;
+    
+    //clear the audio queue safely
+    m_queueMutex.lock();
+    m_audioQueue.clear();
+    m_queueMutex.unlock();
+
+    return 0;
+}
+
+int LinuxAudioPlayer::Pause(){
+    //TODO implement
+    return 0;
+}
+
+int LinuxAudioPlayer::Resume(){
+    //TODO implement
+    return 0;
+}
+
+AudioPlayerState LinuxAudioPlayer::GetState(){
+    return m_state;
 }
 
 int LinuxAudioPlayer::WriteToALSA(uint8_t* buffer){
@@ -243,8 +292,15 @@ int LinuxAudioPlayer::WriteToALSA(uint8_t* buffer){
 }
 
 int LinuxAudioPlayer::Close(){
+    m_shuttingDown = true;
+    m_state = AudioPlayerState::UNINITIALIZED;
     snd_pcm_drain(m_playback_handle);
     snd_pcm_close(m_playback_handle);
+    
+    m_canceled = true;
+    m_threadMutex.unlock();
+    m_conditionVariable.notify_one();
+    m_playerThread.join();
     
     return 0;
 }
