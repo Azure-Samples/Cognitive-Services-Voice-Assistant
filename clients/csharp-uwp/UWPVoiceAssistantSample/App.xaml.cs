@@ -46,16 +46,15 @@ namespace UWPVoiceAssistantSample
             this.Suspending += this.OnSuspending;
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
 
-            Task.Run(async () => { await this.CopyConfigAndAssignValues(); }).Wait();
+            LocalSettingsHelper.CopyConfigAndAssignValues().GetAwaiter();
+            //Task.Run(async () => { await this.CopyConfigAndAssignValues(); }).Wait();
 
             var keywordRegistration = new KeywordRegistration(
                 "Contoso",
                 "{C0F1842F-D389-44D1-8420-A32A63B35568}",
                 "1033",
                 "MICROSOFT_KWSGRAPH_V1",
-                LocalSettingsHelper.KeywordActivationModelPath,
-                new Version(1, 0, 0, 0),
-                LocalSettingsHelper.KeywordConfirmationModelPath);
+                new Version(1, 0, 0, 0));
 
             this.agentSessionManager = new AgentSessionManager();
 
@@ -284,25 +283,6 @@ namespace UWPVoiceAssistantSample
             var view = ApplicationView.GetForCurrentView();
             var ver = Package.Current.Id.Version;
             view.Title = $"Agent v{ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}";
-        }
-
-        private async Task CopyConfigAndAssignValues()
-        {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
-
-            if (!string.IsNullOrWhiteSpace(configFile.Path))
-            {
-                AppSettings appSettings = AppSettings.Load(configFile.Path);
-
-                LocalSettingsHelper.SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
-                LocalSettingsHelper.AzureRegion = appSettings.AzureRegion;
-                LocalSettingsHelper.CustomSpeechId = appSettings.CustomSpeechId;
-                LocalSettingsHelper.CustomVoiceIds = appSettings.CustomVoiceIds;
-                LocalSettingsHelper.CustomCommandsAppId = appSettings.CustomCommandsAppId;
-                LocalSettingsHelper.BotId = appSettings.BotId;
-                LocalSettingsHelper.KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
-                LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
-            }
         }
     }
 }

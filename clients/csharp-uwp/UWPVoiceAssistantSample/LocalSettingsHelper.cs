@@ -3,8 +3,10 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using System;
     using System.Globalization;
     using System.Runtime.CompilerServices;
+    using System.Threading.Tasks;
     using UWPVoiceAssistantSample.AudioCommon;
     using Windows.Devices.SmartCards;
     using Windows.Media.MediaProperties;
@@ -203,6 +205,25 @@ namespace UWPVoiceAssistantSample
             }
 
             return result;
+        }
+
+        public static async Task CopyConfigAndAssignValues()
+        {
+            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
+
+            if (!string.IsNullOrWhiteSpace(configFile.Path))
+            {
+                AppSettings appSettings = AppSettings.Load(configFile.Path);
+
+                SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
+                AzureRegion = appSettings.AzureRegion;
+                CustomSpeechId = appSettings.CustomSpeechId;
+                CustomVoiceIds = appSettings.CustomVoiceIds;
+                CustomCommandsAppId = appSettings.CustomCommandsAppId;
+                BotId = appSettings.BotId;
+                KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
+                KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
+            }
         }
     }
 }
