@@ -284,16 +284,6 @@ namespace UWPVoiceAssistantSample
                 this.VAStatusIcon.Glyph = voiceActivationStatusInfo.Glyph;
                 this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
 
-                //if ((string)this.MicrophoneLinkButton.Content == "Microphone is not available.")
-                //{
-                //    this.VoiceActivationLinkButton.Content = "Voice activation is not available.";
-                //    this.MicrophoneInfoIcon.Glyph = Glyphs.Cancel;
-                //    this.MicrophoneInfoIcon.Foreground = new SolidColorBrush(Colors.Red);
-                //    this.VAStatusIcon.Glyph = Glyphs.Cancel;
-                //    this.VAStatusIcon.Foreground = new SolidColorBrush(Colors.Red);
-                //    this.TeachingTipStackPanel.Children.Clear();
-                //}
-
                 if (voiceActivationStatusInfo.Status[0] == UIAudioStatus.VoiceActivationEnabledMessage)
                 {
                     this.VoiceActivationLinkButton.Content = UIAudioStatus.VoiceActivationEnabledMessage;
