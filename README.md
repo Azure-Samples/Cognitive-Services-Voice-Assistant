@@ -35,30 +35,46 @@ Taxonomies for products and languages: https://review.docs.microsoft.com/new-hop
 
 ## Overview
 
-This repository includes samples of [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes a client tool for end-to-end regression testing of a Voice Assistant system. Voice Assistant clients use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Alternatively, Voice Assistant clients can use Speech SDK to connect to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application.
+This repository includes everything needed to build a sample [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) hosted in your own Azure subscription, with a client application of your choice. Voice Assistants use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) in the client application to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Alternatively, Speech SDK can be used to connect to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application. Voice Assistants can be [keyword activated](https://speech.microsoft.com/customkeyword) using sample models in this repo or new ones you create.
 
 <!--
+The repo has sample clients in C++, C# and Java, samples of [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes a client tool for end-to-end regression testing of a Voice Assistant system.
 Sample code for building Voice Assistant clients, using Microsoft's Speech SDK and Direct Line Speech channel, including Custom Command
 0-->
 
-## Samples List
+## Repository Content
 
-To build any of the samples below, clone this GitHub repository and look at the projects in the clients folder:
+### Sample Client Applications
 
-```bash
-    git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-    cd Cognitive-Services-Voice-Assistant\clients
-```
-
-The following table describes the samples and root files in this repository:
-
-| File/folder | Description | Language/Platform |
+| Folder | Description | Language/Platform |
 |-------------|-------------|-------------------|
-| [`clients\csharp-uwp`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-uwp) |  UWP voice assistant client sample. An example UWP app that uses Window's new voice activation APIs, together with the Voice Assistant platform, to connect to your bot or Custom Commands application. | C#, Universal Windows Platform (UWP) |
-| [`clients\csharp-wpf`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf) |  Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application | C#, Windows Presentation Foundation (WPF) |
-| [`clients\cpp-console`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) | Console client sample for Smart Speaker devices, configured via a json file to connect to your bot or Custom Commands application. It supports microphone input and audio playback. Build scripts for [Raspberry Pi](https://www.raspberrypi.org/), [GGEC Speaker](http://www.ggec.com/) and Windows are provided | C++, Windows, Linux |
-| [`clients\csharp-dotnet-core\voice-assistant-test`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-dotnet-core/voice-assistant-test) | Automated, multi-turn, end-to-end regression test for your bot or Custom Commands application. Supports WAV file input, text or Bot-Framework activities |  |
-| [`keyword-models`](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/keyword-models)| A few keyword models (.table files) for you to try out. Or you can create your own -- See [Create a custom keyword using Speech Studio](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws) |
+| [clients\csharp-uwp](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-uwp) |  UWP voice assistant client sample. An example UWP app that uses Window's new voice activation APIs, together with the Voice Assistant platform, to connect to your bot or Custom Commands application. | C#, Universal Windows Platform (UWP) |
+| [clients\csharp-wpf](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf) |  Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application | C#, Windows Presentation Foundation (WPF) |
+| [clients\cpp-console](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) | Console client sample for Smart Speaker devices, configured via a json file to connect to your bot or Custom Commands application. It supports microphone input and audio playback. Build scripts for [Raspberry Pi](https://www.raspberrypi.org/), [GGEC Speaker](http://www.ggec.com/) and Windows are provided | C++, Windows, Linux |
+| [clients\java-android](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/java-android) | An Android application (phone or tablet) configured to connect to your bot or Custom Commands application | Java Android
+
+### Sample Custom Commands
+
+| Folder | Description |
+|-------------|-------------|
+| [custom-commands\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/hospitality) | Sample voice commands to control your room (lights, TV, temperature etc.), including visualization of the results. A PowerShell script is included to deploy and provision all the necessary Azure resources in your own Azure subscription
+
+### Keyword Models
+
+| Folder | Description |
+|-------------|-------------|
+| [keyword-models](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/keyword-models)| A few keyword models (.table files) for you to try out. Or you can create your own -- See [Create a custom keyword using Speech Studio](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws) |
+
+### Test Code
+
+| Folder | Description | Language/Platform |
+|-------------|-------------|-------------------|
+| [clients\csharp-dotnet-core\voice-assistant-test](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-dotnet-core/voice-assistant-test) | Automated, multi-turn, end-to-end regression test for your bot or Custom Commands application. Supports WAV file input, text or Bot-Framework activities | C# .NET Core  |
+
+### Root Folder Files
+
+| File | Description | Language/Platform |
+|-------------|-------------|-------------------|
 | `.gitignore`         | Define what to ignore at commit time
 | `CODE_OF_CONDUCT.md` | Code of Conduct for all Microsoft repositories
 | `CONTRIBUTING.md`    | Guidelines for contributing to these samples
@@ -66,7 +82,6 @@ The following table describes the samples and root files in this repository:
 | `LICENSE.md`         | The license for these samples
 | `SECURITY.md`        | Information about reporting any security vulnerabilities to Microsoft
 | `NOTICE.txt`         | License of third party software incorporated in these samples
-
 <!--
 ## Prerequisites
 
@@ -84,6 +99,14 @@ Outline step-by-step instructions to execute the sample and see its output. Incl
 
 Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
 -->
+## Clone the Repo
+
+To build any of the sample client applications or deploy custom commands to your Azure subscription, you will first need to clone this GitHub repository:
+
+```bash
+    git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
+    cd Cognitive-Services-Voice-Assistant
+```
 
 ## Contributing
 
