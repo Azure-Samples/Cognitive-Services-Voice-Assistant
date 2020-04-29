@@ -707,6 +707,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
@@ -735,6 +738,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
             }
@@ -763,6 +769,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 var chatAndLogGrid = ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
@@ -789,6 +798,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
                 this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth, Height = 800 });
             }
@@ -813,6 +825,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ApplicationStateGrid, 1);
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
@@ -824,15 +839,18 @@ namespace UWPVoiceAssistantSample
                 this.ChatGrid.Visibility = Visibility.Collapsed;
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
-                Grid.SetRowSpan(this.ApplicationStateGrid, 1);
+                Grid.SetRowSpan(this.ApplicationStateGrid, 2);
                 Grid.SetRow(this.VoiceSettingsStackPanel, 0);
                 Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
                 Grid.SetRow(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
-                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = 675, Height = 65 });
-                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 675, Height = 65 });
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 1);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 0);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = 632, Height = 125 });
+                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 632, Height = 125 });
             }
 
             if (this.WindowsContolFlyoutItem.IsChecked && !this.WindowsLogFlyoutItem.IsChecked && !this.WindowsChatFlyoutItem.IsChecked)
@@ -843,7 +861,7 @@ namespace UWPVoiceAssistantSample
                 var margin = this.ControlsGrid.Margin;
                 margin.Top = 90;
                 this.ControlsGrid.Margin = margin;
-                Grid.SetColumnSpan(this.ControlsGrid, 1);
+                Grid.SetColumn(this.ControlsGrid, 0);
                 Grid.SetColumn(this.ApplicationStateGrid, 0);
                 Grid.SetColumn(this.HelpButtonGrid, 0);
                 Grid.SetRowSpan(this.ApplicationStateGrid, 3);
@@ -853,6 +871,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 3);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 0);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ControlsGrid.ActualWidth, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ControlsGrid.ActualWidth, Height = 800 });
             }
@@ -875,6 +896,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
             }
