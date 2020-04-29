@@ -46,7 +46,7 @@ namespace UWPVoiceAssistantSample
             this.Suspending += this.OnSuspending;
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
 
-            this.CopyConfigAndAssignValues().GetAwaiter();
+            Task.Run(async () => { await this.CopyConfigAndAssignValues(); }).Wait();
 
             var keywordRegistration = new KeywordRegistration(
                 "Contoso",
