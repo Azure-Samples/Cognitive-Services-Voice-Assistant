@@ -37,8 +37,14 @@ namespace AudioPlayer
             
             virtual int Stop() final;
 
+            /// <summary>
+            /// not implemented currently
+            /// </summary
             virtual int Pause() final;
 
+            /// <summary>
+            /// not implemented currently
+            /// </summary
             virtual int Resume() final;
 
             virtual int SetVolume(unsigned int percent) final;

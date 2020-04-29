@@ -340,12 +340,12 @@ int WindowsAudioPlayer::Stop(){
 
 int WindowsAudioPlayer::Pause(){
     //TODO implement
-    return 0;
+    return -1;
 }
 
 int WindowsAudioPlayer::Resume(){
     //TODO implement
-    return 0;
+    return -1;
 }
 
 int WindowsAudioPlayer::SetVolume(unsigned int percent){

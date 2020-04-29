@@ -274,12 +274,12 @@ int LinuxAudioPlayer::Stop(){
 
 int LinuxAudioPlayer::Pause(){
     //TODO implement
-    return 0;
+    return -1;
 }
 
 int LinuxAudioPlayer::Resume(){
     //TODO implement
-    return 0;
+    return -1;
 }
 
 AudioPlayerState LinuxAudioPlayer::GetState(){
