@@ -4,3 +4,5 @@
   "KeywordActivationModelDataFormat": "MICROSOFT_KWSGRAPH_V1",
   "KeywordActivationModelPath": "ms-appx:///SDKKeywords/Computer.bin",
   "KeywordConfirmationModelPath": "ms-appx:///SDKKeywords/computer.table"
+
+

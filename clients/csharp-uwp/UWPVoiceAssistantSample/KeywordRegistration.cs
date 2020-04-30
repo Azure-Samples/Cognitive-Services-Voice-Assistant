@@ -166,12 +166,21 @@ namespace UWPVoiceAssistantSample
                 }
 
                 var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
+
+                var configurations = await detector.GetConfigurationsAsync();
+                configurations.ToList().ForEach(async configuration => await configuration.SetEnabledAsync(false));
+
                 var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
                     detector,
                     this.KeywordDisplayName,
                     this.KeywordId,
                     this.KeywordModelId);
                 await this.SetModelDataIfNeededAsync(targetConfiguration);
+
+                if (!targetConfiguration.IsActive)
+                {
+                    await targetConfiguration.SetEnabledAsync(true);
+                }
 
                 this.keywordConfiguration = targetConfiguration;
 
