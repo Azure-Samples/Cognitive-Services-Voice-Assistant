@@ -194,8 +194,8 @@
     <Content Include="MVAKeywords\Contoso.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\keyword-models\contoso.table">
-      <Link>SDKKeywords\contoso.table</Link>
+    <Content Include="..\..\..\keyword-models\*.table">
+      <Link>SDKKeywords\%(RecursiveDir)%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Properties\Default.rd.xml" />

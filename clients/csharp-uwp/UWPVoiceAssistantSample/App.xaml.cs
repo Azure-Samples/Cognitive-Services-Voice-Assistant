@@ -5,6 +5,8 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioOutput;
@@ -44,16 +46,14 @@ namespace UWPVoiceAssistantSample
             this.Suspending += this.OnSuspending;
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
 
-            this.CopyConfigAndAssignValues().GetAwaiter();
+            LocalSettingsHelper.CopyConfigAndAssignValues().GetAwaiter();
 
             var keywordRegistration = new KeywordRegistration(
                 "Contoso",
                 "{C0F1842F-D389-44D1-8420-A32A63B35568}",
                 "1033",
                 "MICROSOFT_KWSGRAPH_V1",
-                "ms-appx:///MVAKeywords/Contoso.bin",
-                new Version(1, 0, 0, 0),
-                "ms-appx:///SDKKeywords/Contoso.table");
+                new Version(1, 0, 0, 0));
 
             this.agentSessionManager = new AgentSessionManager();
 
@@ -282,23 +282,6 @@ namespace UWPVoiceAssistantSample
             var view = ApplicationView.GetForCurrentView();
             var ver = Package.Current.Id.Version;
             view.Title = $"Agent v{ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}";
-        }
-
-        private async Task CopyConfigAndAssignValues()
-        {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
-
-            if (!string.IsNullOrWhiteSpace(configFile.Path))
-            {
-                AppSettings appSettings = AppSettings.Load(configFile.Path);
-
-                LocalSettingsHelper.SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
-                LocalSettingsHelper.AzureRegion = appSettings.AzureRegion;
-                LocalSettingsHelper.CustomSpeechId = appSettings.CustomSpeechId;
-                LocalSettingsHelper.CustomVoiceIds = appSettings.CustomVoiceIds;
-                LocalSettingsHelper.CustomCommandsAppId = appSettings.CustomCommandsAppId;
-                LocalSettingsHelper.BotId = appSettings.BotId;
-            }
         }
     }
 }

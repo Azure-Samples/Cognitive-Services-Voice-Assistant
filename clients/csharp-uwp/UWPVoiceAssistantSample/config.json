@@ -4,5 +4,7 @@
   "CustomSpeechId": "",
   "CustomVoiceIds": "",
   "CustomCommandsAppId": "",
-  "BotId": ""
+  "BotId": "",
+  "KeywordActivationModelPath": "ms-appx:///MVAKeywords/Contoso.bin",
+  "KeywordConfirmationModelPath": "ms-appx:///SDKKeywords/contoso.table"
 }
