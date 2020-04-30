@@ -70,6 +70,14 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
             config->_loadResult = AgentConfigurationLoadResult::KWFileNotFound;
             return config;
         }
+
+        // this check should be removed once the SDK properly validates KWS model files
+        std::experimental::filesystem::path pathObj(config->_keywordModelPath);
+        if (!pathObj.has_extension() || pathObj.extension().string() != ".table")
+        {
+            config->_loadResult = AgentConfigurationLoadResult::KWFileWrongExtension;
+            return config;
+        }
     }
 
     if (config->_speechKey.length() == 0)
