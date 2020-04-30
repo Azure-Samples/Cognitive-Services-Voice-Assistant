@@ -105,6 +105,30 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("DialogServiceConnector_botID", value);
         }
 
+        public static string KeywordDisplayName
+        {
+            get => ReadValueWithDefault<string>("keywordDisplayName", string.Empty);
+            set => WriteValue("keywordDisplayName", value);
+        }
+
+        public static string KeywordId
+        {
+            get => ReadValueWithDefault<string>("keywordID", string.Empty);
+            set => WriteValue("keywordID", value);
+        }
+
+        public static string KeywordModelId
+        {
+            get => ReadValueWithDefault<string>("keywordModelId", string.Empty);
+            set => WriteValue("keywordModelId", value);
+        }
+
+        public static string KeywordActivationModelDataFormat
+        {
+            get => ReadValueWithDefault<string>("keywordActivationModelDataFormat", string.Empty);
+            set => WriteValue("keywordActivationModelDataFormat", value);
+        }
+
         /// <summary>
         /// Gets or sets the KeywordActivationModelPath.
         /// </summary>
@@ -115,7 +139,7 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets or set the KeywordConfirmationModelPath.
+        /// Gets or sets the KeywordConfirmationModelPath.
         /// </summary>
         public static string KeywordConfirmationModelPath
         {
@@ -221,6 +245,10 @@ namespace UWPVoiceAssistantSample
                 CustomVoiceIds = appSettings.CustomVoiceIds;
                 CustomCommandsAppId = appSettings.CustomCommandsAppId;
                 BotId = appSettings.BotId;
+                KeywordDisplayName = appSettings.KeywordDisplayName;
+                KeywordId = appSettings.KeywordId;
+                KeywordModelId = appSettings.KeywordModelId;
+                KeywordActivationModelDataFormat = appSettings.KeywordActivationModelDataFormat;
                 KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
                 KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
             }

@@ -31,17 +31,8 @@ namespace UWPVoiceAssistantSample
         /// <param name="keywordActivationModelFilePath">File path of the keyword activation model.</param>
         /// <param name="availableActivationKeywordModelVersion">Version of the most recent keyword model that is available.</param>
         /// <param name="confirmationKeywordModelPath">Path of the confirmation keyword model.</param>
-        public KeywordRegistration(
-            string keywordDisplayName,
-            string keywordId,
-            string keywordModelId,
-            string keywordActivationModelDataFormat,
-            Version availableActivationKeywordModelVersion)
+        public KeywordRegistration(Version availableActivationKeywordModelVersion)
         {
-            this.KeywordDisplayName = keywordDisplayName;
-            this.KeywordId = keywordId;
-            this.KeywordModelId = keywordModelId;
-            this.KeywordActivationModelDataFormat = keywordActivationModelDataFormat;
             this.AvailableActivationKeywordModelVersion = availableActivationKeywordModelVersion;
 
             this.creatingKeywordConfigSemaphore = new SemaphoreSlim(1, 1);
@@ -50,27 +41,27 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets the display name associated with the keyword.
+        /// Gets or sets the display name associated with the keyword.
         /// </summary>
-        public string KeywordDisplayName { get; private set; }
+        public string KeywordDisplayName { get => LocalSettingsHelper.KeywordDisplayName; set => this.KeywordDisplayName = value; }
 
         /// <summary>
-        /// Gets the signal identifier associated with a keyword. This value, together with the
+        /// Gets or sets the signal identifier associated with a keyword. This value, together with the
         /// model identifier, uniquely identifies the configuration data for this keyword.
         /// </summary>
-        public string KeywordId { get; private set; }
+        public string KeywordId { get => LocalSettingsHelper.KeywordId; set => this.KeywordId = value; }
 
         /// <summary>
-        /// Gets the model identifier associated with a keyword. This is typically a locale,
+        /// Gets or sets the model identifier associated with a keyword. This is typically a locale,
         /// like "1033", and together with the keyword identifier uniquely identifies the
         /// configuration data for this keyword.
         /// </summary>
-        public string KeywordModelId { get; private set; }
+        public string KeywordModelId { get => LocalSettingsHelper.KeywordModelId; set => this.KeywordModelId = value; }
 
         /// <summary>
-        /// Gets the model data format associated with the activation keyword.
+        /// Gets or sets the model data format associated with the activation keyword.
         /// </summary>
-        public string KeywordActivationModelDataFormat { get; private set; }
+        public string KeywordActivationModelDataFormat { get => LocalSettingsHelper.KeywordActivationModelDataFormat; set => this.KeywordActivationModelDataFormat = value; }
 
         /// <summary>
         /// Gets or sets the path to the model data associated with your activation keyword. This may be a

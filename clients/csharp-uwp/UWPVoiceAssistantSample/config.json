@@ -5,6 +5,10 @@
   "CustomVoiceIds": "",
   "CustomCommandsAppId": "",
   "BotId": "",
+  "KeywordDisplayName": "Contoso",
+  "KeywordId": "{C0F1842F-D389-44D1-8420-A32A63B35568}",
+  "KeywordModelId": "1033",
+  "KeywordActivationModelDataFormat": "MICROSOFT_KWSGRAPH_V1",
   "KeywordActivationModelPath": "ms-appx:///MVAKeywords/Contoso.bin",
   "KeywordConfirmationModelPath": "ms-appx:///SDKKeywords/contoso.table"
 }

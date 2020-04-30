@@ -47,6 +47,11 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public string BotId { get; set; }
 
+        public string KeywordDisplayName { get; set; }
+        public string KeywordId { get; set; }
+        public string KeywordModelId { get; set; }
+        public string KeywordActivationModelDataFormat { get; set; }
+
         /// <summary>
         /// Gets or sets KeywordActivationModelPath.
         /// </summary>
