@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -35,17 +36,13 @@ namespace UWPVoiceAssistantSample
             string keywordId,
             string keywordModelId,
             string keywordActivationModelDataFormat,
-            string keywordActivationModelFilePath,
-            Version availableActivationKeywordModelVersion,
-            string confirmationKeywordModelPath)
+            Version availableActivationKeywordModelVersion)
         {
             this.KeywordDisplayName = keywordDisplayName;
             this.KeywordId = keywordId;
             this.KeywordModelId = keywordModelId;
             this.KeywordActivationModelDataFormat = keywordActivationModelDataFormat;
-            this.KeywordActivationModelFilePath = keywordActivationModelFilePath;
             this.AvailableActivationKeywordModelVersion = availableActivationKeywordModelVersion;
-            this.ConfirmationKeywordModelPath = confirmationKeywordModelPath;
 
             this.creatingKeywordConfigSemaphore = new SemaphoreSlim(1, 1);
 
@@ -76,12 +73,12 @@ namespace UWPVoiceAssistantSample
         public string KeywordActivationModelDataFormat { get; private set; }
 
         /// <summary>
-        /// Gets the path to the model data associated with your activation keyword. This may be a
+        /// Gets or sets the path to the model data associated with your activation keyword. This may be a
         /// standard file path or an ms-appx:/// path pointing to a resource in the app package.
         /// When not provided, no attempt will be made to associate model data with the
         /// activation keyword.
         /// </summary>
-        public string KeywordActivationModelFilePath { get; private set; }
+        public string KeywordActivationModelFilePath { get => LocalSettingsHelper.KeywordActivationModelPath; set => this.KeywordActivationModelFilePath = value; }
 
         /// <summary>
         /// Gets the available version of the model data associated with an activation keyword.
@@ -121,10 +118,10 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets  sets the path to the keyword model used for validation of the activation
+        /// Gets or sets the path to the keyword model used for validation of the activation
         /// keyword's result. This may be a file path or an ms-appx application path.
         /// </summary>
-        public string ConfirmationKeywordModelPath { get; private set; }
+        public string ConfirmationKeywordModelPath { get => LocalSettingsHelper.KeywordConfirmationModelPath; set => this.ConfirmationKeywordModelPath = value; }
 
         /// <summary>
         /// Changes the registered keyword using the new inputs.
@@ -165,6 +162,11 @@ namespace UWPVoiceAssistantSample
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
         public async Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync()
         {
+            if (string.IsNullOrWhiteSpace(this.KeywordActivationModelFilePath) && string.IsNullOrWhiteSpace(this.ConfirmationKeywordModelPath))
+            {
+                await LocalSettingsHelper.CopyConfigAndAssignValues();
+            }
+
             using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
             {
                 if (this.keywordConfiguration != null)

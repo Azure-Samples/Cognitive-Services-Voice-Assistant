@@ -4,7 +4,6 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
-    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -68,7 +67,7 @@ namespace UWPVoiceAssistantSample
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Unable to configure a ConversationalAgentSession. Please check your registration with the MVA platform.\r\n{ex.Message}");
+                this.logger.Log($"Unable to configure a ConversationalAgentSession. Please check your registration with the MVA platform.\r\n{ex.Message}");
             }
             finally
             {

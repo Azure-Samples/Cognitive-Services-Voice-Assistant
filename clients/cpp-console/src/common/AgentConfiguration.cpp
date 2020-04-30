@@ -1,9 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include "AgentConfiguration.h"
 #include <cstdio>
 #include <fstream>
+#include <experimental/filesystem>
 //the pragma here suppresses warnings from the 3rd party header
 #pragma warning(push, 0)
 #pragma warning (disable : 26451)
@@ -28,6 +30,7 @@ namespace FieldNames
     constexpr auto CustomEndpoint = "custom_endpoint";
     constexpr auto KeywordDisplay = "keyword_display";
     constexpr auto Volume = "volume";
+    constexpr auto LogFilePath = "log_file_path";
 }
 
 AgentConfiguration::AgentConfiguration() : _loadResult(AgentConfigurationLoadResult::Undefined)
@@ -37,9 +40,9 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
 {
     auto config = make_shared<AgentConfiguration>();
 
-    if (path.length() == 0)
+    if (path.length() == 0 || !std::experimental::filesystem::exists(path))
     {
-        config->_loadResult = AgentConfigurationLoadResult::FileNotFound;
+        config->_loadResult = AgentConfigurationLoadResult::ConfigFileNotFound;
         return config;
     }
 
@@ -57,7 +60,24 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_customSpeechId = j.value(FieldNames::CustomSpeechDeploymentId, "");
     config->_keywordModelPath = j.value(FieldNames::KeywordModel, "");
     config->_keywordDisplayName = j.value(FieldNames::KeywordDisplay, "");
+    config->_logFilePath = j.value(FieldNames::LogFilePath, "");
     config->_volume = atoi(j.value(FieldNames::Volume, "").c_str());
+
+	if (config->_keywordModelPath.length() > 0)
+	{
+		if (!std::experimental::filesystem::exists(config->_keywordModelPath))
+		{
+			config->_loadResult = AgentConfigurationLoadResult::KWFileNotFound;
+			return config;
+		}
+
+		std::experimental::filesystem::path pathObj(config->_keywordModelPath);
+		if (!pathObj.has_extension() || pathObj.extension().string() != ".table")
+		{
+			config->_loadResult = AgentConfigurationLoadResult::KWFileWrongExtension;
+			return config;
+		}
+	}
 
     if (config->_speechKey.length() == 0)
     {
@@ -81,6 +101,32 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_dialogServiceConfig = config->CreateDialogServiceConfig();
 
     return config;
+}
+
+std::string AgentConfiguration::LoadMessage()
+{
+	switch (_loadResult)
+	{
+	case AgentConfigurationLoadResult::Success:
+		return "Success";
+	case AgentConfigurationLoadResult::ConfigFileNotFound:
+		return "Config file is not found.";
+	case AgentConfigurationLoadResult::ConfigFileNotParsed:
+		return "Config file can not be parsed.";
+	case AgentConfigurationLoadResult::KWFileNotFound:
+		return "Keyword file is not found.";
+	case AgentConfigurationLoadResult::KWFileWrongExtension:
+		return "Keyword file extension is not \".table\".";
+	case AgentConfigurationLoadResult::BadSpeechKey:
+		return "Speech key is missing.";
+	case AgentConfigurationLoadResult::MissingRegion:
+		return "Region is missing.";
+	case AgentConfigurationLoadResult::RegionWithCustom:
+		return "Region with custom is found.";
+    case AgentConfigurationLoadResult::Undefined:
+	default:
+		return "Unknown Failure";
+	}
 }
 
 shared_ptr<DialogServiceConfig> AgentConfiguration::AsDialogServiceConfig()
@@ -108,6 +154,12 @@ shared_ptr<DialogServiceConfig> AgentConfiguration::CreateDialogServiceConfig()
     {
         config->SetProperty(PropertyId::Conversation_Custom_Voice_Deployment_Ids, _customVoiceIds);
     }
+
+    if (_logFilePath.length() > 0)
+    {
+        config->SetProperty(PropertyId::Speech_LogFilename, _logFilePath);
+    }
+
 
     if (_customSpeechId.length() > 0)
     {

@@ -18,9 +18,7 @@ namespace KeywordRegistrationTests
                 "{C0F1842F-D389-44D1-8420-A32A63B35568}",
                 "1033",
                 "MICROSOFT_KWSGRAPH_V1",
-                "ms-appx:///MVAKeywords/Contoso.bin",
-                new Version(1, 0, 0, 0),
-                "ms-appx:///SDKKeywords/Contoso.table");
+                new Version(1, 0, 0, 0));
 
 
         [TestMethod]
@@ -213,9 +211,7 @@ namespace KeywordRegistrationTests
                             "{C0F1842F-D389-44D1-8420-A32A63B35568}",
                             "1033",
                             "",
-                            "ms-appx:///MVAKeywords/Contoso.bin",
-                            new Version(1, 0, 0, 0),
-                            "ms-appx:///SDKKeywords/Contoso.table");
+                            new Version(1, 0, 0, 0));
 
             var lastVersion = keyword.LastUpdatedActivationKeywordModelVersion;
 

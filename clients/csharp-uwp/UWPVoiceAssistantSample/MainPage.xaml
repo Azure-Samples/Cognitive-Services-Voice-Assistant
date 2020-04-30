@@ -5,11 +5,12 @@
     xmlns:mvadls="using:UWPVoiceAssistantSample"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     x:Name="MainPageWindow">
-
-    <Grid x:Name="MainWindowGrid" MaxWidth="1280">
+    
+    <Grid x:Name="MainWindowGrid" MaxWidth="1280" MinWidth="1280">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -24,8 +25,8 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 1 0 1"/>
-        <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1">
+        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1 1 1 1"/>
+        <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Padding="5,5,0,5">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button x:Name="WindowFilterButton" Content="Filter View" Grid.Column="0">
                     <Button.Flyout>
@@ -38,7 +39,7 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <Grid x:Name="HelpButtonGrid" Grid.Row="0" Grid.Column="1">
+        <Grid x:Name="HelpButtonGrid" Grid.Row="0" Grid.Column="1" Padding="0,5,5,5">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="HelpButton" Content="Help">
                     <Button.Flyout>
@@ -85,14 +86,37 @@
                         NavigateUri="ms-settings:privacy-microphone" 
                         HorizontalAlignment="Left"/>
             </StackPanel>
-            <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left">
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="35" Foreground="Green" Margin="5,0,0,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
+            <StackPanel x:Name="ApplicationStateBadgeStackPanel" Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                <FontIcon x:Name="ApplicationStateBadgeIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Warning}"/>
+                <HyperlinkButton
+                x:Name="ApplicationStateBadge"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center" 
+                Click="ApplicationStateBadgeClick"
+                Grid.Column="3"
+                Padding="10"
+                Margin="0,0,5,0">
+                </HyperlinkButton>
+
+                <muxc:TeachingTip x:Name="ApplicationStateTeachingTip"
+                    IsLightDismissEnabled="True"
+                    PreferredPlacement="Top">
+                    <muxc:TeachingTip.Content>
+                        <StackPanel x:Name="TeachingTipStackPanel" Orientation="Vertical" Margin="5,-18,-5,5" Padding="0,0,20,25">
+
+                        </StackPanel>
+                    </muxc:TeachingTip.Content>
+                </muxc:TeachingTip>
+            </StackPanel>
+
+            <StackPanel x:Name="ConversationStateStackPanel" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Left" Margin="-30,0,0,0">
+                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" FontSize="35" Foreground="Green" Margin="5,0,10,0" Glyph="{x:Bind mvadls:Glyphs.CircleCheckMark}"/>
                 <TextBlock x:Name="ConversationStateTextBlock" Text="System: " Grid.Column="2" Margin="1,9,0,0"></TextBlock>
             </StackPanel>
 
         </Grid>
-        <Border x:Name="ApplicationStateGridBorder" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 0 0 1"/>
-            <Grid x:Name="ControlsGrid" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="3" Grid.Row="2" Grid.ColumnSpan="1" Width="355">
+        <Border x:Name="ApplicationStateGridBorder" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1 0 1 1"/>
+            <Grid x:Name="ControlsGrid" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="4" Grid.Row="2" Grid.ColumnSpan="1" Width="355" BorderBrush="LightGray" BorderThickness="0,0,1,0">
                 <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" MinHeight="30"/>
                 <RowDefinition Height="Auto" MinHeight="30"/>
@@ -113,7 +137,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Controls" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2"/>
-            <Button x:Name="CollpaseControlsPane" Grid.Column="2" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" Click="CollapseControls"/>
+            <Button x:Name="CollpaseControlsPane" Grid.Column="2" Margin="0,0,-45,0" HorizontalAlignment="Right" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" Click="CollapseControls"/>
             <ToggleSwitch x:Name="BackgroundTaskToggle"
                 IsOn="{x:Bind BackgroundTaskRegistered, Mode=TwoWay}"
                 Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
@@ -190,14 +214,14 @@
                     <FontIcon x:Name="LoadConfigIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind mvadls:Glyphs.Load}"/>
                     <HyperlinkButton x:Name="LoadConfigButton"
                         Margin="10,0,0,0"
-                        Content="Load Config"
+                        Content="Apply Config"
                         Click="LoadConfigClick"/>
              </StackPanel>
-                    <TextBlock Text="Audio Output Format" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="5,5,5,5" FontFamily="Consolas"/>
-            <ComboBox x:Name="OutputFormatComboBox" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
+                    <TextBlock Text="Audio Output Format" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="10,5,5,5" FontFamily="Consolas"/>
+            <ComboBox x:Name="OutputFormatComboBox" Grid.Row="11" Margin="5,0,0,0" Grid.Column="0" VerticalAlignment="Center" SelectionChanged="OutputFormatComboBox_SelectionChanged"/>
         </Grid>
 
-        <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Width="475">
+        <Grid x:Name="LogGrid" Grid.Column="1" Grid.Row="2" Grid.RowSpan="4" Width="475" BorderBrush="LightGray" BorderThickness="0,0,1,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -205,8 +229,22 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Logs" TextAlignment="Left" VerticalAlignment="Center" Padding="25,0,0,0" FontSize="30"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1">
+            <Button x:Name="LogFilterButton" Content="Filter Logs" Grid.Column="1">
+                <Button.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <ToggleMenuFlyoutItem x:Name="LogInformationFlyoutItem" Text="Information" IsChecked="True" Click="TriggerLogAvailable"/>
+                        <ToggleMenuFlyoutItem x:Name="LogNoiseFlyoutItem" Text="Noise" IsChecked="True" Click="TriggerLogAvailable"/>
+                        <ToggleMenuFlyoutItem x:Name="LogErrorFlyoutItem" Text="Errors" IsChecked="True" Click="TriggerLogAvailable"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
                 <HyperlinkButton x:Name="ClearLogsButton" Content="Clear Logs" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <HyperlinkButton x:Name="OpenLogLocationButton" Content="Open Logs" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <Button x:Name="CollapseLogPane" FontFamily="Segoe MDL2 Assets" Content="&#xE711;" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CollapseLogs"/>
@@ -215,12 +253,14 @@
             <ScrollViewer x:Name="ChangeLogScrollViewer"
                     HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Bottom"
                     Margin="5"
-                    Grid.Row="1" Grid.Column="1" 
-                    Grid.RowSpan="4" Grid.ColumnSpan="2">
-                <RichTextBlock x:Name="ChangeLogTextBlock" Width="500" FontWeight="Bold"/>
+                    Grid.Row="1" Grid.Column="0" 
+                    Grid.RowSpan="4" Grid.ColumnSpan="3">
+                <StackPanel x:Name="ChangeLogStackPanel" Width="470" Orientation="Vertical">
+                    
+                </StackPanel>
             </ScrollViewer>
         </Grid>
-        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6" Margin="0" Width="450">
+        <Grid x:Name="ChatGrid" Grid.Row="0" Grid.Column="2" Grid.RowSpan="6" Margin="0" Width="450" Background="WhiteSmoke" Padding="0,5,0,5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -236,13 +276,14 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Chat" TextAlignment="Left" VerticalAlignment="Top" Padding="25,0,0,0" FontSize="30" Grid.ColumnSpan="2" Grid.RowSpan="3"/>
             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.RowSpan="3">
-                <HyperlinkButton Name="DownloadChatHistory" Click="DownloadChatHistoryClick" Content="Download" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
+                <HyperlinkButton Name="DownloadChatHistory" Click="DownloadChatHistoryClick" Content="Save" Margin="0,0,20,0" FontSize="15"></HyperlinkButton>
                 <Button x:Name="ResetButton" Content="Reset" Margin="0,0,20,0"/>
             </StackPanel>
 
             <ListView Grid.Row="1" Grid.Column="0" 
                       Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView"
                       Margin="0,40,0,0"
+                      Background="WhiteSmoke"
                       ItemsSource="{x:Bind Conversations, Mode=OneWay}">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
@@ -261,16 +302,19 @@
 
                             <Polygon
                                 Grid.Row="0"
-                                Points="0,0 0,0, 0,0"
                                 Margin="10,0,10,0"
                                 Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
                                 Grid.Row="1"
+                                BorderBrush="#0078D4"
+                                BorderThickness="1"
+                                Background="White"
                                 Visibility="{x:Bind Received, Mode=OneWay}"/>
 
                             <Grid
                                 Grid.Row="1"
+                                Background="LightSkyBlue"
                                 Visibility="{x:Bind Sent, Mode=OneWay}"/>
 
                             <Grid Grid.Row="1">
@@ -307,19 +351,19 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            
-            <Border x:Name="ChatViewSeparator" Grid.Row="5" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1" Margin="40,20,40,20"/>
 
-            <Grid Grid.Row="6" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <Grid Grid.Row="5" Grid.ColumnSpan="2" Grid.RowSpan="3" Background="WhiteSmoke">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="0" MinWidth="375" Width="Auto" VerticalAlignment="Stretch"></TextBox>
-                <Button x:Name="MicrophoneButton" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right" Margin="0,0,10,10" FontFamily="Segoe MDL2 Assets" Content="" FontSize="25" Background="#0078D4">
+                <Border x:Name="ChatViewSeparator" Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="Gray" BorderThickness="1" Margin="40,20,40,20" Background="LightGray"/>
+                <TextBox x:Name="TextInputTextBox" Margin="10,0,10,10" Grid.Column="0" Grid.Row="1" MinWidth="375" Width="Auto" VerticalAlignment="Stretch"></TextBox>
+                <Button x:Name="MicrophoneButton" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,10,10" FontFamily="Segoe MDL2 Assets" Content="" FontSize="25" Background="#0078D4">
                 </Button>
             </Grid>
 

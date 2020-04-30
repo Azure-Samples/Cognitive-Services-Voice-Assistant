@@ -3,8 +3,10 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using System;
     using System.Globalization;
     using System.Runtime.CompilerServices;
+    using System.Threading.Tasks;
     using UWPVoiceAssistantSample.AudioCommon;
     using Windows.Devices.SmartCards;
     using Windows.Media.MediaProperties;
@@ -103,6 +105,24 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("DialogServiceConnector_botID", value);
         }
 
+        /// <summary>
+        /// Gets or sets the KeywordActivationModelPath.
+        /// </summary>
+        public static string KeywordActivationModelPath
+        {
+            get => ReadValueWithDefault<string>("keywordActivationModelPath", string.Empty);
+            set => WriteValue("keywordActivationModelPath", value);
+        }
+
+        /// <summary>
+        /// Gets or set the KeywordConfirmationModelPath.
+        /// </summary>
+        public static string KeywordConfirmationModelPath
+        {
+            get => ReadValueWithDefault<string>("keywordConfirmationModelPath", string.Empty);
+            set => WriteValue("keywordConfirmationModelPath", value);
+        }
+
         public static DialogAudio OutputFormat
         {
             get
@@ -185,6 +205,25 @@ namespace UWPVoiceAssistantSample
             }
 
             return result;
+        }
+
+        public static async Task CopyConfigAndAssignValues()
+        {
+            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
+
+            if (!string.IsNullOrWhiteSpace(configFile.Path))
+            {
+                AppSettings appSettings = AppSettings.Load(configFile.Path);
+
+                SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
+                AzureRegion = appSettings.AzureRegion;
+                CustomSpeechId = appSettings.CustomSpeechId;
+                CustomVoiceIds = appSettings.CustomVoiceIds;
+                CustomCommandsAppId = appSettings.CustomCommandsAppId;
+                BotId = appSettings.BotId;
+                KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
+                KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
+            }
         }
     }
 }

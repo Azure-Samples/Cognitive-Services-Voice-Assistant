@@ -4,12 +4,17 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
+    using System.Xml;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.UI.Xaml.Controls;
     using Newtonsoft.Json;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
@@ -20,6 +25,7 @@ namespace UWPVoiceAssistantSample
     using Windows.System.Power;
     using Windows.UI;
     using Windows.UI.Core;
+    using Windows.UI.Notifications;
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -40,11 +46,14 @@ namespace UWPVoiceAssistantSample
         private readonly IKeywordRegistration keywordRegistration;
         private readonly IDialogManager dialogManager;
         private readonly IAgentSessionManager agentSessionManager;
-        private App app;
-        private int bufferIndex;
+        private readonly HashSet<TextBlock> informationLogs;
+        private readonly HashSet<TextBlock> errorLogs;
+        private readonly HashSet<TextBlock> noiseLogs;
+        private readonly App app;
         private bool configModified;
         private bool hypotheizedSpeechToggle;
         private Conversation activeConversation;
+        private int logBufferIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -62,6 +71,10 @@ namespace UWPVoiceAssistantSample
             this.dialogManager = this.services.GetRequiredService<IDialogManager>();
             this.keywordRegistration = this.services.GetRequiredService<IKeywordRegistration>();
             this.agentSessionManager = this.services.GetRequiredService<IAgentSessionManager>();
+
+            this.informationLogs = new HashSet<TextBlock>();
+            this.errorLogs = new HashSet<TextBlock>();
+            this.noiseLogs = new HashSet<TextBlock>();
 
             // Ensure that we restore the full view (not the compact mode) upon foreground launch
             _ = this.UpdateViewStateAsync();
@@ -132,7 +145,7 @@ namespace UWPVoiceAssistantSample
             this.ClearLogsButton.Click += async (_, __)
                 => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    this.ChangeLogTextBlock.Blocks.Clear();
+                    this.ChangeLogStackPanel.Children.Clear();
                 });
 
             this.OpenLogLocationButton.Click += async (_, __)
@@ -204,7 +217,7 @@ namespace UWPVoiceAssistantSample
 
             this.logger.LogAvailable += (s, e) =>
             {
-                this.ReadLogBuffer();
+                this.WriteLog();
             };
             this.logger.Log(LogMessageLevel.Noise, "Main page created, UI rendering");
         }
@@ -252,38 +265,102 @@ namespace UWPVoiceAssistantSample
                 var microphoneStatusInfo = await UIAudioStatus.GetMicrophoneStatusAsync();
                 this.MicrophoneInfoIcon.Glyph = microphoneStatusInfo.Glyph;
                 this.MicrophoneInfoIcon.Foreground = new SolidColorBrush(microphoneStatusInfo.Color);
-                this.MicrophoneLinkButton.Content = microphoneStatusInfo.Status;
+
+                int teachingTipCount = 0;
+
+                if (microphoneStatusInfo.Status[0] == UIAudioStatus.MicrophoneAvailable)
+                {
+                    this.MicrophoneLinkButton.Content = UIAudioStatus.MicrophoneAvailable;
+                    this.TeachingTipStackPanel.Children.Clear();
+                }
+                else
+                {
+                    this.MicrophoneLinkButton.Content = "Microphone is not available.";
+                    this.VAStatusIcon.Glyph = Glyphs.Warning;
+                    this.TeachingTipStackPanel.Children.Clear();
+                }
 
                 var voiceActivationStatusInfo = await UIAudioStatus.GetVoiceActivationStatusAsync();
                 this.VAStatusIcon.Glyph = voiceActivationStatusInfo.Glyph;
                 this.VAStatusIcon.Foreground = new SolidColorBrush(voiceActivationStatusInfo.Color);
-                this.VoiceActivationLinkButton.Content = voiceActivationStatusInfo.Status;
+
+                if (voiceActivationStatusInfo.Status[0] == UIAudioStatus.VoiceActivationEnabledMessage)
+                {
+                    this.VoiceActivationLinkButton.Content = UIAudioStatus.VoiceActivationEnabledMessage;
+                    this.TeachingTipStackPanel.Children.Clear();
+                }
+                else
+                {
+                    this.VoiceActivationLinkButton.Content = "Voice activation is not available";
+                    this.TeachingTipStackPanel.Children.Clear();
+                }
+
+                foreach (var item in microphoneStatusInfo.Status)
+                {
+                    TextBlock microphoneStatusTextBlock = new TextBlock();
+                    TextBlock emptyTextBlock = new TextBlock();
+                    Border border = new Border();
+                    microphoneStatusTextBlock.Text = item;
+                    microphoneStatusTextBlock.TextWrapping = TextWrapping.WrapWholeWords;
+                    emptyTextBlock.Text = string.Empty;
+                    emptyTextBlock.Height = 5;
+                    border.BorderBrush = new SolidColorBrush(Colors.LightGray);
+                    border.BorderThickness = new Thickness(1);
+                    this.TeachingTipStackPanel.Children.Add(microphoneStatusTextBlock);
+                    this.TeachingTipStackPanel.Children.Add(emptyTextBlock);
+                    this.TeachingTipStackPanel.Children.Add(border);
+                    teachingTipCount++;
+
+                    if (item == UIAudioStatus.MicrophoneAvailable)
+                    {
+                        this.TeachingTipStackPanel.Children.Remove(microphoneStatusTextBlock);
+                        this.TeachingTipStackPanel.Children.Remove(border);
+                        teachingTipCount--;
+                    }
+                }
+
+                foreach (var item in voiceActivationStatusInfo.Status)
+                {
+                    TextBlock voiceActivationStatusTextBlock = new TextBlock();
+                    TextBlock emptyTextBlock = new TextBlock();
+                    Border border = new Border();
+                    voiceActivationStatusTextBlock.Text = item;
+                    voiceActivationStatusTextBlock.TextWrapping = TextWrapping.WrapWholeWords;
+                    emptyTextBlock.Text = string.Empty;
+                    emptyTextBlock.Height = 5;
+                    border.BorderBrush = new SolidColorBrush(Colors.LightGray);
+                    border.BorderThickness = new Thickness(1);
+                    this.TeachingTipStackPanel.Children.Add(voiceActivationStatusTextBlock);
+                    this.TeachingTipStackPanel.Children.Add(emptyTextBlock);
+                    this.TeachingTipStackPanel.Children.Add(border);
+                    teachingTipCount++;
+
+                    if (item == UIAudioStatus.VoiceActivationEnabledMessage)
+                    {
+                        this.TeachingTipStackPanel.Children.Remove(voiceActivationStatusTextBlock);
+                        this.TeachingTipStackPanel.Children.Remove(border);
+                        teachingTipCount--;
+                    }
+                }
+
+                if (teachingTipCount == 0)
+                {
+                    this.ApplicationStateBadgeIcon.Glyph = Glyphs.CircleCheckMark;
+                    this.ApplicationStateBadgeIcon.Foreground = new SolidColorBrush(Colors.Green);
+                    this.ApplicationStateBadgeIcon.FontSize = 35;
+                    this.ApplicationStateBadge.IsEnabled = false;
+                }
+                else
+                {
+                    this.ApplicationStateBadgeIcon.Glyph = Glyphs.Warning;
+                    this.ApplicationStateBadgeIcon.Foreground = new SolidColorBrush(Colors.DarkOrange);
+                    this.ApplicationStateBadgeIcon.FontSize = 20;
+                    this.ApplicationStateBadge.IsEnabled = true;
+                }
+
+                this.ApplicationStateBadge.Content = $"{teachingTipCount} Warnings";
 
                 this.DismissButton.Visibility = session.IsUserAuthenticated ? Visibility.Collapsed : Visibility.Visible;
-
-                //if (!this.BackgroundTaskRegistered && !micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1560, Height = 800 });
-                //}
-
-                //if (!this.BackgroundTaskRegistered && micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30) , Height = 800 });
-                //}
-
-                //if (this.BackgroundTaskRegistered && !micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
-                //}
-
-                //if (this.BackgroundTaskRegistered && micReady)
-                //{
-                //    ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //    //ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30) + ((int)this.LogGrid.ActualWidth), Height = 800 });
-                //    ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.MainPageWindow.ActualWidth - 30), Height = 800 });
-                //}
-
             });
         }
 
@@ -361,65 +438,127 @@ namespace UWPVoiceAssistantSample
             this.RefreshStatus();
         }
 
-        private async void ReadLogBuffer()
+        private bool LogInformation(string information)
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            if (information.Contains("Information", StringComparison.OrdinalIgnoreCase))
             {
-                for (var i = 0; i < this.logger.LogBuffer.Count; i++)
+                TextBlock informationTextBlock = new TextBlock();
+                informationTextBlock.Foreground = new SolidColorBrush(Colors.Blue);
+                informationTextBlock.TextWrapping = TextWrapping.Wrap;
+                string[] split = information.Split("Information");
+                if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (this.bufferIndex < this.logger.LogBuffer.Count)
-                    {
-                        string text = this.logger.LogBuffer[this.bufferIndex];
-                        if (text.Contains(" : ", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string[] split = text.Split(" : ");
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = split[1];
-                            paragraph.Inlines.Add(run);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                        }
-                        else if (text.Contains("Information", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string[] split = text.Split("Information");
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = split[1];
-                            paragraph.Inlines.Add(run);
-                            paragraph.Foreground = new SolidColorBrush(Colors.Blue);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                        }
-                        else if (text.Contains("Error", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string[] split = text.Split("Error");
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = split[1];
-                            paragraph.Inlines.Add(run);
-                            paragraph.Foreground = new SolidColorBrush(Colors.Red);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                        }
-                        else if (text.Contains("Noise", StringComparison.OrdinalIgnoreCase))
-                        {
-                            string[] split = text.Split("Noise");
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = split[1];
-                            paragraph.Inlines.Add(run);
-                            paragraph.Foreground = new SolidColorBrush(Colors.Gray);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                        }
-                        else
-                        {
-                            Paragraph paragraph = new Paragraph();
-                            Run run = new Run();
-                            run.Text = text;
-                            paragraph.Inlines.Add(run);
-                            this.ChangeLogTextBlock.Blocks.Add(paragraph);
-                        }
+                    string[] removeColon = split[1].Split(" : ");
+                    informationTextBlock.Text = removeColon[1];
+                }
+                else
+                {
+                    informationTextBlock.Text = split[1];
+                }
 
-                        this.bufferIndex++;
+                this.informationLogs.Add(informationTextBlock);
+
+                if (this.LogInformationFlyoutItem.IsChecked)
+                {
+                    this.ChangeLogStackPanel.Children.Add(informationTextBlock);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool LogNoise(string noise)
+        {
+            if (noise.Contains("Noise", StringComparison.OrdinalIgnoreCase))
+            {
+                TextBlock noiseTextBlock = new TextBlock();
+                noiseTextBlock.Foreground = new SolidColorBrush(Colors.Gray);
+                noiseTextBlock.TextWrapping = TextWrapping.Wrap;
+                string[] split = noise.Split("Noise");
+                noiseTextBlock.Text = split[1];
+
+                this.noiseLogs.Add(noiseTextBlock);
+
+                if (this.LogNoiseFlyoutItem.IsChecked)
+                {
+                    this.ChangeLogStackPanel.Children.Add(noiseTextBlock);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool LogErrors(string error)
+        {
+            if (error.Contains("Error", StringComparison.OrdinalIgnoreCase))
+            {
+                TextBlock errorTextBlock = new TextBlock();
+                errorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                errorTextBlock.TextWrapping = TextWrapping.Wrap;
+                string[] split = error.Split("Error");
+                errorTextBlock.Text = split[1];
+
+                this.errorLogs.Add(errorTextBlock);
+
+                if (this.LogErrorFlyoutItem.IsChecked)
+                {
+                    this.ChangeLogStackPanel.Children.Add(errorTextBlock);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private async void WriteLog()
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                int nextLogIndex = this.logBufferIndex;
+                for (; nextLogIndex < this.logger.LogBuffer.Count; nextLogIndex++)
+                {
+                    var text = this.logger.LogBuffer[nextLogIndex];
+
+                    if (this.LogInformation(text))
+                    {
                     }
+                    else if (this.LogErrors(text))
+                    {
+                    }
+                    else
+                    {
+                        this.LogNoise(text);
+                    }
+                }
+
+                this.logBufferIndex = nextLogIndex;
+
+                this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
+            });
+        }
+
+        private async void FilterLogs()
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                foreach (TextBlock textBlock in this.informationLogs)
+                {
+                    textBlock.Visibility = this.LogInformationFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                foreach (TextBlock textBlock in this.noiseLogs)
+                {
+                    textBlock.Visibility = this.LogNoiseFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                foreach (TextBlock textBlock in this.errorLogs)
+                {
+                    textBlock.Visibility = this.LogErrorFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
                 }
 
                 this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
@@ -465,8 +604,10 @@ namespace UWPVoiceAssistantSample
             var customVoiceIdModified = LocalSettingsHelper.CustomVoiceIds != appSettings.CustomVoiceIds;
             var customCommandsAppIdModified = LocalSettingsHelper.CustomCommandsAppId != appSettings.CustomCommandsAppId;
             var botIdModified = LocalSettingsHelper.BotId != appSettings.BotId;
+            var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModelPath;
+            var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordConfirmationModelPath;
 
-            this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified || customVoiceIdModified || customCommandsAppIdModified || botIdModified;
+            this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified || customVoiceIdModified || customCommandsAppIdModified || botIdModified || keywordActivationModelPathModified ||keywordActivationModelPathModified || keywordConfirmationModelPathModified;
 
             if (this.configModified)
             {
@@ -506,6 +647,18 @@ namespace UWPVoiceAssistantSample
                 {
                     LocalSettingsHelper.BotId = appSettings.BotId;
                     this.logger.Log($"Bot Id: {LocalSettingsHelper.BotId}");
+                }
+
+                if (keywordActivationModelPathModified)
+                {
+                    LocalSettingsHelper.KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
+                    this.logger.Log($"Keyword Activation Model Path: {LocalSettingsHelper.KeywordActivationModelPath}");
+                }
+
+                if (keywordConfirmationModelPathModified)
+                {
+                    LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
+                    this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
                 }
             }
             else
@@ -554,6 +707,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
@@ -582,6 +738,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
             }
@@ -610,6 +769,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 var chatAndLogGrid = ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
@@ -623,7 +785,7 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.ChatGrid, 0);
                 Grid.SetRow(this.ChatGrid, 2);
                 var margin = this.ChatGrid.Margin;
-                margin.Top = 90;
+                margin.Top = 100;
                 this.ChatGrid.Margin = margin;
                 Grid.SetColumnSpan(this.ChatGrid, 1);
                 Grid.SetColumn(this.ApplicationStateGrid, 0);
@@ -636,6 +798,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
                 this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth, Height = 800 });
             }
@@ -660,6 +825,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ApplicationStateGrid, 1);
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
@@ -671,7 +839,18 @@ namespace UWPVoiceAssistantSample
                 this.ChatGrid.Visibility = Visibility.Collapsed;
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
-                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ApplicationStateGrid.ActualWidth, Height = (int)this.ApplicationStateGrid.ActualHeight + 100 });
+                Grid.SetRowSpan(this.ApplicationStateGrid, 2);
+                Grid.SetRow(this.VoiceSettingsStackPanel, 0);
+                Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
+                Grid.SetRow(this.MicrophoneSettingsStackPanel, 0);
+                Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
+                Grid.SetRow(this.ConversationStateStackPanel, 0);
+                Grid.SetColumn(this.ConversationStateStackPanel, 2);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 1);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 0);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = 632, Height = 125 });
+                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 632, Height = 125 });
             }
 
             if (this.WindowsContolFlyoutItem.IsChecked && !this.WindowsLogFlyoutItem.IsChecked && !this.WindowsChatFlyoutItem.IsChecked)
@@ -682,7 +861,7 @@ namespace UWPVoiceAssistantSample
                 var margin = this.ControlsGrid.Margin;
                 margin.Top = 90;
                 this.ControlsGrid.Margin = margin;
-                Grid.SetColumnSpan(this.ControlsGrid, 1);
+                Grid.SetColumn(this.ControlsGrid, 0);
                 Grid.SetColumn(this.ApplicationStateGrid, 0);
                 Grid.SetColumn(this.HelpButtonGrid, 0);
                 Grid.SetRowSpan(this.ApplicationStateGrid, 3);
@@ -692,6 +871,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 3);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 0);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ControlsGrid.ActualWidth, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ControlsGrid.ActualWidth, Height = 800 });
             }
@@ -714,6 +896,10 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
             }
         }
@@ -759,9 +945,34 @@ namespace UWPVoiceAssistantSample
 
         private async void DownloadChatHistoryClick(object sender, RoutedEventArgs e)
         {
-            var json = JsonConvert.SerializeObject(this.Conversations);
-            var writeChatHistory = await ApplicationData.Current.LocalFolder.CreateFileAsync($"chatHistory_{DateTime.Now.ToString("yyyyMMdd_HHmmss", null)}.json", CreationCollisionOption.ReplaceExisting);
-            await File.WriteAllTextAsync(writeChatHistory.Path, json);
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var fileName = $"chatHistory_{DateTime.Now.ToString("yyyyMMdd_HHmmss", null)}.txt";
+            var writeChatHistory = await localFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+            foreach (var message in this.Conversations)
+            {
+                await File.AppendAllTextAsync(writeChatHistory.Path, "\r\n" + "Text: " + message.Body + "\r\n" + "BotReply: " + message.Received + "\r\n" + "Timestamp: " + message.Time + "\r\n" + "========");
+            }
+
+            var launchOption = new FolderLauncherOptions();
+
+            var fileToSelect = await localFolder.GetFileAsync(fileName);
+            launchOption.ItemsToSelect.Add(fileToSelect);
+
+            await Launcher.LaunchFolderAsync(localFolder, launchOption);
+        }
+
+        private async void TriggerLogAvailable(object sender, RoutedEventArgs e)
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                this.FilterLogs();
+            });
+        }
+
+        private void ApplicationStateBadgeClick(object sender, RoutedEventArgs e)
+        {
+            this.ApplicationStateTeachingTip.IsOpen = true;
         }
     }
 }

@@ -43,7 +43,7 @@ namespace DialogManagerTests
         {
         }
 
-        public async Task CancelSignalVerification()
+        public async Task CancelSignalVerificationAsync()
         {
         }
 
