@@ -272,16 +272,19 @@ namespace UWPVoiceAssistantSample
         private static async Task CopyFilesToLocalFolder()
         {
             var config = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
-            var sDKKeywordsFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            var keywords = await sDKKeywordsFolder.GetFolderAsync("SDKKeywords");
-            var keyword = await keywords.GetFilesAsync();
+            var applicationInstalledLocation = Windows.ApplicationModel.Package.Current.InstalledLocation;
+            var sdkKeywordsFolder = await applicationInstalledLocation.GetFolderAsync("SDKKeywords");
+            var keywords = await sdkKeywordsFolder.GetFilesAsync();
 
-            foreach (var file in keyword)
+            foreach (var keyword in keywords)
             {
-                await file.CopyAsync(ApplicationData.Current.LocalFolder);
+                if (keyword == null)
+                {
+                    await keyword.CopyAsync(ApplicationData.Current.LocalFolder);
+                }
             }
 
-            await config.CopyAsync(ApplicationData.Current.LocalFolder);
+            await config.CopyAsync(ApplicationData.Current.LocalFolder, "config.json", NameCollisionOption.ReplaceExisting);
         }
     }
 }
