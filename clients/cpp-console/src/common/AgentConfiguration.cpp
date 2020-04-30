@@ -63,21 +63,14 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_logFilePath = j.value(FieldNames::LogFilePath, "");
     config->_volume = atoi(j.value(FieldNames::Volume, "").c_str());
 
-	if (config->_keywordModelPath.length() > 0)
-	{
-		if (!std::experimental::filesystem::exists(config->_keywordModelPath))
-		{
-			config->_loadResult = AgentConfigurationLoadResult::KWFileNotFound;
-			return config;
-		}
-
-		std::experimental::filesystem::path pathObj(config->_keywordModelPath);
-		if (!pathObj.has_extension() || pathObj.extension().string() != ".table")
-		{
-			config->_loadResult = AgentConfigurationLoadResult::KWFileWrongExtension;
-			return config;
-		}
-	}
+    if (config->_keywordModelPath.length() > 0)
+    {
+        if (!std::experimental::filesystem::exists(config->_keywordModelPath))
+        {
+            config->_loadResult = AgentConfigurationLoadResult::KWFileNotFound;
+            return config;
+        }
+    }
 
     if (config->_speechKey.length() == 0)
     {
