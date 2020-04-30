@@ -165,27 +165,45 @@ namespace UWPVoiceAssistantSample
                     return this.keywordConfiguration;
                 }
 
-                var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
-
-                var configurations = await detector.GetConfigurationsAsync();
-                configurations.ToList().ForEach(async configuration => await configuration.SetEnabledAsync(false));
-
-                var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                    detector,
-                    this.KeywordDisplayName,
-                    this.KeywordId,
-                    this.KeywordModelId);
-                await this.SetModelDataIfNeededAsync(targetConfiguration);
-
-                if (!targetConfiguration.IsActive)
-                {
-                    await targetConfiguration.SetEnabledAsync(true);
-                }
-
-                this.keywordConfiguration = targetConfiguration;
-
-                return targetConfiguration;
+                return await this.CreateKeywordConfigurationAsyncInternal();
             }
+        }
+
+        /// <summary>
+        /// Forces creation of an activation keyword configuration matching the
+        /// specified keyword registration information.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
+        public async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsync()
+        {
+            using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
+            {
+                return await this.CreateKeywordConfigurationAsyncInternal();
+            }
+        }
+
+        private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
+        {
+            var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
+
+            var configurations = await detector.GetConfigurationsAsync();
+            configurations.ToList().ForEach(async configuration => await configuration.SetEnabledAsync(false));
+
+            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                detector,
+                this.KeywordDisplayName,
+                this.KeywordId,
+                this.KeywordModelId);
+            await this.SetModelDataIfNeededAsync(targetConfiguration);
+
+            if (!targetConfiguration.IsActive)
+            {
+                await targetConfiguration.SetEnabledAsync(true);
+            }
+
+            this.keywordConfiguration = targetConfiguration;
+
+            return targetConfiguration;
         }
 
         /// <summary>

@@ -278,10 +278,7 @@ namespace UWPVoiceAssistantSample
 
             foreach (var keyword in keywords)
             {
-                if (keyword == null)
-                {
-                    await keyword.CopyAsync(ApplicationData.Current.LocalFolder);
-                }
+                await keyword.CopyAsync(ApplicationData.Current.LocalFolder);
             }
 
             await config.CopyAsync(ApplicationData.Current.LocalFolder, "config.json", NameCollisionOption.ReplaceExisting);

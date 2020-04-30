@@ -691,6 +691,16 @@ namespace UWPVoiceAssistantSample
                     LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
                     this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
                 }
+
+                if (keywordActivationModelDataFormatModified 
+                    || keywordActivationModelPathModified 
+                    || keywordConfirmationModelPathModified 
+                    || keywordDisplayNameModified 
+                    || keywordIdModified
+                    || keywordModelIdModified)
+                {
+                    await this.keywordRegistration.CreateKeywordConfigurationAsync();
+                }
             }
             else
             {
