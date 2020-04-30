@@ -331,6 +331,7 @@ ASALocalRun/
 clients/cpp-console/.vscode/
 clients/cpp-console/out/
 clients/cpp-console/lib/
+clients/cpp-console/include/alsa/
 clients/cpp-console/include/c_api/
 clients/cpp-console/include/cxx_api/
 clients/cpp-console/cpp-console.code-workspace

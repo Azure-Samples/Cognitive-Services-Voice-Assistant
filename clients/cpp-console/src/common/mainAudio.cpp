@@ -71,7 +71,12 @@ void log_t(T v, Args... args)
 	std::chrono::system_clock::time_point now = chrono::system_clock::now();
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 	std::tm now_tm;
-	localtime_s(&now_tm, &now_c);
+#ifdef LINUX
+    localtime_r(&now_c, &now_tm);
+#endif
+#ifdef WINDOWS
+    localtime_s(&now_tm, &now_c);
+#endif
 	strftime(buff, sizeof buff, "%H:%M:%S", &now_tm);
 
 	cout << buff << "." << chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count() % 1000 << "  ";
