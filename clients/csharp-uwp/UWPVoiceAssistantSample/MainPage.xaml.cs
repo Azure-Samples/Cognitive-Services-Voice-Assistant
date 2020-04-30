@@ -579,7 +579,7 @@ namespace UWPVoiceAssistantSample
                 watcher.Filter = "*.json";
 
                 string fileName = "config.json";
-                var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
 
                 if (file.Path != null)
                 {
@@ -594,9 +594,9 @@ namespace UWPVoiceAssistantSample
 
         private async void LoadConfigClick(object sender, RoutedEventArgs e)
         {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
+            var configFile = await ApplicationData.Current.LocalFolder.GetFileAsync("config.json");
 
-            AppSettings appSettings = AppSettings.Load(configFile.Path);
+            AppSettings appSettings = await AppSettings.Load(configFile);
 
             var speechKeyModified = LocalSettingsHelper.SpeechSubscriptionKey != appSettings.SpeechSubscriptionKey;
             var speechRegionModified = LocalSettingsHelper.AzureRegion != appSettings.AzureRegion;

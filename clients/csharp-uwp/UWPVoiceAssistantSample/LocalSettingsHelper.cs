@@ -5,12 +5,14 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using UWPVoiceAssistantSample.AudioCommon;
     using Windows.Devices.SmartCards;
     using Windows.Media.MediaProperties;
     using Windows.Storage;
+    using Windows.UI.Xaml;
 
     /// <summary>
     /// A convenience wrapper for getting and setting well-known properties from AppLocal settings.
@@ -105,24 +107,36 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("DialogServiceConnector_botID", value);
         }
 
+        /// <summary>
+        /// Gets or sets the KeywordDisplayName.
+        /// </summary>
         public static string KeywordDisplayName
         {
             get => ReadValueWithDefault<string>("keywordDisplayName", string.Empty);
             set => WriteValue("keywordDisplayName", value);
         }
 
+        /// <summary>
+        /// Gets or sets the KeywordId.
+        /// </summary>
         public static string KeywordId
         {
             get => ReadValueWithDefault<string>("keywordID", string.Empty);
             set => WriteValue("keywordID", value);
         }
 
+        /// <summary>
+        /// Gets or sets the KeywordModelId.
+        /// </summary>
         public static string KeywordModelId
         {
             get => ReadValueWithDefault<string>("keywordModelId", string.Empty);
             set => WriteValue("keywordModelId", value);
         }
 
+        /// <summary>
+        /// Gets or sets the KeywordActivationModelDataFormat.
+        /// </summary>
         public static string KeywordActivationModelDataFormat
         {
             get => ReadValueWithDefault<string>("keywordActivationModelDataFormat", string.Empty);
@@ -233,11 +247,12 @@ namespace UWPVoiceAssistantSample
 
         public static async Task CopyConfigAndAssignValues()
         {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
+            await CopyFilesToLocalFolder();
+            var configFile = await ApplicationData.Current.LocalFolder.GetFileAsync("config.json");
 
             if (!string.IsNullOrWhiteSpace(configFile.Path))
             {
-                AppSettings appSettings = AppSettings.Load(configFile.Path);
+                AppSettings appSettings = await AppSettings.Load(configFile);
 
                 SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
                 AzureRegion = appSettings.AzureRegion;
@@ -252,6 +267,21 @@ namespace UWPVoiceAssistantSample
                 KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
                 KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
             }
+        }
+
+        private static async Task CopyFilesToLocalFolder()
+        {
+            var config = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
+            var sDKKeywordsFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+            var keywords = await sDKKeywordsFolder.GetFolderAsync("SDKKeywords");
+            var keyword = await keywords.GetFilesAsync();
+
+            foreach (var file in keyword)
+            {
+                await file.CopyAsync(ApplicationData.Current.LocalFolder);
+            }
+
+            await config.CopyAsync(ApplicationData.Current.LocalFolder);
         }
     }
 }

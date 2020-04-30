@@ -8,7 +8,9 @@ namespace UWPVoiceAssistantSample
     using System.Globalization;
     using System.IO;
     using System.Runtime.CompilerServices;
+    using System.Threading.Tasks;
     using Newtonsoft.Json;
+    using Windows.Storage;
 
     /// <summary>
     /// Bot specific application settings obtained for config.json.
@@ -47,9 +49,24 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public string BotId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the KeywordDisplayName.
+        /// </summary>
         public string KeywordDisplayName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the KeywordId.
+        /// </summary>
         public string KeywordId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the KeywordModelId.
+        /// </summary>
         public string KeywordModelId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the KeywordActivationModelDataFormat.
+        /// </summary>
         public string KeywordActivationModelDataFormat { get; set; }
 
         /// <summary>
@@ -67,12 +84,13 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <param name="configFile">config.json.</param>
         /// <returns>Instance of AppSettings.</returns>
-        public static AppSettings Load(string configFile)
+        public static async Task<AppSettings> Load(StorageFile configFile)
         {
-            StreamReader file = new StreamReader(configFile);
-            string config = file.ReadToEnd();
-            file.Close();
-            AppSettings instance = JsonConvert.DeserializeObject<AppSettings>(config);
+            //StreamReader file = new StreamReader(configFile);
+            string file = await Windows.Storage.FileIO.ReadTextAsync(configFile);
+            //string config = file.ReadToEnd();
+            //file.Close();
+            AppSettings instance = JsonConvert.DeserializeObject<AppSettings>(file);
             ValidateAppSettings(instance);
 
             return instance;
@@ -137,7 +155,9 @@ namespace UWPVoiceAssistantSample
         {
             if (!string.IsNullOrWhiteSpace(path))
             {
-                if (path.StartsWith("ms-appx:///", StringComparison.OrdinalIgnoreCase))
+                var fileExists = ApplicationData.Current.LocalFolder.GetFileAsync(path);
+
+                if (fileExists != null)
                 {
                     return true;
                 }
@@ -196,7 +216,7 @@ namespace UWPVoiceAssistantSample
             {
                 if (ValidateModelFilePath(instance.KeywordActivationModelPath) == false)
                 {
-                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordActivationModelPath. Verify path starts with ms-appx:///");
+                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordActivationModelPath. Verify the keyword bin file exists in the LocalState Folder.");
                 }
             }
 
@@ -204,7 +224,7 @@ namespace UWPVoiceAssistantSample
             {
                 if (ValidateModelFilePath(instance.KeywordConfirmationModelPath) == false)
                 {
-                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordConfirmationModelPath. Verify path starts with with ms-appx:///");
+                    logger.Log(LogMessageLevel.Error, "Failed to validate KeywordConfirmationModelPath. Verify the keyword table file exists in the LocalState Folder.");
                 }
             }
         }
