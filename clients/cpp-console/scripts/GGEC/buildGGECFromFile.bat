@@ -16,6 +16,7 @@ set lib=-lMicrosoft.CognitiveServices.Speech.core %lib%
 set lib=-lpma %lib%
 set lib=-lpthread %lib%
 set lib=-lasound %lib%
+set lib=-lstdc++fs %lib%
 REM set lib=-l:libcutils.so.0 %lib%
 
 set commonTargets=-std=c++14 %inc% %incDir% %lib%
