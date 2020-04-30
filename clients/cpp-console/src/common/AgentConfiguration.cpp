@@ -30,6 +30,7 @@ namespace FieldNames
     constexpr auto CustomEndpoint = "custom_endpoint";
     constexpr auto KeywordDisplay = "keyword_display";
     constexpr auto Volume = "volume";
+    constexpr auto BargeInSupported = "barge_in_supported";
     constexpr auto LogFilePath = "log_file_path";
 }
 
@@ -62,6 +63,7 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_keywordDisplayName = j.value(FieldNames::KeywordDisplay, "");
     config->_logFilePath = j.value(FieldNames::LogFilePath, "");
     config->_volume = atoi(j.value(FieldNames::Volume, "").c_str());
+    config->_barge_in_supported = j.value(FieldNames::BargeInSupported, "");
 
 	if (config->_keywordModelPath.length() > 0)
 	{

@@ -96,6 +96,7 @@ int main(int argc, char** argv)
     const char * device = "default";
     KeywordActivationState keywordActivationState = KeywordActivationState::Undefined;
     bool volumeOn = false;
+    bool bargeInSupported = false;
     
     IAudioPlayer* player;
     shared_ptr<AgentConfiguration> agentConfig;
@@ -104,7 +105,10 @@ int main(int argc, char** argv)
     auto StartListening = [&]()
     {
         log_t("Now listening...");
-        player->Stop();
+        if(bargeInSupported)
+        {
+            player->Stop();
+        }
         DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
         auto future = dialogServiceConnector->ListenOnceAsync();
     };
@@ -170,6 +174,11 @@ int main(int argc, char** argv)
         return (int)agentConfig->LoadResult();
     }
     
+    if(agentConfig->_barge_in_supported == "true")
+    {
+        bargeInSupported = true;
+    }
+    
     if(agentConfig->_volume > 0){
         volumeOn = true;
 #ifdef LINUX
@@ -227,7 +236,10 @@ int main(int argc, char** argv)
         switch(reason){
             case ResultReason::RecognizedKeyword:
                 newStatus = DeviceStatus::Listening;
-                player->Stop();
+                if(bargeInSupported)
+                {
+                    player->Stop();
+                }
                 break;
             case ResultReason::RecognizedSpeech:
                 newStatus = DeviceStatus::Listening;
@@ -273,9 +285,11 @@ int main(int argc, char** argv)
         {
             log_t("Activity has audio, playing synchronously.");
 
-            // TODO: AEC + Barge-in
-            //log_t("Pausing KWS during TTS playback");
-            //PauseKws();
+            if(!bargeInSupported)
+            {
+                log_t("Pausing KWS during TTS playback");
+                PauseKws();
+            }
 
             auto audio = event.GetAudio();
             int play_result = 0;
@@ -293,6 +307,10 @@ int main(int argc, char** argv)
             }
         }
 
+        //wait for audio to play. This is important even with Echo cancellation so the new listening doesn't time out while the audio is playing.
+        int secondsOfAudio = total_bytes_read / 32000;
+        std::this_thread::sleep_for(std::chrono::milliseconds(secondsOfAudio*1000));
+
         if (continue_multiturn)
         {
             log_t("Activity requested a continuation (ExpectingInput) -- listening again");
@@ -300,10 +318,10 @@ int main(int argc, char** argv)
         }
         else
         {
-            //TODO remove once we have echo cancellation
-            /*int secondsOfAudio = total_bytes_read / 32000;
-            std::this_thread::sleep_for(std::chrono::milliseconds(secondsOfAudio*1000));
-            StartKws();*/
+            if(!bargeInSupported)
+            {
+                StartKws();
+            }
         }
     };
 
