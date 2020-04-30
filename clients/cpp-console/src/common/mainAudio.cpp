@@ -67,20 +67,20 @@ void log(T v, Args... args)
 template<typename T, typename... Args>
 void log_t(T v, Args... args)
 {
-	char buff[9];
-	std::chrono::system_clock::time_point now = chrono::system_clock::now();
-	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-	std::tm now_tm;
+    char buff[9];
+    std::chrono::system_clock::time_point now = chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm now_tm;
 #ifdef LINUX
     localtime_r(&now_c, &now_tm);
 #endif
 #ifdef WINDOWS
     localtime_s(&now_tm, &now_c);
 #endif
-	strftime(buff, sizeof buff, "%H:%M:%S", &now_tm);
+    strftime(buff, sizeof buff, "%H:%M:%S", &now_tm);
 
-	cout << buff << "." << chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count() % 1000 << "  ";
-	log(v, args...);
+    cout << buff << "." << chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count() % 1000 << "  ";
+    log(v, args...);
 }
 
 int main(int argc, char** argv)
