@@ -54,10 +54,10 @@ namespace UWPVoiceAssistantSample
         public KeywordActivationModel KeywordActivationModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the details of the keyword confirmation model used for confirming the inital detection of the
+        /// Gets or sets the path of the keyword confirmation model used for confirming the inital detection of the
         /// activation model on the device.
         /// </summary>
-        public KeywordConfirmationModel KeywordConfirmationModel { get; set; }
+        public string KeywordModel { get; set; }
 
         /// <summary>
         /// Reads and deserializes the configuration file.
@@ -139,7 +139,7 @@ namespace UWPVoiceAssistantSample
                 "Failed to validate custom voice ids");
             LogIfFalse(IsValidResourceId(instance.CustomCommandsAppId, optional: true), "Failed to validate Custom Commands id");
             LogIfFalse(IsValidModelPath(instance.KeywordActivationModel.Path), "Failed to validate keyword activation model path");
-            LogIfFalse(IsValidModelPath(instance.KeywordConfirmationModel.Path), "Failed to validate keyword confirmation model path");
+            LogIfFalse(IsValidModelPath(instance.KeywordModel), "Failed to validate keyword confirmation model path");
         }
     }
 }

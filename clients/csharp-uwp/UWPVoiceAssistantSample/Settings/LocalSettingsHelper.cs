@@ -233,7 +233,7 @@ namespace UWPVoiceAssistantSample
                 KeywordId = appSettings.KeywordActivationModel.KeywordId;
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
-                KeywordConfirmationModelPath = appSettings.KeywordConfirmationModel.Path;
+                KeywordConfirmationModelPath = appSettings.KeywordModel;
             }
         }
 
@@ -241,7 +241,7 @@ namespace UWPVoiceAssistantSample
         /// Writes a provided object to app-local settings via ApplicationData APIs.
         /// </summary>
         /// <param name="key"> The key under which the setting is to be stored. </param>
-        /// <param name="value"> The object (string-serializable) to be recorded. </param>
+        /// <param name="newValue"> The object (string-serializable) to be recorded. </param>
         public static void WriteValue(string key, object newValue)
         {
             ApplicationData.Current.LocalSettings.Values[key] = newValue;

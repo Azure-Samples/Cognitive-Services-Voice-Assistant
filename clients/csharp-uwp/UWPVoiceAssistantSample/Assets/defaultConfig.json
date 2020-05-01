@@ -12,7 +12,5 @@
     "ModelId": "1033",
     "ModelDataFormat": "MICROSOFT_KWSGRAPH_V1"
   },
-  "KeywordConfirmationModel": {
-    "Path": "ms-appx:///Assets/ConfirmationKeywords/contoso.table"
-  }
+  "KeywordModel": "ms-appx:///Assets/ConfirmationKeywords/contoso.table"
 }

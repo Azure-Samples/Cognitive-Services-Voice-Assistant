@@ -167,7 +167,6 @@
     <Compile Include="IKeywordRegistration.cs" />
     <Compile Include="KeywordRegistration.cs" />
     <Compile Include="Settings\KeywordActivationModel.cs" />
-    <Compile Include="Settings\KeywordConfirmationModel.cs" />
     <Compile Include="Settings\LocalSettingsHelper.cs" />
     <Compile Include="Logging\DiagnosticTraceLogProvider.cs" />
     <Compile Include="Logging\LogRouter.cs" />

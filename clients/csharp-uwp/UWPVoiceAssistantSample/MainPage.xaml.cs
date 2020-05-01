@@ -609,7 +609,7 @@ namespace UWPVoiceAssistantSample
             var keywordModelIdModified = LocalSettingsHelper.KeywordModelId != appSettings.KeywordActivationModel.ModelId;
             var keywordActivationModelDataFormatModified = LocalSettingsHelper.KeywordActivationModelDataFormat != appSettings.KeywordActivationModel.ModelDataFormat;
             var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModel.Path;
-            var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordConfirmationModel.Path;
+            var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordModel;
 
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
@@ -688,7 +688,7 @@ namespace UWPVoiceAssistantSample
 
                 if (keywordConfirmationModelPathModified)
                 {
-                    LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordConfirmationModel.Path;
+                    LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordModel;
                     this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
                 }
 
