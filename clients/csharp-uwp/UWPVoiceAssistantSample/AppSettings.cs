@@ -86,10 +86,7 @@ namespace UWPVoiceAssistantSample
         /// <returns>Instance of AppSettings.</returns>
         public static async Task<AppSettings> Load(StorageFile configFile)
         {
-            //StreamReader file = new StreamReader(configFile);
             string file = await Windows.Storage.FileIO.ReadTextAsync(configFile);
-            //string config = file.ReadToEnd();
-            //file.Close();
             AppSettings instance = JsonConvert.DeserializeObject<AppSettings>(file);
             ValidateAppSettings(instance);
 

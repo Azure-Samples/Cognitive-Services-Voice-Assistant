@@ -349,11 +349,6 @@ namespace UWPVoiceAssistantSample
             }
         }
 
-        //private async Task<StorageFile> GetFileFromPathAsync(string path)
-        //    => path.StartsWith("ms-appx", StringComparison.InvariantCultureIgnoreCase)
-        //        ? await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))
-        //        : await StorageFile.GetFileFromPathAsync(path);
-
         private async Task<StorageFile> GetFileFromPathAsync(string path)
             => await ApplicationData.Current.LocalFolder.GetFileAsync(path);
     }
