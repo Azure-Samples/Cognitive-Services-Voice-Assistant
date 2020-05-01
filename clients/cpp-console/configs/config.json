@@ -6,5 +6,6 @@
   "volume": "25",
   "commands_app_id": "",
   "custom_voice_deployment_ids": "",
-  "log_file_path": ""
+  "log_file_path": "",
+  "barge_in_supported": "true"
 }

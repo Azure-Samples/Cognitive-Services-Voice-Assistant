@@ -32,6 +32,9 @@ void DeviceStatusIndicators::SetStatus(const DeviceStatus status){
             system("adk-message-send 'led_start_pattern {pattern:10}' >/dev/null");
         break;
     case DeviceStatus::Speaking:
+            //pulse purple
+            system("adk-message-send 'led_start_pattern {pattern:2}' >/dev/null");
+            break;
     default:
         break;
     }
