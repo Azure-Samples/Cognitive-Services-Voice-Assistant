@@ -37,6 +37,8 @@ namespace UWPVoiceAssistantSampleTests
             this.InitializeComponent();
             this.Suspending += OnSuspending;
 
+            Task.Run(async () => await LocalSettingsHelper.InitializeAsync()).Wait();
+
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
             LogRouter.Initialize();
 

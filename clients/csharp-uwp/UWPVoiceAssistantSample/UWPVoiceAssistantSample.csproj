@@ -23,7 +23,6 @@
     <AppxBundlePlatforms>x86|x64|arm|arm64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
-    <AppxPackageDir>C:\Users\v-saplum\Documents\MVA_AppPackage\</AppxPackageDir>
     <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
@@ -136,7 +135,7 @@
   <ItemGroup>
     <Compile Include="ActivityWrapper.cs" />
     <Compile Include="AgentSessionWrapper.cs" />
-    <Compile Include="AppSettings.cs" />
+    <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="AgentSessionManager.cs" />
     <Compile Include="AudioCommon\DialogAudio.cs" />
     <Compile Include="AudioCommon\DirectLineSpeechAudio.cs" />
@@ -167,7 +166,9 @@
     <Compile Include="AudioCommon\IMemoryBufferByteAccess.cs" />
     <Compile Include="IKeywordRegistration.cs" />
     <Compile Include="KeywordRegistration.cs" />
-    <Compile Include="LocalSettingsHelper.cs" />
+    <Compile Include="Settings\KeywordActivationModel.cs" />
+    <Compile Include="Settings\KeywordConfirmationModel.cs" />
+    <Compile Include="Settings\LocalSettingsHelper.cs" />
     <Compile Include="Logging\DiagnosticTraceLogProvider.cs" />
     <Compile Include="Logging\LogRouter.cs" />
     <Compile Include="Logging\ILogProvider.cs" />
@@ -190,15 +191,14 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MVAKeywords\contosoInfo.txt" />
-    <Content Include="MVAKeywords\Contoso.bin">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Assets\ActivationKeywords\contosoInfo.txt" />
+    <Content Include="Assets\ActivationKeywords\Contoso.bin" />
     <Content Include="..\..\..\keyword-models\*.*">
-      <Link>SDKKeywords\%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <Link>Assets\ConfirmationKeywords\%(RecursiveDir)%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Assets\defaultConfig.json" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
@@ -206,6 +206,7 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -252,13 +253,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

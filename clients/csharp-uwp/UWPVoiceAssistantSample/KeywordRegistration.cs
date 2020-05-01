@@ -153,11 +153,6 @@ namespace UWPVoiceAssistantSample
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
         public async Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync()
         {
-            if (string.IsNullOrWhiteSpace(this.KeywordActivationModelFilePath) && string.IsNullOrWhiteSpace(this.ConfirmationKeywordModelPath))
-            {
-                await LocalSettingsHelper.CopyConfigAndAssignValues();
-            }
-
             using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
             {
                 if (this.keywordConfiguration != null)
@@ -180,30 +175,6 @@ namespace UWPVoiceAssistantSample
             {
                 return await this.CreateKeywordConfigurationAsyncInternal();
             }
-        }
-
-        private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
-        {
-            var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
-
-            var configurations = await detector.GetConfigurationsAsync();
-            configurations.ToList().ForEach(async configuration => await configuration.SetEnabledAsync(false));
-
-            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                detector,
-                this.KeywordDisplayName,
-                this.KeywordId,
-                this.KeywordModelId);
-            await this.SetModelDataIfNeededAsync(targetConfiguration);
-
-            if (!targetConfiguration.IsActive)
-            {
-                await targetConfiguration.SetEnabledAsync(true);
-            }
-
-            this.keywordConfiguration = targetConfiguration;
-
-            return targetConfiguration;
         }
 
         /// <summary>
@@ -327,7 +298,9 @@ namespace UWPVoiceAssistantSample
             }
             else if (!hasNoFormat && !hasNoPath)
             {
-                if (configuration.AvailabilityInfo.IsEnabled)
+                var configurationWasEnabled = configuration.AvailabilityInfo.IsEnabled;
+
+                if (configurationWasEnabled)
                 {
                     // Active configurations can't have their data updated. Disable for now;
                     // we'll re-enable shortly.
@@ -344,17 +317,46 @@ namespace UWPVoiceAssistantSample
                 // Update was successful. Record this so we don't repeat it needlessly!
                 this.LastUpdatedActivationKeywordModelVersion = this.AvailableActivationKeywordModelVersion;
 
-                // And now, re-enable the configuration.
-                await configuration.SetEnabledAsync(true);
+                // And now, re-enable the configuration if we previously disabled it.
+                if (configurationWasEnabled)
+                {
+                    await configuration.SetEnabledAsync(true);
+                }
             }
         }
 
-        //private async Task<StorageFile> GetFileFromPathAsync(string path)
-        //    => path.StartsWith("ms-appx", StringComparison.InvariantCultureIgnoreCase)
-        //        ? await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))
-        //        : await StorageFile.GetFileFromPathAsync(path);
+        private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
+        {
+            var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
+
+            // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
+            // are disabled to avoid collisions.
+            var configurations = await detector.GetConfigurationsAsync();
+            foreach (var configuration in configurations)
+            {
+                await configuration.SetEnabledAsync(false);
+            }
+
+            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                detector,
+                this.KeywordDisplayName,
+                this.KeywordId,
+                this.KeywordModelId);
+            await this.SetModelDataIfNeededAsync(targetConfiguration);
+
+            if (!targetConfiguration.IsActive)
+            {
+                await targetConfiguration.SetEnabledAsync(true);
+            }
+
+            this.keywordConfiguration = targetConfiguration;
+
+            return targetConfiguration;
+        }
 
         private async Task<StorageFile> GetFileFromPathAsync(string path)
-            => await ApplicationData.Current.LocalFolder.GetFileAsync(path);
+            => path.StartsWith("ms-app", StringComparison.InvariantCultureIgnoreCase)
+                ? await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))
+                : await StorageFile.GetFileFromPathAsync(path);
     }
 }
