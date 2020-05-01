@@ -40,12 +40,7 @@ namespace UWPVoiceAssistantSampleTests
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
             LogRouter.Initialize();
 
-            this.keywordRegistration = new KeywordRegistration(
-                "Contoso",
-                "{C0F1842F-D389-44D1-8420-A32A63B35568}",
-                "1033",
-                "MICROSOFT_KWSGRAPH_V1",
-                new Version(1, 0, 0, 0));
+            this.keywordRegistration = new KeywordRegistration(new Version(1, 0, 0, 0));
 
             this.agentSessionManager = new AgentSessionManager();
 
