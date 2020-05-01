@@ -255,7 +255,7 @@ int main(int argc, char** argv)
                 newStatus = DeviceStatus::Idle;
         }
         
-        //update the device status
+        // Update the device status
         DeviceStatusIndicators::SetStatus(newStatus);
     };
 
@@ -303,8 +303,8 @@ int main(int argc, char** argv)
             uint32_t total_bytes_read = 0;
             if(volumeOn && player != nullptr){
                 
-                //if we are expecting more input and have audio to play, we will want to wait till all audio is done playing before
-                //before listening again. We can read from the stream here to accomplish this.
+                // If we are expecting more input and have audio to play, we will want to wait till all audio is done playing before
+                // before listening again. We can read from the stream here to accomplish this.
                  if(continue_multiturn){
                     uint32_t playBufferSize = 1024;
                     unsigned int bytesRead = 0;
@@ -317,7 +317,7 @@ int main(int argc, char** argv)
                     
                     DeviceStatusIndicators::SetStatus(DeviceStatus::Speaking);
                     
-                    //we don't want to timeout while tts is playing so start 1 second before it is done
+                    // We don't want to timeout while tts is playing so start 1 second before it is done
                     int secondsOfAudio = total_bytes_read / 32000;
                     std::this_thread::sleep_for(std::chrono::milliseconds((secondsOfAudio-1)*1000));
                 }
@@ -336,7 +336,7 @@ int main(int argc, char** argv)
         if (continue_multiturn)
         {
             log_t("Activity requested a continuation (ExpectingInput) -- listening again");
-            //There may be an issue where the listening times out while the Audio is playing.
+            // There may be an issue where the listening times out while the Audio is playing.
             ContinueListening();
         }
         else
