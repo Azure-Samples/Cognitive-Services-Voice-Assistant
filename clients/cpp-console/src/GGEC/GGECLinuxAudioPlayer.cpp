@@ -220,10 +220,9 @@ int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize){
 
 int LinuxAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream){
     int rc = 0;
-    fprintf(stdout, "DEBUG: Play called with stream\n");
+    
     if(m_state == AudioPlayerState::UNINITIALIZED){
         rc = -1;
-        fprintf(stdout, "DEBUG: Play failed. Player uninitialized\n");
     }
     else{
         AudioPlayerEntry entry(pStream);
