@@ -113,6 +113,13 @@ int main(int argc, char** argv)
         auto future = dialogServiceConnector->ListenOnceAsync();
     };
     
+    auto ContinueListening = [&]()
+    {
+        log_t("Now listening...");
+        DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
+        auto future = dialogServiceConnector->ListenOnceAsync();
+    };
+    
     auto StartKws = [&]()
     {
         log_t("Enter StartKws (state = ", uint32_t(keywordActivationState), ")");
@@ -280,10 +287,9 @@ int main(int argc, char** argv)
 
         auto continue_multiturn = activity.value<string>("inputHint", "") == "expectingInput";
 
-        uint32_t total_bytes_read = 0;
         if (event.HasAudio())
         {
-            log_t("Activity has audio, playing synchronously.");
+            log_t("Activity has audio, playing asynchronously.");
 
             if(!bargeInSupported)
             {
@@ -293,28 +299,45 @@ int main(int argc, char** argv)
 
             auto audio = event.GetAudio();
             int play_result = 0;
-
+    
+            uint32_t total_bytes_read = 0;
             if(volumeOn && player != nullptr){
-                play_result = player->Play(audio);
+                
+                //if we are expecting more input and have audio to play, we will want to wait till all audio is done playing before
+                //before listening again. We can read from the stream here to accomplish this.
+                 if(continue_multiturn){
+                    uint32_t playBufferSize = 1024;
+                    unsigned int bytesRead = 0;
+                    std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+                    do{
+                        bytesRead = audio->Read(playBuffer.get(), playBufferSize);
+                        player->Play(playBuffer.get(), bytesRead);
+                        total_bytes_read += bytesRead;
+                    }while(bytesRead > 0);
+                    
+                    DeviceStatusIndicators::SetStatus(DeviceStatus::Speaking);
+                    
+                    //we don't want to timeout while tts is playing so start 1 second before it is done
+                    int secondsOfAudio = total_bytes_read / 32000;
+                    std::this_thread::sleep_for(std::chrono::milliseconds((secondsOfAudio-1)*1000));
+                }
+                else{
+                    play_result = player->Play(audio);
+                }
             }
-
-            cout << endl;
-            log_t("Playback of ", total_bytes_read, " bytes complete.");
 
             if (!continue_multiturn)
             {
                 DeviceStatusIndicators::SetStatus(DeviceStatus::Idle);
             }
+            
         }
-
-        //wait for audio to play. This is important even with Echo cancellation so the new listening doesn't time out while the audio is playing.
-        int secondsOfAudio = total_bytes_read / 32000;
-        std::this_thread::sleep_for(std::chrono::milliseconds(secondsOfAudio*1000));
-
+        
         if (continue_multiturn)
         {
             log_t("Activity requested a continuation (ExpectingInput) -- listening again");
-            StartListening();
+            //There may be an issue where the listening times out while the Audio is playing.
+            ContinueListening();
         }
         else
         {
