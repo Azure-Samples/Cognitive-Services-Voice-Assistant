@@ -37,6 +37,11 @@ namespace UWPVoiceAssistantSampleTests
             return null;
         }
 
+        public Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsync()
+        {
+            return null;
+        }
+
         public async Task<StorageFile> GetActivationKeywordFileAsync()
         {
             return null;

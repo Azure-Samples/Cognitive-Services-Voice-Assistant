@@ -692,10 +692,10 @@ namespace UWPVoiceAssistantSample
                     this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
                 }
 
-                if (keywordActivationModelDataFormatModified 
-                    || keywordActivationModelPathModified 
-                    || keywordConfirmationModelPathModified 
-                    || keywordDisplayNameModified 
+                if (keywordActivationModelDataFormatModified
+                    || keywordActivationModelPathModified
+                    || keywordConfirmationModelPathModified
+                    || keywordDisplayNameModified
                     || keywordIdModified
                     || keywordModelIdModified)
                 {
