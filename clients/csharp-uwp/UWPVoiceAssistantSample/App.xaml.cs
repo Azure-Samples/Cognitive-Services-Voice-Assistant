@@ -43,10 +43,10 @@ namespace UWPVoiceAssistantSample
             this.logger = LogRouter.GetClassLogger();
             this.logger.Log("Constructor: app launched");
 
+            Task.Run(async () => await LocalSettingsHelper.InitializeAsync()).Wait();
+
             this.Suspending += this.OnSuspending;
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
-
-            LocalSettingsHelper.CopyConfigAndAssignValues().GetAwaiter();
 
             var keywordRegistration = new KeywordRegistration(
                 new Version(1, 0, 0, 0));
