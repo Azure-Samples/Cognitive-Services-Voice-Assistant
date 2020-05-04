@@ -30,6 +30,7 @@ namespace FieldNames
     constexpr auto CustomEndpoint = "custom_endpoint";
     constexpr auto KeywordDisplay = "keyword_display";
     constexpr auto Volume = "volume";
+    constexpr auto BargeInSupported = "barge_in_supported";
     constexpr auto LogFilePath = "log_file_path";
 }
 
@@ -62,22 +63,24 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_keywordDisplayName = j.value(FieldNames::KeywordDisplay, "");
     config->_logFilePath = j.value(FieldNames::LogFilePath, "");
     config->_volume = atoi(j.value(FieldNames::Volume, "").c_str());
+    config->_barge_in_supported = j.value(FieldNames::BargeInSupported, "");
 
-	if (config->_keywordModelPath.length() > 0)
-	{
-		if (!std::experimental::filesystem::exists(config->_keywordModelPath))
-		{
-			config->_loadResult = AgentConfigurationLoadResult::KWFileNotFound;
-			return config;
-		}
+    if (config->_keywordModelPath.length() > 0)
+    {
+        if (!std::experimental::filesystem::exists(config->_keywordModelPath))
+        {
+            config->_loadResult = AgentConfigurationLoadResult::KWFileNotFound;
+            return config;
+        }
 
-		std::experimental::filesystem::path pathObj(config->_keywordModelPath);
-		if (!pathObj.has_extension() || pathObj.extension().string() != ".table")
-		{
-			config->_loadResult = AgentConfigurationLoadResult::KWFileWrongExtension;
-			return config;
-		}
-	}
+        // this check should be removed once the SDK properly validates KWS model files
+        std::experimental::filesystem::path pathObj(config->_keywordModelPath);
+        if (!pathObj.has_extension() || pathObj.extension().string() != ".table")
+        {
+            config->_loadResult = AgentConfigurationLoadResult::KWFileWrongExtension;
+            return config;
+        }
+    }
 
     if (config->_speechKey.length() == 0)
     {

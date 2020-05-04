@@ -1,0 +1,3 @@
+# Microsoft Cognitive Services - Voice Assistant Java Android Sample
+
+The Android sample client is jointly developed with Microsoft's Bot-Framework team and hosted in the [Botframework Solution](https://github.com/microsoft/botframework-solutions) GitHub repository. See [Virtual Assistant Client (Android)](https://github.com/microsoft/botframework-solutions/tree/master/samples/android/clients/VirtualAssistantClient) in that repository.

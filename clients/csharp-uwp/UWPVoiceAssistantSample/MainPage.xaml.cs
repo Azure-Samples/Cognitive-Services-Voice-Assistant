@@ -10,6 +10,7 @@ namespace UWPVoiceAssistantSample
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
     using Microsoft.Extensions.DependencyInjection;
@@ -443,6 +444,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock informationTextBlock = new TextBlock();
                 informationTextBlock.Foreground = new SolidColorBrush(Colors.Blue);
+                informationTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = information.Split("Information");
                 if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
                 {
@@ -473,6 +475,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock noiseTextBlock = new TextBlock();
                 noiseTextBlock.Foreground = new SolidColorBrush(Colors.Gray);
+                noiseTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = noise.Split("Noise");
                 noiseTextBlock.Text = split[1];
 
@@ -495,6 +498,7 @@ namespace UWPVoiceAssistantSample
             {
                 TextBlock errorTextBlock = new TextBlock();
                 errorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+                errorTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = error.Split("Error");
                 errorTextBlock.Text = split[1];
 
@@ -575,7 +579,7 @@ namespace UWPVoiceAssistantSample
                 watcher.Filter = "*.json";
 
                 string fileName = "config.json";
-                var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
 
                 if (file.Path != null)
                 {
@@ -590,9 +594,9 @@ namespace UWPVoiceAssistantSample
 
         private async void LoadConfigClick(object sender, RoutedEventArgs e)
         {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
+            var configFile = await ApplicationData.Current.LocalFolder.GetFileAsync("config.json");
 
-            AppSettings appSettings = AppSettings.Load(configFile.Path);
+            AppSettings appSettings = await AppSettings.Load(configFile);
 
             var speechKeyModified = LocalSettingsHelper.SpeechSubscriptionKey != appSettings.SpeechSubscriptionKey;
             var speechRegionModified = LocalSettingsHelper.AzureRegion != appSettings.AzureRegion;
@@ -600,8 +604,17 @@ namespace UWPVoiceAssistantSample
             var customVoiceIdModified = LocalSettingsHelper.CustomVoiceIds != appSettings.CustomVoiceIds;
             var customCommandsAppIdModified = LocalSettingsHelper.CustomCommandsAppId != appSettings.CustomCommandsAppId;
             var botIdModified = LocalSettingsHelper.BotId != appSettings.BotId;
+            var keywordDisplayNameModified = LocalSettingsHelper.KeywordDisplayName != appSettings.KeywordActivationModel.DisplayName;
+            var keywordIdModified = LocalSettingsHelper.KeywordId != appSettings.KeywordActivationModel.KeywordId;
+            var keywordModelIdModified = LocalSettingsHelper.KeywordModelId != appSettings.KeywordActivationModel.ModelId;
+            var keywordActivationModelDataFormatModified = LocalSettingsHelper.KeywordActivationModelDataFormat != appSettings.KeywordActivationModel.ModelDataFormat;
+            var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModel.Path;
+            var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordModel;
 
-            this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified || customVoiceIdModified || customCommandsAppIdModified || botIdModified;
+            this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
+                customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
+                keywordDisplayNameModified || keywordIdModified || keywordModelIdModified ||
+                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordConfirmationModelPathModified;
 
             if (this.configModified)
             {
@@ -641,6 +654,52 @@ namespace UWPVoiceAssistantSample
                 {
                     LocalSettingsHelper.BotId = appSettings.BotId;
                     this.logger.Log($"Bot Id: {LocalSettingsHelper.BotId}");
+                }
+
+                if (keywordDisplayNameModified)
+                {
+                    LocalSettingsHelper.KeywordDisplayName = appSettings.KeywordActivationModel.DisplayName;
+                    this.logger.Log($"Keyword Display Name: {LocalSettingsHelper.KeywordDisplayName}");
+                }
+
+                if (keywordIdModified)
+                {
+                    LocalSettingsHelper.KeywordId = appSettings.KeywordActivationModel.KeywordId;
+                    this.logger.Log($"Keyword Id: {LocalSettingsHelper.KeywordId}");
+                }
+
+                if (keywordModelIdModified)
+                {
+                    LocalSettingsHelper.KeywordModelId = appSettings.KeywordActivationModel.ModelId;
+                    this.logger.Log($"Keyword Model Id: {LocalSettingsHelper.KeywordModelId}");
+                }
+
+                if (keywordActivationModelDataFormatModified)
+                {
+                    LocalSettingsHelper.KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
+                    this.logger.Log($"Keyword Activation Model Data Format: {LocalSettingsHelper.KeywordActivationModelDataFormat}");
+                }
+
+                if (keywordActivationModelPathModified)
+                {
+                    LocalSettingsHelper.KeywordActivationModelPath = appSettings.KeywordActivationModel.Path;
+                    this.logger.Log($"Keyword Activation Model Path: {LocalSettingsHelper.KeywordActivationModelPath}");
+                }
+
+                if (keywordConfirmationModelPathModified)
+                {
+                    LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordModel;
+                    this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
+                }
+
+                if (keywordActivationModelDataFormatModified
+                    || keywordActivationModelPathModified
+                    || keywordConfirmationModelPathModified
+                    || keywordDisplayNameModified
+                    || keywordIdModified
+                    || keywordModelIdModified)
+                {
+                    await this.keywordRegistration.CreateKeywordConfigurationAsync();
                 }
             }
             else
@@ -689,6 +748,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
@@ -717,6 +779,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth), Height = 800 });
             }
@@ -745,6 +810,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 var chatAndLogGrid = ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth);
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = chatAndLogGrid, Height = 800 });
@@ -771,6 +839,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
                 this.ChatGrid.HorizontalAlignment = HorizontalAlignment.Center;
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth - 10, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ChatGrid.ActualWidth, Height = 800 });
             }
@@ -795,6 +866,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetRow(this.ApplicationStateGrid, 1);
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = ((int)this.ControlsGrid.ActualWidth) + ((int)this.ChatGrid.ActualWidth) + ((int)this.LogGrid.ActualWidth), Height = 800 });
             }
@@ -806,15 +880,18 @@ namespace UWPVoiceAssistantSample
                 this.ChatGrid.Visibility = Visibility.Collapsed;
                 Grid.SetColumnSpan(this.ApplicationStateGrid, 2);
                 Grid.SetColumn(this.HelpButtonGrid, 1);
-                Grid.SetRowSpan(this.ApplicationStateGrid, 1);
+                Grid.SetRowSpan(this.ApplicationStateGrid, 2);
                 Grid.SetRow(this.VoiceSettingsStackPanel, 0);
                 Grid.SetColumn(this.VoiceSettingsStackPanel, 0);
                 Grid.SetRow(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 1);
                 Grid.SetRow(this.ConversationStateStackPanel, 0);
                 Grid.SetColumn(this.ConversationStateStackPanel, 2);
-                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = 675, Height = 65 });
-                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 675, Height = 65 });
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 1);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 0);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = 632, Height = 125 });
+                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 632, Height = 125 });
             }
 
             if (this.WindowsContolFlyoutItem.IsChecked && !this.WindowsLogFlyoutItem.IsChecked && !this.WindowsChatFlyoutItem.IsChecked)
@@ -825,7 +902,7 @@ namespace UWPVoiceAssistantSample
                 var margin = this.ControlsGrid.Margin;
                 margin.Top = 90;
                 this.ControlsGrid.Margin = margin;
-                Grid.SetColumnSpan(this.ControlsGrid, 1);
+                Grid.SetColumn(this.ControlsGrid, 0);
                 Grid.SetColumn(this.ApplicationStateGrid, 0);
                 Grid.SetColumn(this.HelpButtonGrid, 0);
                 Grid.SetRowSpan(this.ApplicationStateGrid, 3);
@@ -835,6 +912,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 3);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 0);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.ControlsGrid.ActualWidth, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.ControlsGrid.ActualWidth, Height = 800 });
             }
@@ -857,6 +937,9 @@ namespace UWPVoiceAssistantSample
                 Grid.SetColumn(this.MicrophoneSettingsStackPanel, 0);
                 Grid.SetRow(this.ConversationStateStackPanel, 2);
                 Grid.SetColumn(this.ConversationStateStackPanel, 0);
+                Grid.SetRow(this.ApplicationStateBadgeStackPanel, 0);
+                Grid.SetColumn(this.ApplicationStateBadgeStackPanel, 3);
+                this.ApplicationStateBadgeStackPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
                 ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = (int)this.LogGrid.ActualWidth, Height = 800 });
             }

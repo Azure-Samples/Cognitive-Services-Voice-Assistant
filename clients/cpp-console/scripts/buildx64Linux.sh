@@ -17,6 +17,7 @@ src/common/DeviceStatusIndicators.cpp \
 -I./include/c_api \
 -I./include \
 -pthread \
+-lstdc++fs \
 -lasound \
 -lMicrosoft.CognitiveServices.Speech.core
 

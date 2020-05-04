@@ -414,7 +414,7 @@ namespace UWPVoiceAssistantSample
             {
                 await this.FinishConversationAsync();
                 return;
-            } 
+            }
 
             this.signalDetectionHelper.KeywordRecognitionDuringSignalVerification(recognitionText, isFinal: true);
         }

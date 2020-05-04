@@ -3,19 +3,24 @@
 
 namespace UWPVoiceAssistantSample
 {
-    using System.Globalization;
-    using System.Runtime.CompilerServices;
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
     using UWPVoiceAssistantSample.AudioCommon;
-    using Windows.Devices.SmartCards;
-    using Windows.Media.MediaProperties;
+    using Windows.ApplicationModel;
     using Windows.Storage;
+    using Windows.UI.Xaml;
 
     /// <summary>
     /// A convenience wrapper for getting and setting well-known properties from AppLocal settings.
     /// </summary>
     public static class LocalSettingsHelper
     {
-        private static readonly ILogProvider log = LogRouter.GetClassLogger();
+        private const string LocalConfigFilename = "config.json";
+        private static readonly ILogProvider Log = LogRouter.GetClassLogger();
+        private static readonly StorageFolder LocalConfigFolder = ApplicationData.Current.LocalFolder;
+        private static readonly Uri DefaultConfigUri = new Uri($"ms-appx:///Assets/defaultConfig.json");
         private static DialogAudio cachedOutputFormat;
 
         /// <summary>
@@ -103,6 +108,60 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("DialogServiceConnector_botID", value);
         }
 
+        /// <summary>
+        /// Gets or sets the KeywordDisplayName.
+        /// </summary>
+        public static string KeywordDisplayName
+        {
+            get => ReadValueWithDefault<string>("keywordDisplayName", string.Empty);
+            set => WriteValue("keywordDisplayName", value);
+        }
+
+        /// <summary>
+        /// Gets or sets the KeywordId.
+        /// </summary>
+        public static string KeywordId
+        {
+            get => ReadValueWithDefault<string>("keywordID", string.Empty);
+            set => WriteValue("keywordID", value);
+        }
+
+        /// <summary>
+        /// Gets or sets the KeywordModelId.
+        /// </summary>
+        public static string KeywordModelId
+        {
+            get => ReadValueWithDefault<string>("keywordModelId", string.Empty);
+            set => WriteValue("keywordModelId", value);
+        }
+
+        /// <summary>
+        /// Gets or sets the KeywordActivationModelDataFormat.
+        /// </summary>
+        public static string KeywordActivationModelDataFormat
+        {
+            get => ReadValueWithDefault<string>("keywordActivationModelDataFormat", string.Empty);
+            set => WriteValue("keywordActivationModelDataFormat", value);
+        }
+
+        /// <summary>
+        /// Gets or sets the KeywordActivationModelPath.
+        /// </summary>
+        public static string KeywordActivationModelPath
+        {
+            get => ReadValueWithDefault<string>("keywordActivationModelPath", string.Empty);
+            set => WriteValue("keywordActivationModelPath", value);
+        }
+
+        /// <summary>
+        /// Gets or sets the KeywordConfirmationModelPath.
+        /// </summary>
+        public static string KeywordConfirmationModelPath
+        {
+            get => ReadValueWithDefault<string>("keywordConfirmationModelPath", string.Empty);
+            set => WriteValue("keywordConfirmationModelPath", value);
+        }
+
         public static DialogAudio OutputFormat
         {
             get
@@ -130,7 +189,7 @@ namespace UWPVoiceAssistantSample
                 {
                     WriteValue("AudioOutputFormat", value.SerializeToSettingsValue());
                     cachedOutputFormat = value;
-                    log.Log(LogMessageLevel.Noise, $"AudioOutputFormat updated to {value.Label}");
+                    Log.Log(LogMessageLevel.Noise, $"AudioOutputFormat updated to {value.Label}");
                 }
                 else if (value == null && ApplicationData.Current.LocalSettings.Values.ContainsKey("AudioOutputFormat"))
                 {
@@ -150,10 +209,39 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
+        /// Loads file-backed initial values for settings, ensuring that a configuration file exists in a writeable
+        /// location if it doesn't already.
+        /// </summary>
+        /// <returns> A task that completes once file-based settings are initialized. </returns>
+        public static async Task InitializeAsync()
+        {
+            await EnsureFilesInLocalFolderAsync();
+            var configFile = await LocalConfigFolder.GetFileAsync(LocalConfigFilename);
+
+            if (!string.IsNullOrWhiteSpace(configFile.Path))
+            {
+                AppSettings appSettings = await AppSettings.Load(configFile);
+
+                SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
+                AzureRegion = appSettings.AzureRegion;
+                CustomSpeechId = appSettings.CustomSpeechId;
+                CustomVoiceIds = appSettings.CustomVoiceIds;
+                CustomCommandsAppId = appSettings.CustomCommandsAppId;
+                BotId = appSettings.BotId;
+                KeywordDisplayName = appSettings.KeywordActivationModel.DisplayName;
+                KeywordActivationModelPath = appSettings.KeywordActivationModel.Path;
+                KeywordId = appSettings.KeywordActivationModel.KeywordId;
+                KeywordModelId = appSettings.KeywordActivationModel.ModelId;
+                KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
+                KeywordConfirmationModelPath = appSettings.KeywordModel;
+            }
+        }
+
+        /// <summary>
         /// Writes a provided object to app-local settings via ApplicationData APIs.
         /// </summary>
         /// <param name="key"> The key under which the setting is to be stored. </param>
-        /// <param name="value"> The object (string-serializable) to be recorded. </param>
+        /// <param name="newValue"> The object (string-serializable) to be recorded. </param>
         public static void WriteValue(string key, object newValue)
         {
             ApplicationData.Current.LocalSettings.Values[key] = newValue;
@@ -185,6 +273,19 @@ namespace UWPVoiceAssistantSample
             }
 
             return result;
+        }
+
+        private static async Task EnsureFilesInLocalFolderAsync()
+        {
+            var copiesToEnsure = new (StorageFile source, FileInfo destination)[]
+            {
+                (await StorageFile.GetFileFromApplicationUriAsync(DefaultConfigUri),
+                    new FileInfo(Path.Combine(LocalConfigFolder.Path, LocalConfigFilename))),
+            };
+
+            copiesToEnsure.Where(copyToEnsure => !copyToEnsure.destination.Exists)
+                .ToList()
+                .ForEach(copyOperation => File.Copy(copyOperation.source.Path, copyOperation.destination.FullName));
         }
     }
 }

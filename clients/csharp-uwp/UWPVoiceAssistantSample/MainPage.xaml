@@ -25,7 +25,7 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 1 0 1"/>
+        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1 1 1 1"/>
         <Grid x:Name="WindowFilterGrid" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Padding="5,5,0,5">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button x:Name="WindowFilterButton" Content="Filter View" Grid.Column="0">
@@ -115,7 +115,7 @@
             </StackPanel>
 
         </Grid>
-        <Border x:Name="ApplicationStateGridBorder" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="0 0 0 1"/>
+        <Border x:Name="ApplicationStateGridBorder" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1 0 1 1"/>
             <Grid x:Name="ControlsGrid" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="4" Grid.Row="2" Grid.ColumnSpan="1" Width="355" BorderBrush="LightGray" BorderThickness="0,0,1,0">
                 <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" MinHeight="30"/>

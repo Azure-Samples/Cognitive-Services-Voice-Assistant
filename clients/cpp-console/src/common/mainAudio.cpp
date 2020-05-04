@@ -67,15 +67,20 @@ void log(T v, Args... args)
 template<typename T, typename... Args>
 void log_t(T v, Args... args)
 {
-	char buff[9];
-	std::chrono::system_clock::time_point now = chrono::system_clock::now();
-	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-	std::tm now_tm;
-	localtime_s(&now_tm, &now_c);
-	strftime(buff, sizeof buff, "%H:%M:%S", &now_tm);
+    char buff[9];
+    std::chrono::system_clock::time_point now = chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm now_tm;
+#ifdef LINUX
+    localtime_r(&now_c, &now_tm);
+#endif
+#ifdef WINDOWS
+    localtime_s(&now_tm, &now_c);
+#endif
+    strftime(buff, sizeof buff, "%H:%M:%S", &now_tm);
 
-	cout << buff << "." << chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count() % 1000 << "  ";
-	log(v, args...);
+    cout << buff << "." << chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch()).count() % 1000 << "  ";
+    log(v, args...);
 }
 
 int main(int argc, char** argv)
@@ -86,17 +91,34 @@ int main(int argc, char** argv)
         return 0;
     }
     
-    int bufferSize = 1024;
-    unsigned char * buffer = (unsigned char *)malloc(bufferSize);
     string configFilePath = argv[1];
     string s;
     const char * device = "default";
     KeywordActivationState keywordActivationState = KeywordActivationState::Undefined;
     bool volumeOn = false;
+    bool bargeInSupported = false;
     
     IAudioPlayer* player;
     shared_ptr<AgentConfiguration> agentConfig;
     shared_ptr<DialogServiceConnector> dialogServiceConnector;
+    
+    auto StartListening = [&]()
+    {
+        log_t("Now listening...");
+        if(bargeInSupported)
+        {
+            player->Stop();
+        }
+        DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
+        auto future = dialogServiceConnector->ListenOnceAsync();
+    };
+    
+    auto ContinueListening = [&]()
+    {
+        log_t("Now listening...");
+        DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
+        auto future = dialogServiceConnector->ListenOnceAsync();
+    };
     
     auto StartKws = [&]()
     {
@@ -159,6 +181,11 @@ int main(int argc, char** argv)
         return (int)agentConfig->LoadResult();
     }
     
+    if(agentConfig->_barge_in_supported == "true")
+    {
+        bargeInSupported = true;
+    }
+    
     if(agentConfig->_volume > 0){
         volumeOn = true;
 #ifdef LINUX
@@ -167,6 +194,8 @@ int main(int argc, char** argv)
 #ifdef WINDOWS
         player = new WindowsAudioPlayer();
 #endif
+        log_t("Initializing Audio Player...");
+        player->Initialize();
         player->SetVolume(agentConfig->_volume);
     }
     
@@ -208,12 +237,26 @@ int main(int argc, char** argv)
     dialogServiceConnector->Recognized += [&](const SpeechRecognitionEventArgs& event) {
         printf("FINAL RESULT: '%s'\n", event.Result->Text.c_str());
         auto&& reason = event.Result->Reason;
-        auto newStatus = reason == ResultReason::RecognizedKeyword
-                ? DeviceStatus::Listening
-                : reason == ResultReason::RecognizedSpeech
-                ? DeviceStatus::Thinking
-                : DeviceStatus::Idle;
-            DeviceStatusIndicators::SetStatus(newStatus);
+        
+        DeviceStatus newStatus;
+        
+        switch(reason){
+            case ResultReason::RecognizedKeyword:
+                newStatus = DeviceStatus::Listening;
+                if(bargeInSupported)
+                {
+                    player->Stop();
+                }
+                break;
+            case ResultReason::RecognizedSpeech:
+                newStatus = DeviceStatus::Listening;
+                break;
+            default:
+                newStatus = DeviceStatus::Idle;
+        }
+        
+        // Update the device status
+        DeviceStatusIndicators::SetStatus(newStatus);
     };
 
     // Signal for events relating to the cancellation of an interaction. The event indicates if the reason is a direct cancellation or an error.
@@ -244,44 +287,64 @@ int main(int argc, char** argv)
 
         auto continue_multiturn = activity.value<string>("inputHint", "") == "expectingInput";
 
-        uint32_t total_bytes_read = 0;
         if (event.HasAudio())
         {
-            log_t("Activity has audio, playing synchronously.");
+            log_t("Activity has audio, playing asynchronously.");
 
-            // TODO: AEC + Barge-in
-            // For now: no KWS during playback            
-            log_t("Pausing KWS during TTS playback");
-            PauseKws();
+            if(!bargeInSupported)
+            {
+                log_t("Pausing KWS during TTS playback");
+                PauseKws();
+            }
 
             auto audio = event.GetAudio();
             int play_result = 0;
-
+    
+            uint32_t total_bytes_read = 0;
             if(volumeOn && player != nullptr){
-                play_result = player->Play(audio);
+                
+                // If we are expecting more input and have audio to play, we will want to wait till all audio is done playing before
+                // before listening again. We can read from the stream here to accomplish this.
+                 if(continue_multiturn){
+                    uint32_t playBufferSize = 1024;
+                    unsigned int bytesRead = 0;
+                    std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+                    do{
+                        bytesRead = audio->Read(playBuffer.get(), playBufferSize);
+                        player->Play(playBuffer.get(), bytesRead);
+                        total_bytes_read += bytesRead;
+                    }while(bytesRead > 0);
+                    
+                    DeviceStatusIndicators::SetStatus(DeviceStatus::Speaking);
+                    
+                    // We don't want to timeout while tts is playing so start 1 second before it is done
+                    int secondsOfAudio = total_bytes_read / 32000;
+                    std::this_thread::sleep_for(std::chrono::milliseconds((secondsOfAudio-1)*1000));
+                }
+                else{
+                    play_result = player->Play(audio);
+                }
             }
-
-            cout << endl;
-            log_t("Playback of ", total_bytes_read, " bytes complete.");
 
             if (!continue_multiturn)
             {
                 DeviceStatusIndicators::SetStatus(DeviceStatus::Idle);
             }
+            
         }
-
+        
         if (continue_multiturn)
         {
             log_t("Activity requested a continuation (ExpectingInput) -- listening again");
-            DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
-            auto future = dialogServiceConnector->ListenOnceAsync();
+            // There may be an issue where the listening times out while the Audio is playing.
+            ContinueListening();
         }
         else
         {
-            //TODO remove once we have echo cancellation
-            int secondsOfAudio = total_bytes_read / 32000;
-            std::this_thread::sleep_for(std::chrono::milliseconds(secondsOfAudio*1000));
-            StartKws();
+            if(!bargeInSupported)
+            {
+                StartKws();
+            }
         }
     };
 
@@ -317,8 +380,7 @@ int main(int argc, char** argv)
     {
         cin >> s;
         if(s == "1"){
-            log_t("Now listening...");
-            auto future = dialogServiceConnector->ListenOnceAsync();
+            StartListening();
         }
         if(s == "2" && keywordActivationState != KeywordActivationState::NotSupported){
             keywordActivationState = KeywordActivationState::Paused;
@@ -327,16 +389,10 @@ int main(int argc, char** argv)
         if(s == "3" && keywordActivationState != KeywordActivationState::NotSupported){
             StopKws();
         }
-
         DisplayKeystrokeOptions();
     }
 
     cout << "Closing down and freeing variables." << endl;
-    
-    if(volumeOn){
-        player->Close();
-    }
-    free(buffer);
     
     return 0;
 }
