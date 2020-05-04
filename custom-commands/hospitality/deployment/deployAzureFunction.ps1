@@ -6,8 +6,8 @@ Param(
 $ErrorActionPreference = "Stop"
 $resourceGroup= $resourceName
 $publishZip="publish.zip"
-$publishFolder="../skill/VirtualRoomApp/bin/Release/netcoreapp2.1/publish"
-$sln = "../skill/VirtualRoomApp.sln"
+$publishFolder="../azure-function/VirtualRoomApp/bin/Release/netcoreapp2.1/publish"
+$sln = "../azure-function/VirtualRoomApp.sln"
 
 Write-Host "Cleaning and building solution at $sln"
 $output = dotnet clean $sln -c Release
