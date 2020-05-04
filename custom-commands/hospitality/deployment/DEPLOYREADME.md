@@ -27,7 +27,7 @@ Call az login to log your powershell into Azure. If you have more than one Azure
     az login
 ```
  Run the following powershell script. 
- * Replace "MyResourceGroupName" with the an Azure Resource Group name of your choice. This name should be no more than 19 characters, alphanumeric only (upper or lower case does not matter since the script will convert it to lower case). Make sure an Azure resource group by this name does not already exist. This name will also be used to construct names of all the Azure resources and URL that will be associated with the Custom Command application in your Azure subscription. Some of these Azure resource names (and URL) need to be globally unique, so the script will may append a random number ot the name you selected
+ * Replace "MyResourceGroupName" with the an Azure Resource Group name of your choice. This name should be no more than 19 characters, alphanumeric only. Make sure an Azure resource group by this name does not already exist. This name will also be used to construct names of all the Azure resources and URL that will be associated with the visualization of the Custom Commands in your Azure subscription. Some of these Azure resource names (and URL) need to be globally unique, so the script will append a random number to the name you selected
  * Replace "westus" with an Azure region near you, form the list of [Voice Assistant supported regions](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#voice-assistants). Read more about Azure Regions [here](https://azure.microsoft.com/en-us/global-infrastructure/regions/). Note that if you are using a free trial Azure subscirption, you are limited to Azure regions westus or northeurope
 ```cmd
     ./deployAll.ps1 -resourceName MyResourceGroupName -region westus
@@ -37,7 +37,7 @@ It will take a few minutes for the scripts to run. On a successful completion, y
 ***********************
 Custom commands has been published.
 Update these parameters in your client to use the Custom Commands Application
-    CustomCommandsId   = ########-####-####-####-############
+    CustomCommandsId = ########-####-####-####-############
     SpeechSubscriptionKey = ################################
     Speech Region = westus
 ***********************
