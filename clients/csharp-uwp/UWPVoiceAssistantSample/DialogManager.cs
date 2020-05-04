@@ -322,6 +322,7 @@ namespace UWPVoiceAssistantSample
             if (this.ConversationContinuationRequested)
             {
                 this.ConversationContinuationRequested = false;
+                this.dialogBackend.SetAudioSource(this.dialogAudioInput);
                 await this.dialogAudioInput.InitializeFromNowAsync();
                 await this.StartTurnAsync(signalVerificationRequired: false);
             }
