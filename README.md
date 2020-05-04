@@ -40,7 +40,7 @@ This repository includes everything needed to build a sample [Voice Assistant](h
 <!-- The image says "Click here for step-by-step instructions on building a sample Voice Assistant"-->
 <p align="center">
 <a href="docs/CreateSampleVoiceAssistant.md">
-<img src="docs/images/ClickHere.png"/>
+<img src="docs/images/click-here.png"/>
 </a>
 </p>
 <p>&nbsp;</p>
