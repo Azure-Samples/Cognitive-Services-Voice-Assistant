@@ -1015,5 +1015,18 @@ namespace UWPVoiceAssistantSample
         {
             this.ApplicationStateTeachingTip.IsOpen = true;
         }
+
+        private async void TextInputTextBoxKeyUp(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key != VirtualKey.Enter)
+            {
+                return;
+            }
+
+            var message = this.TextInputTextBox.Text;
+            this.TextInputTextBox.Text = string.Empty;
+            this.AddMessageToStatus(message);
+            await this.dialogManager.SendActivityAsync(message);
+        }
     }
 }

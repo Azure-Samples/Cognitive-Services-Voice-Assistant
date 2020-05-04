@@ -193,6 +193,10 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task that completes once the activity is sent. </returns>
         public async Task<string> SendActivityAsync(string activityJson)
         {
+            await this.dialogBackend.InitializeAsync(await this.keywordRegistration.GetConfirmationKeywordFileAsync());
+            await this.StopAudioCaptureAsync();
+            await this.StopAudioPlaybackAsync();
+
             var id = await this.dialogBackend.SendDialogMessageAsync(activityJson);
             return id;
         }
@@ -215,7 +219,6 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task that completes once playback is stopped. </returns>
         public async Task StopAudioPlaybackAsync()
         {
-            await this.dialogAudioOutput?.StopPlaybackAsync();
             await this.dialogResponseQueue.AbortAsync();
         }
 
@@ -319,6 +322,7 @@ namespace UWPVoiceAssistantSample
             if (this.ConversationContinuationRequested)
             {
                 this.ConversationContinuationRequested = false;
+                this.dialogBackend.SetAudioSource(this.dialogAudioInput);
                 await this.dialogAudioInput.InitializeFromNowAsync();
                 await this.StartTurnAsync(signalVerificationRequired: false);
             }
