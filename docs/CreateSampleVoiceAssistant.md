@@ -4,7 +4,7 @@
 
 ## Step 1 - Deploy a sample Custom Command Applications to your Azure subscription
 
-[click here](../custom-commands/hospitality/deployment/DEPLOYREADME.md)
+[click here](../custom-commands/hospitality/deployment/README.md)
 
 ## Step 2 - Select a client application
 

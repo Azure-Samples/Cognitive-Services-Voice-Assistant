@@ -57,7 +57,7 @@ If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/
 | MyResourceGroupName### | Storage account
 -->
 <p align="center">
-<img src="images/ResourceGroup.png"/>
+<img src="images/resource-group.png"/>
 </a>
 </p>
 If you see errors in the script, refer to the Troubleshooting section below. Before running the script again due to errors, please delete the Azure Resource if you plan to run with the same Azure Resource name:
