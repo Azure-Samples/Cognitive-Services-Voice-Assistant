@@ -75,6 +75,7 @@ namespace UWPVoiceAssistantSample
         private IAgentSessionManager agentSessionManager;
         private ILogProvider logger;
         private KwsPerformanceLogger kwsPerformanceLogger;
+        private Stopwatch kwsPerformanceStopWatch;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalDetectionHelper"/> class.
@@ -85,6 +86,7 @@ namespace UWPVoiceAssistantSample
             this.logger = LogRouter.GetClassLogger();
             this.keywordResponseLock = new object();
             this.kwsPerformanceLogger = new KwsPerformanceLogger();
+            this.kwsPerformanceStopWatch = new Stopwatch();
         }
 
         /// <summary>
@@ -141,6 +143,8 @@ namespace UWPVoiceAssistantSample
 
             this.SignalReceived?.Invoke(detectionOrigin, this.signalNeedsVerification);
 
+            this.kwsPerformanceLogger.LogSignalReceived("1", true, DateTime.Now.Ticks);
+
             if (this.signalNeedsVerification)
             {
                 this.StartFailsafeTimer();
@@ -174,14 +178,12 @@ namespace UWPVoiceAssistantSample
             else if (string.IsNullOrEmpty(recognitionText))
             {
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: NoMatch");
-                //this.kwsPerformanceLogger.LogSignalReceived("1", false);
                 this.OnSessionSignalRejected(this.LastDetectedSignalOrigin);
 
             }
             else
             {
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: Verified : {recognitionText}");
-                //this.kwsPerformanceLogger.LogSignalReceived("1", true);
                 this.OnSessionSignalConfirmed(session, this.LastDetectedSignalOrigin);
             }
         }
@@ -205,7 +207,8 @@ namespace UWPVoiceAssistantSample
         {
             this.StopFailsafeTimer();
             this.SignalRejected?.Invoke(origin);
-
+            this.kwsPerformanceStopWatch.Stop();
+            this.kwsPerformanceLogger.LogSignalReceived("1", false, this.kwsPerformanceStopWatch.ElapsedTicks);
         }
 
         private void StartFailsafeTimer()
@@ -220,6 +223,8 @@ namespace UWPVoiceAssistantSample
                         {
                             this.logger.Log($"Failsafe timer expired; rejecting");
                             this.SignalRejected?.Invoke(this.LastDetectedSignalOrigin);
+                            this.kwsPerformanceStopWatch.Stop();
+                            this.kwsPerformanceLogger.LogSignalReceived("2", false, this.kwsPerformanceStopWatch.ElapsedTicks);
                         } // else timer was stopped while waiting for the lock
                     }
                 },

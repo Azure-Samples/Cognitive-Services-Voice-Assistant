@@ -1,15 +1,11 @@
-﻿using NLog;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
-
-namespace UWPVoiceAssistantSample.KwsPerformance
+﻿namespace UWPVoiceAssistantSample.KwsPerformance
 {
+    using System;
+    using System.IO;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Windows.Storage;
+
     public class KwsPerformanceLogger
     {
         public static KeywordDetectionParams keywordDetectionParams = new KeywordDetectionParams();
@@ -18,39 +14,53 @@ namespace UWPVoiceAssistantSample.KwsPerformance
 
         private string filePath = $"{ApplicationData.Current.LocalFolder.Path}\\kwsPerformanceMetrics.csv";
 
+        private bool performanceFileCreated;
+
         public KwsPerformanceLogger()
         {
             this.logger = LogRouter.GetClassLogger();
         }
 
-        public void Initialize()
+        public async Task Initialize()
         {
             if (!File.Exists(this.filePath))
             {
-                _ = File.Create(this.filePath);
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine("Stage, Confirmed, Elapsed Time");
+
+                await File.AppendAllTextAsync(this.filePath, sb.ToString());
+
+                this.performanceFileCreated = true;
+                return;
             }
+
+            this.performanceFileCreated = false;
         }
 
         public void LogSignalReceived(string stage, bool confirmed, long elapsedTime)
         {
-            Initialize();
+            if (!this.performanceFileCreated)
+            {
+                this.Initialize().Wait();
+            }
 
-            this.logger.Log("signal received kwsperformancelogger");
+            this.logger.Log(LogMessageLevel.Error, $"{stage}, {confirmed}, {elapsedTime}");
 
             keywordDetectionParams.Stage = stage;
             keywordDetectionParams.Confirmed = confirmed;
             keywordDetectionParams.KW_ElapsedTime = elapsedTime;
 
-            WriteToCSV();
+            this.WriteToCSV().Wait();
         }
 
-        public void WriteToCSV()
+        public async Task WriteToCSV()
         {
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine($"\"{keywordDetectionParams.Stage}\",\"{keywordDetectionParams.Confirmed}\",\"{keywordDetectionParams.KW_ElapsedTime}\"");
 
-            File.AppendAllText(this.filePath, sb.ToString());
+            await File.AppendAllTextAsync(this.filePath, sb.ToString());
         }
     }
 }

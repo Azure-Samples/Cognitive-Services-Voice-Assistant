@@ -381,7 +381,6 @@ namespace UWPVoiceAssistantSample
         private void InitializeSignalDetectionHelper()
         {
             this.signalDetectionHelper = new SignalDetectionHelper(this.agentSessionManager);
-            
 
             this.signalDetectionHelper.SignalReceived += async (DetectionOrigin detectionOrigin, bool signalNeedsVerification) =>
             {
@@ -391,34 +390,25 @@ namespace UWPVoiceAssistantSample
                 this.kwsPerformanceStopWatch.Start();
             };
 
-            
             this.signalDetectionHelper.SignalRejected += async (DetectionOrigin origin) =>
             {
                 await this.dialogBackend.CancelSignalVerificationAsync();
                 await this.StopAudioCaptureAsync();
                 this.logger.Log($"Failsafe timer expired; rejecting");
                 await this.FinishConversationAsync();
-                this.kwsPerformanceStopWatch.Stop();
-                //var ts = stopwatch.ElapsedTicks;
                 this.SignalRejected.Invoke(origin);
-                this.kwsPerformanceLogger.LogSignalReceived("1", false, this.kwsPerformanceStopWatch.ElapsedTicks);
             };
 
             this.signalDetectionHelper.SignalConfirmed += async (DetectionOrigin origin) =>
             {
                 await this.ChangeAgentStateAsync(ConversationalAgentState.Listening);
                 this.SignalConfirmed.Invoke(origin);
-                this.kwsPerformanceStopWatch.Stop();
-                //var ts = stopwatch.ElapsedTicks;
-                this.kwsPerformanceLogger.LogSignalReceived("1", true, this.kwsPerformanceStopWatch.ElapsedTicks);
-                this.logger.Log("SignalDetectionHelper.SignalConfirmed" + this.kwsPerformanceStopWatch.ElapsedTicks);
             };
         }
 
         private void OnKeywordRecognizing(string recognitionText)
         {
             this.signalDetectionHelper.KeywordRecognitionDuringSignalVerification(recognitionText, isFinal: false);
-            //this.kwsPerformanceLogger.LogSignalReceived("2", true);
         }
 
         private async void OnKeywordRecognized(string recognitionText)

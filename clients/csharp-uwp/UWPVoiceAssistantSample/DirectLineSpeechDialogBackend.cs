@@ -38,7 +38,8 @@ namespace UWPVoiceAssistantSample
         private bool enableSdkLogging;
         private string keywordFilePath;
         private bool startEventReceived;
-        private TimeSpan kwsPerformanceTimeSpan;
+        private bool secondStageConfirmed;
+        private Stopwatch kwsPerformanceStopwatch;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
@@ -133,27 +134,25 @@ namespace UWPVoiceAssistantSample
                 this.connectorInputStream = AudioInputStream.CreatePushStream();
 
                 this.connector?.Dispose();
-                //this.ConnectorConfiguration.SetProperty(this.speechKey, $"wss://{this.speechRegion}.convai.speech.microsoft.com/orchestrate/api/v1");
                 this.connector = new DialogServiceConnector(
                     this.ConnectorConfiguration,
                     AudioConfig.FromStreamInput(this.connectorInputStream));
 
                 this.connector.SessionStarted += (s, e) => this.SessionStarted?.Invoke(e.SessionId);
                 this.connector.SessionStopped += (s, e) => this.SessionStopped?.Invoke(e.SessionId);
-                Stopwatch stopwatch = new Stopwatch();
+                this.kwsPerformanceStopwatch = new Stopwatch();
                 this.connector.Recognizing += (s, e) =>
                 {
-                    stopwatch.Start();
+                    this.kwsPerformanceStopwatch.Start();
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizingKeyword:
                             this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognizing?.Invoke(e.Result.Text);
-                            stopwatch.Stop();
-                            var ts = stopwatch.ElapsedTicks;
-                            this.kwsPerformanceLogger.LogSignalReceived("2", true,  ts);
-                            this.logger.Log("DialogBackend Recognizing " + ts);
-                            stopwatch.Start();
+                            this.kwsPerformanceStopwatch.Stop();
+                            this.kwsPerformanceLogger.LogSignalReceived("2", true,  this.kwsPerformanceStopwatch.ElapsedTicks);
+                            this.secondStageConfirmed = true;
+                            this.kwsPerformanceStopwatch.Start();
                             break;
                         case ResultReason.RecognizingSpeech:
                             this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
@@ -165,17 +164,14 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.Recognized += (s, e) =>
                 {
-                    stopwatch.Stop();
-                    var ts = stopwatch.ElapsedTicks;
+                    this.kwsPerformanceStopwatch.Stop();
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizedKeyword:
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
-                            //stopwatch.Stop();
-                            //var ts = stopwatch.ElapsedTicks;
-                            this.kwsPerformanceLogger.LogSignalReceived("3", true, ts);
-                            this.logger.Log("DialogBackend Recognized " + ts);
+                            this.kwsPerformanceLogger.LogSignalReceived("3", true, this.kwsPerformanceStopwatch.ElapsedTicks);
+                            this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
                             this.logger.Log($"Recognized final speech: \"{e.Result.Text}\"");
@@ -185,7 +181,12 @@ namespace UWPVoiceAssistantSample
                             // If a KeywordRecognized handler is available, this is a final stage
                             // keyword verification rejection.
                             this.logger.Log($"Cloud model rejected keyword");
-                            this.kwsPerformanceLogger.LogSignalReceived("3", false, ts);
+                            if (this.secondStageConfirmed)
+                            {
+                                this.kwsPerformanceLogger.LogSignalReceived("3", false, this.kwsPerformanceStopwatch.ElapsedTicks);
+                                this.secondStageConfirmed = false;
+                            }
+
                             this.KeywordRecognized?.Invoke(null);
                             break;
                         default:
