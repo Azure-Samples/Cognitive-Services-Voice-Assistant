@@ -135,6 +135,8 @@
   <ItemGroup>
     <Compile Include="ActivityWrapper.cs" />
     <Compile Include="AgentSessionWrapper.cs" />
+    <Compile Include="KwsPerformance\KeywordDetectionParams.cs" />
+    <Compile Include="KwsPerformance\KwsPerformanceLogger.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="AgentSessionManager.cs" />
     <Compile Include="AudioCommon\DialogAudio.cs" />

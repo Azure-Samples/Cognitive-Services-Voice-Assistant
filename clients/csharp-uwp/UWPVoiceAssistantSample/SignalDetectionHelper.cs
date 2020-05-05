@@ -6,7 +6,9 @@ namespace UWPVoiceAssistantSample
     using System;
     using System.Diagnostics;
     using System.Threading;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
+    using Windows.UI.Text.Core;
 
     /// <summary>
     /// Arguments raised when a signal detection has finished being resolved after being surfaced
@@ -72,6 +74,7 @@ namespace UWPVoiceAssistantSample
         private bool signalNeedsVerification;
         private IAgentSessionManager agentSessionManager;
         private ILogProvider logger;
+        private KwsPerformanceLogger kwsPerformanceLogger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalDetectionHelper"/> class.
@@ -81,6 +84,7 @@ namespace UWPVoiceAssistantSample
             this.agentSessionManager = agentSessionManager;
             this.logger = LogRouter.GetClassLogger();
             this.keywordResponseLock = new object();
+            this.kwsPerformanceLogger = new KwsPerformanceLogger();
         }
 
         /// <summary>
@@ -170,11 +174,14 @@ namespace UWPVoiceAssistantSample
             else if (string.IsNullOrEmpty(recognitionText))
             {
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: NoMatch");
+                //this.kwsPerformanceLogger.LogSignalReceived("1", false);
                 this.OnSessionSignalRejected(this.LastDetectedSignalOrigin);
+
             }
             else
             {
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: Verified : {recognitionText}");
+                //this.kwsPerformanceLogger.LogSignalReceived("1", true);
                 this.OnSessionSignalConfirmed(session, this.LastDetectedSignalOrigin);
             }
         }
@@ -198,6 +205,7 @@ namespace UWPVoiceAssistantSample
         {
             this.StopFailsafeTimer();
             this.SignalRejected?.Invoke(origin);
+
         }
 
         private void StartFailsafeTimer()

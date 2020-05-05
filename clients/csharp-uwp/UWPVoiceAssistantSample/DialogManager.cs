@@ -4,9 +4,11 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
 
     /// <summary>
@@ -25,6 +27,8 @@ namespace UWPVoiceAssistantSample
     public class DialogManager<TInputType> : IDialogManager, IDisposable
     {
         private ILogProvider logger;
+        private KwsPerformanceLogger kwsPerformanceLogger;
+        private Stopwatch kwsPerformanceStopWatch;
         private IDialogBackend<TInputType> dialogBackend;
         private IDialogAudioInputProvider<TInputType> dialogAudioInput;
         private IDialogAudioOutputAdapter dialogAudioOutput;
@@ -51,6 +55,7 @@ namespace UWPVoiceAssistantSample
             Contract.Requires(dialogBackend != null);
             Contract.Requires(agentSessionManager != null);
             this.logger = LogRouter.GetClassLogger();
+            this.kwsPerformanceLogger = new KwsPerformanceLogger();
             this.dialogBackend = dialogBackend;
             this.dialogBackend.SessionStarted += (id)
                 => this.logger.Log($"DialogManager: Session start: {id}");
@@ -70,6 +75,8 @@ namespace UWPVoiceAssistantSample
 
             this.agentSessionManager.SignalDetected += (sender, args) => this.HandleSignalDetection(args);
             this.InitializeSignalDetectionHelper();
+
+            this.kwsPerformanceStopWatch = new Stopwatch();
 
             _ = this.InitializeAsync(dialogAudioOutput);
         }
@@ -261,6 +268,7 @@ namespace UWPVoiceAssistantSample
         protected virtual async Task<bool> SetupConversationAsync(DetectionOrigin signalOrigin)
         {
             var session = await this.agentSessionManager.GetSessionAsync();
+            this.kwsPerformanceStopWatch.Start();
             try
             {
                 if (signalOrigin == DetectionOrigin.FromPushToTalk)
@@ -275,6 +283,8 @@ namespace UWPVoiceAssistantSample
             catch (Exception ex)
             {
                 this.logger.Log($"Unable to acquire MVA 1st-pass audio. Rejecting signal.\n{ex.HResult}: {ex.Message}");
+                this.kwsPerformanceStopWatch.Stop();
+                this.kwsPerformanceLogger.LogSignalReceived("1", false, this.kwsPerformanceStopWatch.ElapsedTicks);
                 await this.FinishConversationAsync();
                 return false;
             }
@@ -371,34 +381,44 @@ namespace UWPVoiceAssistantSample
         private void InitializeSignalDetectionHelper()
         {
             this.signalDetectionHelper = new SignalDetectionHelper(this.agentSessionManager);
+            
 
             this.signalDetectionHelper.SignalReceived += async (DetectionOrigin detectionOrigin, bool signalNeedsVerification) =>
             {
                 await this.StartConversationAsync(
                     detectionOrigin,
                     signalNeedsVerification);
+                this.kwsPerformanceStopWatch.Start();
             };
 
+            
             this.signalDetectionHelper.SignalRejected += async (DetectionOrigin origin) =>
             {
                 await this.dialogBackend.CancelSignalVerificationAsync();
                 await this.StopAudioCaptureAsync();
                 this.logger.Log($"Failsafe timer expired; rejecting");
                 await this.FinishConversationAsync();
-
+                this.kwsPerformanceStopWatch.Stop();
+                //var ts = stopwatch.ElapsedTicks;
                 this.SignalRejected.Invoke(origin);
+                this.kwsPerformanceLogger.LogSignalReceived("1", false, this.kwsPerformanceStopWatch.ElapsedTicks);
             };
 
             this.signalDetectionHelper.SignalConfirmed += async (DetectionOrigin origin) =>
             {
                 await this.ChangeAgentStateAsync(ConversationalAgentState.Listening);
                 this.SignalConfirmed.Invoke(origin);
+                this.kwsPerformanceStopWatch.Stop();
+                //var ts = stopwatch.ElapsedTicks;
+                this.kwsPerformanceLogger.LogSignalReceived("1", true, this.kwsPerformanceStopWatch.ElapsedTicks);
+                this.logger.Log("SignalDetectionHelper.SignalConfirmed" + this.kwsPerformanceStopWatch.ElapsedTicks);
             };
         }
 
         private void OnKeywordRecognizing(string recognitionText)
         {
             this.signalDetectionHelper.KeywordRecognitionDuringSignalVerification(recognitionText, isFinal: false);
+            //this.kwsPerformanceLogger.LogSignalReceived("2", true);
         }
 
         private async void OnKeywordRecognized(string recognitionText)

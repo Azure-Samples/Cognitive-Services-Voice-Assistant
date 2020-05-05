@@ -5,12 +5,15 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Threading.Tasks;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
+    using UWPVoiceAssistantSample.KwsPerformance;
+    using Windows.Services.Store;
     using Windows.Storage;
 
     /// <summary>
@@ -25,6 +28,7 @@ namespace UWPVoiceAssistantSample
         private PushAudioInputStream connectorInputStream;
         private bool alreadyDisposed = false;
         private ILogProvider logger;
+        private KwsPerformanceLogger kwsPerformanceLogger;
         private string speechKey;
         private string speechRegion;
         private string customSpeechId;
@@ -34,6 +38,7 @@ namespace UWPVoiceAssistantSample
         private bool enableSdkLogging;
         private string keywordFilePath;
         private bool startEventReceived;
+        private TimeSpan kwsPerformanceTimeSpan;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
@@ -41,6 +46,7 @@ namespace UWPVoiceAssistantSample
         public DirectLineSpeechDialogBackend()
         {
             this.logger = LogRouter.GetClassLogger();
+            this.kwsPerformanceLogger = new KwsPerformanceLogger();
         }
 
         /// <summary>
@@ -127,19 +133,27 @@ namespace UWPVoiceAssistantSample
                 this.connectorInputStream = AudioInputStream.CreatePushStream();
 
                 this.connector?.Dispose();
+                //this.ConnectorConfiguration.SetProperty(this.speechKey, $"wss://{this.speechRegion}.convai.speech.microsoft.com/orchestrate/api/v1");
                 this.connector = new DialogServiceConnector(
                     this.ConnectorConfiguration,
                     AudioConfig.FromStreamInput(this.connectorInputStream));
 
                 this.connector.SessionStarted += (s, e) => this.SessionStarted?.Invoke(e.SessionId);
                 this.connector.SessionStopped += (s, e) => this.SessionStopped?.Invoke(e.SessionId);
+                Stopwatch stopwatch = new Stopwatch();
                 this.connector.Recognizing += (s, e) =>
                 {
+                    stopwatch.Start();
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizingKeyword:
                             this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognizing?.Invoke(e.Result.Text);
+                            stopwatch.Stop();
+                            var ts = stopwatch.ElapsedTicks;
+                            this.kwsPerformanceLogger.LogSignalReceived("2", true,  ts);
+                            this.logger.Log("DialogBackend Recognizing " + ts);
+                            stopwatch.Start();
                             break;
                         case ResultReason.RecognizingSpeech:
                             this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
@@ -151,11 +165,17 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.Recognized += (s, e) =>
                 {
+                    stopwatch.Stop();
+                    var ts = stopwatch.ElapsedTicks;
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizedKeyword:
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
+                            //stopwatch.Stop();
+                            //var ts = stopwatch.ElapsedTicks;
+                            this.kwsPerformanceLogger.LogSignalReceived("3", true, ts);
+                            this.logger.Log("DialogBackend Recognized " + ts);
                             break;
                         case ResultReason.RecognizedSpeech:
                             this.logger.Log($"Recognized final speech: \"{e.Result.Text}\"");
@@ -165,6 +185,7 @@ namespace UWPVoiceAssistantSample
                             // If a KeywordRecognized handler is available, this is a final stage
                             // keyword verification rejection.
                             this.logger.Log($"Cloud model rejected keyword");
+                            this.kwsPerformanceLogger.LogSignalReceived("3", false, ts);
                             this.KeywordRecognized?.Invoke(null);
                             break;
                         default:

@@ -162,6 +162,12 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("keywordConfirmationModelPath", value);
         }
 
+        public static bool KwsPerfomanceLogging
+        {
+            get => ReadValueWithDefault<bool>("kwsPerformanceLogging", false);
+            set => WriteValue("kwsPerformanceLogging", value);
+        }
+
         public static DialogAudio OutputFormat
         {
             get
