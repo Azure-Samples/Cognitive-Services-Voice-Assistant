@@ -56,6 +56,46 @@
             z-index: 100;
         }
 
+        #top-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 14%;
+            left: 17.5%;
+            z-index: 100;
+            width: 265px;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #middle-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 45%;
+            left: 67%;
+            z-index: 100;
+            width: 265px;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #bottom-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 69%;
+            left: 22%;
+            z-index: 100;
+            width: 436px;
+
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        .try-saying {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: -20px;
+        }
+
         .messages {
             position: absolute;
             height: 90px;
@@ -82,56 +122,31 @@
 
 <body>
 
-    <header>
-        <div class="collapse bg-dark" id="navbarHeader">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-8 col-md-12 py-4">
-                        <h4 class="text-white">About</h4>
-                        <p class="text-muted">
-                            This is a sample virtual automotive to demostrate the capabilities of Custom
-                            Commands.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="navbar navbar-dark bg-dark box-shadow">
-            <div class="container d-flex justify-content-between">
-                <a href="https://landingdemowidget.blob.core.windows.net/www/demo.html?room=test1#"
-                    class="navbar-brand d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather feather-home">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
-                    <strong>&nbsp;Virtual Automotive</strong>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
-                    aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </div>
-    </header>
-
     <main role="main">
         <div id="automotive-room" class="demoFrame ">
             <img id="0" src="./Background.png" class="room-image" style="position:relative">
-            <img id="screen" src="./car-screen-off.png" class="room-image overlays" style="position:absolute">
-            <img id="screen-on" src="./car-screen-on.png" class="room-image overlays" style="position:absolute">
-            <img id="defrost" src="./car-defrost-on.png" class="room-image overlays" style="position:absolute">
-            <img id="heater-" src="./car-heater-on.png" class="room-image overlays" style="position:absolute">
-            <img id="seatwarmer" src="./car-seatwarmer-on.png" class="room-image overlays" style="display:absolute;">
-            <div id="thermostat" class="thermostat"><span id="temperature">421°</span></div>
-            <img id="helpboxes" src="./car-bluebox.png" class="room-image overlays" style="display:absolute;">
-            <!-- <div class="col-sm list border rounded messages">
-                <p class="lead">
-                    <span id="message-title">Messages:</span><br>
-                    <span id="item-ordered" style="display: none;">decreased temperature by 7 degrees</span>
-                </p>
-            </div> -->
+            <img id="screen" src="./automotive-screen-off.png" class="room-image overlays" style="position:absolute">
+            <img id="screen-on" src="./automotive-screen-on.png" class="room-image overlays" style="position:absolute">
+            <img id="defrost" src="./automotive-defrost-on.png" class="room-image overlays" style="position:absolute">
+            <img id="heater-" src="./automotive-heater-on.png" class="room-image overlays" style="position:absolute">
+            <img id="seatwarmer" src="./automotive-seatwarmer-on.png" class="room-image overlays"
+                style="display:absolute;">
+            <div id="thermostat" class="thermostat"><span id="temperature">65°</span></div>
+
+            <div id="help-content">
+                <img id="helpboxes" src="./automotive-bluebox.png" class="room-image overlays"
+                    style="display:absolute;">
+
+                <div id="top-hint">
+                    <div class="try-saying">Try saying:</div></br>"Turn on defroster"
+                </div>
+                <div id="middle-hint">
+                    <div class="try-saying">Try saying:</div></br>"Set to 72 degrees"
+                </div>
+                <div id="bottom-hint">
+                    <div class="try-saying">Try saying:</div></br>"Turn on the seat heater"
+                </div>
+            </div>
         </div>
     </main>
 
@@ -145,10 +160,14 @@
     <script>
         $(function () {
             var urlParams = new URLSearchParams(window.location.search);
-            var jsonUrl = "https://virtualroommanager.azurewebsites.net/api/RoomDemo";
-            var room = urlParams.get("room");
+            var jsonUrl = "https://automotivedemowidget.azurewebsites.net/api/AutomotiveDemo";
             if (urlParams.has("room")) {
+                var room = urlParams.get("room");
                 jsonUrl = jsonUrl + "?room=" + room;
+            }
+            else {
+                var roomNumber = parseInt((Math.random() * 500000), 10)
+                jsonUrl = jsonUrl + "?room=" + roomNumber;
             }
 
             var timesRun = 0;
@@ -167,7 +186,7 @@
             setTimeout(function () { alert("Timed out, please refresh!"); }, 10800000);
 
             function apply(configuration) {
-                $("#temperature").html(configuration.Temperature);
+                $("#temperature").html(configuration.Temperature + "°");
 
                 if (configuration.Help) {
                     $("#helpboxes").fadeOut('fast')
@@ -175,6 +194,14 @@
                 else {
                     $("#helpboxes").fadeIn('fast')
                 }
+
+                if (configuration.Help) {
+                    $("#help-content").fadeIn('fast')
+                }
+                else {
+                    $("#help-content").fadeOut('fast')
+                }
+
 
                 if (configuration.SeatWarmers) {
                     $("#seatwarmer").fadeOut('fast')
@@ -198,16 +225,6 @@
                     $("#television-content").fadeOut('fast')
                     $("#television-notification").fadeOut('fast')
                 }
-
-                // if (configuration.Message != null
-                //     && configuration.Message != $("#item-ordered").text()) {
-                //     $("#item-ordered").html(configuration.Message);
-                //     $("#item-ordered")
-                //         .finish()
-                //         .fadeIn('fast')
-                //         .delay(8000)
-                //         .fadeOut('slow');
-                // }
             }
 
             function clear() {
