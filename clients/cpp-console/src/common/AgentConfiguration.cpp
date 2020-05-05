@@ -34,7 +34,8 @@ namespace FieldNames
 }
 
 AgentConfiguration::AgentConfiguration() : _loadResult(AgentConfigurationLoadResult::Undefined)
-{}
+{
+}
 
 shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& path)
 {
@@ -106,28 +107,28 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
 
 std::string AgentConfiguration::LoadMessage()
 {
-	switch (_loadResult)
-	{
-	case AgentConfigurationLoadResult::Success:
-		return "Success";
-	case AgentConfigurationLoadResult::ConfigFileNotFound:
-		return "Config file is not found.";
-	case AgentConfigurationLoadResult::ConfigFileNotParsed:
-		return "Config file can not be parsed.";
-	case AgentConfigurationLoadResult::KWFileNotFound:
-		return "Keyword file is not found.";
-	case AgentConfigurationLoadResult::KWFileWrongExtension:
-		return "Keyword file extension is not \".table\".";
-	case AgentConfigurationLoadResult::BadSpeechKey:
-		return "Speech key is missing.";
-	case AgentConfigurationLoadResult::MissingRegion:
-		return "Region is missing.";
-	case AgentConfigurationLoadResult::RegionWithCustom:
-		return "Region with custom is found.";
+    switch (_loadResult)
+    {
+    case AgentConfigurationLoadResult::Success:
+        return "Success";
+    case AgentConfigurationLoadResult::ConfigFileNotFound:
+        return "Config file is not found.";
+    case AgentConfigurationLoadResult::ConfigFileNotParsed:
+        return "Config file can not be parsed.";
+    case AgentConfigurationLoadResult::KWFileNotFound:
+        return "Keyword file is not found.";
+    case AgentConfigurationLoadResult::KWFileWrongExtension:
+        return "Keyword file extension is not \".table\".";
+    case AgentConfigurationLoadResult::BadSpeechKey:
+        return "Speech key is missing.";
+    case AgentConfigurationLoadResult::MissingRegion:
+        return "Region is missing.";
+    case AgentConfigurationLoadResult::RegionWithCustom:
+        return "Region with custom is found.";
     case AgentConfigurationLoadResult::Undefined:
-	default:
-		return "Unknown Failure";
-	}
+    default:
+        return "Unknown Failure";
+    }
 }
 
 shared_ptr<DialogServiceConfig> AgentConfiguration::AsDialogServiceConfig()
@@ -160,7 +161,6 @@ shared_ptr<DialogServiceConfig> AgentConfiguration::CreateDialogServiceConfig()
     {
         config->SetProperty(PropertyId::Speech_LogFilename, _logFilePath);
     }
-
 
     if (_customSpeechId.length() > 0)
     {

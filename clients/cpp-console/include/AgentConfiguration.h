@@ -67,5 +67,4 @@ private:
     AgentConfigurationLoadResult _loadResult;
     nlohmann::json _configJson;
     std::shared_ptr<Microsoft::CognitiveServices::Speech::Dialog::DialogServiceConfig> _dialogServiceConfig;
-
 };
