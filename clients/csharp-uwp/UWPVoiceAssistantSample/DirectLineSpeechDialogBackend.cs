@@ -134,6 +134,7 @@ namespace UWPVoiceAssistantSample
                 this.connectorInputStream = AudioInputStream.CreatePushStream();
 
                 this.connector?.Dispose();
+                //this.ConnectorConfiguration.SetProperty("https://westus.api.cognitive.microsoft.com/sts/v1.0/issuetoken", $"wss://{this.speechRegion}.convai.speech.microsoft.com/orchestrate/api/v1");
                 this.connector = new DialogServiceConnector(
                     this.ConnectorConfiguration,
                     AudioConfig.FromStreamInput(this.connectorInputStream));
