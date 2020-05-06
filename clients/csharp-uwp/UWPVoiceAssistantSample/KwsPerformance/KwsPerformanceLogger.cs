@@ -18,12 +18,12 @@
         private bool csvFileCreated;
 
         /// <summary>
-        /// 
+        /// Timestamp for kws event initiation.
         /// </summary>
         public static TimeSpan kwsEventFireTime;
-        
+
         /// <summary>
-        /// 
+        /// Timestamp for keyword verification.
         /// </summary>
         public static TimeSpan kwsStartTime;
 
