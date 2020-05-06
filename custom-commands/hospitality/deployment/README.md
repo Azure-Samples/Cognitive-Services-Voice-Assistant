@@ -13,7 +13,7 @@
  
  TODO: Need diagram of CC and Visualization, and a description of the components and how they interact
 
-## Deploying Azure Resources
+## Deploying Azure resources
 Clone the repository and change directory so you are in the \<<repo-root\>>\custom-commands\hospitality\deployment folder.
 
 You will need to unrestrict powershell's script execution policy by running the following in an administrator powershell:
@@ -60,17 +60,22 @@ If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/
 <img src="images/resource-group.png"/>
 </a>
 </p>
-If you see errors in the script, refer to the Troubleshooting section below. Before running the script again due to errors, please delete the Azure Resource if you plan to run with the same Azure Resource name:
-```powershell
-az group delete --name MyResourceGroupName
-```
+
+If you see errors in the script, refer to the [Troubleshooting](#troubleshooting) section below. Before running the script again due to errors, please [clean up your Azure resources](#cleaning-up-your-azure-resources)
 
 ## Troubleshooting
 
 * *"The subscription '########-####-####-####-############' is disabled and therefore marked as read only. You cannot perform any write actions on this subscription until it is re-enabled.
 Write-Error: Failed to create resource group"* - This may be because your free trial period for Azure subscription has ended. Upgrade your subscription.
 
-## Deploying Azure Resources - Deeper Dive
+## Cleaning up your Azure resources
+
+If you want to delete all Azure resources created by the script deployAll.ps1, simply run this command to delete the resource group (replace MyResourceGroupName with the name you picked):
+```powershell
+az group delete --name MyResourceGroupName
+```
+
+## Deploying Azure resources - deep dive
 
 There should be a set of azure resources created in your azure subscription. In the Azure portal is should look something like this:
 
@@ -82,5 +87,5 @@ After that the azure function project located in [../skill](../skill) was built 
 
 The Custom Commands application was created from the json file [../skill/hospitalityCustomCommands.json](../skill/hospitalityCustomCommands.json) and deployed to your Azure subscription. You can view that in the [Microsoft Speech portal](https://speech.microsoft.com/).
 
-If you would like to dig deeper into the powershell scripts you will see there are some simple string replacements we do to update the links between the azure function and the html file in the storage account that is ultimatly the web page you see.
+If you would like to dig deeper into the powershell scripts you will see there are some simple string replacements we do to update the links between the azure function and the html file in the storage account that is ultimately the web page you see.
 
