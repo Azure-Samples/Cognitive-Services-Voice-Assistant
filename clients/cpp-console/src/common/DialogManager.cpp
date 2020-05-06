@@ -2,15 +2,15 @@
 // Licensed under the MIT License.
 
 #include <thread>
-#include "helper.h"
-#include "DialogConnector.h"
+#include "log.h"
+#include "DialogManager.h"
 
 using namespace std;
 using namespace Microsoft::CognitiveServices::Speech;
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
 using namespace AudioPlayer;
 
-DialogConnector::DialogConnector(shared_ptr<AgentConfiguration> agentConfig)
+DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 {
     _agentConfig = agentConfig;
 
@@ -19,7 +19,7 @@ DialogConnector::DialogConnector(shared_ptr<AgentConfiguration> agentConfig)
     AttachHandlers();
 }
 
-void DialogConnector::InitializeDialogServiceConnector()
+void DialogManager::InitializeDialogServiceConnector()
 {
     log_t("Configuration loaded. Creating connector...");
     _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
@@ -40,7 +40,7 @@ void DialogConnector::InitializeDialogServiceConnector()
     log_t("Connector successfully initialized!");
 }
 
-void DialogConnector::InitializePlayer()
+void DialogManager::InitializePlayer()
 {
     if (_agentConfig->_volume > 0)
     {
@@ -58,7 +58,7 @@ void DialogConnector::InitializePlayer()
 
 }
 
-void DialogConnector::AttachHandlers()
+void DialogManager::AttachHandlers()
 {
     // Signals that indicates the start of a listening session.
     _dialogServiceConnector->SessionStarted += [&](const SessionEventArgs& event)
@@ -175,7 +175,7 @@ void DialogConnector::AttachHandlers()
     };
 }
 
-void DialogConnector::PauseKws()
+void DialogManager::PauseKws()
 {
     log_t("Enter PauseKws (state = ", uint32_t(_keywordActivationState), ")");
 
@@ -189,7 +189,7 @@ void DialogConnector::PauseKws()
     log_t("Exit PauseKws (state = ", uint32_t(_keywordActivationState), ")");
 }
 
-void DialogConnector::StartKws()
+void DialogManager::StartKws()
 {
     log_t("Enter StartKws (state = ", uint32_t(_keywordActivationState), ")");
 
@@ -206,7 +206,7 @@ void DialogConnector::StartKws()
     log_t("Exit StartKws (state = ", uint32_t(_keywordActivationState), ")");
 }
 
-void DialogConnector::StartListening()
+void DialogManager::StartListening()
 {
     log_t("Now listening...");
     _player->Stop();
@@ -214,7 +214,7 @@ void DialogConnector::StartListening()
     auto future = _dialogServiceConnector->ListenOnceAsync();
 }
 
-void DialogConnector::StopKws()
+void DialogManager::StopKws()
 {
     log_t("Enter StopKws (state = ", uint32_t(_keywordActivationState), ")");
 

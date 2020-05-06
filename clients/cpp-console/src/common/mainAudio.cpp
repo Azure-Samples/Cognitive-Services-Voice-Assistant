@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string> 
 #include <fstream>
-#include "helper.h"
+#include "log.h"
 #include "AgentConfiguration.h"
-#include "DialogConnector.h"
+#include "DialogManager.h"
 #include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
 
@@ -24,7 +24,7 @@ using namespace Microsoft::CognitiveServices::Speech::Dialog;
 using namespace Microsoft::CognitiveServices::Speech;
 using namespace Microsoft::CognitiveServices::Speech::Audio;
 
-void DisplayKeystrokeOptions(DialogConnector&);
+void DisplayKeystrokeOptions(DialogManager&);
 
 int main(int argc, char** argv)
 {
@@ -46,22 +46,22 @@ int main(int argc, char** argv)
         return (int)agentConfig->LoadResult();
     }
 
-    DialogConnector dialogConnector(agentConfig);
+    DialogManager dialogManager(agentConfig);
 
     // Activate keyword listening on start up if keyword model file exists
     if (agentConfig->KeywordModel().length() > 0)
     {
-        dialogConnector.SetKeywordActivationState(KeywordActivationState::Paused);
-        dialogConnector.StartKws();
+        dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
+        dialogManager.StartKws();
     }
     else
     {
-        dialogConnector.SetKeywordActivationState(KeywordActivationState::NotSupported);
+        dialogManager.SetKeywordActivationState(KeywordActivationState::NotSupported);
     }
 
     DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
 
-    DisplayKeystrokeOptions(dialogConnector);
+    DisplayKeystrokeOptions(dialogManager);
 
     string s = "";
     while (s != "x")
@@ -69,18 +69,18 @@ int main(int argc, char** argv)
         cin >> s;
         if (s == "1")
         {
-            dialogConnector.StartListening();
+            dialogManager.StartListening();
         }
-        if (s == "2" && dialogConnector.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+        if (s == "2" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
         {
-            dialogConnector.SetKeywordActivationState(KeywordActivationState::Paused);
-            dialogConnector.StartKws();
+            dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
+            dialogManager.StartKws();
         }
-        if (s == "3" && dialogConnector.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+        if (s == "3" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
         {
-            dialogConnector.StopKws();
+            dialogManager.StopKws();
         }
-        DisplayKeystrokeOptions(dialogConnector);
+        DisplayKeystrokeOptions(dialogManager);
     }
 
     cout << "Closing down and freeing variables." << endl;
@@ -88,11 +88,11 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void DisplayKeystrokeOptions(DialogConnector& dialogConnector)
+void DisplayKeystrokeOptions(DialogManager& dialogManager)
 {
     cout << "Commands:" << endl;
     cout << "1 [listen once]" << endl;
-    if (dialogConnector.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+    if (dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
     {
         cout << "2 [start keyword listening]" << endl;
         cout << "3 [stop keyword listening]" << endl;

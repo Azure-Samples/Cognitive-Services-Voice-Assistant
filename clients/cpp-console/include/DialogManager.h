@@ -35,10 +35,10 @@ enum class KeywordActivationState
     NotListening = 4
 };
 
-class DialogConnector
+class DialogManager
 {
 public:
-    DialogConnector(shared_ptr<AgentConfiguration> agentConfig);
+    DialogManager(shared_ptr<AgentConfiguration> agentConfig);
     const KeywordActivationState GetKeywordActivationState() { return _keywordActivationState; }
     void SetKeywordActivationState(const KeywordActivationState& state) { _keywordActivationState = state; }
     void PauseKws();

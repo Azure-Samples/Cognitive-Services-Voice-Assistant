@@ -42,10 +42,10 @@
     <ClInclude Include="..\..\include\WindowsAudioPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\DialogConnector.h">
+    <ClInclude Include="..\..\include\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\helper.h">
+    <ClInclude Include="..\..\include\DialogManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -65,10 +65,7 @@
     <ClCompile Include="WindowsAudioPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\DialogConnector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\common\helper.cpp">
+    <ClCompile Include="..\common\DialogManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,7 +7,10 @@
 
 using namespace std;
 
-void log();
+static void log()
+{
+    cout << endl;
+}
 
 template<typename T, typename... Args>
 void log(T v, Args... args)
