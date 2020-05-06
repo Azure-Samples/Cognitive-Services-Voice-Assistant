@@ -33,4 +33,7 @@ src/common/DialogManager.cpp \
 cp ./scripts/run.sh ./out
 chmod +x ./out/run.sh
 
-echo "Done. To start the demo execute:\nRun cd ../out\n./run.sh <path_to_configFile>"
+echo Done. To start the demo execute:
+echo cd ../out
+echo export LD_LIBRARY_PATH="../lib/arm32"
+echo ./sample.exe [path_to_configFile]
