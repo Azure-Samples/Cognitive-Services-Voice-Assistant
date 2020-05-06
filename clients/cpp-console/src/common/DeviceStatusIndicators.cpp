@@ -3,8 +3,8 @@
 
 #include "DeviceStatusIndicators.h"
 
-
-void DeviceStatusIndicators::SetStatus(const DeviceStatus status){
+void DeviceStatusIndicators::SetStatus(const DeviceStatus status)
+{
     std::cout << "New status : " << DeviceStatusNames::to_string(status) << std::endl;
     switch (status)
     {
