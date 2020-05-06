@@ -2,6 +2,14 @@
 clear
 cd ..
 mkdir out
+mkdir SDK
+
+echo "Downloading Speech SDK binaries"
+wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SpeechSDK
+
+echo "Copying binaries to lib folder and headers to include"
+cp -Rf ./SpeechSDK/SpeechSDK*/* .
+
 echo "Building Raspberry Pi x64 sample"
 g++ -Wno-psabi \
 src/common/mainAudio.cpp \
