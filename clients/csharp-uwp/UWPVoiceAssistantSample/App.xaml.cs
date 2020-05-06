@@ -216,6 +216,7 @@ namespace UWPVoiceAssistantSample
 
         private void InitializeSignalDetection()
         {
+            KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
             this.dialogManager.SignalConfirmed += this.OnSignalConfirmed;
             this.dialogManager.SignalRejected += this.OnSignalRejected;
         }

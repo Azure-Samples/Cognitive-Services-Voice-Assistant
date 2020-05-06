@@ -146,8 +146,7 @@ namespace UWPVoiceAssistantSample
                 this.kwsPerformanceStopwatch = new Stopwatch();
                 this.connector.Recognizing += (s, e) =>
                 {
-                    var startTime = KwsPerformanceLogger.kwsEventFireTime - TimeSpan.FromTicks(DateTime.Now.Ticks);
-
+                    KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizingKeyword:
@@ -165,14 +164,15 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.Recognized += (s, e) =>
                 {
+                    KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizedKeyword:
+                            var thirdStageStartTime = KwsPerformanceLogger.kwsStartTime.Ticks;
+                            thirdStageStartTime = DateTime.Now.Ticks;
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
-                            var thirdStageStartTime = KwsPerformanceLogger.kwsStartTime;
-                            thirdStageStartTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
-                            this.kwsPerformanceLogger.LogSignalReceived("3", true, DateTime.Now.Ticks, TimeSpan.FromTicks(thirdStageStartTime.Ticks), TimeSpan.FromTicks(DateTime.Now.Ticks));
+                            this.kwsPerformanceLogger.LogSignalReceived("3", true, KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
                             this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
@@ -185,9 +185,9 @@ namespace UWPVoiceAssistantSample
                             this.logger.Log($"Cloud model rejected keyword");
                             if (this.secondStageConfirmed)
                             {
-                                var thirdStageStartTimeRejected = KwsPerformanceLogger.kwsStartTime;
-                                thirdStageStartTimeRejected = TimeSpan.FromTicks(DateTime.Now.Ticks);
-                                this.kwsPerformanceLogger.LogSignalReceived("3", false, DateTime.Now.Ticks, TimeSpan.FromTicks(thirdStageStartTimeRejected.Ticks), TimeSpan.FromTicks(DateTime.Now.Ticks));
+                                var thirdStageStartTimeRejected = KwsPerformanceLogger.kwsStartTime.Ticks;
+                                thirdStageStartTimeRejected = DateTime.Now.Ticks;
+                                this.kwsPerformanceLogger.LogSignalReceived("3", false, KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
                                 this.secondStageConfirmed = false;
                             }
 
@@ -346,13 +346,13 @@ namespace UWPVoiceAssistantSample
             {
                 config = BotFrameworkConfig.FromSubscription(
                     this.speechKey,
-                    "");
+                    this.speechRegion);
             }
 
             // Disable throttling of input audio (send it as fast as we can!)
             config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "9999");
             config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "10000");
-            config.SetProperty("SPEECH-Endpoint", $"wss://{this.speechRegion}.convai.speech.microsoft.com/orchestrate/api/v1");
+            //config.SetProperty("SPEECH-Endpoint", $"wss://{this.speechRegion}.convai.speech.microsoft.com/orchestrate/api/v1");
             var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
             config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
 

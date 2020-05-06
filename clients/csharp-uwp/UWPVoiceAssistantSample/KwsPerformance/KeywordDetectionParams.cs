@@ -22,11 +22,11 @@ namespace UWPVoiceAssistantSample.KwsPerformance
 
         public long EventFireTime { get; set; }
 
-        public TimeSpan StartTime { get; set; }
+        public long StartTime { get; set; }
 
         /// <summary>
         /// Gets or sets the time for keyword verification.
         /// </summary>
-        public TimeSpan EndTime { get; set; }
+        public long EndTime { get; set; }
     }
 }

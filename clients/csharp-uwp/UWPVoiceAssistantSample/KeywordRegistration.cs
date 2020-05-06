@@ -255,7 +255,6 @@ namespace UWPVoiceAssistantSample
 
             var detector = configurableDetectors.First();
 
-            
             return detector;
         }
 

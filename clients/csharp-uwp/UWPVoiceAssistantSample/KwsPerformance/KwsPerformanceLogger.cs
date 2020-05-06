@@ -26,7 +26,7 @@
         /// <param name="stage">Stage of KWS</param>
         /// <param name="confirmed">Bool indicating if speech matches keyword model.</param>
         /// <param name="elapsedTime">Timespan for keyword confirmation.</param>
-        public void LogSignalReceived(string stage, bool confirmed, long eventFireTime, TimeSpan startTime, TimeSpan endTime)
+        public void LogSignalReceived(string stage, bool confirmed, long eventFireTime, long startTime, long endTime)
         {
             if (!this.csvFileCreated)
             {
