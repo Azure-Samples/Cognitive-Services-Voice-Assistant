@@ -28,7 +28,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 
   ```sh
   git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-  ```  
+  ```
 
 * Download the Speech SDK
 
@@ -44,7 +44,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
   mv SpeechSDK-Linux-1.10.0/lib/arm32 cpp-console/lib/
   mv SpeechSDK-Linux-1.10.0/include/* cpp-console/include/
   cd cpp-console
-  ```  
+  ```
 
 * Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used (.table file), these are in /home/ubuntu/keyword-models
 
@@ -77,18 +77,12 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 
 #### [Main Devices Readme](README.md)
 
-### Common Troubleshoorting
+### Common Troubleshooting
 
 ## Alsa is installed but arecord and aplay do not work
-  Make sure you add the following line to /boot/firmware/config.txt
-    dtparam=audio=on
-  Then reboot your device.
 
-## Text to speech not working but arecord and aplay work
-  For some Ubuntu servers once you add the line to the firmware config to turn the audio on ...
-    /boot/firmware/config.txt 
-    add 
+Add the following line to /boot/firmware/config.txt
+
     dtparam=audio=on
   
-  After doing that, make sure you reboot the device. This ensures all settings are properly configured.
-  
+Then reboot the device to ensure all settings are properly configured.

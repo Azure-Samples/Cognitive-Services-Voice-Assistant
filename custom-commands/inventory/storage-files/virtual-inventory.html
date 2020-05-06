@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<!-- saved from url=(0066)https://virtualroom.blob.core.windows.net/www/demo.html?room=test1 -->
+<html lang="en">
+<script type="text/javascript">window["_gaUserPrefs"] = { ioo: function () { return true; } }</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/x-icon" href="https://virtualroom.blob.core.windows.net/www/favicon.ico">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Virtual Room</title>
+
+    <link rel="stylesheet" href="./bootstrap.min.css" crossorigin="anonymous">
+
+    <style>
+        .demoFrame {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            height: 100%;
+            max-width: 1440px;
+            max-height: 810px;
+            min-width: 960px;
+            min-height: 540px;
+        }
+
+        .room-image {
+            position: relative;
+            width: 100%;
+            max-width: 1440px;
+            min-width: 960px;
+        }
+
+        .overlays {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+
+        #blue-inventory {
+            position: absolute;
+            font-size: 24px;
+            font-weight: normal;
+            top: 39.5%;
+            left: 76.5%;
+            z-index: 100;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #yellow-inventory {
+            position: absolute;
+            font-size: 24px;
+            font-weight: normal;
+            top: 46.75%;
+            left: 76.5%;
+            z-index: 100;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #green-inventory {
+            position: absolute;
+            font-size: 24px;
+            font-weight: normal;
+            top: 54%;
+            left: 76.5%;
+            z-index: 100;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #top-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 7.5%;
+            left: 46.5%;
+            z-index: 100;
+            width: 265px;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #middle-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 39%;
+            left: 20%;
+            z-index: 100;
+            width: 265px;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #bottom-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 66%;
+            left: 44.5%;
+            z-index: 100;
+            width: 236px;
+
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        .try-saying {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: -20px;
+        }
+
+        .messages {
+            position: absolute;
+            height: 90px;
+            width: 400px;
+            margin-top: -9.5%;
+            margin-left: 1%;
+            z-index: 100;
+        }
+
+        #message-title {
+            padding-top: 5px;
+            font-size: smaller;
+        }
+
+        #item-ordered {
+            font-weight: bold;
+        }
+
+        .list {
+            background-image: repeating-linear-gradient(180deg, lightyellow, lightyellow 40px, lemonchiffon 40px, lemonchiffon 80px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <main role="main">
+        <div id="hotel-room" class="demoFrame ">
+            <img id="0" src="./inventory-background.png" class="room-image" style="position:relative">
+
+            <img id="green-1" src="./inventory-green-1.png" class="room-image overlays" style="display: none;">
+            <img id="green-2" src="./inventory-green-2.png" class="room-image overlays" style="display: none;">
+            <img id="green-3" src="./inventory-green-3.png" class="room-image overlays">
+
+
+            <img id="yellow-1" src="./inventory-yellow-1.png" class="room-image overlays" style="display: none;">
+            <img id="yellow-2" src="./inventory-yellow-2.png" class="room-image overlays" style="display: none;">
+            <img id="yellow-3" src="./inventory-yellow-3.png" class="room-image overlays" style="display: none;">
+            <img id="yellow-4" src="./inventory-yellow-4.png" class="room-image overlays">
+
+
+            <img id="blue-1" src="./inventory-blue-1.png" class="room-image overlays" style="display: none;">
+            <img id="blue-2" src="./inventory-blue-2.png" class="room-image overlays" style="display: none;">
+            <img id="blue-3" src="./inventory-blue-3.png" class="room-image overlays" style="display: none;">
+            <img id="blue-4" src="./inventory-blue-4.png" class="room-image overlays" style="display: none;">
+            <img id="blue-5" src="./inventory-blue-5.png" class="room-image overlays">
+
+
+            <img id="auto-1" src="./inventory-auto-1.png" class="room-image overlays" style="display: none;">
+            <img id="auto-2" src="./inventory-auto-2.png" class="room-image overlays">
+
+
+            <img id="phone" src="./inventory-phone.png" class="room-image overlays">
+
+            <div id="blue-inventory">-31 blue</div>
+            <div id="yellow-inventory">1 yellow</div>
+            <div id="green-inventory">11 green</div>
+
+            <div id="help-content">
+                <img id="helpboxes" src="./inventory-bluebox.png" class="room-image overlays" style="display:absolute;">
+
+                <div id="top-hint">
+                    <div class="try-saying">Try saying:</div></br>"Order 10 top
+                    boxes"
+                </div>
+                <div id="middle-hint">
+                    <div class="try-saying">Try saying:</div></br>"Ship 5 yellow
+                    boxes"
+                </div>
+                <div id="bottom-hint">
+                    <div class="try-saying">Try saying:</div></br>"How many green boxes in the inventory?"
+                </div>
+            </div>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./jquery-3.2.1.min.js.download" crossorigin="anonymous"></script>
+    <script src="./popper.min.js.download" crossorigin="anonymous"></script>
+    <script src="./bootstrap.min.js.download" crossorigin="anonymous"></script>
+
+    <script>
+        $(function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var jsonUrl = "https://inventorydemowidget.azurewebsites.net/api/InventoryDemo";
+            if (urlParams.has("room")) {
+                var room = urlParams.get("room");
+                jsonUrl = jsonUrl + "?room=" + room;
+            }
+            else {
+                var roomNumber = parseInt((Math.random() * 500000), 10)
+                jsonUrl = jsonUrl + "?room=" + roomNumber;
+            }
+
+            var timesRun = 0;
+            interval = setInterval(function () {
+                timesRun += 1;
+                if (timesRun === 10800) {
+                    clearInterval(interval);
+                }
+                $.getJSON(jsonUrl, function (configuration) {
+                    clear();
+                    apply(configuration);
+                    console.log(configuration);
+                });
+            }, 1000);
+
+            setTimeout(function () { alert("Timed out, please refresh!"); }, 10800000);
+
+            function apply(configuration) {
+
+
+                //html - counts
+                $("#blue-inventory").html(configuration.FirstItem + " blue");
+                $("#yellow-inventory").html(configuration.SecondItem + " yellow");
+                $("#green-inventory").html(configuration.ThirdItem + " green");
+
+                if (configuration.Help) {
+                    $("#help-content").fadeIn('fast')
+                }
+                else {
+                    $("#help-content").fadeOut('fast')
+                }
+
+
+                if (configuration.FirstItem == 0) {
+                    $("#blue-1").fadeOut('fast')
+                    $("#blue-2").fadeOut('fast')
+                    $("#blue-3").fadeOut('fast')
+                    $("#blue-4").fadeOut('fast')
+                    $("#blue-5").fadeOut('fast')
+                }
+                else if (configuration.FirstItem >= 1 && configuration.FirstItem < 6) {
+                    $("#blue-1").fadeIn('fast')
+                    $("#blue-2").fadeOut('fast')
+                    $("#blue-3").fadeOut('fast')
+                    $("#blue-4").fadeOut('fast')
+                    $("#blue-5").fadeOut('fast')
+                }
+                else if (configuration.FirstItem >= 6 && configuration.FirstItem < 11) {
+                    $("#blue-1").fadeOut('fast')
+                    $("#blue-2").fadeIn('fast')
+                    $("#blue-3").fadeOut('fast')
+                    $("#blue-4").fadeOut('fast')
+                    $("#blue-5").fadeOut('fast')
+                }
+                else if (configuration.FirstItem >= 11 && configuration.FirstItem < 16) {
+                    $("#blue-1").fadeOut('fast')
+                    $("#blue-2").fadeOut('fast')
+                    $("#blue-3").fadeIn('fast')
+                    $("#blue-4").fadeOut('fast')
+                    $("#blue-5").fadeOut('fast')
+                }
+                else if (configuration.FirstItem >= 16 && configuration.FirstItem < 21) {
+                    $("#blue-1").fadeOut('fast')
+                    $("#blue-2").fadeOut('fast')
+                    $("#blue-3").fadeOut('fast')
+                    $("#blue-4").fadeIn('fast')
+                    $("#blue-5").fadeOut('fast')
+                }
+                else if (configuration.FirstItem >= 21) {
+                    $("#blue-1").fadeOut('fast')
+                    $("#blue-2").fadeOut('fast')
+                    $("#blue-3").fadeOut('fast')
+                    $("#blue-4").fadeOut('fast')
+                    $("#blue-5").fadeIn('fast')
+                }
+
+
+                if (configuration.SecondItem == 0) {
+                    $("#yellow-1").fadeOut('fast')
+                    $("#yellow-2").fadeOut('fast')
+                    $("#yellow-3").fadeOut('fast')
+                    $("#yellow-4").fadeOut('fast')
+                }
+                else if (configuration.SecondItem >= 1 && configuration.SecondItem < 5) {
+                    $("#yellow-1").fadeIn('fast')
+                    $("#yellow-2").fadeOut('fast')
+                    $("#yellow-3").fadeOut('fast')
+                    $("#yellow-4").fadeOut('fast')
+                }
+                else if (configuration.SecondItem >= 5 && configuration.SecondItem < 10) {
+                    $("#yellow-1").fadeOut('fast')
+                    $("#yellow-2").fadeIn('fast')
+                    $("#yellow-3").fadeOut('fast')
+                    $("#yellow-4").fadeOut('fast')
+                }
+                else if (configuration.SecondItem >= 10 && configuration.SecondItem < 15) {
+                    $("#yellow-1").fadeOut('fast')
+                    $("#yellow-2").fadeOut('fast')
+                    $("#yellow-3").fadeIn('fast')
+                    $("#yellow-4").fadeOut('fast')
+                }
+                else if (configuration.SecondItem >= 15) {
+                    $("#yellow-1").fadeOut('fast')
+                    $("#yellow-2").fadeOut('fast')
+                    $("#yellow-3").fadeOut('fast')
+                    $("#yellow-4").fadeIn('fast')
+                }
+
+
+                if (configuration.ThirdItem == 0) {
+                    $("#green-1").fadeOut('fast')
+                    $("#green-2").fadeOut('fast')
+                    $("#green-3").fadeOut('fast')
+                }
+                else if (configuration.ThirdItem >= 1 && configuration.ThirdItem < 5) {
+                    $("#green-1").fadeIn('fast')
+                    $("#green-2").fadeOut('fast')
+                    $("#green-3").fadeOut('fast')
+                }
+                else if (configuration.ThirdItem >= 5 && configuration.ThirdItem < 10) {
+                    $("#green-1").fadeOut('fast')
+                    $("#green-2").fadeIn('fast')
+                    $("#green-3").fadeOut('fast')
+                }
+                else if (configuration.ThirdItem >= 10) {
+                    $("#green-1").fadeOut('fast')
+                    $("#green-2").fadeOut('fast')
+                    $("#green-3").fadeIn('fast')
+                }
+
+
+                // if (configuration.Message != null
+                //     && configuration.Message != $("#item-ordered").text()) {
+                //     $("#item-ordered").html(configuration.Message);
+                //     $("#item-ordered")
+                //         .finish()
+                //         .fadeIn('fast')
+                //         .delay(8000)
+                //         .fadeOut('slow');
+                // }
+            }
+
+            function clear() {
+            }
+        });
+    </script>
+
+
+
+</body>
+
+</html>
