@@ -6,6 +6,7 @@ namespace UWPVoiceAssistantSample
     using System;
     using System.Diagnostics;
     using System.Threading;
+    using System.Threading.Tasks;
     using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.UI.Text.Core;
@@ -75,7 +76,6 @@ namespace UWPVoiceAssistantSample
         private IAgentSessionManager agentSessionManager;
         private ILogProvider logger;
         private KwsPerformanceLogger kwsPerformanceLogger;
-        public static Stopwatch kwsPerformanceStopWatch;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalDetectionHelper"/> class.
@@ -86,7 +86,6 @@ namespace UWPVoiceAssistantSample
             this.logger = LogRouter.GetClassLogger();
             this.keywordResponseLock = new object();
             this.kwsPerformanceLogger = new KwsPerformanceLogger();
-            kwsPerformanceStopWatch = new Stopwatch();
         }
 
         /// <summary>
@@ -119,8 +118,6 @@ namespace UWPVoiceAssistantSample
         public async void HandleSignalDetection(
             DetectionOrigin detectionOrigin = DetectionOrigin.FromBackgroundTask)
         {
-            kwsPerformanceStopWatch.Start();
-            var elapsed = kwsPerformanceStopWatch.ElapsedTicks;
             var now = DateTime.Now;
             if (this.lastSignalReceived.HasValue && now.Subtract(this.lastSignalReceived.Value).TotalMilliseconds < MinimumSignalSeparation.TotalMilliseconds)
             {
@@ -145,9 +142,7 @@ namespace UWPVoiceAssistantSample
 
             this.SignalReceived?.Invoke(detectionOrigin, this.signalNeedsVerification);
 
-            //kwsPerformanceStopWatch.Stop();
-
-            this.kwsPerformanceLogger.LogSignalReceived("1", true, elapsed, kwsPerformanceStopWatch.ElapsedTicks);
+            this.kwsPerformanceLogger.LogSignalReceived("1", true, KwsPerformanceLogger.kwsEventFireTime.Ticks, session.SignalStart, session.SignalEnd);
 
             if (this.signalNeedsVerification)
             {
@@ -194,6 +189,7 @@ namespace UWPVoiceAssistantSample
 
         private void OnSessionSignalConfirmed(IAgentSessionWrapper session, DetectionOrigin origin)
         {
+            this.kwsPerformanceLogger.LogSignalReceived("2", true, DateTime.Now.Ticks, TimeSpan.FromTicks(KwsPerformanceLogger.kwsStartTime.Ticks), TimeSpan.FromTicks(DateTime.Now.Ticks));
             this.StopFailsafeTimer();
 
             this.logger.Log($"Confirmed signal received, IsUserAuthenticated={session.IsUserAuthenticated.ToString(null)}");
@@ -209,17 +205,14 @@ namespace UWPVoiceAssistantSample
 
         private void OnSessionSignalRejected(DetectionOrigin origin)
         {
+            this.kwsPerformanceLogger.LogSignalReceived("2", false, DateTime.Now.Ticks, TimeSpan.FromTicks(KwsPerformanceLogger.kwsStartTime.Ticks), TimeSpan.FromTicks(DateTime.Now.Ticks));
             this.StopFailsafeTimer();
             this.SignalRejected?.Invoke(origin);
-            var elapsed = kwsPerformanceStopWatch.ElapsedTicks;
-            //this.kwsPerformanceStopWatch.Stop();
-            this.kwsPerformanceLogger.LogSignalReceived("1", false, elapsed, kwsPerformanceStopWatch.ElapsedTicks);
         }
 
         private void StartFailsafeTimer()
         {
             this.secondStageStopwatch = Stopwatch.StartNew();
-            var elapsed = kwsPerformanceStopWatch.ElapsedTicks;
             this.secondStageFailsafeTimer = new Timer(
                 _ =>
                 {
@@ -229,8 +222,6 @@ namespace UWPVoiceAssistantSample
                         {
                             this.logger.Log($"Failsafe timer expired; rejecting");
                             this.SignalRejected?.Invoke(this.LastDetectedSignalOrigin);
-                            //this.kwsPerformanceStopWatch.Stop();
-                            this.kwsPerformanceLogger.LogSignalReceived("2", false, elapsed, kwsPerformanceStopWatch.ElapsedTicks);
                         } // else timer was stopped while waiting for the lock
                     }
                 },

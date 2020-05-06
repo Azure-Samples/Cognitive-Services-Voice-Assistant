@@ -610,11 +610,12 @@ namespace UWPVoiceAssistantSample
             var keywordActivationModelDataFormatModified = LocalSettingsHelper.KeywordActivationModelDataFormat != appSettings.KeywordActivationModel.ModelDataFormat;
             var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModel.Path;
             var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordModel;
+            var kwsPerformanceMetrics = LocalSettingsHelper.KwsPerfomanceLogging != appSettings.KwsPerfomanceLogging;
 
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
                 keywordDisplayNameModified || keywordIdModified || keywordModelIdModified ||
-                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordConfirmationModelPathModified;
+                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordConfirmationModelPathModified || kwsPerformanceMetrics;
 
             if (this.configModified)
             {
@@ -690,6 +691,12 @@ namespace UWPVoiceAssistantSample
                 {
                     LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordModel;
                     this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
+                }
+
+                if (kwsPerformanceMetrics)
+                {
+                    LocalSettingsHelper.KwsPerfomanceLogging = appSettings.KwsPerfomanceLogging;
+                    this.logger.Log($"KWS Performance Logging: {LocalSettingsHelper.KwsPerfomanceLogging}");
                 }
 
                 if (keywordActivationModelDataFormatModified

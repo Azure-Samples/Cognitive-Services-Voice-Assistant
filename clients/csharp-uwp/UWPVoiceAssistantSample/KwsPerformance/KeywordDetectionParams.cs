@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+using System;
+
 namespace UWPVoiceAssistantSample.KwsPerformance
 {
     /// <summary>
@@ -18,11 +20,13 @@ namespace UWPVoiceAssistantSample.KwsPerformance
         /// </summary>
         public bool Confirmed { get; set; }
 
-        public long StartTime { get; set; }
+        public long EventFireTime { get; set; }
+
+        public TimeSpan StartTime { get; set; }
 
         /// <summary>
         /// Gets or sets the time for keyword verification.
         /// </summary>
-        public long EndTime { get; set; }
+        public TimeSpan EndTime { get; set; }
     }
 }

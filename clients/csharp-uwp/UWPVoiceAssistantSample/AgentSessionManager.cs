@@ -7,6 +7,7 @@ namespace UWPVoiceAssistantSample
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Foundation;
 
@@ -18,6 +19,7 @@ namespace UWPVoiceAssistantSample
         private readonly SemaphoreSlim cachedSessionSemaphore = new SemaphoreSlim(1, 1);
         private readonly ILogProvider logger;
         private AgentSessionWrapper cachedAgentSession = null;
+        private KwsPerformanceLogger kwsPerformanceLogger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentSessionManager"/> class.
@@ -25,6 +27,7 @@ namespace UWPVoiceAssistantSample
         public AgentSessionManager()
         {
             this.logger = LogRouter.GetClassLogger();
+            this.kwsPerformanceLogger = new KwsPerformanceLogger();
         }
 
         /// <summary>
@@ -105,6 +108,8 @@ namespace UWPVoiceAssistantSample
 
         private void OnInAppSignalEventDetected(ConversationalAgentSession sender, ConversationalAgentSignalDetectedEventArgs args)
         {
+            // KwsPerformanceLogger.kwsEventFireTime = DateTime.Now.Ticks;
+            // this.kwsPerformanceLogger.LogSignalReceived("1", true, DateTime.Now.Ticks, startTime, endTime);
             this.logger.Log($"'{sender.Signal.SignalName}' signal detected in session event handler");
 
             this.SignalDetected?.Invoke(this, DetectionOrigin.FromApplicationObject);

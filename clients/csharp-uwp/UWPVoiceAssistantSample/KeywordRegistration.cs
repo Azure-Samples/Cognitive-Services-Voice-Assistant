@@ -20,6 +20,7 @@ namespace UWPVoiceAssistantSample
         private readonly SemaphoreSlim creatingKeywordConfigSemaphore;
         private ActivationSignalDetectionConfiguration keywordConfiguration;
         private bool disposed;
+        public static long StartTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeywordRegistration"/> class.
@@ -254,6 +255,7 @@ namespace UWPVoiceAssistantSample
 
             var detector = configurableDetectors.First();
 
+            
             return detector;
         }
 

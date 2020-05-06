@@ -243,6 +243,7 @@ namespace UWPVoiceAssistantSample
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
                 KeywordConfirmationModelPath = appSettings.KeywordModel;
+                KwsPerfomanceLogging = appSettings.KwsPerfomanceLogging;
             }
         }
 

@@ -47,7 +47,10 @@ namespace UWPVoiceAssistantSample
         public DirectLineSpeechDialogBackend()
         {
             this.logger = LogRouter.GetClassLogger();
-            this.kwsPerformanceLogger = new KwsPerformanceLogger();
+            //if (LocalSettingsHelper.KwsPerfomanceLogging)
+            //{
+                this.kwsPerformanceLogger = new KwsPerformanceLogger();
+            //}
         }
 
         /// <summary>
@@ -143,16 +146,14 @@ namespace UWPVoiceAssistantSample
                 this.kwsPerformanceStopwatch = new Stopwatch();
                 this.connector.Recognizing += (s, e) =>
                 {
-                    //this.kwsPerformanceStopwatch.Start();
-                    var elapsed = SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks;
+                    var startTime = KwsPerformanceLogger.kwsEventFireTime - TimeSpan.FromTicks(DateTime.Now.Ticks);
+
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizingKeyword:
                             this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognizing?.Invoke(e.Result.Text);
-                            this.kwsPerformanceLogger.LogSignalReceived("2", true, elapsed, SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks);
                             this.secondStageConfirmed = true;
-                            //this.kwsPerformanceStopwatch.Start();
                             break;
                         case ResultReason.RecognizingSpeech:
                             this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
@@ -164,15 +165,14 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.Recognized += (s, e) =>
                 {
-                    //this.kwsPerformanceStopwatch.Stop();
-                    var elapsed = SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks;
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizedKeyword:
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
-                            //this.kwsPerformanceStopwatch.Stop();
-                            this.kwsPerformanceLogger.LogSignalReceived("3", true, elapsed, SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks);
+                            var thirdStageStartTime = KwsPerformanceLogger.kwsStartTime;
+                            thirdStageStartTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
+                            this.kwsPerformanceLogger.LogSignalReceived("3", true, DateTime.Now.Ticks, TimeSpan.FromTicks(thirdStageStartTime.Ticks), TimeSpan.FromTicks(DateTime.Now.Ticks));
                             this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
@@ -185,8 +185,9 @@ namespace UWPVoiceAssistantSample
                             this.logger.Log($"Cloud model rejected keyword");
                             if (this.secondStageConfirmed)
                             {
-                                SignalDetectionHelper.kwsPerformanceStopWatch.Stop();
-                                this.kwsPerformanceLogger.LogSignalReceived("3", false, elapsed, SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks);
+                                var thirdStageStartTimeRejected = KwsPerformanceLogger.kwsStartTime;
+                                thirdStageStartTimeRejected = TimeSpan.FromTicks(DateTime.Now.Ticks);
+                                this.kwsPerformanceLogger.LogSignalReceived("3", false, DateTime.Now.Ticks, TimeSpan.FromTicks(thirdStageStartTimeRejected.Ticks), TimeSpan.FromTicks(DateTime.Now.Ticks));
                                 this.secondStageConfirmed = false;
                             }
 
@@ -200,7 +201,6 @@ namespace UWPVoiceAssistantSample
                 {
                     var code = (int)e.ErrorCode;
                     var message = $"{e.Reason.ToString()}: {e.ErrorDetails}";
-                    Debug.WriteLine(message);
                     this.ErrorReceived?.Invoke(new DialogErrorInformation(code, message));
                 };
                 this.connector.ActivityReceived += (s, e) =>
@@ -346,7 +346,7 @@ namespace UWPVoiceAssistantSample
             {
                 config = BotFrameworkConfig.FromSubscription(
                     this.speechKey,
-                    this.speechRegion);
+                    "");
             }
 
             // Disable throttling of input audio (send it as fast as we can!)

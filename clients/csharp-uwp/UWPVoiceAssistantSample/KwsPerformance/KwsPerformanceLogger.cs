@@ -17,13 +17,16 @@
 
         private bool csvFileCreated;
 
+        public static TimeSpan kwsEventFireTime;
+        public static TimeSpan kwsStartTime;
+
         /// <summary>
         /// Sets the keyword stage, confirmation bool, and elapsed time for KWS and KWV.
         /// </summary>
         /// <param name="stage">Stage of KWS</param>
         /// <param name="confirmed">Bool indicating if speech matches keyword model.</param>
         /// <param name="elapsedTime">Timespan for keyword confirmation.</param>
-        public void LogSignalReceived(string stage, bool confirmed, long startTime, long endTime)
+        public void LogSignalReceived(string stage, bool confirmed, long eventFireTime, TimeSpan startTime, TimeSpan endTime)
         {
             if (!this.csvFileCreated)
             {
@@ -32,6 +35,7 @@
 
             keywordDetectionParams.Stage = stage;
             keywordDetectionParams.Confirmed = confirmed;
+            keywordDetectionParams.EventFireTime = eventFireTime;
             keywordDetectionParams.StartTime = startTime;
             keywordDetectionParams.EndTime = endTime;
 
@@ -44,7 +48,7 @@
             {
                 StringBuilder sb = new StringBuilder();
 
-                sb.AppendLine("Stage, Confirmed, StartTime, EndTime");
+                sb.AppendLine("Stage, Confirmed, EventFireTime, StartTime, EndTime");
 
                 await File.AppendAllTextAsync(this.filePath, sb.ToString());
 
@@ -59,7 +63,7 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"\"{keywordDetectionParams.Stage}\",\"{keywordDetectionParams.Confirmed}\",\"{keywordDetectionParams.StartTime}\", \"{keywordDetectionParams.EndTime}\"");
+            sb.AppendLine($"\"{keywordDetectionParams.Stage}\",\"{keywordDetectionParams.Confirmed}\",\"{keywordDetectionParams.EventFireTime}\",\"{keywordDetectionParams.StartTime}\",\"{keywordDetectionParams.EndTime}\"");
 
             await File.AppendAllTextAsync(this.filePath, sb.ToString());
         }

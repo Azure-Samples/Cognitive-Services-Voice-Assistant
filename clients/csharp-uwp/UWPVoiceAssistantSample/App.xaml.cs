@@ -10,6 +10,7 @@ namespace UWPVoiceAssistantSample
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioOutput;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
     using Windows.ApplicationModel.Background;
@@ -189,6 +190,7 @@ namespace UWPVoiceAssistantSample
 
             if (args?.TaskInstance.Task.Name == MVARegistrationHelpers.BackgroundTriggerName)
             {
+                KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks / 10000);
                 this.logger.Log($"OnBackgroundActivated: 1st-stage keyword activation");
                 this.dialogManager.HandleSignalDetection();
 

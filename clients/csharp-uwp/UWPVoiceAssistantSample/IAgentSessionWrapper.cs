@@ -76,6 +76,10 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         string SignalName { get; set; }
 
+        TimeSpan SignalStart { get; set; }
+
+        TimeSpan SignalEnd { get; set; }
+
         /// <summary>
         /// Initializes the session event handlers.
         /// </summary>
