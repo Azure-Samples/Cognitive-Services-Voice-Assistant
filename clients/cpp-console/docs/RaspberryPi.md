@@ -30,7 +30,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
   git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
   ```  
 
-* Download the Speech SDK
+* Download the Speech SDK: The speech SDK will be downloaded as part of the build script. Otherwise it can be found here:[Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
 
 The Speech SDK will be downloaded as part of the build script.
 
