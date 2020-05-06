@@ -38,7 +38,7 @@ The repo should be cloned onto your dev machine and we will operate out of the c
 
 To utilize the audio processing from the Microsoft Audio Stack, we will also download the specific binaries for the GGEC speaker. This will happen automatically if you used the build script. Otherwise they can be found here: [binaries](https://aka.ms/sdsdk-download).
 
-Download the Speech SDK: The speech SDK will be downloaded as part of the build script. Otherwise it can be found here:[Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
+Download the Speech SDK: The speech SDK will be downloaded as part of the build script. Otherwise it can be found here: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
 
 Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword (.table file) being used.
 
