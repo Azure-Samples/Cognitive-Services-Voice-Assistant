@@ -44,10 +44,12 @@ public:
     void PauseKws();
     void StartKws();
     void StartListening();
+    void ContinueListening();
     void StopKws();
 
 private:
     bool _volumeOn = false;
+    bool _bargeInSupported = false;
     KeywordActivationState _keywordActivationState = KeywordActivationState::Undefined;
     IAudioPlayer* _player;
     shared_ptr<AgentConfiguration> _agentConfig;
