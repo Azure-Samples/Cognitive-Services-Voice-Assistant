@@ -22,10 +22,21 @@ $storageResourceId = $storageResource.id
 #assign proper roles for this user
 Write-Host "Creating Blob Owner role assignee = $userName storageResourceId = $storageResourceId" 
 #az role assignment create --role "Storage Blob Data Owner" --assignee $userName --scope $storageResourceId
-az role assignment create --role "Storage Blob Data Reader" --assignee $userName --scope $storageResourceId
-az role assignment create --role "Storage Blob Data Contributor" --assignee $userName --scope $storageResourceId
+$output = az role assignment create --role "Storage Blob Data Reader" --assignee $userName --scope $storageResourceId | ConvertFrom-Json
 
-#Start-Sleep -s 5
+if( !$output ){
+    Write-Error "Failed to create role Storage Blob Data Reader on $storageResource"
+    Write-Error $output
+    exit
+}
+
+$output = az role assignment create --role "Storage Blob Data Contributor" --assignee $userName --scope $storageResourceId | ConvertFrom-Json
+
+if( !$output ){
+    Write-Error "Failed to create role Storage Blob Data Contributor on $storageResource"
+    Write-Error $output
+    exit
+}
 
 #create the actual container
 Write-Host "Creating container ContainerName = $containerName account-name = $storageName" 
@@ -39,7 +50,7 @@ $storageURL = az storage blob url --container-name $containerName --connection-s
 $storageURL = $storageURL.Trim("`"")
 $storageURL = $storageURL.TrimEnd("/$storageName")
 
-Write-Host "Updating demo.html with new blob url" 
+Write-Host "Updating demo.html with new blob url - $storageURL. Function - $functionURL" 
 $newFile = (Get-Content '../storage-files/demo.html')
 $newFile = $newFile | Foreach-Object { $_ -replace "AZURE_STORAGE_URL", $storageURL }
 $newFile = $newFile | Foreach-Object { $_ -replace "AZURE_FUNCTION_URL", $functionURL }
@@ -55,6 +66,7 @@ while (-not $completed) {
         $output = az storage blob upload-batch -d $containerName -s ../storage-files --auth-mode login --account-name $storageName | ConvertFrom-Json
     if ($retrycount -ge $retries) {
         Write-Error ("Container command failed the maximum number of {1} times." -f $retrycount)
+        Write-Error "$output"
         exit
     }
     
@@ -73,6 +85,6 @@ Write-Host "Getting storage connection string"
 $storageConnectionString = az storage account show-connection-string --resource-group $resourceGroup --name $storageName | ConvertFrom-Json
 
 Write-Host "Updating RoomDemo.cs with new connection string" 
-$newFile = (Get-Content '../skill/VirtualRoomApp/RoomDemo.cs')
+$newFile = (Get-Content '../azure-function/VirtualRoomApp/RoomDemo.cs')
 $newFile = $newFile | Foreach-Object { $_ -replace "STORAGE_CONNECTION_STRING", $storageConnectionString.connectionString }
-$newFile | Set-Content '../skill/VirtualRoomApp/RoomDemo.cs'
+$newFile | Set-Content '../azure-function/VirtualRoomApp/RoomDemo.cs'

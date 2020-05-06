@@ -164,5 +164,5 @@ Write-Host "***********************"
 Write-Host "Custom commands has been published."
 
 Write-Host "Update these parameters in your client to use the Custom Commands Application"
-Write-Host "    CustomCommandsId   = $appId"
+Write-Host "    CustomCommandsId = $appId"
 Write-Host "    SpeechSubscriptionKey = $speechResourceKey"

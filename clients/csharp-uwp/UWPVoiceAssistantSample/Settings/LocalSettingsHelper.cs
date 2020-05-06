@@ -4,13 +4,11 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
-    using System.Globalization;
     using System.IO;
-    using System.Runtime.CompilerServices;
+    using System.Linq;
     using System.Threading.Tasks;
     using UWPVoiceAssistantSample.AudioCommon;
-    using Windows.Devices.SmartCards;
-    using Windows.Media.MediaProperties;
+    using Windows.ApplicationModel;
     using Windows.Storage;
     using Windows.UI.Xaml;
 
@@ -19,7 +17,10 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public static class LocalSettingsHelper
     {
-        private static readonly ILogProvider log = LogRouter.GetClassLogger();
+        private const string LocalConfigFilename = "config.json";
+        private static readonly ILogProvider Log = LogRouter.GetClassLogger();
+        private static readonly StorageFolder LocalConfigFolder = ApplicationData.Current.LocalFolder;
+        private static readonly Uri DefaultConfigUri = new Uri($"ms-appx:///Assets/defaultConfig.json");
         private static DialogAudio cachedOutputFormat;
 
         /// <summary>
@@ -188,7 +189,7 @@ namespace UWPVoiceAssistantSample
                 {
                     WriteValue("AudioOutputFormat", value.SerializeToSettingsValue());
                     cachedOutputFormat = value;
-                    log.Log(LogMessageLevel.Noise, $"AudioOutputFormat updated to {value.Label}");
+                    Log.Log(LogMessageLevel.Noise, $"AudioOutputFormat updated to {value.Label}");
                 }
                 else if (value == null && ApplicationData.Current.LocalSettings.Values.ContainsKey("AudioOutputFormat"))
                 {
@@ -208,10 +209,39 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
+        /// Loads file-backed initial values for settings, ensuring that a configuration file exists in a writeable
+        /// location if it doesn't already.
+        /// </summary>
+        /// <returns> A task that completes once file-based settings are initialized. </returns>
+        public static async Task InitializeAsync()
+        {
+            await EnsureFilesInLocalFolderAsync();
+            var configFile = await LocalConfigFolder.GetFileAsync(LocalConfigFilename);
+
+            if (!string.IsNullOrWhiteSpace(configFile.Path))
+            {
+                AppSettings appSettings = await AppSettings.Load(configFile);
+
+                SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
+                AzureRegion = appSettings.AzureRegion;
+                CustomSpeechId = appSettings.CustomSpeechId;
+                CustomVoiceIds = appSettings.CustomVoiceIds;
+                CustomCommandsAppId = appSettings.CustomCommandsAppId;
+                BotId = appSettings.BotId;
+                KeywordDisplayName = appSettings.KeywordActivationModel.DisplayName;
+                KeywordActivationModelPath = appSettings.KeywordActivationModel.Path;
+                KeywordId = appSettings.KeywordActivationModel.KeywordId;
+                KeywordModelId = appSettings.KeywordActivationModel.ModelId;
+                KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
+                KeywordConfirmationModelPath = appSettings.KeywordModel;
+            }
+        }
+
+        /// <summary>
         /// Writes a provided object to app-local settings via ApplicationData APIs.
         /// </summary>
         /// <param name="key"> The key under which the setting is to be stored. </param>
-        /// <param name="value"> The object (string-serializable) to be recorded. </param>
+        /// <param name="newValue"> The object (string-serializable) to be recorded. </param>
         public static void WriteValue(string key, object newValue)
         {
             ApplicationData.Current.LocalSettings.Values[key] = newValue;
@@ -245,43 +275,17 @@ namespace UWPVoiceAssistantSample
             return result;
         }
 
-        public static async Task CopyConfigAndAssignValues()
+        private static async Task EnsureFilesInLocalFolderAsync()
         {
-            await CopyFilesToLocalFolder();
-            var configFile = await ApplicationData.Current.LocalFolder.GetFileAsync("config.json");
-
-            if (!string.IsNullOrWhiteSpace(configFile.Path))
+            var copiesToEnsure = new (StorageFile source, FileInfo destination)[]
             {
-                AppSettings appSettings = await AppSettings.Load(configFile);
+                (await StorageFile.GetFileFromApplicationUriAsync(DefaultConfigUri),
+                    new FileInfo(Path.Combine(LocalConfigFolder.Path, LocalConfigFilename))),
+            };
 
-                SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
-                AzureRegion = appSettings.AzureRegion;
-                CustomSpeechId = appSettings.CustomSpeechId;
-                CustomVoiceIds = appSettings.CustomVoiceIds;
-                CustomCommandsAppId = appSettings.CustomCommandsAppId;
-                BotId = appSettings.BotId;
-                KeywordDisplayName = appSettings.KeywordDisplayName;
-                KeywordId = appSettings.KeywordId;
-                KeywordModelId = appSettings.KeywordModelId;
-                KeywordActivationModelDataFormat = appSettings.KeywordActivationModelDataFormat;
-                KeywordActivationModelPath = appSettings.KeywordActivationModelPath;
-                KeywordConfirmationModelPath = appSettings.KeywordConfirmationModelPath;
-            }
-        }
-
-        private static async Task CopyFilesToLocalFolder()
-        {
-            var config = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
-            var applicationInstalledLocation = Windows.ApplicationModel.Package.Current.InstalledLocation;
-            var sdkKeywordsFolder = await applicationInstalledLocation.GetFolderAsync("SDKKeywords");
-            var keywords = await sdkKeywordsFolder.GetFilesAsync();
-
-            foreach (var keyword in keywords)
-            {
-                await keyword.CopyAsync(ApplicationData.Current.LocalFolder);
-            }
-
-            await config.CopyAsync(ApplicationData.Current.LocalFolder, "config.json", NameCollisionOption.ReplaceExisting);
+            copiesToEnsure.Where(copyToEnsure => !copyToEnsure.destination.Exists)
+                .ToList()
+                .ForEach(copyOperation => File.Copy(copyOperation.source.Path, copyOperation.destination.FullName));
         }
     }
 }

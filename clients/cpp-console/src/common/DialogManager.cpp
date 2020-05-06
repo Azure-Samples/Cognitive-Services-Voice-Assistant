@@ -42,6 +42,11 @@ void DialogManager::InitializeDialogServiceConnector()
 
 void DialogManager::InitializePlayer()
 {
+    if(_agentConfig->_barge_in_supported == "true")
+    {
+        _bargeInSupported = true;
+    }
+    
     if (_agentConfig->_volume > 0)
     {
         _volumeOn = true;
@@ -134,43 +139,67 @@ void DialogManager::AttachHandlers()
 
         auto continue_multiturn = activity.value<string>("inputHint", "") == "expectingInput";
 
-        uint32_t total_bytes_read = 0;
         if (event.HasAudio())
         {
-            log_t("Activity has audio, playing synchronously.");
+            log_t("Activity has audio, playing asynchronously.");
 
-            // TODO: AEC + Barge-in
-            //log_t("Pausing KWS during TTS playback");
-            //PauseKws();
+            if(!_bargeInSupported)
+            {
+                log_t("Pausing KWS during TTS playback");
+                PauseKws();
+            }
 
             auto audio = event.GetAudio();
             int play_result = 0;
-
-            if (_volumeOn && _player != nullptr)
+    
+            uint32_t total_bytes_read = 0;
+            if(_volumeOn && _player != nullptr)
             {
-                play_result = _player->Play(audio);
+                
+                // If we are expecting more input and have audio to play, we will want to wait till all audio is done playing before
+                // before listening again. We can read from the stream here to accomplish this.
+                 if(continue_multiturn)
+                 {
+                    uint32_t playBufferSize = 1024;
+                    unsigned int bytesRead = 0;
+                    std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+                    do{
+                        bytesRead = audio->Read(playBuffer.get(), playBufferSize);
+                        _player->Play(playBuffer.get(), bytesRead);
+                        total_bytes_read += bytesRead;
+                    }while(bytesRead > 0);
+                    
+                    DeviceStatusIndicators::SetStatus(DeviceStatus::Speaking);
+                    
+                    // We don't want to timeout while tts is playing so start 1 second before it is done
+                    int secondsOfAudio = total_bytes_read / 32000;
+                    std::this_thread::sleep_for(std::chrono::milliseconds((secondsOfAudio-1)*1000));
+                }
+                else
+                {
+                    play_result = _player->Play(audio);
+                }
             }
-
-            cout << endl;
-            log_t("Playback of ", total_bytes_read, " bytes complete.");
 
             if (!continue_multiturn)
             {
                 DeviceStatusIndicators::SetStatus(DeviceStatus::Idle);
             }
+            
         }
-
+        
         if (continue_multiturn)
         {
             log_t("Activity requested a continuation (ExpectingInput) -- listening again");
-            StartListening();
+            // There may be an issue where the listening times out while the Audio is playing.
+            ContinueListening();
         }
         else
         {
-            //TODO remove once we have echo cancellation
-            /*int secondsOfAudio = total_bytes_read / 32000;
-            std::this_thread::sleep_for(std::chrono::milliseconds(secondsOfAudio*1000));
-            StartKws();*/
+            if(!_bargeInSupported)
+            {
+                StartKws();
+            }
         }
     };
 }
@@ -209,10 +238,20 @@ void DialogManager::StartKws()
 void DialogManager::StartListening()
 {
     log_t("Now listening...");
-    _player->Stop();
+    if(_bargeInSupported)
+    {
+        _player->Stop();
+    }
     DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
     auto future = _dialogServiceConnector->ListenOnceAsync();
 }
+
+void DialogManager::ContinueListening()
+{
+    log_t("Now listening...");
+    DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
+    auto future = _dialogServiceConnector->ListenOnceAsync();
+};
 
 void DialogManager::StopKws()
 {

@@ -35,7 +35,16 @@ Taxonomies for products and languages: https://review.docs.microsoft.com/new-hop
 
 ## Overview
 
-This repository includes everything needed to build a sample [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) hosted in your own Azure subscription, with a client application of your choice. Voice Assistants use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) in the client application to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Alternatively, Speech SDK can be used to connect to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application. Voice Assistants can be [keyword activated](https://speech.microsoft.com/customkeyword) using sample models in this repo or new ones you create.
+This repository includes everything needed to build a sample [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) hosted in your own Azure subscription, with a client application of your choice. Voice Assistants use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) in the client application to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Alternatively, Speech SDK can be used to connect to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application. Voice Assistants can be [keyword activated](https://speech.microsoft.com/customkeyword) using keyword model files in this repository or new ones you create.
+<p>&nbsp;</p>
+<!-- The image says "Click here for step-by-step instructions on building a sample Voice Assistant"-->
+<p align="center">
+<a href="docs/CreateSampleVoiceAssistant.md">
+<img src="docs/images/click-here.png"/>
+</a>
+</p>
+<p>&nbsp;</p>
+Or browse individual components per the repository content below.
 
 <!--
 The repo has sample clients in C++, C# and Java, samples of [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes a client tool for end-to-end regression testing of a Voice Assistant system.
