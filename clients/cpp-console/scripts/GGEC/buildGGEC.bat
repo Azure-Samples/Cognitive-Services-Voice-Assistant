@@ -12,6 +12,13 @@ tar -xf .\SDK\sdk.tar -C .\SDK
 echo Copying SDK binaries to lib folder and headers to include
 for /f %%i in ('dir /b .\SDK\SpeechSDK*') do xcopy /s /y .\SDK\%%i\* .
 
+echo Downloading GGEC Device SDK binaries
+curl -L "https://aka.ms/sdsdk-download-speaker" --output .\SDK\speaker.zip
+tar -xf .\SDK\speaker.zip -C .\SDK
+
+echo Copying GGEC Device SDK binaries into the lib folder
+for /f %%i in ('dir /b .\SDK\Speaker') do xcopy /s /y .\SDK\Speaker\%%i .\lib\arm32
+
 set imageId=dev_ubuntu_arm32
 set dockerRunEnv=--rm --workdir /nf --volume %cd%:/nf %imageId%
 set buildCmd=docker run %dockerRunEnv% g++
