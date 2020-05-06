@@ -17,7 +17,14 @@
 
         private bool csvFileCreated;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static TimeSpan kwsEventFireTime;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public static TimeSpan kwsStartTime;
 
         /// <summary>
@@ -25,12 +32,14 @@
         /// </summary>
         /// <param name="stage">Stage of KWS</param>
         /// <param name="confirmed">Bool indicating if speech matches keyword model.</param>
-        /// <param name="elapsedTime">Timespan for keyword confirmation.</param>
-        public void LogSignalReceived(string stage, bool confirmed, long eventFireTime, long startTime, long endTime)
+        /// <param name="eventFireTime">Value in ticks indicating time of event.</param>
+        /// <param name="startTime">Value in ticks indicating start time of kws.</param>
+        /// <param name="endTime">Value in ticks indicating end time of kws.</param>
+        public void LogSignalReceived(string stage, string confirmed, long eventFireTime, long startTime, long endTime)
         {
             if (!this.csvFileCreated)
             {
-                this.Initialize().Wait();
+                this.Initialize();
             }
 
             keywordDetectionParams.Stage = stage;
@@ -42,15 +51,15 @@
             this.WriteToCSV().Wait();
         }
 
-        private async Task Initialize()
+        private void Initialize()
         {
             if (!File.Exists(this.filePath))
             {
-                StringBuilder sb = new StringBuilder();
+                // StringBuilder sb = new StringBuilder();
 
-                sb.AppendLine("Stage, Confirmed, EventFireTime, StartTime, EndTime");
+                // sb.AppendLine("Stage, Confirmed, EventFireTime, StartTime, EndTime");
 
-                await File.AppendAllTextAsync(this.filePath, sb.ToString());
+                // await File.AppendAllTextAsync(this.filePath, sb.ToString());
 
                 this.csvFileCreated = true;
                 return;

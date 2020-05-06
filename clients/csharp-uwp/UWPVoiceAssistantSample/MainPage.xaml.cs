@@ -610,12 +610,12 @@ namespace UWPVoiceAssistantSample
             var keywordActivationModelDataFormatModified = LocalSettingsHelper.KeywordActivationModelDataFormat != appSettings.KeywordActivationModel.ModelDataFormat;
             var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModel.Path;
             var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordModel;
-            var kwsPerformanceMetrics = LocalSettingsHelper.KwsPerfomanceLogging != appSettings.KwsPerfomanceLogging;
+            var setPropertyIdModified = LocalSettingsHelper.SetPropertyId != appSettings.SetPropertyId;
 
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
                 keywordDisplayNameModified || keywordIdModified || keywordModelIdModified ||
-                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordConfirmationModelPathModified || kwsPerformanceMetrics;
+                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordConfirmationModelPathModified || setPropertyIdModified;
 
             if (this.configModified)
             {
@@ -693,10 +693,10 @@ namespace UWPVoiceAssistantSample
                     this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
                 }
 
-                if (kwsPerformanceMetrics)
+                if (setPropertyIdModified)
                 {
-                    LocalSettingsHelper.KwsPerfomanceLogging = appSettings.KwsPerfomanceLogging;
-                    this.logger.Log($"KWS Performance Logging: {LocalSettingsHelper.KwsPerfomanceLogging}");
+                    LocalSettingsHelper.SetPropertyId = appSettings.SetPropertyId;
+                    this.logger.Log($"KWS Performance Logging: {LocalSettingsHelper.SetPropertyId}");
                 }
 
                 if (keywordActivationModelDataFormatModified

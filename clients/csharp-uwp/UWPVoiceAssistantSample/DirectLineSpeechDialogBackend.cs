@@ -12,7 +12,9 @@ namespace UWPVoiceAssistantSample
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
+    using Newtonsoft.Json.Linq;
     using UWPVoiceAssistantSample.KwsPerformance;
+    using Windows.Services.Maps;
     using Windows.Services.Store;
     using Windows.Storage;
 
@@ -172,7 +174,7 @@ namespace UWPVoiceAssistantSample
                             thirdStageStartTime = DateTime.Now.Ticks;
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
-                            this.kwsPerformanceLogger.LogSignalReceived("3", true, KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
+                            this.kwsPerformanceLogger.LogSignalReceived("3", "A", KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
                             this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
@@ -187,7 +189,7 @@ namespace UWPVoiceAssistantSample
                             {
                                 var thirdStageStartTimeRejected = KwsPerformanceLogger.kwsStartTime.Ticks;
                                 thirdStageStartTimeRejected = DateTime.Now.Ticks;
-                                this.kwsPerformanceLogger.LogSignalReceived("3", false, KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
+                                this.kwsPerformanceLogger.LogSignalReceived("3", "R", KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
                                 this.secondStageConfirmed = false;
                             }
 
@@ -342,6 +344,18 @@ namespace UWPVoiceAssistantSample
             // {
             //    config = BotFrameworkConfig.FromSubscription(speechKey, speechRegion, botId);
             // }
+            else if (LocalSettingsHelper.SetPropertyId != null)
+            {
+                // Azure Region must be set to an empty string if setting optional service property.
+                config = BotFrameworkConfig.FromSubscription(
+                    this.speechKey,
+                    string.Empty);
+
+                foreach (KeyValuePair<string, JToken> setPropertyId in LocalSettingsHelper.SetPropertyId)
+                {
+                    config.SetProperty(setPropertyId.Key, setPropertyId.Value.ToString());
+                }
+            }
             else
             {
                 config = BotFrameworkConfig.FromSubscription(
@@ -352,7 +366,7 @@ namespace UWPVoiceAssistantSample
             // Disable throttling of input audio (send it as fast as we can!)
             config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "9999");
             config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "10000");
-            //config.SetProperty("SPEECH-Endpoint", $"wss://{this.speechRegion}.convai.speech.microsoft.com/orchestrate/api/v1");
+
             var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
             config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
 

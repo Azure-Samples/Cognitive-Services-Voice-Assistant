@@ -10,6 +10,7 @@ namespace UWPVoiceAssistantSample
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using Windows.Storage;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// Bot specific application settings obtained for config.json.
@@ -59,7 +60,10 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public string KeywordModel { get; set; }
 
-        public bool KwsPerfomanceLogging { get; set; }
+        /// <summary>
+        /// Gets or sets the property Id for BotFrameworkConfig.
+        /// </summary>
+        public JObject SetPropertyId { get; set; }
 
         /// <summary>
         /// Reads and deserializes the configuration file.

@@ -3,6 +3,7 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using Newtonsoft.Json.Linq;
     using System;
     using System.IO;
     using System.Linq;
@@ -163,13 +164,9 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets or sets the KwsPerformanceLogging feature.
+        /// Gets or sets the property Id for BotFrameworkConfig.
         /// </summary>
-        public static bool KwsPerfomanceLogging
-        {
-            get => ReadValueWithDefault<bool>("kwsPerformanceLogging", false);
-            set => WriteValue("kwsPerformanceLogging", value);
-        }
+        public static JObject SetPropertyId { get; set; }
 
         public static DialogAudio OutputFormat
         {
@@ -243,7 +240,7 @@ namespace UWPVoiceAssistantSample
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
                 KeywordConfirmationModelPath = appSettings.KeywordModel;
-                KwsPerfomanceLogging = appSettings.KwsPerfomanceLogging;
+                SetPropertyId = appSettings.SetPropertyId;
             }
         }
 

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-using System;
-
 namespace UWPVoiceAssistantSample.KwsPerformance
 {
     /// <summary>
@@ -18,14 +16,20 @@ namespace UWPVoiceAssistantSample.KwsPerformance
         /// <summary>
         /// Gets or sets a value indicating whether the Keyword stage was confirmed.
         /// </summary>
-        public bool Confirmed { get; set; }
+        public string Confirmed { get; set; }
 
+        /// <summary>
+        /// Gets or sets the event fire time.
+        /// </summary>
         public long EventFireTime { get; set; }
 
+        /// <summary>
+        /// Gets or sets the start time for kws.
+        /// </summary>
         public long StartTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the time for keyword verification.
+        /// Gets or sets the end time for kws.
         /// </summary>
         public long EndTime { get; set; }
     }
