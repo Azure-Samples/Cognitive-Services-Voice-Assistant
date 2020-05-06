@@ -7,7 +7,7 @@ mkdir SpeechSDK
 echo "Downloading Speech SDK binaries"
 wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SpeechSDK
 
-echo "Copying binaries to lib folder and headers to include"
+echo "Copying SDK binaries to lib folder and headers to include"
 cp -Rf ./SpeechSDK/SpeechSDK*/* .
 
 echo "Building Raspberry Pi sample"

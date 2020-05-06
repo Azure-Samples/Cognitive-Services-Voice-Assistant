@@ -3,6 +3,14 @@ setlocal
 cd ..\..
 
 mkdir out
+mkdir SDK
+
+echo Downloading SDK
+curl -L "https://aka.ms/csspeech/linuxbinary" --output .\SDK\sdk.tar
+tar -xf .\SDK\sdk.tar -C .\SDK
+
+echo Copying SDK binaries to lib folder and headers to include
+for /f %%i in ('dir /b .\SDK\SpeechSDK*') do xcopy /s /y .\SDK\%%i\* .
 
 set imageId=dev_ubuntu_arm32
 set dockerRunEnv=--rm --workdir /nf --volume %cd%:/nf %imageId%
