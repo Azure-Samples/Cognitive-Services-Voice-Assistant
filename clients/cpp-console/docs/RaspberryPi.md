@@ -28,7 +28,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 
   ```sh
   git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-  ```bash
+  ```
 
 * Download the Speech SDK
 
@@ -44,7 +44,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
   mv SpeechSDK-Linux-1.10.0/lib/arm32 cpp-console/lib/
   mv SpeechSDK-Linux-1.10.0/include/* cpp-console/include/
   cd cpp-console
-  ```bash
+  ```
 
 * Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used (.table file), these are in /home/ubuntu/keyword-models
 
