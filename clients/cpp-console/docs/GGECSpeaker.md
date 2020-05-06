@@ -36,7 +36,7 @@ Wait until the LED ring glows green.
 
 The repo should be cloned onto your dev machine and we will operate out of the cpp-console folder
 
-To utilize the audio processing from the Microsoft Audio Stack, we will also dowload the specific binaries for the GGEC speaker. This will happen automatically if you used the build script. Otherwise they can be found here: [binaries](https://aka.ms/sdsdk-download).
+To utilize the audio processing from the Microsoft Audio Stack, we will also download the specific binaries for the GGEC speaker. This will happen automatically if you used the build script. Otherwise they can be found here: [binaries](https://aka.ms/sdsdk-download).
 
 Download the Speech SDK: The speech SDK will be downloaded as part of the build script. Otherwise it can be found here:[Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
 
