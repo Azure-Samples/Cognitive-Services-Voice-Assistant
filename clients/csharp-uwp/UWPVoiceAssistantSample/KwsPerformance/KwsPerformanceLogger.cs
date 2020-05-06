@@ -6,59 +6,60 @@
     using System.Threading.Tasks;
     using Windows.Storage;
 
+    /// <summary>
+    /// Generates a CSV file indicating keyword spotting and verification for each stage.
+    /// </summary>
     public class KwsPerformanceLogger
     {
-        public static KeywordDetectionParams keywordDetectionParams = new KeywordDetectionParams();
-
-        private ILogProvider logger;
+        private static KeywordDetectionParams keywordDetectionParams = new KeywordDetectionParams();
 
         private string filePath = $"{ApplicationData.Current.LocalFolder.Path}\\kwsPerformanceMetrics.csv";
 
-        private bool performanceFileCreated;
+        private bool csvFileCreated;
 
-        public KwsPerformanceLogger()
+        /// <summary>
+        /// Sets the keyword stage, confirmation bool, and elapsed time for KWS and KWV.
+        /// </summary>
+        /// <param name="stage">Stage of KWS</param>
+        /// <param name="confirmed">Bool indicating if speech matches keyword model.</param>
+        /// <param name="elapsedTime">Timespan for keyword confirmation.</param>
+        public void LogSignalReceived(string stage, bool confirmed, long startTime, long endTime)
         {
-            this.logger = LogRouter.GetClassLogger();
+            if (!this.csvFileCreated)
+            {
+                this.Initialize().Wait();
+            }
+
+            keywordDetectionParams.Stage = stage;
+            keywordDetectionParams.Confirmed = confirmed;
+            keywordDetectionParams.StartTime = startTime;
+            keywordDetectionParams.EndTime = endTime;
+
+            this.WriteToCSV().Wait();
         }
 
-        public async Task Initialize()
+        private async Task Initialize()
         {
             if (!File.Exists(this.filePath))
             {
                 StringBuilder sb = new StringBuilder();
 
-                sb.AppendLine("Stage, Confirmed, Elapsed Time");
+                sb.AppendLine("Stage, Confirmed, StartTime, EndTime");
 
                 await File.AppendAllTextAsync(this.filePath, sb.ToString());
 
-                this.performanceFileCreated = true;
+                this.csvFileCreated = true;
                 return;
             }
 
-            this.performanceFileCreated = false;
+            this.csvFileCreated = false;
         }
 
-        public void LogSignalReceived(string stage, bool confirmed, long elapsedTime)
-        {
-            if (!this.performanceFileCreated)
-            {
-                this.Initialize().Wait();
-            }
-
-            this.logger.Log(LogMessageLevel.Error, $"{stage}, {confirmed}, {elapsedTime}");
-
-            keywordDetectionParams.Stage = stage;
-            keywordDetectionParams.Confirmed = confirmed;
-            keywordDetectionParams.KW_ElapsedTime = elapsedTime;
-
-            this.WriteToCSV().Wait();
-        }
-
-        public async Task WriteToCSV()
+        private async Task WriteToCSV()
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"\"{keywordDetectionParams.Stage}\",\"{keywordDetectionParams.Confirmed}\",\"{keywordDetectionParams.KW_ElapsedTime}\"");
+            sb.AppendLine($"\"{keywordDetectionParams.Stage}\",\"{keywordDetectionParams.Confirmed}\",\"{keywordDetectionParams.StartTime}\", \"{keywordDetectionParams.EndTime}\"");
 
             await File.AppendAllTextAsync(this.filePath, sb.ToString());
         }

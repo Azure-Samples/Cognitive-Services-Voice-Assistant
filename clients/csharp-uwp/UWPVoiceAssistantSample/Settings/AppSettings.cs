@@ -59,6 +59,8 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public string KeywordModel { get; set; }
 
+        public bool KWSPerformanceLogging { get; set; }
+
         /// <summary>
         /// Reads and deserializes the configuration file.
         /// </summary>

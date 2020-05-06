@@ -18,9 +18,11 @@ namespace UWPVoiceAssistantSample.KwsPerformance
         /// </summary>
         public bool Confirmed { get; set; }
 
+        public long StartTime { get; set; }
+
         /// <summary>
         /// Gets or sets the time for keyword verification.
         /// </summary>
-        public long KW_ElapsedTime { get; set; }
+        public long EndTime { get; set; }
     }
 }

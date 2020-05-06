@@ -268,7 +268,8 @@ namespace UWPVoiceAssistantSample
         protected virtual async Task<bool> SetupConversationAsync(DetectionOrigin signalOrigin)
         {
             var session = await this.agentSessionManager.GetSessionAsync();
-            this.kwsPerformanceStopWatch.Start();
+            //this.kwsPerformanceStopWatch.Start();
+            var elapsed = SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks;
             try
             {
                 if (signalOrigin == DetectionOrigin.FromPushToTalk)
@@ -283,8 +284,8 @@ namespace UWPVoiceAssistantSample
             catch (Exception ex)
             {
                 this.logger.Log($"Unable to acquire MVA 1st-pass audio. Rejecting signal.\n{ex.HResult}: {ex.Message}");
-                this.kwsPerformanceStopWatch.Stop();
-                this.kwsPerformanceLogger.LogSignalReceived("1", false, this.kwsPerformanceStopWatch.ElapsedTicks);
+                //this.kwsPerformanceStopWatch.Stop();
+                this.kwsPerformanceLogger.LogSignalReceived("1", false, elapsed, SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks);
                 await this.FinishConversationAsync();
                 return false;
             }
@@ -387,7 +388,7 @@ namespace UWPVoiceAssistantSample
                 await this.StartConversationAsync(
                     detectionOrigin,
                     signalNeedsVerification);
-                this.kwsPerformanceStopWatch.Start();
+                //this.kwsPerformanceStopWatch.Start();
             };
 
             this.signalDetectionHelper.SignalRejected += async (DetectionOrigin origin) =>

@@ -134,7 +134,6 @@ namespace UWPVoiceAssistantSample
                 this.connectorInputStream = AudioInputStream.CreatePushStream();
 
                 this.connector?.Dispose();
-                //this.ConnectorConfiguration.SetProperty("https://westus.api.cognitive.microsoft.com/sts/v1.0/issuetoken", $"wss://{this.speechRegion}.convai.speech.microsoft.com/orchestrate/api/v1");
                 this.connector = new DialogServiceConnector(
                     this.ConnectorConfiguration,
                     AudioConfig.FromStreamInput(this.connectorInputStream));
@@ -144,16 +143,16 @@ namespace UWPVoiceAssistantSample
                 this.kwsPerformanceStopwatch = new Stopwatch();
                 this.connector.Recognizing += (s, e) =>
                 {
-                    this.kwsPerformanceStopwatch.Start();
+                    //this.kwsPerformanceStopwatch.Start();
+                    var elapsed = SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks;
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizingKeyword:
                             this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognizing?.Invoke(e.Result.Text);
-                            this.kwsPerformanceStopwatch.Stop();
-                            this.kwsPerformanceLogger.LogSignalReceived("2", true,  this.kwsPerformanceStopwatch.ElapsedTicks);
+                            this.kwsPerformanceLogger.LogSignalReceived("2", true, elapsed, SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks);
                             this.secondStageConfirmed = true;
-                            this.kwsPerformanceStopwatch.Start();
+                            //this.kwsPerformanceStopwatch.Start();
                             break;
                         case ResultReason.RecognizingSpeech:
                             this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
@@ -165,13 +164,15 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.Recognized += (s, e) =>
                 {
-                    this.kwsPerformanceStopwatch.Stop();
+                    //this.kwsPerformanceStopwatch.Stop();
+                    var elapsed = SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks;
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizedKeyword:
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
-                            this.kwsPerformanceLogger.LogSignalReceived("3", true, this.kwsPerformanceStopwatch.ElapsedTicks);
+                            //this.kwsPerformanceStopwatch.Stop();
+                            this.kwsPerformanceLogger.LogSignalReceived("3", true, elapsed, SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks);
                             this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
@@ -184,7 +185,8 @@ namespace UWPVoiceAssistantSample
                             this.logger.Log($"Cloud model rejected keyword");
                             if (this.secondStageConfirmed)
                             {
-                                this.kwsPerformanceLogger.LogSignalReceived("3", false, this.kwsPerformanceStopwatch.ElapsedTicks);
+                                SignalDetectionHelper.kwsPerformanceStopWatch.Stop();
+                                this.kwsPerformanceLogger.LogSignalReceived("3", false, elapsed, SignalDetectionHelper.kwsPerformanceStopWatch.ElapsedTicks);
                                 this.secondStageConfirmed = false;
                             }
 
@@ -198,6 +200,7 @@ namespace UWPVoiceAssistantSample
                 {
                     var code = (int)e.ErrorCode;
                     var message = $"{e.Reason.ToString()}: {e.ErrorDetails}";
+                    Debug.WriteLine(message);
                     this.ErrorReceived?.Invoke(new DialogErrorInformation(code, message));
                 };
                 this.connector.ActivityReceived += (s, e) =>
@@ -349,7 +352,7 @@ namespace UWPVoiceAssistantSample
             // Disable throttling of input audio (send it as fast as we can!)
             config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "9999");
             config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "10000");
-
+            config.SetProperty("SPEECH-Endpoint", $"wss://{this.speechRegion}.convai.speech.microsoft.com/orchestrate/api/v1");
             var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
             config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
 
