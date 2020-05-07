@@ -9,14 +9,19 @@ namespace UWPVoiceAssistantSample.KwsPerformance
     public class KeywordDetectionParams
     {
         /// <summary>
-        /// Gets or sets the KWS Stage.
+        /// Gets or sets a value indicating if the kws is hardware or software.
         /// </summary>
-        public string Stage { get; set; }
+        public string Spotter { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the Keyword stage was confirmed.
         /// </summary>
         public string Confirmed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the KWS Stage.
+        /// </summary>
+        public string Stage { get; set; }
 
         /// <summary>
         /// Gets or sets the event fire time.

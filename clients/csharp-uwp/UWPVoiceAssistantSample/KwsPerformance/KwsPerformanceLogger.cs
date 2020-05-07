@@ -11,12 +11,6 @@
     /// </summary>
     public class KwsPerformanceLogger
     {
-        private static KeywordDetectionParams keywordDetectionParams = new KeywordDetectionParams();
-
-        private string filePath = $"{ApplicationData.Current.LocalFolder.Path}\\kwsPerformanceMetrics.csv";
-
-        private bool csvFileCreated;
-
         /// <summary>
         /// Timestamp for kws event initiation.
         /// </summary>
@@ -27,23 +21,33 @@
         /// </summary>
         public static TimeSpan kwsStartTime;
 
+        public static string Spotter;
+
+        private static KeywordDetectionParams keywordDetectionParams = new KeywordDetectionParams();
+
+        private string filePath = $"{ApplicationData.Current.LocalFolder.Path}\\kwsPerformanceMetrics.csv";
+
+        private bool csvFileCreated;
+
         /// <summary>
         /// Sets the keyword stage, confirmation bool, and elapsed time for KWS and KWV.
         /// </summary>
-        /// <param name="stage">Stage of KWS</param>
-        /// <param name="confirmed">Bool indicating if speech matches keyword model.</param>
+        /// <param name="spotter">Keyword recognition model is HWKWS or SWKWS.</param>
+        /// <param name="confirmed">String value indicating if speech matches keyword model. "A" for accepted and "R" for rejected.</param>
+        /// <param name="stage">Stage of KWS.</param>
         /// <param name="eventFireTime">Value in ticks indicating time of event.</param>
         /// <param name="startTime">Value in ticks indicating start time of kws.</param>
         /// <param name="endTime">Value in ticks indicating end time of kws.</param>
-        public void LogSignalReceived(string stage, string confirmed, long eventFireTime, long startTime, long endTime)
+        public void LogSignalReceived(string spotter, string confirmed, string stage, long eventFireTime, long startTime, long endTime)
         {
             if (!this.csvFileCreated)
             {
                 this.Initialize();
             }
 
-            keywordDetectionParams.Stage = stage;
+            keywordDetectionParams.Spotter = spotter;
             keywordDetectionParams.Confirmed = confirmed;
+            keywordDetectionParams.Stage = stage;
             keywordDetectionParams.EventFireTime = eventFireTime;
             keywordDetectionParams.StartTime = startTime;
             keywordDetectionParams.EndTime = endTime;
@@ -75,7 +79,7 @@
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"\"{keywordDetectionParams.Stage}\",\"{keywordDetectionParams.Confirmed}\",\"{keywordDetectionParams.EventFireTime}\",\"{keywordDetectionParams.StartTime}\",\"{keywordDetectionParams.EndTime}\"");
+            sb.AppendLine($"\"{keywordDetectionParams.Spotter}\",\"{keywordDetectionParams.Confirmed}\",\"{keywordDetectionParams.Stage}\",\"{keywordDetectionParams.EventFireTime}\",\"{keywordDetectionParams.StartTime}\",\"{keywordDetectionParams.EndTime}\"");
 
             await File.AppendAllTextAsync(this.filePath, sb.ToString());
         }

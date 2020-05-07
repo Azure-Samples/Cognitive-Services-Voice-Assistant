@@ -10,6 +10,7 @@ namespace UWPVoiceAssistantSample
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Storage;
 
@@ -259,10 +260,12 @@ namespace UWPVoiceAssistantSample
 
             if (hardwareDetectors.Any())
             {
+                KwsPerformanceLogger.Spotter = "HWKWS";
                 return hardwareDetectors.First();
             }
             else
             {
+                KwsPerformanceLogger.Spotter = "SWKWS";
                 return configurableDetectors.First();
             }
         }

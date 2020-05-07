@@ -155,7 +155,6 @@ namespace UWPVoiceAssistantSample
                 this.connector.SessionStopped += (s, e) => this.SessionStopped?.Invoke(e.SessionId);
                 this.connector.Recognizing += (s, e) =>
                 {
-                    KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizingKeyword:
@@ -181,7 +180,7 @@ namespace UWPVoiceAssistantSample
                             thirdStageStartTime = DateTime.Now.Ticks;
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
-                            this.kwsPerformanceLogger.LogSignalReceived("3", "A", KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
+                            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "3", KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
                             this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
@@ -196,7 +195,7 @@ namespace UWPVoiceAssistantSample
                             {
                                 var thirdStageStartTimeRejected = KwsPerformanceLogger.kwsStartTime.Ticks;
                                 thirdStageStartTimeRejected = DateTime.Now.Ticks;
-                                this.kwsPerformanceLogger.LogSignalReceived("3", "R", KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
+                                this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "3", KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
                                 this.secondStageConfirmed = false;
                             }
 

@@ -142,7 +142,7 @@ namespace UWPVoiceAssistantSample
 
             this.SignalReceived?.Invoke(detectionOrigin, this.signalNeedsVerification);
 
-            this.kwsPerformanceLogger.LogSignalReceived("1", "A", KwsPerformanceLogger.kwsEventFireTime.Ticks, session.SignalStart.Ticks, session.SignalEnd.Ticks);
+            this.kwsPerformanceLogger.LogSignalReceived(KwsPerformanceLogger.Spotter, "A", "1", KwsPerformanceLogger.kwsEventFireTime.Ticks, session.SignalStart.Ticks, session.SignalEnd.Ticks);
 
             if (this.signalNeedsVerification)
             {
@@ -189,7 +189,7 @@ namespace UWPVoiceAssistantSample
 
         private void OnSessionSignalConfirmed(IAgentSessionWrapper session, DetectionOrigin origin)
         {
-            this.kwsPerformanceLogger.LogSignalReceived("2", "A", KwsPerformanceLogger.kwsEventFireTime.Ticks, KwsPerformanceLogger.kwsStartTime.Ticks, DateTime.Now.Ticks);
+            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "2", KwsPerformanceLogger.kwsEventFireTime.Ticks, KwsPerformanceLogger.kwsStartTime.Ticks, DateTime.Now.Ticks);
             this.StopFailsafeTimer();
 
             this.logger.Log($"Confirmed signal received, IsUserAuthenticated={session.IsUserAuthenticated.ToString(null)}");
@@ -205,7 +205,7 @@ namespace UWPVoiceAssistantSample
 
         private void OnSessionSignalRejected(DetectionOrigin origin)
         {
-            this.kwsPerformanceLogger.LogSignalReceived("2", "R", KwsPerformanceLogger.kwsEventFireTime.Ticks, KwsPerformanceLogger.kwsStartTime.Ticks, DateTime.Now.Ticks);
+            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "2", KwsPerformanceLogger.kwsEventFireTime.Ticks, KwsPerformanceLogger.kwsStartTime.Ticks, DateTime.Now.Ticks);
             this.StopFailsafeTimer();
             this.SignalRejected?.Invoke(origin);
         }
@@ -220,6 +220,7 @@ namespace UWPVoiceAssistantSample
                     {
                         if (this.secondStageStopwatch != null)
                         {
+                            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "2", KwsPerformanceLogger.kwsEventFireTime.Ticks, KwsPerformanceLogger.kwsStartTime.Ticks, DateTime.Now.Ticks);
                             this.logger.Log($"Failsafe timer expired; rejecting");
                             this.SignalRejected?.Invoke(this.LastDetectedSignalOrigin);
                         } // else timer was stopped while waiting for the lock
