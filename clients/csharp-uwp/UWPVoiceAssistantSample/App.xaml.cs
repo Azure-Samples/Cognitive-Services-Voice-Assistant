@@ -5,8 +5,6 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioOutput;
@@ -14,9 +12,7 @@ namespace UWPVoiceAssistantSample
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
     using Windows.ApplicationModel.Background;
-    using Windows.ApplicationModel.ConversationalAgent;
     using Windows.ApplicationModel.Core;
-    using Windows.Storage;
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;

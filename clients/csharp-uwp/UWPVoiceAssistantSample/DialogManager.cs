@@ -28,7 +28,6 @@ namespace UWPVoiceAssistantSample
     {
         private ILogProvider logger;
         private KwsPerformanceLogger kwsPerformanceLogger;
-        private Stopwatch kwsPerformanceStopWatch;
         private IDialogBackend<TInputType> dialogBackend;
         private IDialogAudioInputProvider<TInputType> dialogAudioInput;
         private IDialogAudioOutputAdapter dialogAudioOutput;
@@ -75,8 +74,6 @@ namespace UWPVoiceAssistantSample
 
             this.agentSessionManager.SignalDetected += (sender, args) => this.HandleSignalDetection(args);
             this.InitializeSignalDetectionHelper();
-
-            this.kwsPerformanceStopWatch = new Stopwatch();
 
             _ = this.InitializeAsync(dialogAudioOutput);
         }

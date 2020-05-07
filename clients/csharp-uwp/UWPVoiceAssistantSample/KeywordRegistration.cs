@@ -4,9 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
-    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -22,7 +20,6 @@ namespace UWPVoiceAssistantSample
         private readonly SemaphoreSlim creatingKeywordConfigSemaphore;
         private ActivationSignalDetectionConfiguration keywordConfiguration;
         private bool disposed;
-        public static long StartTime;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeywordRegistration"/> class.
