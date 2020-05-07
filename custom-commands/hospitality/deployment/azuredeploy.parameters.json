@@ -3,16 +3,16 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceName": {
-      "value": "test7resource"
+      "value": "AZURE_RESOURCE_NAME"
     },
     "luisName": {
-      "value": "test7resource-8070"
+      "value": "AZURE_RESOURCE_NAME-####"
     },
     "functionName": {
-      "value": "test7resource-8070"
+      "value": "AZURE_RESOURCE_NAME-####"
     },
     "storageName": {
-      "value": "test7resource8070"
+      "value": "AZURE_RESOURCE_NAME####"
     }
   }
 }
