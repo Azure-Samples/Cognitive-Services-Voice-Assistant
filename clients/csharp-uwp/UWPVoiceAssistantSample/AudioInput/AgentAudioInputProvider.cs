@@ -140,15 +140,15 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task that completes once audio input has been stopped. </returns>
         public async Task StopAsync()
         {
-            await this.FinishDebugAudioDumpIfNeededAsync();
-
             if (this.graphRunning)
             {
-                this.inputGraph.Stop();
-            }
+                await this.FinishDebugAudioDumpIfNeededAsync();
 
-            this.graphRunning = false;
-            this.inputGraph.QuantumStarted -= this.OnQuantumStarted;
+                this.inputGraph.Stop();
+
+                this.graphRunning = false;
+                this.inputGraph.QuantumStarted -= this.OnQuantumStarted;
+            }
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ $FreeAppServiceSupportedRegions = "westus", "northeurope"
 $isRegionSupported = $FreeAppServiceSupportedRegions -eq $region
 
 if("" -eq $isRegionSupported ){
-    Write-Output "Region '$region' is currently not supported for free app service place. Please choose a region from the following: $FreeAppServiceSupportedRegions."
+    Write-Output "Region '$region' is currently not supported for free app service plans. Please choose a region from the following: $FreeAppServiceSupportedRegions."
     exit
 }
 

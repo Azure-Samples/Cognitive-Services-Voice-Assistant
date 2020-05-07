@@ -17,7 +17,15 @@ $newFile.parameters.storageName.value = $storageName
 $newFile | ConvertTo-Json -depth 100 | Set-Content './azuredeploy.parameters.json'
 
 Write-Host "Creating resource group"
-$output = az group create --name $resourceName --location $region
+$output = az group exists --name $resourceName
+
+if($output -eq $true){
+    Write-Error "Resource Group already exists. Please give a new resource name."
+    exit
+}
+
+$output = az group create --name $resourceName --location $region | ConvertFrom-Json
+
 if( !$output ){
     Write-Error "Failed to create resource group"
     Write-Error "$output"

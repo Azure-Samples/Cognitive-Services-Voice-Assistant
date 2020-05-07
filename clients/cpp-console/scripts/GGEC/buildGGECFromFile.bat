@@ -26,6 +26,7 @@ set src=src/GGEC/GGECDeviceStatusIndicators.cpp %src%
 set src=src/common/AudioPlayerEntry.cpp %src%
 set src=src/common/mainAudioFromFile.cpp %src%
 set src=src/common/AgentConfiguration.cpp %src%
+set src=src/common/DialogManager.cpp %src%
 set tgt=out/sample.exe
 
 set defines=-D LINUX

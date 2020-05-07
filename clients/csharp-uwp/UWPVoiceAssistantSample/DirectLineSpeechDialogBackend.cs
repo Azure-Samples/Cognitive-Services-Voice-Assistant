@@ -254,8 +254,10 @@ namespace UWPVoiceAssistantSample
         /// </returns>
         public async Task<string> SendDialogMessageAsync(string message)
         {
-            var id = await this.connector.SendActivityAsync(message);
-            return id;
+            var activityJson = new JObject();
+            activityJson["type"] = "message";
+            activityJson["text"] = message;
+            return await this.connector.SendActivityAsync(activityJson.ToString());
         }
 
         /// <summary>
