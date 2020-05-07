@@ -48,7 +48,10 @@
             keywordDetectionParams.StartTime = startTime;
             keywordDetectionParams.EndTime = endTime;
 
-            this.WriteToCSV().Wait();
+            if (LocalSettingsHelper.SetPropertyId != null)
+            {
+                this.WriteToCSV().Wait();
+            }
         }
 
         private void Initialize()

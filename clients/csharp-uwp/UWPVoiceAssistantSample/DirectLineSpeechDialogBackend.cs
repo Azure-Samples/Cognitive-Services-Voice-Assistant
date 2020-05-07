@@ -38,10 +38,10 @@ namespace UWPVoiceAssistantSample
         private string customCommandsAppId;
         private string botId;
         private bool enableSdkLogging;
+        private bool enableKwsLogging;
         private string keywordFilePath;
         private bool startEventReceived;
         private bool secondStageConfirmed;
-        private Stopwatch kwsPerformanceStopwatch;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
@@ -49,10 +49,7 @@ namespace UWPVoiceAssistantSample
         public DirectLineSpeechDialogBackend()
         {
             this.logger = LogRouter.GetClassLogger();
-            //if (LocalSettingsHelper.KwsPerfomanceLogging)
-            //{
-                this.kwsPerformanceLogger = new KwsPerformanceLogger();
-            //}
+            this.kwsPerformanceLogger = new KwsPerformanceLogger();
         }
 
         /// <summary>
@@ -129,6 +126,17 @@ namespace UWPVoiceAssistantSample
 
             var refreshConnector = configRefreshRequired || (this.keywordFilePath != keywordFile.Path);
 
+            if (LocalSettingsHelper.SetPropertyId != null)
+            {
+                this.enableKwsLogging = true;
+            }
+
+            if (this.enableKwsLogging)
+            {
+                refreshConnector = true;
+                this.enableKwsLogging = false;
+            }
+
             if (refreshConnector)
             {
                 var newConnectorConfiguration = this.CreateConfiguration();
@@ -145,7 +153,6 @@ namespace UWPVoiceAssistantSample
 
                 this.connector.SessionStarted += (s, e) => this.SessionStarted?.Invoke(e.SessionId);
                 this.connector.SessionStopped += (s, e) => this.SessionStopped?.Invoke(e.SessionId);
-                this.kwsPerformanceStopwatch = new Stopwatch();
                 this.connector.Recognizing += (s, e) =>
                 {
                     KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
@@ -355,12 +362,16 @@ namespace UWPVoiceAssistantSample
                 {
                     config.SetProperty(setPropertyId.Key, setPropertyId.Value.ToString());
                 }
+
+                this.enableKwsLogging = true;
             }
             else
             {
                 config = BotFrameworkConfig.FromSubscription(
                     this.speechKey,
                     this.speechRegion);
+
+                this.enableKwsLogging = false;
             }
 
             // Disable throttling of input audio (send it as fast as we can!)
@@ -408,7 +419,8 @@ namespace UWPVoiceAssistantSample
                 && this.customVoiceIds == customVoiceIds
                 && this.customCommandsAppId == customCommandsAppId
                 && this.botId == botId
-                && this.enableSdkLogging == enableSdkLogging)
+                && this.enableSdkLogging == enableSdkLogging
+                && !this.enableKwsLogging)
             {
                 return false;
             }
