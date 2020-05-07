@@ -3,7 +3,7 @@
 <p align="center">UNDER DEVELOPMENT</p>
 
 ## Things you will need
-* An Azure account. [sign up for free](https://azure.microsoft.com/free/ai/).
+* An Azure account. [Sign up for free](https://azure.microsoft.com/free/ai/).
 * Powershell 6.0 or greater. [Download Powershell here](https://github.com/PowerShell/PowerShell/releases). 
     * On Windows, download and run an .msi file (e.g. "PowerShell-7.0.0-win-x64.msi")
 * Azure CLI. [Insall Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version 2.4.0 or higher.
@@ -38,7 +38,7 @@ Call az login to log your Powershell into Azure. If you have more than one Azure
 ```
 It will take a few minutes for the scripts to run. 
 
-If you see errors while running the script, refer to the [Troubleshooting](#troubleshooting) section below. Before running the script again due to errors, please [clean up your Azure resources and Github repo state](#cleaning-up-your-azure-resources-and-github-repo)
+If you see errors while running the script, refer to the [Troubleshooting](#troubleshooting) section below. Before running the script again due to errors, please [clean up your Azure resources and Github repo state](#cleaning-up-your-azure-resources-and-github-repo).
 
 On a successful completion, you should see a message at the end similar to the following, with all the information you need to configure one of the selected Voice Assistant client samples, and a URL to visualize the results of your voice commands:
 ```console
@@ -89,7 +89,7 @@ Write-Error: Failed to create resource group"</p>* - This may be because your fr
 
 ## Cleaning up your Azure resources and GitHub repo
 
-When you run the script deployAll.ps1, a new Azure resource group is created, and a couple of files on disk get automatically modified. If you want to undo the effects of the script, follow the instructions below. Do that when you are done with this demo and want to clean things up. Also do the clean up if you encountered an error while running the script, and would like to re-run it. It's important to do clean up before you re-run the script.
+When you run the script deployAll.ps1, a new Azure resource group is created, a few files on disk get automatically modified and a few new ones created. If you want to undo the effects of the script, follow the instructions below. Do that when you are done with this demo and want to clean things up. Also do the clean up if you encountered an error while running the script, and would like to re-run it. It's important to do clean up before you re-run the script.
 1. Run this command in your Powershell prompt to delete the resource group (replace MyResourceGroupName with the name you picked):
 ```powershell
 az group delete --name MyResourceGroupName
@@ -98,9 +98,7 @@ az group delete --name MyResourceGroupName
 
 ## Deploying Azure resources - deep dive
 
-There should be a set of azure resources created in your azure subscription. In the Azure portal is should look something like this:
-
-![Resources](../../../docs/images/Resources.png)
+*This section needs to be updated.*
 
 The resources were created using an azure template which is stored in the [./azuredeploy.json](./azuredeploy.json) file.</br>
 Then the [../storage files](../storage-files) were deployed into the storage resource.</br>
