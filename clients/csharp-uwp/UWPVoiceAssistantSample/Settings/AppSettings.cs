@@ -66,12 +66,12 @@ namespace UWPVoiceAssistantSample
         public JObject SetProperty { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether kws logging is enabled or disabled.
         /// </summary>
         public bool EnableKwsLogging { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether to use 1st stage hardware keyword spotter.
         /// </summary>
         public bool EnableHardwareDetector { get; set; }
 

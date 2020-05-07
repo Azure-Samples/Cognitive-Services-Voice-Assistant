@@ -168,8 +168,14 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public static JObject SetProperty { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether kws logging is enabled or disabled.
+        /// </summary>
         public static bool EnableKwsLogging { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to use 1st stage hardware keyword spotter.
+        /// </summary>
         public static bool EnableHardwareDetector { get; set; }
 
         public static DialogAudio OutputFormat
