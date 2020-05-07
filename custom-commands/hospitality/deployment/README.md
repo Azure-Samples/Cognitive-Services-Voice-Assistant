@@ -76,7 +76,7 @@ If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/
 If you enter the visualization URL in your browser (e.g. https://#########.blob.core.windows.net/www/demo.html?room=test1) you will see a default scene, simulating an environment you will soon manipulate with your voice.
 
 For the Hospitality demo, you should see this scene:
-![xxx](images\hospitality-default-scene.png)
+![hospitality scene](images\hospitality-default-scene.png)
 
 
 ## Troubleshooting
