@@ -166,7 +166,11 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets the property Id for BotFrameworkConfig.
         /// </summary>
-        public static JObject SetPropertyId { get; set; }
+        public static JObject SetProperty { get; set; }
+
+        public static bool EnableKwsLogging { get; set; }
+
+        public static bool EnableHardwareDetector { get; set; }
 
         public static DialogAudio OutputFormat
         {
@@ -240,7 +244,9 @@ namespace UWPVoiceAssistantSample
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
                 KeywordConfirmationModelPath = appSettings.KeywordModel;
-                SetPropertyId = appSettings.SetPropertyId;
+                SetProperty = appSettings.SetProperty;
+                EnableKwsLogging = appSettings.EnableKwsLogging;
+                EnableHardwareDetector = appSettings.EnableHardwareDetector;
             }
         }
 

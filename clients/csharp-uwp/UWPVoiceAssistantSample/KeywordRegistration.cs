@@ -232,7 +232,7 @@ namespace UWPVoiceAssistantSample
             }
         }
 
-        private static async Task<ActivationSignalDetector> GetFirstEligibleDetectorAsync(
+        private static async Task<ActivationSignalDetector> GetDetectorAsync(
             string dataFormat)
         {
             var detectorManager = ConversationalAgentDetectorManager.Default;
@@ -246,19 +246,33 @@ namespace UWPVoiceAssistantSample
                 throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {configurableDetectors.Count()}.");
             }
 
-            var hardwareDetectors = configurableDetectors.Where(candidate => candidate.Kind == ActivationSignalDetectorKind.AudioPattern &&
-            candidate.SupportedPowerStates.Contains(ActivationSignalDetectorPowerState.ConnectedLowPower));
+            if (LocalSettingsHelper.EnableHardwareDetector)
+            {
+                var hardwareDetectors = configurableDetectors.Where(candidate => !candidate.CanCreateConfigurations);
 
-            if (hardwareDetectors.Any())
-            {
-                KwsPerformanceLogger.Spotter = "HWKWS";
-                return hardwareDetectors.First();
+                var hardwareDetector = hardwareDetectors.First();
+
+                if (hardwareDetectors.Any())
+                {
+                    KwsPerformanceLogger.Spotter = "HWKWS";
+                    foreach (var detector in configurableDetectors)
+                    {
+                        if (detector != hardwareDetector)
+                        {
+                            var detectorConfiguration = await detector.GetConfigurationsAsync();
+                            foreach (var configuration in detectorConfiguration)
+                            {
+                                await configuration.SetEnabledAsync(false);
+                            }
+                        }
+                    }
+
+                    return hardwareDetector;
+                }
             }
-            else
-            {
-                KwsPerformanceLogger.Spotter = "SWKWS";
-                return configurableDetectors.First();
-            }
+
+            KwsPerformanceLogger.Spotter = "SWKWS";
+            return configurableDetectors.First();
         }
 
         private static async Task<ActivationSignalDetectionConfiguration> GetOrCreateConfigurationOnDetectorAsync(
@@ -331,7 +345,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
         {
-            var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
+            var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
 
             // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
             // are disabled to avoid collisions.

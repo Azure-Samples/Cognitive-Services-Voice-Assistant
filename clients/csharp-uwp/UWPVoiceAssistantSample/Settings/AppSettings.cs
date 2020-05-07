@@ -63,7 +63,17 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets the property Id for BotFrameworkConfig.
         /// </summary>
-        public JObject SetPropertyId { get; set; }
+        public JObject SetProperty { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool EnableKwsLogging { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool EnableHardwareDetector { get; set; }
 
         /// <summary>
         /// Reads and deserializes the configuration file.

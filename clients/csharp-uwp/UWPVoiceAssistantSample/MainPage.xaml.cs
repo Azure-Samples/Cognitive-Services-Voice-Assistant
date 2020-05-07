@@ -603,12 +603,15 @@ namespace UWPVoiceAssistantSample
             var keywordActivationModelDataFormatModified = LocalSettingsHelper.KeywordActivationModelDataFormat != appSettings.KeywordActivationModel.ModelDataFormat;
             var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModel.Path;
             var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordModel;
-            var setPropertyIdModified = LocalSettingsHelper.SetPropertyId != appSettings.SetPropertyId;
+            var setPropertyIdModified = LocalSettingsHelper.SetProperty != appSettings.SetProperty;
+            var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging != appSettings.EnableKwsLogging;
+            var enabledHardwareDetector = LocalSettingsHelper.EnableHardwareDetector != appSettings.EnableHardwareDetector;
 
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
                 keywordDisplayNameModified || keywordIdModified || keywordModelIdModified ||
-                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordConfirmationModelPathModified || setPropertyIdModified;
+                keywordActivationModelDataFormatModified || keywordActivationModelPathModified ||
+                keywordConfirmationModelPathModified || setPropertyIdModified || enableKwsLogging || enabledHardwareDetector;
 
             if (this.configModified)
             {
@@ -688,8 +691,20 @@ namespace UWPVoiceAssistantSample
 
                 if (setPropertyIdModified)
                 {
-                    LocalSettingsHelper.SetPropertyId = appSettings.SetPropertyId;
-                    this.logger.Log($"KWS Performance Logging: {LocalSettingsHelper.SetPropertyId}");
+                    LocalSettingsHelper.SetProperty = appSettings.SetProperty;
+                    this.logger.Log($"KWS Performance Logging: {LocalSettingsHelper.SetProperty}");
+                }
+
+                if (enableKwsLogging)
+                {
+                    LocalSettingsHelper.EnableKwsLogging = appSettings.EnableKwsLogging;
+                    this.logger.Log($"KwsLoggins is set to: {LocalSettingsHelper.EnableKwsLogging}");
+                }
+
+                if (enabledHardwareDetector)
+                {
+                    LocalSettingsHelper.EnableHardwareDetector = appSettings.EnableHardwareDetector;
+                    this.logger.Log($"Enable Hardware Detector: {LocalSettingsHelper.EnableHardwareDetector}");
                 }
 
                 if (keywordActivationModelDataFormatModified

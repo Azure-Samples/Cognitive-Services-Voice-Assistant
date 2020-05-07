@@ -54,11 +54,11 @@ namespace UWPVoiceAssistantSample.KwsPerformance
             keywordDetectionParams.Spotter = spotter;
             keywordDetectionParams.Confirmed = confirmed;
             keywordDetectionParams.Stage = stage;
-            keywordDetectionParams.EventFireTime = eventFireTime;
-            keywordDetectionParams.StartTime = startTime;
-            keywordDetectionParams.EndTime = endTime;
+            keywordDetectionParams.EventFireTime = eventFireTime / 10000;
+            keywordDetectionParams.StartTime = startTime / 10000;
+            keywordDetectionParams.EndTime = endTime / 10000;
 
-            if (LocalSettingsHelper.SetPropertyId != null)
+            if (LocalSettingsHelper.EnableKwsLogging)
             {
                 this.WriteToCSV().Wait();
             }

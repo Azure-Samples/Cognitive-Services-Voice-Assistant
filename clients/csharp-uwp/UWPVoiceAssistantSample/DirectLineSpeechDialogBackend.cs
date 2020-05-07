@@ -126,7 +126,7 @@ namespace UWPVoiceAssistantSample
 
             var refreshConnector = configRefreshRequired || (this.keywordFilePath != keywordFile.Path);
 
-            if (LocalSettingsHelper.SetPropertyId != null)
+            if (LocalSettingsHelper.SetProperty != null)
             {
                 this.enableKwsLogging = true;
             }
@@ -352,14 +352,14 @@ namespace UWPVoiceAssistantSample
             // {
             //    config = BotFrameworkConfig.FromSubscription(speechKey, speechRegion, botId);
             // }
-            else if (LocalSettingsHelper.SetPropertyId != null)
+            else if (LocalSettingsHelper.SetProperty != null)
             {
                 // Azure Region must be set to an empty string if setting optional service property.
                 config = BotFrameworkConfig.FromSubscription(
                     this.speechKey,
-                    string.Empty);
+                    this.speechRegion);
 
-                foreach (KeyValuePair<string, JToken> setPropertyId in LocalSettingsHelper.SetPropertyId)
+                foreach (KeyValuePair<string, JToken> setPropertyId in LocalSettingsHelper.SetProperty)
                 {
                     config.SetProperty(setPropertyId.Key, setPropertyId.Value.ToString());
                 }
@@ -413,6 +413,7 @@ namespace UWPVoiceAssistantSample
             var customCommandsAppId = LocalSettingsHelper.CustomCommandsAppId;
             var botId = LocalSettingsHelper.BotId;
             var enableSdkLogging = LocalSettingsHelper.EnableSdkLogging;
+            var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging;
 
             if (this.speechKey == speechKey
                 && this.speechRegion == speechRegion
@@ -421,7 +422,7 @@ namespace UWPVoiceAssistantSample
                 && this.customCommandsAppId == customCommandsAppId
                 && this.botId == botId
                 && this.enableSdkLogging == enableSdkLogging
-                && !this.enableKwsLogging)
+                && this.enableKwsLogging == enableKwsLogging)
             {
                 return false;
             }
