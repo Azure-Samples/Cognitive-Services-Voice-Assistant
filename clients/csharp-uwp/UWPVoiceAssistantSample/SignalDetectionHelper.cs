@@ -6,10 +6,8 @@ namespace UWPVoiceAssistantSample
     using System;
     using System.Diagnostics;
     using System.Threading;
-    using System.Threading.Tasks;
     using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
-    using Windows.UI.Text.Core;
 
     /// <summary>
     /// Arguments raised when a signal detection has finished being resolved after being surfaced

@@ -6,16 +6,11 @@ namespace UWPVoiceAssistantSample
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.UI.Xaml.Controls;
-    using Newtonsoft.Json;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
@@ -25,11 +20,9 @@ namespace UWPVoiceAssistantSample
     using Windows.System.Power;
     using Windows.UI;
     using Windows.UI.Core;
-    using Windows.UI.Notifications;
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Documents;
     using Windows.UI.Xaml.Media;
 
     /// <summary>

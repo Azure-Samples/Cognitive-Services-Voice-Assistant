@@ -24,13 +24,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Initializes a new instance of the <see cref="KeywordRegistration"/> class.
         /// </summary>
-        /// <param name="keywordDisplayName">Display name shown for the keyword in settings.</param>
-        /// <param name="keywordId">Id of the keyword.</param>
-        /// <param name="keywordModelId">Model id of the keyword.</param>
-        /// <param name="keywordActivationModelDataFormat">Data format of the keyword activation model.</param>
-        /// <param name="keywordActivationModelFilePath">File path of the keyword activation model.</param>
         /// <param name="availableActivationKeywordModelVersion">Version of the most recent keyword model that is available.</param>
-        /// <param name="confirmationKeywordModelPath">Path of the confirmation keyword model.</param>
         public KeywordRegistration(Version availableActivationKeywordModelVersion)
         {
             this.AvailableActivationKeywordModelVersion = availableActivationKeywordModelVersion;
