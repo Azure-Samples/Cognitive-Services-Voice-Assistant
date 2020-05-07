@@ -11,11 +11,11 @@ This sample is intended to be a starting point for any application coded in c++.
 
 For Windows you should use the nuget package.
 
-For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo so that you have a structure like this (for ARM32): ./lib/arm32. 
+For Linux or ARM devices the build scripts will download and copy the SDK's newest version and the native binaries will be copied to the lib folder in this repo so that you have a structure like this (for ARM32): ./lib/arm32. 
 
-Headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api
+Headers and their folders will be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api
 
-Replace the text in the configs/config.json file with your subscription key and key region. If you are using a custom speech commands application or custom speech font you can insert those GUID's there as well.
+Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or custom speech font you can insert those GUID's there as well.
 
 ## Build directly on Linux arm32
 

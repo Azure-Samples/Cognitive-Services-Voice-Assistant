@@ -36,9 +36,9 @@ Wait until the LED ring glows green.
 
 The repo should be cloned onto your dev machine and we will operate out of the cpp-console folder
 
-To utilize the audio processing from the Microsoft Audio Stack, we will also need the specific binaries for the GGEC speaker that can be found here: [binaries](https://aka.ms/sdsdk-download). Those binaries should be copied to the lib folder in this repo so that you have a structure like this: ./lib/arm32
+To utilize the audio processing from the Microsoft Audio Stack, we will also download the specific binaries for the GGEC speaker. This will happen automatically if you used the build script. Otherwise they can be found here: [binaries](https://aka.ms/sdsdk-download).
 
-Download the Speech SDK: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary). The headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api also copy the libaries to ./lib/arm32
+Download the Speech SDK: The speech SDK will be downloaded as part of the build script. Otherwise it can be found here: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
 
 Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword (.table file) being used.
 
