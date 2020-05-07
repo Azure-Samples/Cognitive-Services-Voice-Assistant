@@ -190,7 +190,7 @@ namespace UWPVoiceAssistantSample
 
             if (args?.TaskInstance.Task.Name == MVARegistrationHelpers.BackgroundTriggerName)
             {
-                KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks / 10000);
+                KwsPerformanceLogger.KwsEventFireTimee = TimeSpan.FromTicks(DateTime.Now.Ticks / 10000);
                 this.logger.Log($"OnBackgroundActivated: 1st-stage keyword activation");
                 this.dialogManager.HandleSignalDetection();
 
@@ -216,7 +216,7 @@ namespace UWPVoiceAssistantSample
 
         private void InitializeSignalDetection()
         {
-            KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
+            KwsPerformanceLogger.KwsEventFireTimee = TimeSpan.FromTicks(DateTime.Now.Ticks);
             this.dialogManager.SignalConfirmed += this.OnSignalConfirmed;
             this.dialogManager.SignalRejected += this.OnSignalRejected;
         }

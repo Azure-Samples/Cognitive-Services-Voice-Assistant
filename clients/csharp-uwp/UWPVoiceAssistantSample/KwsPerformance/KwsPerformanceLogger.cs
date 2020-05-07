@@ -1,4 +1,7 @@
-﻿namespace UWPVoiceAssistantSample.KwsPerformance
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
+namespace UWPVoiceAssistantSample.KwsPerformance
 {
     using System;
     using System.IO;
@@ -14,13 +17,16 @@
         /// <summary>
         /// Timestamp for kws event initiation.
         /// </summary>
-        public static TimeSpan kwsEventFireTime;
+        public static TimeSpan KwsEventFireTimee;
 
         /// <summary>
         /// Timestamp for keyword verification.
         /// </summary>
-        public static TimeSpan kwsStartTime;
+        public static TimeSpan KwsStartTime;
 
+        /// <summary>
+        /// String value indicating if 1st stage kws is hardware or software.
+        /// </summary>
         public static string Spotter;
 
         private static KeywordDetectionParams keywordDetectionParams = new KeywordDetectionParams();
@@ -63,9 +69,7 @@
             if (!File.Exists(this.filePath))
             {
                 // StringBuilder sb = new StringBuilder();
-
-                // sb.AppendLine("Stage, Confirmed, EventFireTime, StartTime, EndTime");
-
+                // sb.AppendLine("Spotter, Confirmed, Stage, EventFireTime, StartTime, EndTime");
                 // await File.AppendAllTextAsync(this.filePath, sb.ToString());
 
                 this.csvFileCreated = true;

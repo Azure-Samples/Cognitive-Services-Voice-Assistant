@@ -255,7 +255,7 @@ namespace UWPVoiceAssistantSample
                 throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {configurableDetectors.Count()}.");
             }
 
-            var hardwareDetectors = configurableDetectors.Where(candidate => candidate.Kind == ActivationSignalDetectorKind.AudioPattern && 
+            var hardwareDetectors = configurableDetectors.Where(candidate => candidate.Kind == ActivationSignalDetectorKind.AudioPattern &&
             !candidate.SupportedPowerStates.Contains(ActivationSignalDetectorPowerState.ConnectedLowPower));
 
             if (hardwareDetectors.Any())

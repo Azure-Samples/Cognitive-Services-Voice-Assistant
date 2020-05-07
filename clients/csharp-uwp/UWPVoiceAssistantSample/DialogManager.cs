@@ -308,7 +308,7 @@ namespace UWPVoiceAssistantSample
                 : ConversationalAgentState.Listening;
             await this.ChangeAgentStateAsync(newState);
 
-            KwsPerformanceLogger.kwsStartTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
+            KwsPerformanceLogger.KwsStartTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
 
             await this.dialogBackend.StartAudioTurnAsync(signalVerificationRequired);
 
