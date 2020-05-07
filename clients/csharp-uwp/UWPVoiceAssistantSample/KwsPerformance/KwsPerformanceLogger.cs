@@ -17,7 +17,7 @@ namespace UWPVoiceAssistantSample.KwsPerformance
         /// <summary>
         /// Timestamp for kws event initiation.
         /// </summary>
-        public static TimeSpan KwsEventFireTimee;
+        public static TimeSpan KwsEventFireTime;
 
         /// <summary>
         /// Timestamp for keyword verification.

@@ -172,15 +172,15 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.Recognized += (s, e) =>
                 {
-                    KwsPerformanceLogger.kwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
+                    KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizedKeyword:
-                            var thirdStageStartTime = KwsPerformanceLogger.kwsStartTime.Ticks;
+                            var thirdStageStartTime = KwsPerformanceLogger.KwsStartTime.Ticks;
                             thirdStageStartTime = DateTime.Now.Ticks;
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
-                            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "3", KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
+                            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
                             this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
@@ -193,9 +193,9 @@ namespace UWPVoiceAssistantSample
                             this.logger.Log($"Cloud model rejected keyword");
                             if (this.secondStageConfirmed)
                             {
-                                var thirdStageStartTimeRejected = KwsPerformanceLogger.kwsStartTime.Ticks;
+                                var thirdStageStartTimeRejected = KwsPerformanceLogger.KwsStartTime.Ticks;
                                 thirdStageStartTimeRejected = DateTime.Now.Ticks;
-                                this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "3", KwsPerformanceLogger.kwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
+                                this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
                                 this.secondStageConfirmed = false;
                             }
 

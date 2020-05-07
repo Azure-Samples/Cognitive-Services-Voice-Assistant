@@ -253,7 +253,7 @@ namespace UWPVoiceAssistantSample
             }
 
             var hardwareDetectors = configurableDetectors.Where(candidate => candidate.Kind == ActivationSignalDetectorKind.AudioPattern &&
-            !candidate.SupportedPowerStates.Contains(ActivationSignalDetectorPowerState.ConnectedLowPower));
+            candidate.SupportedPowerStates.Contains(ActivationSignalDetectorPowerState.ConnectedLowPower));
 
             if (hardwareDetectors.Any())
             {
