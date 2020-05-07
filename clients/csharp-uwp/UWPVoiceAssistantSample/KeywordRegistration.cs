@@ -4,6 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
@@ -255,14 +256,18 @@ namespace UWPVoiceAssistantSample
 
             var hardwareDetectors = configurableDetectors.Where(candidate => candidate.Kind == ActivationSignalDetectorKind.HardwareEvent);
 
-            if (hardwareDetectors.Any())
-            {
-                return hardwareDetectors.First();
-            }
-            else
-            {
-                return configurableDetectors.First();
-            }
+            //if (hardwareDetectors.Any())
+            //{
+            //    return hardwareDetectors.First();
+            //}
+            //else
+            //{
+            //    return configurableDetectors.First();
+            //}
+
+            var detector = configurableDetectors.First();
+            Debug.WriteLine(detector.ProviderId);
+            return detector;
         }
 
         private static async Task<ActivationSignalDetectionConfiguration> GetOrCreateConfigurationOnDetectorAsync(
