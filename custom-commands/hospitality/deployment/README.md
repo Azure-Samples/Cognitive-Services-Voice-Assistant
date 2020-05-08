@@ -53,7 +53,7 @@ To view your visualization go to this link.
     Visualization Endpoint = https://#########.blob.core.windows.net/www/demo.html?room=test1
 ***********************
 ```
-Copy the above information and store it for later use.
+Copy the above information and store it for later use (but you can always [retrieve it if needed](#retrieving-client-connection-information-and-visualization-URL))
 
 If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) in the Azure portal, you will see a new resource group has been created with the name you selected, with 6 resources in it, similar to what you see here:
 <!-- Save this for reference, we may want to go back to a table and add descriptions...
@@ -73,11 +73,22 @@ If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/
 
 ## Make sure the visualization works properly
 
-If you enter the visualization URL in your browser (e.g. https://#########.blob.core.windows.net/www/demo.html?room=test1) you will see a default scene, simulating an environment you will soon manipulate with your voice.
+If you enter the visualization URL in your browser (```https://myresourcegroupname####.blob.core.windows.net/www/demo.html?room=test1```) you will see a default scene, simulating an environment you will soon manipulate with your voice.
 
 For the Hospitality demo, you should see this scene:
 ![hospitality scene](images/hospitality-default-scene.png)
 
+## See your Custom Command application in Speech Studio
+
+* Open [Speech Studio](http://speech.microsoft.com)
+* Click on "Sign in" on the top right if you are not already signed in. Make sure you use the same Azure account you used to login from the Powershell script
+* If you're prompted to select directory (Azure Active Directory for identity and access management), select the "Default Directory"
+* If you're prompted to select a speech resource (*"Speech resources created on Azure are listed below. Choose one to begin a Speech Studio project"*), select the one named MyResourceGroupName-speech, which was created when you run the Powershell script. Then click on "Go to Studio".
+* In the main Speech Studio page, go down to the bottom of the page and click on the "Custom Commands (PREVIEW)" box
+* You should now see the newly created Custom Command project named MyResourceGroupName-commands, similar to the following:
+![speech studio](images/speech-studio.png)
+
+Click on the project to open the Custom Command editor and have a look at the commands defined there. For more information about Custom Commands, see the "Develop with Custom Command" links in the [Voice Assistant documentation](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/index-voice-assistants).
 
 ## Troubleshooting
 The following are some common errors seen while executing the script:
@@ -86,6 +97,22 @@ Write-Error: Failed to create resource group"</p>* - This may be because your fr
 * *<p style='color:red'>"The template deployment 'azuredeploy' is not valid according to the validation procedure... See inner errors for details.... Operation failed. Only one free account is allowed for account type 'SpeechServices'....  Write-Error: Failed to deploy template"</p>* - The script uses the Azure free tier (F0) when deploying Cognitive Service Azure resources. In this tier there can only be one Speech resource per subscription. If you already deployed one Custom Command demo, and you are running the script again with a different resource group name, you will get this error. There are two ways to fix this:
   * [Delete the first Azure resource group](#cleaning-up-your-azure-resources-and-github-repo) before running another deployment script if you don't need both, or
   * Find the line ```"kind": "SpeechServices"``` in the file ```azuredeploy.json``` and change F0 to S0 above it. This will remove the limitation of single speech resource per subscription, but you may be charged for it.
+
+## Retrieving client connection information and visualization URL
+
+The values below were displayed when the deployment script finished running successfully. If you need to retrieve them, follow the instructions below.
+
+These three values are needed in order to configure a [client application](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant#sample-client-applications) to connect to the Custom Command service.:
+
+* Speech subscription key and key region
+    * Find the relevant [Azure resource group](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) and click on it to see all the resources in the group
+    * There will be one resource named MyResourceGroupName-speech (of type Cognitive Services). Notice its region. Click on the resource name.
+    * Click on "Keys and Endpoints" on the left menu. The value shown as "KEY 1" is the speech subscription key.  
+* Custom Commands Application ID
+    * [Log into the relevant Custom Command project](#see-your-custom-command-application-in-speech-studio) in speech studio.
+    * Click on the Settings option, at the bottom of the left-side menu. You will see the Application ID there. Note that the Speech key can also be seen there ("show key")
+
+The URL to visualize the voice command results is always in the form ```https://myresourcegroupname####.blob.core.windows.net/www/demo.html?room=test1```, where #### is the random number the deployment script created. You can see this number by looking at the resource names in your Azure portal. 
 
 ## Cleaning up your Azure resources and GitHub repo
 
