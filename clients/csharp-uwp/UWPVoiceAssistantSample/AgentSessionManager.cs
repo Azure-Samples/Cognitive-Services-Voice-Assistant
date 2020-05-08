@@ -4,7 +4,6 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
-    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +16,16 @@ namespace UWPVoiceAssistantSample
     public class AgentSessionManager : IAgentSessionManager, IDisposable
     {
         private readonly SemaphoreSlim cachedSessionSemaphore = new SemaphoreSlim(1, 1);
+        private readonly ILogProvider logger;
         private AgentSessionWrapper cachedAgentSession = null;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentSessionManager"/> class.
+        /// </summary>
+        public AgentSessionManager()
+        {
+            this.logger = LogRouter.GetClassLogger();
+        }
 
         /// <summary>
         /// Raised when the state machine for conversational agent state has finished setting
@@ -59,7 +67,7 @@ namespace UWPVoiceAssistantSample
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Unable to configure a ConversationalAgentSession. Please check your registration with the MVA platform.\r\n{ex.Message}");
+                this.logger.Log($"Unable to configure a ConversationalAgentSession. Please check your registration with the MVA platform.\r\n{ex.Message}");
             }
             finally
             {
@@ -89,6 +97,7 @@ namespace UWPVoiceAssistantSample
                 if (disposing)
                 {
                     this.cachedAgentSession?.Dispose();
+                    this.cachedAgentSession = null;
                     this.cachedSessionSemaphore?.Dispose();
                 }
             }
@@ -96,7 +105,7 @@ namespace UWPVoiceAssistantSample
 
         private void OnInAppSignalEventDetected(ConversationalAgentSession sender, ConversationalAgentSignalDetectedEventArgs args)
         {
-            Debug.WriteLine($"'{sender.Signal.SignalName}' signal detected in session event handler");
+            this.logger.Log($"'{sender.Signal.SignalName}' signal detected in session event handler");
 
             this.SignalDetected?.Invoke(this, DetectionOrigin.FromApplicationObject);
         }

@@ -17,12 +17,13 @@ pr:
   branches:
     include:
     - master
-    
-pool:
-  vmImage: 'windows-latest'
 
-# Use this when build agents are ready:
-# pool: 'Voice Assistant Agent Pool'
+# Use this for Microsoft-hosted build agents (released versions of Windows only):    
+#pool:
+#  vmImage: 'windows-latest'
+
+# Use this for self-hosted build agents, when you need to build on a pre-release version of Windows: 
+pool: 'Voice Assistant Agent Pool'
 
 
 variables:
@@ -101,7 +102,7 @@ variables:
           "toolVersion": "6.2.9304.0"
        }
     ]
-
+    
 steps:
 
 - task: NuGetToolInstaller@1
@@ -172,24 +173,24 @@ steps:
 
 # Build UWP Voice Assistant Sample (C# UWP)
 
-#- task: NuGetCommand@2
-#  displayName: '$(sample4Name) - NuGetCommand'
-#  inputs:
-#    restoreSolution: '$(sample4Solution)'
+- task: NuGetCommand@2
+  displayName: '$(sample4Name) - NuGetCommand'
+  inputs:
+    restoreSolution: '$(sample4Solution)'
 
-#- task: VSBuild@1
-#  displayName: '$(sample4Name) - VSBuild'
-#  inputs:
-#    solution: '$(sample4Solution)'
-#    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
-#    platform: '$(buildPlatformNative)'
-#    configuration: '$(buildConfiguration)'
+- task: VSBuild@1
+  displayName: '$(sample4Name) - VSBuild'
+  inputs:
+    solution: '$(sample4Solution)'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatformNative)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    platform: '$(buildPlatformNative)'
+    configuration: '$(buildConfiguration)'
 
-#- task: PublishPipelineArtifact@1
-#  displayName: '$(sample4Name) - PublishPipelineArtifact'
-#  inputs:
-#    path: $(sample4PublishedArtifactPath)
-#    artifact: $(sample4PublishedArtifactName)
+- task: PublishPipelineArtifact@1
+  displayName: '$(sample4Name) - PublishPipelineArtifact'
+  inputs:
+    path: $(sample4PublishedArtifactPath)
+    artifact: $(sample4PublishedArtifactName)
 
 #- task: VSTest@2
 #  inputs:
@@ -209,8 +210,8 @@ steps:
     targetArgument: '$(Build.SourcesDirectory)'
     result: 'PoliCheck.xml'
 
+# This does not work on self-hosted agent for some reason
 - task: notice@0
   inputs:
     outputformat: 'text'
-
 

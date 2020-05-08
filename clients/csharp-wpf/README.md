@@ -8,7 +8,7 @@ Following the introduction of [Custom Commands](https://docs.microsoft.com/en-us
 
 ## Features
 
-* Fully configurable to support any bot registered with the Direct Line Speech channel
+* Fully configurable to support any bot registered with the Direct Line Speech channel or Custom Commands application
 * Accepts typed text and speech captured by a microphone as inputs for your bot
 * Supports playback of audio response
 * Supports use of [custom wake-words](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws)
@@ -24,23 +24,30 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
 
 - Windows 10 PC
 - Visual Studio 2017 or higher
+- [.NET Framework Runtime 4.6.1](https://dotnet.microsoft.com/download) or higher if you just want to download and run the executable, or [.NET Framework Dev Pack 4.6.1](https://dotnet.microsoft.com/download) or higher if you want to clone the repo and build the executable from source code 
 - Microphone access
 - An Azure [Speech Services Key](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started)
 - A [Bot-Framework](https://dev.botframework.com/) bot service registered with [Direct Line Speech](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-channel-connect-directlinespeech?view=azure-bot-service-4.0) channel
 
 ### Quickstart
-
-1. The first step is to clone the repository:
+1. To download and run a pre-build executable:
+    - Go to the [Releases section of this GitHub repo](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/releases)
+    - Look for the latest release named "Windows Voice Assistant Client". Each release has a tag in the form of YYYYMMDD.# indicating the build date
+    - Download the latest ZIP package named WindowsVoiceAssistantClient-YYYYMMDD.#.zip, and unpack it to a local drive. 
+    - Run the executable VoiceAssistantClient.exe
+    
+1. Alternatively, to build the executable from source code:
+    - The first step is to clone the repository:
    ```bash
    git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistants.git
    ```
-2. Then change directories:
+    -  Then change directories:
    ```bash
    cd Cognitive-Services-Voice-Assistants\clients\csharp-wpf
    ```
-3. Launch Visual Studio 2017 or newer by opening the solution `VoiceAssistantClient.sln`. Build the solution (the default build flavor is Debug x64)
-4. Run the executable. For example, for Debug x64 build, this will be the executable: `VoiceAssistantClient\bin\x64\Debug\VoiceAssistantClient.exe`.
-5. When you first run the application, the **Setting** page will open. The first two fields are required (all others are optional):
+    -  Launch Visual Studio 2017 or newer by opening the solution `VoiceAssistantClient.sln`. Build the solution (the default build flavor is Debug x64)
+    - Run the executable. For example, for Debug x64 build, this will be the executable: `VoiceAssistantClient\bin\x64\Debug\VoiceAssistantClient.exe`.
+1. When you first run the application, the **Setting** page will open. The first two fields are required (all others are optional):
     - Enter _Subscription key_. This is your Azure [Speech Services Key](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started)
     - Enter _Subscription key region_. This is the Azure region of your key in the format specified by the "Speech SDK Parameter" column [in this table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#speech-to-text-text-to-speech-and-translation) (for example "westus")
     - Leave the field _Custom commands app Id_ empty (unless you plan to use [Custom Commands](#use-custom-commands))
@@ -48,12 +55,12 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
     - Press _Ok_ when you're done.
     - Your entries will be saved and populated automatically when you launch the app again.
 ![Setting page](docs/media/SettingsPage.png)  
-6. Press **Reconnect**. The application will try to connect to your bot via Direct Line Speech channel.
+1. Press **Reconnect**. The application will try to connect to your bot via Direct Line Speech channel.
 ![Main Page](docs/media/MainPage.png)
 The message **New conversation started -- type or press the microphone button** will appear below the text bar if the connection succeeded.
-7. You'll be prompted to allow microphone access. If you want to use the microphone, allow access.
-8. Press the microphone icon to begin recording. While speaking, intermediate recognition results will be shown in the application. The microphone icon will turn red while recording is in progress. It will automatically detect end of speech and stop recording.
-9. If everything works, you should see your bot's response on the screen and hear it speak the response. You can click on lines in the **Activity Log** window to see the full activity payload from the bot in JSON.
+1. You'll be prompted to allow microphone access. If you want to use the microphone, allow access.
+1. Press the microphone icon to begin recording. While speaking, intermediate recognition results will be shown in the application. The microphone icon will turn red while recording is in progress. It will automatically detect end of speech and stop recording.
+1. If everything works, you should see your bot's response on the screen and hear it speak the response. You can click on lines in the **Activity Log** window to see the full activity payload from the bot in JSON.
     **Note**: You'll only hear the bot's voice response if the [**Speak** field](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#speak) in the bot's output activity was set.
 ![Main Page with Activity](docs/media/MainPageWithActivity.png)
 

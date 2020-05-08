@@ -9,6 +9,7 @@ src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
 src/common/AgentConfiguration.cpp \
 src/common/DeviceStatusIndicators.cpp \
+src/common/DialogManager.cpp \
 -o ./out/sample.exe \
 -std=c++14 \
 -D LINUX \
@@ -17,5 +18,6 @@ src/common/DeviceStatusIndicators.cpp \
 -I./include/c_api \
 -I./include \
 -pthread \
+-lstdc++fs \
 -lasound \
 -lMicrosoft.CognitiveServices.Speech.core

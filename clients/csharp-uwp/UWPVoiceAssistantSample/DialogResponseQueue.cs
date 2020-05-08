@@ -19,16 +19,6 @@ namespace UWPVoiceAssistantSample
         private bool listeningToOutput = false;
 
         /// <summary>
-        /// Event that fires when a DialogResponse is being handled
-        /// </summary>
-        public event Action<DialogResponse> ExecutingResponse;
-
-        /// <summary>
-        /// Event that fires when a DialogResponse is being handled
-        /// </summary>
-        public event Action<DialogResponse> ResponseExecuted;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DialogResponseQueue"/> class.
         /// </summary>
         /// <param name="outputAdapter">Output adapter to play audio from dialog responses.</param>
@@ -39,6 +29,20 @@ namespace UWPVoiceAssistantSample
             this.actionQueueLock = new object();
         }
 
+        /// <summary>
+        /// Event that fires when a DialogResponse is being handled
+        /// </summary>
+        public event Action<DialogResponse> ExecutingResponse;
+
+        /// <summary>
+        /// Event that fires when a DialogResponse is being handled
+        /// </summary>
+        public event Action<DialogResponse> ResponseExecuted;
+
+        /// <summary>
+        /// Adds a new response to the dialog queue for processing.
+        /// </summary>
+        /// <param name="response"> The response to add to the queue. </param>
         public void Enqueue(DialogResponse response)
         {
             lock (this.actionQueueLock)
@@ -59,6 +63,9 @@ namespace UWPVoiceAssistantSample
             }
         }
 
+        /// <summary>
+        /// Attempts to dequeue and execute the next item in the response queue.
+        /// </summary>
         public void TryDequeue()
         {
             lock (this.actionQueueLock)
@@ -77,7 +84,7 @@ namespace UWPVoiceAssistantSample
                     if (nextResponse.MessageMedia != null)
                     {
                         this.operationInProgress = true;
-                        this.outputAdapter.EnqueueDialogAudio(nextResponse.MessageMedia);
+                        _ = this.outputAdapter.PlayAudioAsync(nextResponse.MessageMedia);
                     }
                     else
                     {
@@ -87,6 +94,11 @@ namespace UWPVoiceAssistantSample
             }
         }
 
+        /// <summary>
+        /// Cancels all pending response queue items and stops the audio playback associated with any in-progress
+        /// responses.
+        /// </summary>
+        /// <returns> A task that completes once the queue is cleared and playback is stopped. </returns>
         public async Task AbortAsync()
         {
             this.dialogResponseQueue.Clear();

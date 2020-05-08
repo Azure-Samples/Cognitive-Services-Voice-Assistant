@@ -5,8 +5,11 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using UWPVoiceAssistantSample.AudioOutput;
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
     using Windows.ApplicationModel.Background;
@@ -21,13 +24,13 @@ namespace UWPVoiceAssistantSample
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    public sealed partial class App : Application
+    public sealed partial class App : Application, IDisposable
     {
-        private ServiceProvider services;
+        private readonly ILogProvider logger;
+        private readonly IDialogManager dialogManager;
+        private readonly IAgentSessionManager agentSessionManager;
         private BackgroundTaskDeferral deferral;
-        private ILogProvider logger;
-        private IDialogManager dialogManager;
-        private IAgentSessionManager agentSessionManager;
+        private bool alreadyDisposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="App"/> class.
@@ -40,19 +43,13 @@ namespace UWPVoiceAssistantSample
             this.logger = LogRouter.GetClassLogger();
             this.logger.Log("Constructor: app launched");
 
+            Task.Run(async () => await LocalSettingsHelper.InitializeAsync()).Wait();
+
             this.Suspending += this.OnSuspending;
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
 
-            this.CopyConfigAndAssignValues().GetAwaiter();
-
             var keywordRegistration = new KeywordRegistration(
-                "Contoso",
-                "{C0F1842F-D389-44D1-8420-A32A63B35568}",
-                "1033",
-                "MICROSOFT_KWSGRAPH_V1",
-                "ms-appx:///MVAKeywords/Contoso.bin",
-                new Version(1, 0, 0, 0),
-                "ms-appx:///SDKKeywords/Contoso.table");
+                new Version(1, 0, 0, 0));
 
             this.agentSessionManager = new AgentSessionManager();
 
@@ -60,13 +57,14 @@ namespace UWPVoiceAssistantSample
                 new DirectLineSpeechDialogBackend(),
                 keywordRegistration,
                 new AgentAudioInputProvider(),
-                this.agentSessionManager);
+                this.agentSessionManager,
+                new MediaPlayerDialogAudioOutputAdapter());
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton(this.dialogManager);
             serviceCollection.AddSingleton<IKeywordRegistration>(keywordRegistration);
             serviceCollection.AddSingleton(this.agentSessionManager);
-            this.services = serviceCollection.BuildServiceProvider();
+            this.Services = serviceCollection.BuildServiceProvider();
 
             CoreApplication.Exiting += async (object sender, object args) =>
             {
@@ -96,12 +94,15 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets service provider that contains services shared across views.
         /// </summary>
-        public ServiceProvider Services
+        public ServiceProvider Services { get; }
+
+        /// <summary>
+        /// Disposes of underlying managed resources. Standard implementation of IDisposable.
+        /// </summary>
+        public void Dispose()
         {
-            get
-            {
-                return this.services;
-            }
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -111,6 +112,8 @@ namespace UWPVoiceAssistantSample
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1280, Height = 800 });
+
             var rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -195,6 +198,20 @@ namespace UWPVoiceAssistantSample
             }
         }
 
+        private void Dispose(bool disposing)
+        {
+            if (!this.alreadyDisposed)
+            {
+                if (disposing)
+                {
+                    this.dialogManager?.Dispose();
+                    this.Services?.Dispose();
+                }
+
+                this.alreadyDisposed = true;
+            }
+        }
+
         private void InitializeSignalDetection()
         {
             this.dialogManager.SignalConfirmed += this.OnSignalConfirmed;
@@ -261,23 +278,6 @@ namespace UWPVoiceAssistantSample
             var view = ApplicationView.GetForCurrentView();
             var ver = Package.Current.Id.Version;
             view.Title = $"Agent v{ver.Major}.{ver.Minor}.{ver.Build}.{ver.Revision}";
-        }
-
-        private async Task CopyConfigAndAssignValues()
-        {
-            var configFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///config.json"));
-
-            if (!string.IsNullOrWhiteSpace(configFile.Path))
-            {
-                AppSettings appSettings = AppSettings.Load(configFile.Path);
-
-                LocalSettingsHelper.SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
-                LocalSettingsHelper.AzureRegion = appSettings.AzureRegion;
-                LocalSettingsHelper.CustomSpeechId = appSettings.CustomSpeechId;
-                LocalSettingsHelper.CustomVoiceIds = appSettings.CustomVoiceIds;
-                LocalSettingsHelper.CustomCommandsAppId = appSettings.CustomCommandsAppId;
-                LocalSettingsHelper.BotId = appSettings.BotId;
-            }
         }
     }
 }

@@ -107,7 +107,7 @@ namespace UWPVoiceAssistantSample
         /// If the current turn is confirming a signal, abort the verfication.
         /// </summary>
         /// <returns> A task that completes when the in-progress turn has been aborted. </returns>
-        Task CancelSignalVerification();
+        Task CancelSignalVerificationAsync();
 
         /// <summary>
         /// Sends a backend-specific message to the assistant implementation for non-speech data.

@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -30,22 +31,9 @@ namespace UWPVoiceAssistantSample
         /// <param name="keywordActivationModelFilePath">File path of the keyword activation model.</param>
         /// <param name="availableActivationKeywordModelVersion">Version of the most recent keyword model that is available.</param>
         /// <param name="confirmationKeywordModelPath">Path of the confirmation keyword model.</param>
-        public KeywordRegistration(
-            string keywordDisplayName,
-            string keywordId,
-            string keywordModelId,
-            string keywordActivationModelDataFormat,
-            string keywordActivationModelFilePath,
-            Version availableActivationKeywordModelVersion,
-            string confirmationKeywordModelPath)
+        public KeywordRegistration(Version availableActivationKeywordModelVersion)
         {
-            this.KeywordDisplayName = keywordDisplayName;
-            this.KeywordId = keywordId;
-            this.KeywordModelId = keywordModelId;
-            this.KeywordActivationModelDataFormat = keywordActivationModelDataFormat;
-            this.KeywordActivationModelFilePath = keywordActivationModelFilePath;
             this.AvailableActivationKeywordModelVersion = availableActivationKeywordModelVersion;
-            this.ConfirmationKeywordModelPath = confirmationKeywordModelPath;
 
             this.creatingKeywordConfigSemaphore = new SemaphoreSlim(1, 1);
 
@@ -53,35 +41,35 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets the display name associated with the keyword.
+        /// Gets or sets the display name associated with the keyword.
         /// </summary>
-        public string KeywordDisplayName { get; private set; }
+        public string KeywordDisplayName { get => LocalSettingsHelper.KeywordDisplayName; set => this.KeywordDisplayName = value; }
 
         /// <summary>
-        /// Gets the signal identifier associated with a keyword. This value, together with the
+        /// Gets or sets the signal identifier associated with a keyword. This value, together with the
         /// model identifier, uniquely identifies the configuration data for this keyword.
         /// </summary>
-        public string KeywordId { get; private set; }
+        public string KeywordId { get => LocalSettingsHelper.KeywordId; set => this.KeywordId = value; }
 
         /// <summary>
-        /// Gets the model identifier associated with a keyword. This is typically a locale,
+        /// Gets or sets the model identifier associated with a keyword. This is typically a locale,
         /// like "1033", and together with the keyword identifier uniquely identifies the
         /// configuration data for this keyword.
         /// </summary>
-        public string KeywordModelId { get; private set; }
+        public string KeywordModelId { get => LocalSettingsHelper.KeywordModelId; set => this.KeywordModelId = value; }
 
         /// <summary>
-        /// Gets the model data format associated with the activation keyword.
+        /// Gets or sets the model data format associated with the activation keyword.
         /// </summary>
-        public string KeywordActivationModelDataFormat { get; private set; }
+        public string KeywordActivationModelDataFormat { get => LocalSettingsHelper.KeywordActivationModelDataFormat; set => this.KeywordActivationModelDataFormat = value; }
 
         /// <summary>
-        /// Gets the path to the model data associated with your activation keyword. This may be a
+        /// Gets or sets the path to the model data associated with your activation keyword. This may be a
         /// standard file path or an ms-appx:/// path pointing to a resource in the app package.
         /// When not provided, no attempt will be made to associate model data with the
         /// activation keyword.
         /// </summary>
-        public string KeywordActivationModelFilePath { get; private set; }
+        public string KeywordActivationModelFilePath { get => LocalSettingsHelper.KeywordActivationModelPath; set => this.KeywordActivationModelFilePath = value; }
 
         /// <summary>
         /// Gets the available version of the model data associated with an activation keyword.
@@ -121,10 +109,10 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets  sets the path to the keyword model used for validation of the activation
+        /// Gets or sets the path to the keyword model used for validation of the activation
         /// keyword's result. This may be a file path or an ms-appx application path.
         /// </summary>
-        public string ConfirmationKeywordModelPath { get; private set; }
+        public string ConfirmationKeywordModelPath { get => LocalSettingsHelper.KeywordConfirmationModelPath; set => this.ConfirmationKeywordModelPath = value; }
 
         /// <summary>
         /// Changes the registered keyword using the new inputs.
@@ -172,17 +160,20 @@ namespace UWPVoiceAssistantSample
                     return this.keywordConfiguration;
                 }
 
-                var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
-                var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                    detector,
-                    this.KeywordDisplayName,
-                    this.KeywordId,
-                    this.KeywordModelId);
-                await this.SetModelDataIfNeededAsync(targetConfiguration);
+                return await this.CreateKeywordConfigurationAsyncInternal();
+            }
+        }
 
-                this.keywordConfiguration = targetConfiguration;
-
-                return targetConfiguration;
+        /// <summary>
+        /// Forces creation of an activation keyword configuration matching the
+        /// specified keyword registration information.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
+        public async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsync()
+        {
+            using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
+            {
+                return await this.CreateKeywordConfigurationAsyncInternal();
             }
         }
 
@@ -307,7 +298,9 @@ namespace UWPVoiceAssistantSample
             }
             else if (!hasNoFormat && !hasNoPath)
             {
-                if (configuration.AvailabilityInfo.IsEnabled)
+                var configurationWasEnabled = configuration.AvailabilityInfo.IsEnabled;
+
+                if (configurationWasEnabled)
                 {
                     // Active configurations can't have their data updated. Disable for now;
                     // we'll re-enable shortly.
@@ -324,13 +317,45 @@ namespace UWPVoiceAssistantSample
                 // Update was successful. Record this so we don't repeat it needlessly!
                 this.LastUpdatedActivationKeywordModelVersion = this.AvailableActivationKeywordModelVersion;
 
-                // And now, re-enable the configuration.
-                await configuration.SetEnabledAsync(true);
+                // And now, re-enable the configuration if we previously disabled it.
+                if (configurationWasEnabled)
+                {
+                    await configuration.SetEnabledAsync(true);
+                }
             }
         }
 
+        private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
+        {
+            var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
+
+            // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
+            // are disabled to avoid collisions.
+            var configurations = await detector.GetConfigurationsAsync();
+            foreach (var configuration in configurations)
+            {
+                await configuration.SetEnabledAsync(false);
+            }
+
+            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                detector,
+                this.KeywordDisplayName,
+                this.KeywordId,
+                this.KeywordModelId);
+            await this.SetModelDataIfNeededAsync(targetConfiguration);
+
+            if (!targetConfiguration.IsActive)
+            {
+                await targetConfiguration.SetEnabledAsync(true);
+            }
+
+            this.keywordConfiguration = targetConfiguration;
+
+            return targetConfiguration;
+        }
+
         private async Task<StorageFile> GetFileFromPathAsync(string path)
-            => path.StartsWith("ms-appx", StringComparison.InvariantCultureIgnoreCase)
+            => path.StartsWith("ms-app", StringComparison.InvariantCultureIgnoreCase)
                 ? await StorageFile.GetFileFromApplicationUriAsync(new Uri(path))
                 : await StorageFile.GetFileFromPathAsync(path);
     }

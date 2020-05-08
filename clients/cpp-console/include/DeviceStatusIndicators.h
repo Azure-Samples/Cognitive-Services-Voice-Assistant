@@ -38,6 +38,6 @@ namespace DeviceStatusNames
 // general abstraction.
 class DeviceStatusIndicators
 {
-    public:
-        static void SetStatus(const DeviceStatus status);
+public:
+    static void SetStatus(const DeviceStatus status);
 };

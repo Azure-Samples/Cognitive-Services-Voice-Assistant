@@ -102,6 +102,13 @@ namespace UWPVoiceAssistantSample
         Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync();
 
         /// <summary>
+        /// Forces creation of an activation keyword configuration matching the
+        /// specified keyword registration information.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
+        Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsync();
+
+        /// <summary>
         /// Creates a keyword registration data collection from an input file, such as a
         /// manifest for keyword updates.
         /// </summary>

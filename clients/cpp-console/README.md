@@ -1,4 +1,4 @@
-# Microsoft Cognitive Services - Voice Assistant Sample Code C++ console
+# Microsoft Cognitive Services - Voice Assistant C++ Console Sample
 
 ## Overview
 
@@ -11,24 +11,21 @@ This sample is intended to be a starting point for any application coded in c++.
 
 For Windows you should use the nuget package.
 
-For Linux or ARM devices the target version and the native binaries should be copied to the lib folder in this repo so that you have a structure like this (for ARM32): ./lib/arm32. 
+For Linux or ARM devices the build scripts will download and copy the SDK's newest version and the native binaries will be copied to the lib folder in this repo so that you have a structure like this (for ARM32): ./lib/arm32. 
 
-Headers and their folders should be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api
+Headers and their folders will be copied into the include folder so that you have a structure like this: ./include/cxx_api and ./include/c_api
 
-Replace the text in the configs/config.json file with your subscription key and key region. If you are using a custom speech commands application or custom speech font you can insert those GUID's there as well.
+Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or custom speech font you can insert those GUID's there as well.
 
 ## Build directly on Linux arm32
 
-Check out the [RaspberryPi.md](RaspberryPi.md) for detailed instructions.
+Check out the [RaspberryPi.md](docs/RaspberryPi.md) for detailed instructions.
 
 ## Building for Linux Arm32 with Docker
 
-Check out the [GGECSpeaker.md](GGECSpeaker.md) for detailed instructions.
+Check out the [GGECSpeaker.md](docs/GGECSpeaker.md) for detailed instructions.
 
-## Running the sample
+## Building for Windows
 
-### usage: sample.exe config-file
-example running from the out folder:
-    
-    export LD_LIBRARY_PATH="../lib/arm32"
-    sample.exe config.json
+Check out the [Windows.md](docs/Windows.md) for detailed instructions.
+

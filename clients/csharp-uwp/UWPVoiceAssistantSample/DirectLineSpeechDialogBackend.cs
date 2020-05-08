@@ -5,12 +5,13 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
+    using System.Globalization;
     using System.Threading.Tasks;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
+    using Newtonsoft.Json.Linq;
     using Windows.Storage;
 
     /// <summary>
@@ -24,6 +25,24 @@ namespace UWPVoiceAssistantSample
         private DialogServiceConnector connector;
         private PushAudioInputStream connectorInputStream;
         private bool alreadyDisposed = false;
+        private ILogProvider logger;
+        private string speechKey;
+        private string speechRegion;
+        private string customSpeechId;
+        private string customVoiceIds;
+        private string customCommandsAppId;
+        private string botId;
+        private bool enableSdkLogging;
+        private string keywordFilePath;
+        private bool startEventReceived;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
+        /// </summary>
+        public DirectLineSpeechDialogBackend()
+        {
+            this.logger = LogRouter.GetClassLogger();
+        }
 
         /// <summary>
         /// Raised when audio has begun flowing to Direct Line Speech and returns the interaction
@@ -91,74 +110,105 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <param name="keywordFile"> The keyword file to be loaded as part of initialization.</param>
         /// <returns> A task that completes once initialization is complete. </returns>
-        public async Task InitializeAsync(StorageFile keywordFile)
+        public Task InitializeAsync(StorageFile keywordFile)
         {
-            // Default values -- these can be updated
-            this.ConnectorConfiguration = this.CreateConfiguration();
-            this.ConfirmationModel = KeywordRecognitionModel.FromFile(keywordFile.Path);
+            Contract.Requires(keywordFile != null);
 
-            this.connectorInputStream = AudioInputStream.CreatePushStream();
-            this.connector = new DialogServiceConnector(
-                this.ConnectorConfiguration,
-                AudioConfig.FromStreamInput(this.connectorInputStream));
+            var configRefreshRequired = this.TryRefreshConfigValues();
 
-            this.connector.SessionStarted += (s, e) => this.SessionStarted?.Invoke(e.SessionId);
-            this.connector.SessionStopped += (s, e) => this.SessionStopped?.Invoke(e.SessionId);
-            this.connector.Recognizing += (s, e) =>
+            var refreshConnector = configRefreshRequired || (this.keywordFilePath != keywordFile.Path);
+
+            if (refreshConnector)
             {
-                Debug.WriteLine($"Connector recognizing: {e.Result.Text}");
-                switch (e.Result.Reason)
+                var newConnectorConfiguration = this.CreateConfiguration();
+
+                this.ConfirmationModel = KeywordRecognitionModel.FromFile(keywordFile.Path);
+                this.keywordFilePath = keywordFile.Path;
+                this.ConnectorConfiguration = newConnectorConfiguration;
+                this.connectorInputStream = AudioInputStream.CreatePushStream();
+
+                this.connector?.Dispose();
+                this.connector = new DialogServiceConnector(
+                    this.ConnectorConfiguration,
+                    AudioConfig.FromStreamInput(this.connectorInputStream));
+
+                this.connector.SessionStarted += (s, e) => this.SessionStarted?.Invoke(e.SessionId);
+                this.connector.SessionStopped += (s, e) => this.SessionStopped?.Invoke(e.SessionId);
+                this.connector.Recognizing += (s, e) =>
                 {
-                    case ResultReason.RecognizingKeyword:
-                        this.KeywordRecognizing?.Invoke(e.Result.Text);
-                        break;
-                    case ResultReason.RecognizingSpeech:
-                        this.SpeechRecognizing?.Invoke(e.Result.Text);
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
-            };
-            this.connector.Recognized += (s, e) =>
-            {
-                Debug.WriteLine($"Connector recognized: {e.Result.Text}");
-                switch (e.Result.Reason)
+                    switch (e.Result.Reason)
+                    {
+                        case ResultReason.RecognizingKeyword:
+                            this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
+                            this.KeywordRecognizing?.Invoke(e.Result.Text);
+                            break;
+                        case ResultReason.RecognizingSpeech:
+                            this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
+                            this.SpeechRecognizing?.Invoke(e.Result.Text);
+                            break;
+                        default:
+                            throw new InvalidOperationException();
+                    }
+                };
+                this.connector.Recognized += (s, e) =>
                 {
-                    case ResultReason.RecognizedKeyword:
-                        this.KeywordRecognized?.Invoke(e.Result.Text);
-                        break;
-                    case ResultReason.RecognizedSpeech:
-                        this.SpeechRecognized?.Invoke(e.Result.Text);
-                        break;
-                    case ResultReason.NoMatch:
-                        // If a KeywordRecognized handler is available, this is a final stage
-                        // keyword verification rejection.
-                        this.KeywordRecognized?.Invoke(null);
-                        break;
-                    default:
-                        throw new InvalidOperationException();
-                }
-            };
-            this.connector.Canceled += (s, e) =>
-            {
-                var code = (int)e.ErrorCode;
-                var message = $"{e.Reason.ToString()}: {e.ErrorDetails}";
-                this.ErrorReceived?.Invoke(new DialogErrorInformation(code, message));
-            };
-            this.connector.ActivityReceived += (s, e) =>
-            {
-                // Note: the contract of when to end a turn is unique to your dialog system. In this sample,
-                // it's assumed that receiving a message activity without audio marks the end of a turn. Your
-                // dialog system may have a different contract!
-                var wrapper = new ActivityWrapper(e.Activity);
-                var payload = new DialogResponse(
-                    messageBody: e.Activity,
-                    messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio) : null,
-                    shouldEndTurn: e.Audio == null && wrapper.Type == ActivityWrapper.ActivityType.Message,
-                    shouldStartNewTurn: wrapper.InputHint == ActivityWrapper.InputHintType.ExpectingInput);
-                Debug.WriteLine($"Connector activity received");
-                this.DialogResponseReceived?.Invoke(payload);
-            };
+                    switch (e.Result.Reason)
+                    {
+                        case ResultReason.RecognizedKeyword:
+                            this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
+                            this.KeywordRecognized?.Invoke(e.Result.Text);
+                            break;
+                        case ResultReason.RecognizedSpeech:
+                            this.logger.Log($"Recognized final speech: \"{e.Result.Text}\"");
+                            this.SpeechRecognized?.Invoke(e.Result.Text);
+                            break;
+                        case ResultReason.NoMatch:
+                            // If a KeywordRecognized handler is available, this is a final stage
+                            // keyword verification rejection.
+                            this.logger.Log($"Cloud model rejected keyword");
+                            this.KeywordRecognized?.Invoke(null);
+                            break;
+                        default:
+                            throw new InvalidOperationException();
+                    }
+                };
+                this.connector.Canceled += (s, e) =>
+                {
+                    var code = (int)e.ErrorCode;
+                    var message = $"{e.Reason.ToString()}: {e.ErrorDetails}";
+                    this.ErrorReceived?.Invoke(new DialogErrorInformation(code, message));
+                };
+                this.connector.ActivityReceived += (s, e) =>
+                {
+                    // Note: the contract of when to end a turn is unique to your dialog system. In this sample,
+                    // it's assumed that receiving a message activity without audio marks the end of a turn. Your
+                    // dialog system may have a different contract!
+                    var wrapper = new ActivityWrapper(e.Activity);
+
+                    if (wrapper.Type == ActivityWrapper.ActivityType.Event)
+                    {
+                        if (!this.startEventReceived)
+                        {
+                            this.startEventReceived = true;
+                            return;
+                        }
+                        else
+                        {
+                            this.startEventReceived = false;
+                        }
+                    }
+
+                    var payload = new DialogResponse(
+                        messageBody: e.Activity,
+                        messageMedia: e.HasAudio ? new DirectLineSpeechAudioOutputStream(e.Audio, LocalSettingsHelper.OutputFormat) : null,
+                        shouldEndTurn: (e.Audio == null && wrapper.Type == ActivityWrapper.ActivityType.Message) || wrapper.Type == ActivityWrapper.ActivityType.Event,
+                        shouldStartNewTurn: wrapper.InputHint == ActivityWrapper.InputHintType.ExpectingInput);
+
+                    this.DialogResponseReceived?.Invoke(payload);
+                };
+            }
+
+            return Task.FromResult(0);
         }
 
         /// <summary>
@@ -171,8 +221,10 @@ namespace UWPVoiceAssistantSample
         /// </returns>
         public async Task<string> SendDialogMessageAsync(string message)
         {
-            var id = await this.connector.SendActivityAsync(message);
-            return id;
+            var activityJson = new JObject();
+            activityJson["type"] = "message";
+            activityJson["text"] = message;
+            return await this.connector.SendActivityAsync(activityJson.ToString());
         }
 
         /// <summary>
@@ -218,12 +270,9 @@ namespace UWPVoiceAssistantSample
         /// If the current turn is confirming a signal, abort the verfication.
         /// </summary>
         /// <returns> A task that completes when the in-progress turn has been aborted. </returns>
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public async Task CancelSignalVerification()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task CancelSignalVerificationAsync()
         {
-            Debug.WriteLine("\n\n\n\ncancel\n\n\n\n");
-            _ = this.connector.StopKeywordRecognitionAsync();
+            await this.connector?.StopKeywordRecognitionAsync();
         }
 
         /// <summary>
@@ -255,22 +304,15 @@ namespace UWPVoiceAssistantSample
 
         private DialogServiceConfig CreateConfiguration()
         {
-            var speechKey = LocalSettingsHelper.SpeechSubscriptionKey;
-            var speechRegion = LocalSettingsHelper.AzureRegion;
-            var customSpeechId = LocalSettingsHelper.CustomSpeechId;
-            var customVoiceIds = LocalSettingsHelper.CustomVoiceIds;
-            var customCommandsAppId = LocalSettingsHelper.CustomCommandsAppId;
-            var botId = LocalSettingsHelper.BotId;
-
             // Subscription information is supported in multiple formats:
             //  <subscription_key>     use the default bot associated with the subscription
             //  <sub_key>:<app_id>     use a specified Custom Commands application
             //  <sub_key>#<bot_id>     use a specific bot within the subscription
             DialogServiceConfig config;
 
-            if (!string.IsNullOrEmpty(speechKey) && !string.IsNullOrEmpty(speechRegion) && !string.IsNullOrEmpty(customCommandsAppId))
+            if (!string.IsNullOrEmpty(this.speechKey) && !string.IsNullOrEmpty(this.speechRegion) && !string.IsNullOrEmpty(this.customCommandsAppId))
             {
-                config = CustomCommandsConfig.FromSubscription(customCommandsAppId, speechKey, speechRegion);
+                config = CustomCommandsConfig.FromSubscription(this.customCommandsAppId, this.speechKey, this.speechRegion);
             }
 
             // else if (!string.IsNullOrEmpty(speechKey) && !string.IsNullOrEmpty(speechRegion) && !string.IsNullOrEmpty(botId))
@@ -280,34 +322,69 @@ namespace UWPVoiceAssistantSample
             else
             {
                 config = BotFrameworkConfig.FromSubscription(
-                    speechKey,
-                    speechRegion);
+                    this.speechKey,
+                    this.speechRegion);
             }
 
             // Disable throttling of input audio (send it as fast as we can!)
             config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "9999");
             config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "10000");
 
-            if (!string.IsNullOrEmpty(customSpeechId))
+            var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
+            config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
+
+            if (!string.IsNullOrEmpty(this.customSpeechId))
             {
-                config.SetServiceProperty("cid", customSpeechId, ServicePropertyChannel.UriQueryParameter);
+                config.SetServiceProperty("cid", this.customSpeechId, ServicePropertyChannel.UriQueryParameter);
 
                 // Custom Speech does not support Keyword Verification - Remove line below when supported.
                 config.SetProperty("KeywordConfig_EnableKeywordVerification", "false");
             }
 
-            if (!string.IsNullOrEmpty(customVoiceIds))
+            if (!string.IsNullOrEmpty(this.customVoiceIds))
             {
-                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, customVoiceIds);
+                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.customVoiceIds);
             }
 
-            if (LocalSettingsHelper.EnableSdkLogging)
+            if (this.enableSdkLogging)
             {
                 var logPath = $"{ApplicationData.Current.LocalFolder.Path}\\sdklog.txt";
                 config.SetProperty(PropertyId.Speech_LogFilename, logPath);
             }
 
             return config;
+        }
+
+        private bool TryRefreshConfigValues()
+        {
+            var speechKey = LocalSettingsHelper.SpeechSubscriptionKey;
+            var speechRegion = LocalSettingsHelper.AzureRegion;
+            var customSpeechId = LocalSettingsHelper.CustomSpeechId;
+            var customVoiceIds = LocalSettingsHelper.CustomVoiceIds;
+            var customCommandsAppId = LocalSettingsHelper.CustomCommandsAppId;
+            var botId = LocalSettingsHelper.BotId;
+            var enableSdkLogging = LocalSettingsHelper.EnableSdkLogging;
+
+            if (this.speechKey == speechKey
+                && this.speechRegion == speechRegion
+                && this.customSpeechId == customSpeechId
+                && this.customVoiceIds == customVoiceIds
+                && this.customCommandsAppId == customCommandsAppId
+                && this.botId == botId
+                && this.enableSdkLogging == enableSdkLogging)
+            {
+                return false;
+            }
+
+            this.speechKey = speechKey;
+            this.speechRegion = speechRegion;
+            this.customSpeechId = customSpeechId;
+            this.customVoiceIds = customVoiceIds;
+            this.customCommandsAppId = customCommandsAppId;
+            this.botId = botId;
+            this.enableSdkLogging = enableSdkLogging;
+
+            return true;
         }
     }
 }
