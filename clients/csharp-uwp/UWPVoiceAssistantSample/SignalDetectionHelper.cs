@@ -176,7 +176,6 @@ namespace UWPVoiceAssistantSample
             {
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: NoMatch");
                 this.OnSessionSignalRejected(this.LastDetectedSignalOrigin);
-
             }
             else
             {

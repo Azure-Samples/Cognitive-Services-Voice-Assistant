@@ -6,10 +6,8 @@ namespace UWPVoiceAssistantSample
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
-    using Windows.Foundation;
 
     /// <summary>
     /// Class to wrap a single instance of ConversationalAgentSession for an app.

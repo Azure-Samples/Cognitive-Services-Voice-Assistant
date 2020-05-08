@@ -9,8 +9,8 @@ namespace UWPVoiceAssistantSample
     using System.Linq;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
-    using Windows.Storage;
     using Newtonsoft.Json.Linq;
+    using Windows.Storage;
 
     /// <summary>
     /// Bot specific application settings obtained for config.json.

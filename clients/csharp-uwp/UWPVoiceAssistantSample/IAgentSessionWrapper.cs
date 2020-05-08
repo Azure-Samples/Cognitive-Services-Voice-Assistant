@@ -76,8 +76,14 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         string SignalName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the SignalStart Time from ConversationalAgentSignal.
+        /// </summary>
         TimeSpan SignalStart { get; set; }
 
+        /// <summary>
+        /// Gets or sets the SignalStart Time from ConversationalAgentSignal.
+        /// </summary>
         TimeSpan SignalEnd { get; set; }
 
         /// <summary>

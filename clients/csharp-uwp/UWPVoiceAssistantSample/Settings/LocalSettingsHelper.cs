@@ -3,15 +3,13 @@
 
 namespace UWPVoiceAssistantSample
 {
-    using Newtonsoft.Json.Linq;
     using System;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Newtonsoft.Json.Linq;
     using UWPVoiceAssistantSample.AudioCommon;
-    using Windows.ApplicationModel;
     using Windows.Storage;
-    using Windows.UI.Xaml;
 
     /// <summary>
     /// A convenience wrapper for getting and setting well-known properties from AppLocal settings.

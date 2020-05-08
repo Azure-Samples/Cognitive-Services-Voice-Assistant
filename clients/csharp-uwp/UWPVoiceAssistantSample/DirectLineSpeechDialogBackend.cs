@@ -5,7 +5,6 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.Globalization;
     using System.Threading.Tasks;
@@ -14,8 +13,6 @@ namespace UWPVoiceAssistantSample
     using Microsoft.CognitiveServices.Speech.Dialog;
     using Newtonsoft.Json.Linq;
     using UWPVoiceAssistantSample.KwsPerformance;
-    using Windows.Services.Maps;
-    using Windows.Services.Store;
     using Windows.Storage;
 
     /// <summary>
