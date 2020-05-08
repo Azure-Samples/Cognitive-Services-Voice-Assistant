@@ -1,6 +1,6 @@
 # Listen for voice activation
 
-Windows uses a lower-power, always-on keyword detector to detect when a user speaks a registered keyword. This is referred to as "1st stage keyword detection". These are the steps to for a voice assistant application to register a keyword with Windows and listen for 1st stage keyword detection.
+Windows uses a lower-power, always-on keyword detector to detect when a user speaks a registered keyword. This stage of voice activation is referred to as keyword detection. These are the steps to for a voice assistant application to register a keyword with Windows and listen for keyword detection.
 
 ## 1. Ensure that the microphone is available and accessible, then monitor its state
 
@@ -28,7 +28,7 @@ The ConversationalAgentSession is a class in the Windows SDK that allows your ap
 
 ## 7. Listen to the two activation signals: the OnBackgroundActivated and OnSignalDetected
 
-Windows will signal your app when it detects a keyword in one of two ways. If the app is not active (ie you do not have a reference to a non-disposed instance of ConversationalAgentSession), then it will launch your app and call the OnBackgroundActivated method in the [App.xaml.cs](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/App.xaml.cs) file of your application. If the BackgroundActivatedEventArgs' TaskInstance<span>.Task.Name matches "AgentBackgroundTrigger", it was triggered by a 1st stage activation. The application needs to override this method and retrieve an instance of ConversationalAgentSession to signal to Windows that is now active. 
+Windows will signal your app when it detects a keyword in one of two ways. If the app is not active (ie you do not have a reference to a non-disposed instance of ConversationalAgentSession), then it will launch your app and call the OnBackgroundActivated method in the [App.xaml.cs](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/App.xaml.cs) file of your application. If the BackgroundActivatedEventArgs' TaskInstance<span>.Task.Name matches "AgentBackgroundTrigger", it was triggered by keyword detection. The application needs to override this method and retrieve an instance of ConversationalAgentSession to signal to Windows that is now active. 
 
 If the app is active (i.e. has a reference to a non-disposed instance of ConversationalAgentSession), then Windows will signal the app through the SignalDetected event in the ConversationalAgentSession. The app needs to add a handler to this event on startup for signals that occur while the app is already active. In the sample app, this event is wrapped in [AgentSessionWrapper](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/AgentSessionWrapper.cs#L38) and handled in [AgentSessionManager](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/AgentSessionManager.cs).
 

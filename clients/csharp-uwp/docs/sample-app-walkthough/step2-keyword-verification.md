@@ -4,8 +4,8 @@ Once a voice agent application receives a signal from Windows, the next step is 
 
 In the sample application, this is done in two stages using Direct Line Speech (DLS):
 
-- Local keyword verification, or 2nd stage verification, which uses a higher-power, more accurate keyword model running locally, followed by...
-- Cloud keyword verification, or 3rd stage verification, which sends the signal to the cloud to be verified by an even more accurate and resource-intensive keyword verification model.
+- Local keyword verification, which uses a higher-power, more accurate keyword model running locally, followed by...
+- Cloud keyword verification, which sends the signal to the cloud to be verified by an even more accurate and resource-intensive keyword verification model.
 
 Fortunately, most of this complexity is encompassed by the Speech SDK and only requires proper setup. The following steps describe how to complete keyword verification with DLS through the Speech SDK and how to interact with Windows during verification.
 
@@ -19,15 +19,15 @@ Note: The leading audio included in the audio buffer can cause keyword verificat
 
 DialogManager initializes the AgentAudioInputProvider and passes it to an instance of [DirectLineSpeechDialogBackend](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DirectLineSpeechDialogBackend.cs) through DirectLineSpeechDialogBackend.SetAudioSource. The DirectLineSpeechDialogBackend class manages the Speech SDK classes used to interface with Direct Line Speech.
 
-When the AgentAudioInputProvider fires the DataAvailable event, the bytes from the activation audio are [passed to the Speech SDK](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DirectLineSpeechDialogBackend.cs#L192) and analyzed by the local 2nd stage keyword detector.
+When the AgentAudioInputProvider fires the DataAvailable event, the bytes from the activation audio are [passed to the Speech SDK](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DirectLineSpeechDialogBackend.cs#L192) and analyzed by the local keyword detector.
 
 ## 10. Complete local keyword verification
 
-When the local keyword verifier verifies the keyword is present in the activation audio, the DialogServiceConnector object in DirectLineSpeechDialogBackend will fire the SpeechRecognizing event with the result reason ResultReason.RecognizingKeyword. Note: there is no "keyword rejected" signal from the DialogServiceConnector for 2nd stage verification, so there must be a manually implemented timeout to cancel verification in case of failure. In the sample application, this "rejection timer" is implemented in [SignalDetectionHelper](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/SignalDetectionHelper.cs).
+When the local keyword verifier verifies the keyword is present in the activation audio, the DialogServiceConnector object in DirectLineSpeechDialogBackend will fire the SpeechRecognizing event with the result reason ResultReason.RecognizingKeyword. Note: there is no "keyword rejected" signal from the DialogServiceConnector for local keyword verification, so there must be a manually implemented timeout to cancel local keyword verification in case of failure. In the sample application, this "rejection timer" is implemented in [SignalDetectionHelper](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/SignalDetectionHelper.cs).
 
 ## 11. Complete cloud keyword verification
 
-On successful local keyword verification, the DialogServiceConnector automatically sends the audio to the cloud for 3rd stage keyword verification. When it verifies the keyword with cloud verification, the DialogServiceConnector object will fire the SpeechRecognized event with the result reason ResultReason.RecognizedKeyword. If cloud verification fails, the result reason will be ResultReason.NoMatch. In either case, the DialogManager surfaces these events as SignalConfirmed and SignalRejected.
+On successful local keyword verification, the DialogServiceConnector automatically sends the audio to the cloud for cloud keyword verification. When it verifies the keyword with cloud verification, the DialogServiceConnector object will fire the SpeechRecognized event with the result reason ResultReason.RecognizedKeyword. If cloud verification fails, the result reason will be ResultReason.NoMatch. In either case, the DialogManager surfaces these events as SignalConfirmed and SignalRejected.
 
 ## 12. If the keyword is verified, display UI
 

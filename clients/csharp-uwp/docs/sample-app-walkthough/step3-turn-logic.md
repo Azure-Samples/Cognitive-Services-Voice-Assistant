@@ -47,7 +47,7 @@ Throughout activation, keyword verification, and the bot interaction, a UWP voic
 - Working: The agent is taking action based on what the user said
 - Speaking: The voice agent is playing an audio response to the user
 
-The application reports changes in state to the Windows Conversational Agent system through the ConversationalAgentSession.RequestAgentStateChangeAsync method. In the sample app, these state changes are executed in DialogManager through [DialogManager.ChangeAgentStateAsync](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DialogManager.cs#L358).
+The application attempts to make changes to the agent state in Windows through the ConversationalAgentSession.RequestAgentStateChangeAsync method. Success is indicated by the ConversationalAgentUpdateResponse. In the sample app, these state changes are executed in DialogManager through [DialogManager.ChangeAgentStateAsync](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/DialogManager.cs#L358).
 
 ## Handling Above Lock Activation
 
