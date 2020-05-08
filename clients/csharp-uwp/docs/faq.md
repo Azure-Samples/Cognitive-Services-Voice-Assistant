@@ -3,11 +3,9 @@
 
 ## General
 
-### Where can I get more information on...
+### Where can I get more information on voice assistants on Windows?
 
-- [Custom lighting]()
-- [Automatic enablement]()
-- [Best practices for voice agents]()
+Visit our documentation for voice assistants on Windows [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/windows-voice-assistants-overview).
 
 ## Implementation
 
