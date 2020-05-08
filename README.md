@@ -66,9 +66,11 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 
 | Folder | Description |
 |-------------|-------------|
-| [custom-commands\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/hospitality) | Sample voice commands to control your room (lights, TV, temperature etc.), including visualization of the results. A PowerShell script is included to deploy and provision all the necessary Azure resources in your own Azure subscription
+| [custom-commands\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/hospitality)| Sample voice commands to control your room (lights, TV and temperature), including visualization of the results |
+| [custom-commands\inventory](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/inventory) | Sample voice commands to control warehouse inventory (adding or removing different color crates), including visualization of the results |
+| [custom-commands\automotive](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/automotive) | Sample voice commands to the environment in your car (temperature, .... ), including visualization of the results |
 
-### Keyword Models
+### Sample Keyword Models
 
 | Folder | Description |
 |-------------|-------------|
