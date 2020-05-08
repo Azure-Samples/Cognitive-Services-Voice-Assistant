@@ -352,27 +352,19 @@ namespace UWPVoiceAssistantSample
             // {
             //    config = BotFrameworkConfig.FromSubscription(speechKey, speechRegion, botId);
             // }
-            else if (LocalSettingsHelper.SetProperty != null)
-            {
-                // Azure Region must be set to an empty string if setting optional service property.
-                config = BotFrameworkConfig.FromSubscription(
-                    this.speechKey,
-                    this.speechRegion);
-
-                foreach (KeyValuePair<string, JToken> setPropertyId in LocalSettingsHelper.SetProperty)
-                {
-                    config.SetProperty(setPropertyId.Key, setPropertyId.Value.ToString());
-                }
-
-                this.enableKwsLogging = true;
-            }
             else
             {
                 config = BotFrameworkConfig.FromSubscription(
                     this.speechKey,
                     this.speechRegion);
 
-                this.enableKwsLogging = false;
+                if (LocalSettingsHelper.SetProperty != null)
+                {
+                    foreach (KeyValuePair<string, JToken> setPropertyId in LocalSettingsHelper.SetProperty)
+                    {
+                        config.SetProperty(setPropertyId.Key, setPropertyId.Value.ToString());
+                    }
+                }
             }
 
             // Disable throttling of input audio (send it as fast as we can!)
@@ -434,6 +426,7 @@ namespace UWPVoiceAssistantSample
             this.customCommandsAppId = customCommandsAppId;
             this.botId = botId;
             this.enableSdkLogging = enableSdkLogging;
+            this.enableKwsLogging = enableKwsLogging;
 
             return true;
         }
