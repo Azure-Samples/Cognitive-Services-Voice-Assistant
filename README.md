@@ -70,7 +70,7 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 | [custom-commands\inventory](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/inventory) | Sample voice commands to control warehouse inventory (adding or removing different color crates), including visualization of the results |
 | [custom-commands\automotive](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/automotive) | Sample voice commands to the environment in your car (temperature, .... ), including visualization of the results |
 
-### Keyword Models
+### Sample Keyword Models
 
 | Folder | Description |
 |-------------|-------------|
