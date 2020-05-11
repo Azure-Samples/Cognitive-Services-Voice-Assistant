@@ -2,13 +2,21 @@
 clear
 cd ..
 mkdir out
-mkdir SpeechSDK
+mkdir SDK
 
 echo "Downloading Speech SDK binaries"
-wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SpeechSDK
+wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SDK
 
 echo "Copying SDK binaries to lib folder and headers to include"
-cp -Rf ./SpeechSDK/SpeechSDK*/* .
+cp -Rf ./SDK/SpeechSDK*/* .
+
+echo "Downloading Microsoft Audio Stack (MAS) binaries"
+curl -L "https://aka.ms/sdsdk-download-linux-arm32" --output ./SDK/Linux-arm.zip
+tar -xz ./SDK/Linux-arm.zip -C ./SDK
+
+echo "Copying MAS binaries to lib folder"
+cp -Rf ./SDK/Linux-arm/* ./lib/arm32
+
 
 echo "Building Raspberry Pi sample"
 g++ -Wno-psabi \

@@ -22,7 +22,9 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 void DialogManager::InitializeDialogServiceConnector()
 {
     log_t("Configuration loaded. Creating connector...");
-    _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
+    auto config = _agentConfig->AsDialogServiceConfig();
+    config->SetProperty("MicArrayGeometryConfigFile", "/home/ubuntu/cpp-console/configs/mic.json");
+    _dialogServiceConnector = DialogServiceConnector::FromConfig(config);
     log_t("Connector created");
     auto future = _dialogServiceConnector->ConnectAsync();
 
