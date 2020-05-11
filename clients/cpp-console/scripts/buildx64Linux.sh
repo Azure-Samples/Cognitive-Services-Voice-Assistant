@@ -12,7 +12,7 @@ cp -Rf ./SpeechSDK/SpeechSDK*/* .
 
 echo "Building Raspberry Pi x64 sample"
 g++ -Wno-psabi \
-src/common/mainAudio.cpp \
+src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
 src/common/AgentConfiguration.cpp \

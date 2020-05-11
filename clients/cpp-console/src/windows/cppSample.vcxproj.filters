@@ -59,7 +59,7 @@
     <ClCompile Include="..\common\DeviceStatusIndicators.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\mainAudio.cpp">
+    <ClCompile Include="..\common\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowsAudioPlayer.cpp">

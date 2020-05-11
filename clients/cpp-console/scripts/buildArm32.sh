@@ -20,7 +20,7 @@ cp -Rf ./SDK/Linux-arm/* ./lib/arm32
 
 echo "Building Raspberry Pi sample"
 g++ -Wno-psabi \
-src/common/mainAudio.cpp \
+src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
 src/common/AgentConfiguration.cpp \

@@ -39,7 +39,7 @@ set commonTargets=-std=c++14 %inc% %incDir% %lib%
 set src=src/GGEC/GGECLinuxAudioPlayer.cpp %src%
 set src=src/GGEC/GGECDeviceStatusIndicators.cpp %src%
 set src=src/common/AudioPlayerEntry.cpp %src%
-set src=src/common/mainAudio.cpp %src%
+set src=src/common/Main.cpp %src%
 set src=src/common/AgentConfiguration.cpp %src%
 set src=src/common/DialogManager.cpp %src%
 set tgt=out/sample.exe
