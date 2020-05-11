@@ -237,10 +237,18 @@ namespace UWPVoiceAssistantSample
         {
             var detectorManager = ConversationalAgentDetectorManager.Default;
             var allDetectors = await detectorManager.GetAllActivationSignalDetectorsAsync();
+            var configurableDetectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations
+                && candidate.Kind == ActivationSignalDetectorKind.AudioPattern
+                && (string.IsNullOrEmpty(dataFormat) || candidate.SupportedModelDataTypes.Contains(dataFormat)));
+
+            if (configurableDetectors.Count() != 1)
+            {
+                throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {configurableDetectors.Count()}.");
+            }
 
             if (LocalSettingsHelper.EnableHardwareDetector)
             {
-                var hardwareDetectors = allDetectors.Where(candidate => !candidate.CanCreateConfigurations);
+                var hardwareDetectors = allDetectors.Where(candidate => !candidate.CanCreateConfigurations && candidate.Kind == ActivationSignalDetectorKind.AudioPattern);
 
                 var hardwareDetector = hardwareDetectors.First();
 
@@ -261,15 +269,6 @@ namespace UWPVoiceAssistantSample
 
                     return hardwareDetector;
                 }
-            }
-
-            var configurableDetectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations
-                && candidate.Kind == ActivationSignalDetectorKind.AudioPattern
-                && (string.IsNullOrEmpty(dataFormat) || candidate.SupportedModelDataTypes.Contains(dataFormat)));
-
-            if (configurableDetectors.Count() != 1)
-            {
-                throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {configurableDetectors.Count()}.");
             }
 
             KwsPerformanceLogger.Spotter = "SWKWS";
