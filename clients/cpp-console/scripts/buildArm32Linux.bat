@@ -27,7 +27,7 @@ set commonTargets=-std=c++14 %inc% %incDir% %lib%
 set src=src/linux/LinuxAudioPlayer.cpp %src%
 set src=src/common/DeviceStatusIndicators.cpp %src%
 set src=src/common/AudioPlayerEntry.cpp %src%
-set src=src/common/mainAudio.cpp %src%
+set src=src/common/Main.cpp %src%
 set src=src/common/AgentConfiguration.cpp %src%
 set src=src/common/DialogManager.cpp %src%
 set tgt=out/sample.exe

@@ -177,7 +177,7 @@
     <ClCompile Include="..\common\AudioPlayerEntry.cpp" />
     <ClCompile Include="..\common\DeviceStatusIndicators.cpp" />
     <ClCompile Include="..\common\DialogManager.cpp" />
-    <ClCompile Include="..\common\mainAudio.cpp" />
+    <ClCompile Include="..\common\Main.cpp" />
     <ClCompile Include="WindowsAudioPlayer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
