@@ -127,11 +127,31 @@ az group delete --name MyResourceGroupName
 
 *This section needs to be updated.*
 
-The resources were created using an azure template which is stored in the [./azuredeploy.json](./azuredeploy.json) file.</br>
-Then the [../storage files](../storage-files) were deployed into the storage resource.</br>
+First an Azure resource group was created using the resourceName parameter as the name.
+
+Then resources were created using an azure template which is stored in the [./azuredeploy.json](./azuredeploy.json) file. Parameters were passed in from the powershell script by manipulation the json values in the [./azuredeploy.parameters.json](./azuredeploy.parameters.json) file. For the individual resources a random number between 0 and 9999 is attached to help guarantee availability.</br>
+
+The values set in the azuredeploy.json file determine many things like pricing scheme, dependencies, and others.
+
+These are the resources specified in the azuredeploy.json:
+* Language Understanding (LUIS)
+* Language Understanding Authoring
+* Speech
+* Storage Account
+* App Service Plan
+* Function App*
+
+\*It is worth noting we set the CORS policy to "\*" from here.
+
+There are some links between resources that we must update. So we do a simple string replace in the powershell script to connect the demo.html file in the storage account to the azure function and to connect the function to the storage to be able to update tables.
+
+Once the resources we need are deployed and our files are updated, we must fill the storage account with the files used in the visualization. These are stored in the repo under [../storage files](../storage-files).
+
+We give the calling user the Storage Blob Data Reader and Contributor roles. Then we push the files to the resource.
+
 After that the azure function project located in [../skill](../skill) was built using the command line .NET tool and deployed to the Azure function resource.
 
-The Custom Commands application was created from the json file [../skill/hospitalityCustomCommands.json](../skill/hospitalityCustomCommands.json) and deployed to your Azure subscription. You can view that in the [Microsoft Speech portal](https://speech.microsoft.com/).
+The Custom Commands application was created from the json file [../skill/hospitalityCustomCommands.json](../skill/hospitalityCustomCommands.json) and deployed using your Azure subscription. You can view that service in the [Microsoft Speech Portal](https://speech.microsoft.com/).
 
-If you would like to dig deeper into the Powershell scripts you will see there are some simple string replacements we do to update the links between the azure function and the html file in the storage account that is ultimately the web page you see.
+If you would like to dig deeper into the Powershell scripts you will see how update the links between the azure function and the html file in the storage account that is ultimately the web page you see. Another useful thing might be to update the SKU's to allow greatere flexibiliy
 
