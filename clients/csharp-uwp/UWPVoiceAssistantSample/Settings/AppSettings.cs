@@ -75,6 +75,8 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public bool EnableHardwareDetector { get; set; }
 
+        public bool NeedSetModelData { get; set; }
+
         /// <summary>
         /// Reads and deserializes the configuration file.
         /// </summary>

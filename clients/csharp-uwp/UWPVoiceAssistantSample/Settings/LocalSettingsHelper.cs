@@ -258,6 +258,7 @@ namespace UWPVoiceAssistantSample
                 SetProperty = appSettings.SetProperty;
                 EnableKwsLogging = appSettings.EnableKwsLogging;
                 EnableHardwareDetector = appSettings.EnableHardwareDetector;
+                NeedSetModelData = appSettings.NeedSetModelData;
             }
         }
 

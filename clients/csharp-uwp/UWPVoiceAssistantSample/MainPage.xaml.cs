@@ -606,12 +606,13 @@ namespace UWPVoiceAssistantSample
             var setPropertyIdModified = LocalSettingsHelper.SetProperty != appSettings.SetProperty;
             var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging != appSettings.EnableKwsLogging;
             var enabledHardwareDetector = LocalSettingsHelper.EnableHardwareDetector != appSettings.EnableHardwareDetector;
+            var enableSetModelData = LocalSettingsHelper.NeedSetModelData != appSettings.NeedSetModelData;
 
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
                 keywordDisplayNameModified || keywordIdModified || keywordModelIdModified ||
                 keywordActivationModelDataFormatModified || keywordActivationModelPathModified ||
-                keywordConfirmationModelPathModified || setPropertyIdModified || enableKwsLogging || enabledHardwareDetector;
+                keywordConfirmationModelPathModified || setPropertyIdModified || enableKwsLogging || enabledHardwareDetector || enableSetModelData;
 
             if (this.configModified)
             {
@@ -705,6 +706,12 @@ namespace UWPVoiceAssistantSample
                 {
                     LocalSettingsHelper.EnableHardwareDetector = appSettings.EnableHardwareDetector;
                     this.logger.Log($"Enable Hardware Detector: {LocalSettingsHelper.EnableHardwareDetector}");
+                }
+
+                if (enableSetModelData)
+                {
+                    LocalSettingsHelper.NeedSetModelData = appSettings.NeedSetModelData;
+                    this.logger.Log($"Set Model Data: {LocalSettingsHelper.NeedSetModelData}");
                 }
 
                 if (keywordActivationModelDataFormatModified
