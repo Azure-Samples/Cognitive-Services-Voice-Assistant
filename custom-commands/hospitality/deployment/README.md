@@ -139,9 +139,7 @@ These are the resources specified in the azuredeploy.json:
 * Speech
 * Storage Account
 * App Service Plan
-* Function App*
-
-\*It is worth noting we set the CORS policy to "\*" from here.
+* Function App (CORS policy specified as "\*". Further reading: [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing))
 
 There are some links between resources that we must update. So we do a simple string replace in the powershell script to connect the demo.html file in the storage account to the azure function and to connect the function to the storage to be able to update tables.
 
@@ -153,5 +151,7 @@ After that the azure function project located in [../skill](../skill) was built 
 
 The Custom Commands application was created from the json file [../skill/hospitalityCustomCommands.json](../skill/hospitalityCustomCommands.json) and deployed using your Azure subscription. You can view that service in the [Microsoft Speech Portal](https://speech.microsoft.com/).
 
-If you would like to dig deeper into the Powershell scripts you will see how update the links between the azure function and the html file in the storage account that is ultimately the web page you see. Another useful thing might be to update the SKU's to allow greatere flexibiliy
+Our Powershell deployment script is intended to make getting started easier. For further customization you should edit the Powershell scripts to fit your needs.
+
+Another useful thing might be to update the SKU's in the azuredeploy.json to allow higher usage and other things such as multiple speech resources, and App Service plans in different regions. The script has a region check for the supported regions of the free App Service plan, which will need to be removed if you do this.
 
