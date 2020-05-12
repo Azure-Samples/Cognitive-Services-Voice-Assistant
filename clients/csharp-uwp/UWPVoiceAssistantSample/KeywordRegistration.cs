@@ -248,27 +248,27 @@ namespace UWPVoiceAssistantSample
 
             if (LocalSettingsHelper.EnableHardwareDetector)
             {
-                var hardwareDetectors = allDetectors.Where(candidate => !candidate.CanCreateConfigurations && candidate.Kind == ActivationSignalDetectorKind.AudioPattern);
+                //var hardwareDetectors = allDetectors.Where(candidate => !candidate.CanCreateConfigurations && candidate.Kind == ActivationSignalDetectorKind.AudioPattern);
 
-                var hardwareDetector = hardwareDetectors.First();
+                //var hardwareDetector = hardwareDetectors.First();
 
-                if (hardwareDetectors.Any())
-                {
-                    KwsPerformanceLogger.Spotter = "HWKWS";
-                    foreach (var detector in allDetectors)
-                    {
-                        if (detector != hardwareDetector)
-                        {
-                            var detectorConfiguration = await detector.GetConfigurationsAsync();
-                            foreach (var configuration in detectorConfiguration)
-                            {
-                                await configuration.SetEnabledAsync(false);
-                            }
-                        }
-                    }
+                //if (hardwareDetectors.Any())
+                //{
+                //    KwsPerformanceLogger.Spotter = "HWKWS";
+                //    foreach (var detector in allDetectors)
+                //    {
+                //        if (detector != hardwareDetector && detector.Kind != ActivationSignalDetectorKind.HardwareEvent)
+                //        {
+                //            var detectorConfiguration = await detector.GetConfigurationsAsync();
+                //            foreach (var configuration in detectorConfiguration)
+                //            {
+                //                await configuration.SetEnabledAsync(false);
+                //            }
+                //        }
+                //    }
 
-                    return hardwareDetector;
-                }
+                //    return hardwareDetector;
+                //}
             }
 
             KwsPerformanceLogger.Spotter = "SWKWS";
@@ -345,31 +345,67 @@ namespace UWPVoiceAssistantSample
 
         private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
         {
-            var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
-
-            // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
-            // are disabled to avoid collisions.
-            var configurations = await detector.GetConfigurationsAsync();
-            foreach (var configuration in configurations)
+            if (LocalSettingsHelper.EnableHardwareDetector)
             {
-                await configuration.SetEnabledAsync(false);
+                var detectorManager = ConversationalAgentDetectorManager.Default;
+                var allDetectors = await detectorManager.GetAllActivationSignalDetectorsAsync();
+
+                var hardwareDetectors = allDetectors.Where(candidate => !candidate.CanCreateConfigurations && candidate.Kind == ActivationSignalDetectorKind.AudioPattern);
+
+                var hardwareDetector = hardwareDetectors.First();
+
+                if (hardwareDetectors.Any())
+                {
+                    KwsPerformanceLogger.Spotter = "HWKWS";
+                    foreach (var detector in allDetectors)
+                    {
+                        if (detector != hardwareDetector && detector.Kind == ActivationSignalDetectorKind.HardwareEvent)
+                        {
+                            var detectorConfiguration = await detector.GetConfigurationsAsync();
+                            foreach (var configuration in detectorConfiguration)
+                            {
+                                await configuration.SetEnabledAsync(false);
+                            }
+                        }
+                    }
+                }
+
+                var hardwareConfiguraion = await GetOrCreateConfigurationOnDetectorAsync(
+                    hardwareDetector,
+                    this.KeywordDisplayName,
+                    this.KeywordId,
+                    this.KeywordModelId);
+
+                return hardwareConfiguraion;
             }
-
-            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                detector,
-                this.KeywordDisplayName,
-                this.KeywordId,
-                this.KeywordModelId);
-            await this.SetModelDataIfNeededAsync(targetConfiguration);
-
-            if (!targetConfiguration.IsActive)
+            else
             {
-                await targetConfiguration.SetEnabledAsync(true);
+                var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
+
+                // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
+                // are disabled to avoid collisions.
+                var configurations = await detector.GetConfigurationsAsync();
+                foreach (var configuration in configurations)
+                {
+                    await configuration.SetEnabledAsync(false);
+                }
+
+                var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                    detector,
+                    this.KeywordDisplayName,
+                    this.KeywordId,
+                    this.KeywordModelId);
+                await this.SetModelDataIfNeededAsync(targetConfiguration);
+
+                if (!targetConfiguration.IsActive)
+                {
+                    await targetConfiguration.SetEnabledAsync(true);
+                }
+
+                this.keywordConfiguration = targetConfiguration;
+
+                return targetConfiguration;
             }
-
-            this.keywordConfiguration = targetConfiguration;
-
-            return targetConfiguration;
         }
 
         private async Task<StorageFile> GetFileFromPathAsync(string path)

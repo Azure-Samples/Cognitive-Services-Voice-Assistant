@@ -6,11 +6,11 @@
   "CustomCommandsAppId": "",
   "BotId": "",
   "KeywordActivationModel": {
-    "DisplayName": "Contoso",
-    "Path": "ms-appx:///Assets/ActivationKeywords/Contoso.bin",
-    "KeywordId": "{C0F1842F-D389-44D1-8420-A32A63B35568}",
+    "DisplayName": "Cortana",
+    "Path": "ms-appx:///Assets/ActivationKeywords/cortana.bin",
+    "KeywordId": "{A5A7C794-3D59-41DF-915F-19ACDA526FC9}",
     "ModelId": "1033",
     "ModelDataFormat": "MICROSOFT_KWSGRAPH_V1"
   },
-  "KeywordModel": "ms-appx:///Assets/ConfirmationKeywords/contoso.table"
+  "KeywordModel": "ms-appx:///Assets/ConfirmationKeywords/cortana.table"
 }
