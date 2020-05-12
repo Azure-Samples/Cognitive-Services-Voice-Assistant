@@ -25,7 +25,10 @@ Check out the [RaspberryPi.md](docs/RaspberryPi.md) for detailed instructions.
 
 Check out the [GGECSpeaker.md](docs/GGECSpeaker.md) for detailed instructions.
 
+## Building for Linux on a Windows machine
+
+Check out how to [compile this C++ console sample for Linux on a Windows machine](docs/BuildForLinuxOnWindows.md)
+
 ## Building for Windows
 
 Check out the [Windows.md](docs/Windows.md) for detailed instructions.
-
