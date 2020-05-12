@@ -154,7 +154,8 @@ namespace UWPVoiceAssistantSample
                     return this.keywordConfiguration;
                 }
 
-                return await this.CreateKeywordConfigurationAsyncInternal();
+                this.keywordConfiguration = await this.CreateKeywordConfigurationAsyncInternal();
+                return this.keywordConfiguration;
             }
         }
 
@@ -352,19 +353,23 @@ namespace UWPVoiceAssistantSample
                     await targetConfiguration.SetEnabledAsync(true);
                 }
 
-                this.keywordConfiguration = targetConfiguration;
-
                 return targetConfiguration;
             }
             else
             {
                 var hwDetector = await GetDetectorAsync(this.KeywordActivationModelDataFormat, false);
 
-                return await GetOrCreateConfigurationOnDetectorAsync(
+                var hardwareConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
                 hwDetector,
                 this.KeywordDisplayName,
                 this.KeywordId,
                 this.KeywordModelId);
+
+                await this.SetModelDataIfNeededAsync(hardwareConfiguration);
+
+                await hardwareConfiguration.SetEnabledAsync(true);
+
+                return hardwareConfiguration;
             }
         }
 
