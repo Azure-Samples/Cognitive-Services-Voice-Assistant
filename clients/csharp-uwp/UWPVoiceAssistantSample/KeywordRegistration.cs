@@ -154,8 +154,8 @@ namespace UWPVoiceAssistantSample
                     return this.keywordConfiguration;
                 }
 
-                this.keywordConfiguration = await this.CreateKeywordConfigurationAsyncInternal();
-                return this.keywordConfiguration;
+                return await this.CreateKeywordConfigurationAsyncInternal();
+                //return this.keywordConfiguration;
             }
         }
 
@@ -353,6 +353,8 @@ namespace UWPVoiceAssistantSample
                     await targetConfiguration.SetEnabledAsync(true);
                 }
 
+                this.keywordConfiguration = targetConfiguration;
+
                 return targetConfiguration;
             }
             else
@@ -370,6 +372,8 @@ namespace UWPVoiceAssistantSample
                 await hardwareConfiguration.SetEnabledAsync(true);
 
                 KwsPerformanceLogger.Spotter = "HWKWS";
+
+                this.keywordConfiguration = hardwareConfiguration;
 
                 return hardwareConfiguration;
             }
