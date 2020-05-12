@@ -84,7 +84,8 @@ while (-not $completed) {
 Write-Host "Getting storage connection string" 
 $storageConnectionString = az storage account show-connection-string --resource-group $resourceGroup --name $storageName | ConvertFrom-Json
 
-Write-Host "Updating RoomDemo.cs with new connection string" 
-$newFile = (Get-Content '../azure-function/VirtualRoomApp/RoomDemo.cs')
-$newFile = $newFile | Foreach-Object { $_ -replace "STORAGE_CONNECTION_STRING", $storageConnectionString.connectionString }
-$newFile | Set-Content '../azure-function/VirtualRoomApp/RoomDemo.cs'
+Write-Host "Updating Connections.json with new connection string" 
+$newFile = (Get-Content '../azure-function/VirtualRoomApp/Connections.json') | Out-String | ConvertFrom-Json
+$newFile.storageConnectionString = $storageConnectionString.connectionString
+# $newFile = $newFile | Foreach-Object { $_ -replace "STORAGE_CONNECTION_STRING", $storageConnectionString.connectionString }
+$newFile | ConvertTo-Json -depth 100 | Set-Content '../azure-function/VirtualRoomApp/Connections.json'
