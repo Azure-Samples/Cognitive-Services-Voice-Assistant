@@ -359,7 +359,7 @@ namespace UWPVoiceAssistantSample
                     KwsPerformanceLogger.Spotter = "HWKWS";
                     foreach (var detector in allDetectors)
                     {
-                        if (detector != hardwareDetector && detector.Kind == ActivationSignalDetectorKind.HardwareEvent)
+                        if (detector != hardwareDetector && detector.Kind != ActivationSignalDetectorKind.HardwareEvent)
                         {
                             var detectorConfiguration = await detector.GetConfigurationsAsync();
                             foreach (var configuration in detectorConfiguration)
