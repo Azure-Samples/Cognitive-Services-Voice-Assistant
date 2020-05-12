@@ -40,7 +40,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Collection of utterances from user and bot.
         /// </summary>
-        public ObservableCollection<Conversation> Conversations;
+        public static ObservableCollection<Conversation> Conversations;
         private readonly ServiceProvider services;
         private readonly ILogProvider logger;
         private readonly IKeywordRegistration keywordRegistration;
@@ -106,7 +106,7 @@ namespace UWPVoiceAssistantSample
             // Ensure consistency between a few dependent controls and their settings
             this.UpdateUIBasedOnToggles();
 
-            this.Conversations = new ObservableCollection<Conversation>();
+            MainPage.Conversations = new ObservableCollection<Conversation>();
 
             this.ChatHistoryListView.ContainerContentChanging += this.OnChatHistoryListViewContainerChanging;
         }
@@ -139,7 +139,7 @@ namespace UWPVoiceAssistantSample
             {
                 await this.dialogManager.FinishConversationAsync();
                 await this.dialogManager.StopAudioPlaybackAsync();
-                this.Conversations.Clear();
+                MainPage.Conversations.Clear();
                 this.RefreshStatus();
             };
             this.ClearLogsButton.Click += async (_, __)
@@ -381,7 +381,7 @@ namespace UWPVoiceAssistantSample
         {
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                this.Conversations.Add(new Conversation
+                MainPage.Conversations.Add(new Conversation
                 {
                     Body = message,
                     Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
@@ -405,12 +405,12 @@ namespace UWPVoiceAssistantSample
                             Sent = true,
                         };
 
-                        this.Conversations.Add(this.activeConversation);
+                        MainPage.Conversations.Add(this.activeConversation);
                     }
 
                     this.activeConversation.Body = message;
 
-                    this.Conversations.Last().Body = message;
+                    MainPage.Conversations.Last().Body = message;
                 }
             });
         }
@@ -428,7 +428,7 @@ namespace UWPVoiceAssistantSample
                         Sent = true,
                     };
 
-                    this.Conversations.Add(this.activeConversation);
+                    MainPage.Conversations.Add(this.activeConversation);
                 }
 
                 this.activeConversation.Body = message;
@@ -990,7 +990,7 @@ namespace UWPVoiceAssistantSample
             var fileName = $"chatHistory_{DateTime.Now.ToString("yyyyMMdd_HHmmss", null)}.txt";
             var writeChatHistory = await localFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 
-            foreach (var message in this.Conversations)
+            foreach (var message in MainPage.Conversations)
             {
                 await File.AppendAllTextAsync(writeChatHistory.Path, "\r\n" + "Text: " + message.Body + "\r\n" + "BotReply: " + message.Received + "\r\n" + "Timestamp: " + message.Time + "\r\n" + "========");
             }

@@ -181,9 +181,10 @@ namespace UWPVoiceAssistantSample
             if (!session.IsUserAuthenticated && this.lockTransitionOccured && this.detectionOriginFromBelowLock != null)
             {
                 this.SignalConfirmed.Invoke((DetectionOrigin)this.detectionOriginFromBelowLock);
-                this.detectionOriginFromBelowLock = null;
-                this.lockTransitionOccured = false;
             }
+
+            this.detectionOriginFromBelowLock = null;
+            this.lockTransitionOccured = false;
         }
 
         /// <summary>
