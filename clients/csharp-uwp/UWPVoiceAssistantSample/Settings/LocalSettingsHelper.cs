@@ -287,5 +287,10 @@ namespace UWPVoiceAssistantSample
                 .ToList()
                 .ForEach(copyOperation => File.Copy(copyOperation.source.Path, copyOperation.destination.FullName));
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use 1st stage hardware keyword spotter.
+        /// </summary>
+        public static bool EnableHardwareDetector { get; set; }
     }
 }

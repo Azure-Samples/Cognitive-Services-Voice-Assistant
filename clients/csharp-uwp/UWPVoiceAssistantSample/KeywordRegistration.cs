@@ -86,7 +86,7 @@ namespace UWPVoiceAssistantSample
             get
             {
                 var key = $"lastKwModelVer_{this.KeywordId}:{this.KeywordModelId}";
-                var value = LocalSettingsHelper.ReadValueWithDefault<string>(key, "0.0.0.0");
+                var value = LocalSettingsHelper.ReadValueWithDefault<string>(key, "1.0.0.0");
                 return Version.Parse(value);
             }
 
@@ -239,20 +239,27 @@ namespace UWPVoiceAssistantSample
         }
 
         private static async Task<ActivationSignalDetector> GetFirstEligibleDetectorAsync(
-            string dataFormat)
+            string dataFormat, bool canCreateConfigurations = true)
         {
             var detectorManager = ConversationalAgentDetectorManager.Default;
             var allDetectors = await detectorManager.GetAllActivationSignalDetectorsAsync();
-            var configurableDetectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations
+            var detectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations == canCreateConfigurations
                 && candidate.Kind == ActivationSignalDetectorKind.AudioPattern
                 && (string.IsNullOrEmpty(dataFormat) || candidate.SupportedModelDataTypes.Contains(dataFormat)));
 
-            if (configurableDetectors.Count() != 1)
+            if (detectors.Count() != 1)
             {
-                throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {configurableDetectors.Count()}.");
+                if (canCreateConfigurations)
+                {
+                    throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {detectors.Count()}.");
+                }
+                else
+                {
+                    throw new NotSupportedException($"System expects one eligible hardware keyword spotter; actual is {detectors.Count()}.");
+                }
             }
 
-            var detector = configurableDetectors.First();
+            var detector = detectors.First();
 
             return detector;
         }
@@ -337,21 +344,35 @@ namespace UWPVoiceAssistantSample
                 await configuration.SetEnabledAsync(false);
             }
 
-            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                detector,
+            LocalSettingsHelper.EnableHardwareDetector = true;
+            if (!LocalSettingsHelper.EnableHardwareDetector)
+            {
+                var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                    detector,
+                    this.KeywordDisplayName,
+                    this.KeywordId,
+                    this.KeywordModelId);
+                await this.SetModelDataIfNeededAsync(targetConfiguration);
+
+                if (!targetConfiguration.IsActive)
+                {
+                    await targetConfiguration.SetEnabledAsync(true);
+                }
+
+                this.keywordConfiguration = targetConfiguration;
+
+                return targetConfiguration;
+            }
+            else
+            {
+                var hwDetector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat, false);
+
+                return await GetOrCreateConfigurationOnDetectorAsync(
+                hwDetector,
                 this.KeywordDisplayName,
                 this.KeywordId,
                 this.KeywordModelId);
-            await this.SetModelDataIfNeededAsync(targetConfiguration);
-
-            if (!targetConfiguration.IsActive)
-            {
-                await targetConfiguration.SetEnabledAsync(true);
             }
-
-            this.keywordConfiguration = targetConfiguration;
-
-            return targetConfiguration;
         }
 
         private async Task<StorageFile> GetFileFromPathAsync(string path)
