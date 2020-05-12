@@ -86,7 +86,7 @@ namespace UWPVoiceAssistantSample
             get
             {
                 var key = $"lastKwModelVer_{this.KeywordId}:{this.KeywordModelId}";
-                var value = LocalSettingsHelper.ReadValueWithDefault<string>(key, "1.0.0.0");
+                var value = LocalSettingsHelper.ReadValueWithDefault<string>(key, "0.0.0.0");
                 return Version.Parse(value);
             }
 
@@ -289,7 +289,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task SetModelDataIfNeededAsync(ActivationSignalDetectionConfiguration configuration)
         {
-            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0)
+            if ((this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0) || !LocalSettingsHelper.NeedSetModelData)
             {
                 // Keyword is already up to date according to this data; nothing to do here!
                 return;
@@ -344,7 +344,6 @@ namespace UWPVoiceAssistantSample
                 await configuration.SetEnabledAsync(false);
             }
 
-            LocalSettingsHelper.EnableHardwareDetector = true;
             if (!LocalSettingsHelper.EnableHardwareDetector)
             {
                 var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(

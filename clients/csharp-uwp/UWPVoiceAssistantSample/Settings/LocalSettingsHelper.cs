@@ -292,5 +292,12 @@ namespace UWPVoiceAssistantSample
         /// Gets or sets a value indicating whether to use 1st stage hardware keyword spotter.
         /// </summary>
         public static bool EnableHardwareDetector { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to set model data for a keyword configuration.
+        /// Set this value to false if use Cortana keyword. Cortana model data is included into windows image
+        /// Aar will load it from system folder. No need to reset it.
+        /// </summary>
+        public static bool NeedSetModelData { get; set; }
     }
 }
