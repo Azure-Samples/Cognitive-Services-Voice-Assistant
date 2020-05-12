@@ -11,16 +11,15 @@ echo "Copying SDK binaries to lib folder and headers to include"
 cp -Rf ./SDK/SpeechSDK*/* .
 
 echo "Downloading Microsoft Audio Stack (MAS) binaries"
-curl -L "https://aka.ms/sdsdk-download-linux-arm32" --output ./SDK/Linux-arm.zip
-tar -xz ./SDK/Linux-arm.zip -C ./SDK
+curl -L "https://aka.ms/sdsdk-download-linux-arm32" --output ./SDK/Linux-arm.tgz
+tar -xzf ./SDK/Linux-arm.tgz -C ./SDK
 
 echo "Copying MAS binaries to lib folder"
 cp -Rf ./SDK/Linux-arm/* ./lib/arm32
 
-
 echo "Building Raspberry Pi sample"
 g++ -Wno-psabi \
-src/common/Main.cpp \
+src/common/mainAudio.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
 src/common/AgentConfiguration.cpp \
