@@ -32,6 +32,8 @@ namespace UWPVoiceAssistantSample
         private IKeywordRegistration keywordRegistration;
         private IAgentSessionManager agentSessionManager;
         private DialogResponseQueue dialogResponseQueue;
+        private DetectionOrigin? detectionOriginFromBelowLock;
+        private bool lockTransitionOccured;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogManager{TInputType}"/> class.
@@ -158,12 +160,29 @@ namespace UWPVoiceAssistantSample
             {
                 this.dialogAudioOutput.OutputEnded += async () =>
                 {
-                    var session = await this.agentSessionManager.GetSessionAsync();
-                    if (session.AgentState == ConversationalAgentState.Speaking)
+                    var sessionInner = await this.agentSessionManager.GetSessionAsync();
+                    if (sessionInner.AgentState == ConversationalAgentState.Speaking)
                     {
                         await this.ChangeAgentStateAsync(ConversationalAgentState.Inactive);
                     }
                 };
+            }
+
+            var session = await this.agentSessionManager.GetSessionAsync();
+
+            session.SystemStateChanged += (s, e) =>
+            {
+                if (e.SystemStateChangeType == ConversationalAgentSystemStateChangeType.UserAuthentication)
+                {
+                    this.lockTransitionOccured = true;
+                }
+            };
+
+            if (!session.IsUserAuthenticated && this.lockTransitionOccured && this.detectionOriginFromBelowLock != null)
+            {
+                this.SignalConfirmed.Invoke((DetectionOrigin)this.detectionOriginFromBelowLock);
+                this.detectionOriginFromBelowLock = null;
+                this.lockTransitionOccured = false;
             }
         }
 
@@ -396,7 +415,18 @@ namespace UWPVoiceAssistantSample
             this.signalDetectionHelper.SignalConfirmed += async (DetectionOrigin origin) =>
             {
                 await this.ChangeAgentStateAsync(ConversationalAgentState.Listening);
-                this.SignalConfirmed.Invoke(origin);
+
+                var session = await this.agentSessionManager.GetSessionAsync();
+
+                if (!session.IsUserAuthenticated)
+                {
+                    var success = await session.RequestForegroundActivationAsync();
+                    this.detectionOriginFromBelowLock = origin;
+                    this.logger.Log("Activated above lock");
+                } else
+                {
+                    this.SignalConfirmed.Invoke(origin);
+                }
             };
         }
 
