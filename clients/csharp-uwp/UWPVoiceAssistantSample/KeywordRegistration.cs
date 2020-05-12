@@ -233,46 +233,29 @@ namespace UWPVoiceAssistantSample
         }
 
         private static async Task<ActivationSignalDetector> GetDetectorAsync(
-            string dataFormat)
+            string dataFormat, bool canCreateConfigurations = true)
         {
             var detectorManager = ConversationalAgentDetectorManager.Default;
             var allDetectors = await detectorManager.GetAllActivationSignalDetectorsAsync();
-            var configurableDetectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations
+            var detectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations
                 && candidate.Kind == ActivationSignalDetectorKind.AudioPattern
                 && (string.IsNullOrEmpty(dataFormat) || candidate.SupportedModelDataTypes.Contains(dataFormat)));
 
-            if (configurableDetectors.Count() != 1)
+            if (detectors.Count() != 1)
             {
-                throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {configurableDetectors.Count()}.");
-            }
-
-            if (LocalSettingsHelper.EnableHardwareDetector)
-            {
-                //var hardwareDetectors = allDetectors.Where(candidate => !candidate.CanCreateConfigurations && candidate.Kind == ActivationSignalDetectorKind.AudioPattern);
-
-                //var hardwareDetector = hardwareDetectors.First();
-
-                //if (hardwareDetectors.Any())
-                //{
-                //    KwsPerformanceLogger.Spotter = "HWKWS";
-                //    foreach (var detector in allDetectors)
-                //    {
-                //        if (detector != hardwareDetector && detector.Kind != ActivationSignalDetectorKind.HardwareEvent)
-                //        {
-                //            var detectorConfiguration = await detector.GetConfigurationsAsync();
-                //            foreach (var configuration in detectorConfiguration)
-                //            {
-                //                await configuration.SetEnabledAsync(false);
-                //            }
-                //        }
-                //    }
-
-                //    return hardwareDetector;
-                //}
+                //throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {configurableDetectors.Count()}.");
+                if (canCreateConfigurations)
+                {
+                    throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {detectors.Count()}.");
+                }
+                else
+                {
+                    throw new NotSupportedException($"System expects one eligible hardware keyword spotter; actual is {detectors.Count()}.");
+                }
             }
 
             KwsPerformanceLogger.Spotter = "SWKWS";
-            return configurableDetectors.First();
+            return detectors.First();
         }
 
         private static async Task<ActivationSignalDetectionConfiguration> GetOrCreateConfigurationOnDetectorAsync(
@@ -300,7 +283,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task SetModelDataIfNeededAsync(ActivationSignalDetectionConfiguration configuration)
         {
-            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0)
+            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0 || !LocalSettingsHelper.NeedSetModelData)
             {
                 // Keyword is already up to date according to this data; nothing to do here!
                 return;
@@ -345,51 +328,18 @@ namespace UWPVoiceAssistantSample
 
         private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
         {
-            if (LocalSettingsHelper.EnableHardwareDetector)
+            var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
+
+            // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
+            // are disabled to avoid collisions.
+            var configurations = await detector.GetConfigurationsAsync();
+            foreach (var configuration in configurations)
             {
-                var detectorManager = ConversationalAgentDetectorManager.Default;
-                var allDetectors = await detectorManager.GetAllActivationSignalDetectorsAsync();
-
-                var hardwareDetectors = allDetectors.Where(candidate => !candidate.CanCreateConfigurations && candidate.Kind == ActivationSignalDetectorKind.AudioPattern);
-
-                var hardwareDetector = hardwareDetectors.First();
-
-                if (hardwareDetectors.Any())
-                {
-                    KwsPerformanceLogger.Spotter = "HWKWS";
-                    foreach (var detector in allDetectors)
-                    {
-                        if (detector != hardwareDetector && detector.Kind != ActivationSignalDetectorKind.HardwareEvent)
-                        {
-                            var detectorConfiguration = await detector.GetConfigurationsAsync();
-                            foreach (var configuration in detectorConfiguration)
-                            {
-                                await configuration.SetEnabledAsync(false);
-                            }
-                        }
-                    }
-                }
-
-                var hardwareConfiguraion = await GetOrCreateConfigurationOnDetectorAsync(
-                    hardwareDetector,
-                    this.KeywordDisplayName,
-                    this.KeywordId,
-                    this.KeywordModelId);
-
-                return hardwareConfiguraion;
+                await configuration.SetEnabledAsync(false);
             }
-            else
+
+            if (!LocalSettingsHelper.EnableHardwareDetector)
             {
-                var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
-
-                // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
-                // are disabled to avoid collisions.
-                var configurations = await detector.GetConfigurationsAsync();
-                foreach (var configuration in configurations)
-                {
-                    await configuration.SetEnabledAsync(false);
-                }
-
                 var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
                     detector,
                     this.KeywordDisplayName,
@@ -405,6 +355,16 @@ namespace UWPVoiceAssistantSample
                 this.keywordConfiguration = targetConfiguration;
 
                 return targetConfiguration;
+            }
+            else
+            {
+                var hwDetector = await GetDetectorAsync(this.KeywordActivationModelDataFormat, false);
+
+                return await GetOrCreateConfigurationOnDetectorAsync(
+                hwDetector,
+                this.KeywordDisplayName,
+                this.KeywordId,
+                this.KeywordModelId);
             }
         }
 
