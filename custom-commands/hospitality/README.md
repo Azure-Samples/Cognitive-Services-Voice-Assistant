@@ -6,7 +6,7 @@
 
 ## Domain
 
-In this demo we simulate a hotel room and use voice to control some of the devices in the room - The television, air-conditioning, bathroom lights and main light.
+In this demo we simulate a hotel room and use voice to control some of the devices in the room - The television, air-conditioning, blinds, bathroom lights and main-room light.
 
 ## Example sentences
 
@@ -17,6 +17,8 @@ Here are a few examples. Try these or others of your choice:
 * Turn off the AC
 * Set the temperature to 71 degrees
 * Raise the temperature
+* Open the blinds
+* Blinds down
 * TV on
 * Turn it off
 
