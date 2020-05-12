@@ -369,6 +369,8 @@ namespace UWPVoiceAssistantSample
 
                 await hardwareConfiguration.SetEnabledAsync(true);
 
+                KwsPerformanceLogger.Spotter = "HWKWS";
+
                 return hardwareConfiguration;
             }
         }
