@@ -1005,10 +1005,7 @@ namespace UWPVoiceAssistantSample
 
         private async void TriggerLogAvailable(object sender, RoutedEventArgs e)
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                this.FilterLogs();
-            });
+            this.FilterLogs();
         }
 
         private void ApplicationStateBadgeClick(object sender, RoutedEventArgs e)
