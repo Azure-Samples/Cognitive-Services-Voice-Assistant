@@ -132,7 +132,6 @@ When you run the script deployAll.ps1, a new Azure resource group is created, a 
 ```powershell
 az group delete --name MyResourceGroupName
 ```
-2. Run "git status" in your git command prompt. Notice that three files got added (appearing under the "Untracked files") and two files were modifed (appearing under the "changes not staged for commit"). Run "git restore *" to revert the changes made to the two files. You must do that if you want to run the deployment script again. You can also delete the newly created files, but that is not a requirement to run the deployment script again.
 
 ## Deploying Azure resources - deep dive
 
@@ -150,7 +149,7 @@ These are the resources specified in the azuredeploy.json:
 * App Service Plan
 * Function App (CORS policy specified as "\*". Further reading: [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing))
 
-There are some links between resources that we must update. So we do a simple string replace using the Powershell script to connect the demo.html file in the storage account to the azure function and to connect the function to the storage to be able to update tables.
+There are some links between resources that we must update. So we do a simple json manipulation in the powershell script to connect the demo.html file in the storage account to the azure function and to connect the function to the storage to be able to update tables.
 
 Once the resources we need are deployed and our files are updated, we must fill the storage account with the files used in the visualization. These are stored in the repo under [../storage files](../storage-files).
 
