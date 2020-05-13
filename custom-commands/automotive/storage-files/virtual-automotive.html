@@ -161,74 +161,77 @@
         $(function () {
             var urlParams = new URLSearchParams(window.location.search);
             var jsonUrl = "https://automotivedemowidget.azurewebsites.net/api/AutomotiveDemo";
-            if (urlParams.has("room")) {
-                var room = urlParams.get("room");
-                jsonUrl = jsonUrl + "?room=" + room;
-            }
-            else {
-                var roomNumber = parseInt((Math.random() * 500000), 10)
-                jsonUrl = jsonUrl + "?room=" + roomNumber;
-            }
-
-            var timesRun = 0;
-            interval = setInterval(function () {
-                timesRun += 1;
-                if (timesRun === 10800) {
-                    clearInterval(interval);
-                }
-                $.getJSON(jsonUrl, function (configuration) {
-                    clear();
-                    apply(configuration);
-                    console.log(configuration);
-                });
-            }, 1000);
-
-            setTimeout(function () { alert("Timed out, please refresh!"); }, 10800000);
-
-            function apply(configuration) {
-                $("#temperature").html(configuration.Temperature + "°");
-
-                if (configuration.Help) {
-                    $("#helpboxes").fadeOut('fast')
+            $.getJSON("ConnectionURLS.json",function(data){
+                jsonUrl = data.AZURE_FUNCTION_URL;
+                if (urlParams.has("room")) {
+                    var room = urlParams.get("room");
+                    jsonUrl = jsonUrl + "?room=" + room;
                 }
                 else {
-                    $("#helpboxes").fadeIn('fast')
+                    var roomNumber = parseInt((Math.random() * 500000), 10)
+                    jsonUrl = jsonUrl + "?room=" + roomNumber;
                 }
 
-                if (configuration.Help) {
-                    $("#help-content").fadeIn('fast')
-                }
-                else {
-                    $("#help-content").fadeOut('fast')
-                }
+                var timesRun = 0;
+                interval = setInterval(function () {
+                    timesRun += 1;
+                    if (timesRun === 10800) {
+                        clearInterval(interval);
+                    }
+                    $.getJSON(jsonUrl, function (configuration) {
+                        clear();
+                        apply(configuration);
+                        console.log(configuration);
+                    });
+                }, 1000);
+
+                setTimeout(function () { alert("Timed out, please refresh!"); }, 10800000);
+
+                function apply(configuration) {
+                    $("#temperature").html(configuration.Temperature + "°");
+
+                    if (configuration.Help) {
+                        $("#helpboxes").fadeOut('fast')
+                    }
+                    else {
+                        $("#helpboxes").fadeIn('fast')
+                    }
+
+                    if (configuration.Help) {
+                        $("#help-content").fadeIn('fast')
+                    }
+                    else {
+                        $("#help-content").fadeOut('fast')
+                    }
 
 
-                if (configuration.SeatWarmers) {
-                    $("#seatwarmer").fadeOut('fast')
-                }
-                else {
-                    $("#seatwarmer").fadeIn('fast')
+                    if (configuration.SeatWarmers) {
+                        $("#seatwarmer").fadeOut('fast')
+                    }
+                    else {
+                        $("#seatwarmer").fadeIn('fast')
+                    }
+
+                    if (configuration.Defrost) {
+                        $("#defrost").fadeOut('fast')
+                    }
+                    else {
+                        $("#defrost").fadeIn('fast')
+                    }
+
+                    if (configuration.Television) {
+                        $("#television-content").fadeIn('fast')
+                        $("#television-notification").fadeIn('fast')
+                    }
+                    else {
+                        $("#television-content").fadeOut('fast')
+                        $("#television-notification").fadeOut('fast')
+                    }
                 }
 
-                if (configuration.Defrost) {
-                    $("#defrost").fadeOut('fast')
+                function clear() {
                 }
-                else {
-                    $("#defrost").fadeIn('fast')
-                }
-
-                if (configuration.Television) {
-                    $("#television-content").fadeIn('fast')
-                    $("#television-notification").fadeIn('fast')
-                }
-                else {
-                    $("#television-content").fadeOut('fast')
-                    $("#television-notification").fadeOut('fast')
-                }
-            }
-
-            function clear() {
-            }
+            });
         });
     </script>
 

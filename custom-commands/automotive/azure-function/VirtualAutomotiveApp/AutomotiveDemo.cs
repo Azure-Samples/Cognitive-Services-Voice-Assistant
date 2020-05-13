@@ -11,24 +11,32 @@ using Microsoft.WindowsAzure.Storage.Table;
 using System.Net.Http;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace AutomotiveApp
 {
     public static class AutomotiveDemo
     {
-        //Don't forget to fill in CloudAccess's CONNECTION_STRING!
-        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudAccess.CONNECTION_STRING);
-
-        private static CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-
-        private static CloudTable table = tableClient.GetTableReference("virtualautomotiveconfig");
-
         [FunctionName("AutomotiveDemo")]
         public static async Task<HttpResponseMessage> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+            ILogger log, ExecutionContext context)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
+
+            string connectionsJson = File.ReadAllText(Path.Combine(context.FunctionAppDirectory, "Connections.json"));
+
+            JObject ConnectionsObject = JObject.Parse(connectionsJson);
+
+            string connectionString = ConnectionsObject["AZURE_STORAGE_URL"].ToString();
+
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
+
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+
+            CloudTable table = tableClient.GetTableReference("virtualroomconfig");
+
 
             await table.CreateIfNotExistsAsync();
 
