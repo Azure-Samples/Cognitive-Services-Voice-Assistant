@@ -10,8 +10,24 @@
 * .NET Core SDK 2.1 or higher. [Install SDK here](https://docs.microsoft.com/en-us/dotnet/core/install/sdk?pivots=os-windows).
 
 ## What are you deploying?
- 
- TODO: Need diagram of CC and Visualization, and a description of the components and how they interact
+
+You will be deploying a sample [Custom command](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) project in your [Speech Studio](https://speech.microsoft.com/portal) portal. To demonstrate successful task completion (e.g. lights have turned off when you said "lights off"), we created a web page with a simulated scene. The completion rules in the Custom Command project are configured to make web calls to an Azure function that manages the state of the scene. Therefore in addition to the Custom Command project, you will be deploying all the Azure resources needed to support this visualization, in your Azure subscription.
+
+The following block diagram describes how the demo works: 
+<p align="center">
+<img src="images/block-diagram.png"/>
+</a>
+</p>
+We assume that you read about Custom Commands and Speech SDK client applications, so here we only describe the visualization part:
+
+* An Azure Blob storage is created, which holds an HTML file and associated images needed to visualize all the states of the scene 
+* You can view the HTML file in your web browser, since it has a unique URL. It will show the default scene at first
+* An Azure function is created. It has access to the storage. When your Custom Command project completed a dialog (e.g. "turn on the lights"), its completion rule directs it to make a web call invoking the Azure function. The web call includes the desired new scene state (e.g. lights are on)
+* The Azure function updates a row in the Azure Table in storage (or creates the row on first call), to hold the new scene state
+* While all that is happening, the Java Script embedded in the HTML page you are viewing, runs and periodically makes calls to the same Azure function to get the most recent scene state. In this demo the period is set to 1 second
+* If the state has changed, the Java Script code in the HTML builds the new visualization to reflect the current state, using the static images in storage
+
+If all that sounds good, continue on to deploy the resources to your Azure subscription.
 
 ## Deploying Azure resources
 Open a command prompt and clone the repository if you have not done so already. Change directory to the custom commands deployment folder:
@@ -40,7 +56,7 @@ It will take a few minutes for the scripts to run.
 
 If you see errors while running the script, refer to the [Troubleshooting](#troubleshooting) section below. Before running the script again due to errors, please [clean up your Azure resources and Github repo state](#cleaning-up-your-azure-resources-and-github-repo).
 
-On a successful completion, you should see a message at the end similar to the following, with all the information you need to configure one of the selected Voice Assistant client samples, and a URL to visualize the results of your voice commands:
+On a successful completion, you should see a message at the end similar to the following, with all the information you need to configure one of the selected [Voice Assistant client samples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant#sample-client-applications), and a URL to visualize the results of your voice commands:
 ```console
 ***********************
 Custom commands has been published.
@@ -55,21 +71,16 @@ To view your visualization go to this link.
 ```
 Copy the above information and store it for later use (but you can always [retrieve it if needed](#retrieving-client-connection-information-and-visualization-URL))
 
-If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) in the Azure portal, you will see a new resource group has been created with the name you selected, with 6 resources in it, similar to what you see here:
-<!-- Save this for reference, we may want to go back to a table and add descriptions...
-| Name  | Type          |
-| ------- | ---------------- |
-| MyResourceGroupName-###  | Cognitive Services |
-| MyResourceGroupName-### | App Service |
-| MyResourceGroupName-###-authoringkey | Cognitive Services |
-| MyResourceGroupName-serverfarm | App Service Plan |
-| MyResourceGroupName-speech | Cognitive Services |
-| MyResourceGroupName### | Storage account
--->
-<p align="center">
-<img src="images/resource-group.png"/>
-</a>
-</p>
+If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) in the Azure portal, you will see a new resource group has been created with the name you selected, with these 6 resources in it:
+
+| Name  | Type          | Usage
+| ------- | ---------------- | --- |
+| MyResourceGroupName-####  | Cognitive Services | LUIS runtime (API type "Language Understanding (LUIS)")
+| MyResourceGroupName-#### | App Service | Required to host the Azure function
+| MyResourceGroupName-####-authoringkey | Cognitive Services | LUIS authoring (API type Language Understanding Authoring (LUIS))
+| MyResourceGroupName-serverfarm | App Service Plan | Required to host the Azure function
+| MyResourceGroupName-speech | Cognitive Services | Speech resource, where you get the speech subscription key
+| MyResourceGroupName#### | Storage account | Stores HTML and supporting .png files for scene visualization
 
 ## Make sure the visualization works properly
 
@@ -125,11 +136,9 @@ az group delete --name MyResourceGroupName
 
 ## Deploying Azure resources - deep dive
 
-*This section needs to be updated.*
+First an Azure resource group was created using the resourceName parameter of the Powershell script as the name.
 
-First an Azure resource group was created using the resourceName parameter as the name.
-
-Then resources were created using an azure template which is stored in the [./azuredeploy.json](./azuredeploy.json) file. Parameters were passed in from the powershell script by manipulation the json values in the [./azuredeploy.parameters.json](./azuredeploy.parameters.json) file. For the individual resources a random number between 0 and 9999 is attached to help guarantee availability.</br>
+Then resources were created using an azure template which is stored in the [./azuredeploy.json](./azuredeploy.json) file. Parameters were passed in from the Powershell script by manipulation the json values in the [./azuredeploy.parameters.json](./azuredeploy.parameters.json) file. For the individual resources a random number between 0 and 9999 is attached to help guarantee availability.</br>
 
 The values set in the azuredeploy.json file determine many things like pricing scheme, dependencies, and others.
 
@@ -141,17 +150,16 @@ These are the resources specified in the azuredeploy.json:
 * App Service Plan
 * Function App (CORS policy specified as "\*". Further reading: [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing))
 
-There are some links between resources that we must update. So we do a simple string replace in the powershell script to connect the demo.html file in the storage account to the azure function and to connect the function to the storage to be able to update tables.
+There are some links between resources that we must update. So we do a simple string replace using the Powershell script to connect the demo.html file in the storage account to the azure function and to connect the function to the storage to be able to update tables.
 
 Once the resources we need are deployed and our files are updated, we must fill the storage account with the files used in the visualization. These are stored in the repo under [../storage files](../storage-files).
 
 We give the calling user the Storage Blob Data Reader and Contributor roles. Then we push the files to the resource.
 
-After that the azure function project located in [../skill](../skill) was built using the command line .NET tool and deployed to the Azure function resource.
+After that the azure function project located in [../azure-function](../azure-function) was built using the command line .NET tool and deployed to the Azure function resource.
 
-The Custom Commands application was created from the json file [../skill/hospitalityCustomCommands.json](../skill/hospitalityCustomCommands.json) and deployed using your Azure subscription. You can view that service in the [Microsoft Speech Portal](https://speech.microsoft.com/).
+The Custom Commands application was created from the json file [../skill/hospitalityCustomCommands.json](../skill/hospitalityCustomCommands.json) and deployed using your Azure subscription. You can view that service in the [Speech Studio portal](https://speech.microsoft.com/).
 
 Our Powershell deployment script is intended to make getting started easier. For further customization you should edit the Powershell scripts to fit your needs.
 
-Another useful thing might be to update the SKU's in the azuredeploy.json to allow higher usage and other things such as multiple speech resources, and App Service plans in different regions. The script has a region check for the supported regions of the free App Service plan, which will need to be removed if you do this.
-
+Another useful thing might be to update the Azure SKU's in the azuredeploy.json to allow higher usage and other things such as multiple speech resources, and App Service plans in different regions. The script has a region check for the supported regions of the free App Service plan, which will need to be removed if you do this.
