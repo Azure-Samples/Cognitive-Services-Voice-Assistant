@@ -23,6 +23,7 @@ namespace VoiceAssistantTest
             this.Utterance = turn.Utterance;
             this.Activity = turn.Activity;
             this.WAVFile = turn.WAVFile;
+            this.WAVFileDuration = turn.WAVFileDuration;
             this.Keyword = turn.Keyword;
             this.ExpectedTTSAudioResponseDurations = turn.ExpectedTTSAudioResponseDurations;
             this.ExpectedResponses = turn.ExpectedResponses;
@@ -42,10 +43,16 @@ namespace VoiceAssistantTest
         public string ActualRecognizedText { get; set; }
 
         /// <summary>
-        /// Gets or sets the Actual TTS Audio Reponse Duratio (in milliseconds).
+        /// Gets or sets the Actual TTS Audio Response Duration (in milliseconds).
         /// </summary>
         [JsonProperty(Order = 7, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<int> ActualTTSAudioResponseDurations { get; set; }
+
+        /// <summary>
+        /// Gets or sets the actual duration of the input WavFile (in milliseconds).
+        /// </summary>
+        [JsonProperty(Order = 8, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string ActualWavFileDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.

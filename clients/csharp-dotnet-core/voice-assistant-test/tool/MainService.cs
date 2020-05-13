@@ -308,6 +308,11 @@ namespace VoiceAssistantTest
                             testPass = false;
                         }
 
+                        if (!string.IsNullOrEmpty(turn.WAVFileDuration))
+                        {
+                            turnResult.ActualWavFileDuration = botConnector.WavFileDuration;
+                        }
+
                         // Add the turn result to the list of turn results.
                         turnResults.Add(turnResult);
 

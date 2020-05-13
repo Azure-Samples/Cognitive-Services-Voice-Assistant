@@ -56,6 +56,11 @@ namespace VoiceAssistantTest
         /// </summary>
         public string RecognizedKeyword { get; set; }
 
+        /// <summary>
+        /// Gets or sets the duration if WAVFile in milliseconds.
+        /// </summary>
+        public string WavFileDuration { get; set; }
+
         private List<BotReply> BotReplyList { get; set; }
 
         /// <summary>
@@ -146,6 +151,11 @@ namespace VoiceAssistantTest
                 {
                     config.SetServiceProperty(setServicePropertyPair.Key.ToString(CultureInfo.CurrentCulture), setServicePropertyPair.Value.ToString(), ServicePropertyChannel.UriQueryParameter);
                 }
+            }
+
+            if (this.appsettings.RealTimeAudio)
+            {
+                config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100");
             }
 
             if (this.connector != null)
@@ -250,6 +260,7 @@ namespace VoiceAssistantTest
                 this.pushAudioInputStream.Write(dataBuffer, readBytes);
             }
 
+            this.WavFileDuration = waveFileReader.TotalTime.TotalMilliseconds.ToString(CultureInfo.CurrentCulture);
             waveFileReader.Dispose();
         }
 
@@ -600,11 +611,13 @@ namespace VoiceAssistantTest
 
         private void SpeechBotConnector_SessionStarted(object sender, SessionEventArgs e)
         {
+            this.stopWatch.Start();
             Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Session Started event received. SessionId = {e.SessionId}");
         }
 
         private void SpeechBotConnector_SessionStopped(object sender, SessionEventArgs e)
         {
+            this.stopWatch.Stop();
             Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Session Stopped event received. SessionId = {e.SessionId}");
         }
 
