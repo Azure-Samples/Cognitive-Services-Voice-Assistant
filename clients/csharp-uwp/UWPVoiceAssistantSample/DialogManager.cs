@@ -277,7 +277,7 @@ namespace UWPVoiceAssistantSample
             }
             catch (Exception ex)
             {
-                this.logger.Log($"Unable to acquire MVA 1st-pass audio. Rejecting signal.\n{ex.HResult}: {ex.Message}");
+                this.logger.Log(LogMessageLevel.Error, $"Unable to acquire MVA 1st-pass audio. Rejecting signal.\n{ex.HResult}: {ex.Message}");
                 await this.FinishConversationAsync();
                 return false;
             }
@@ -299,6 +299,8 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task to be completed when all common steps are finished. </returns>
         protected virtual async Task StartTurnAsync(bool signalVerificationRequired)
         {
+            this.logger.Log(LogMessageLevel.Noise, "Starting a turn");
+
             var newState = signalVerificationRequired
                 ? ConversationalAgentState.Detecting
                 : ConversationalAgentState.Listening;

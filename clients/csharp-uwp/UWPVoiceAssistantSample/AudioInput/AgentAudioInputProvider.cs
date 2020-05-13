@@ -40,6 +40,15 @@ namespace UWPVoiceAssistantSample
         private bool dataAvailableInitialized = false;
         private int bytesToSkip;
         private int bytesAlreadySkipped;
+        private ILogProvider logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentAudioInputProvider"/> class.
+        /// </summary>
+        public AgentAudioInputProvider()
+        {
+            this.logger = LogRouter.GetClassLogger();
+        }
 
         /// <summary>
         /// Raised when new audio data is available from the producer.
@@ -254,12 +263,12 @@ namespace UWPVoiceAssistantSample
 
             if (this.agentSession != null)
             {
-                Debug.WriteLine($"{Environment.TickCount} Initializing audio from session");
+                this.logger.Log(LogMessageLevel.Noise, $"{Environment.TickCount} Initializing audio from session");
                 this.inputNode = await this.agentSession.CreateAudioDeviceInputNodeAsync(this.inputGraph);
             }
             else
             {
-                Debug.WriteLine($"{Environment.TickCount} Initializing audio from real-time input");
+                this.logger.Log(LogMessageLevel.Noise, $"{Environment.TickCount} Initializing audio from real-time input");
                 var nodeResult = await this.inputGraph.CreateDeviceInputNodeAsync(MediaCategory.Speech);
                 if (nodeResult.Status != AudioDeviceNodeCreationStatus.Success)
                 {
@@ -421,7 +430,7 @@ namespace UWPVoiceAssistantSample
                     const int bytesPerMillisecond = 32;
                     var dataLength = this.debugAudioOutputFileStream.Length - 44;
                     var dataDuration = 1.0 * dataLength / bytesPerMillisecond;
-                    Debug.WriteLine($"Completing write of microphone audio file. Length: {(int)dataDuration}ms");
+                    this.logger.Log(LogMessageLevel.Noise, $"Completing write of microphone audio file. Length: {(int)dataDuration}ms");
                     this.WriteDebugWavHeader(this.debugAudioOutputFileStream);
                     this.debugAudioOutputFileStream.Flush();
                     this.debugAudioOutputFileStream.Close();
