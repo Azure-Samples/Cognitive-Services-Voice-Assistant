@@ -48,7 +48,7 @@ At the end of this step, you will have a .table file if you want keyword activat
 * Follow the instructions there to download the executable or build it from source code. 
 * Configure it by editing a JSON file and entering the values you have from Step 2 (speech subscription key, key region & Custom Commands application ID) and the optional .table file name from Step 3. This will enable your client application to connect to your Custom Command service. 
 * Open a web browser and enter the URL you have from Step 2. This is where you will see a visualization of your voice command results
-* Run the client application and try out several voice command, while viewing the results in the visualization web page.
+* Run the client application and try out several voice commands, while viewing the results in the visualization web page.
 
 If you are developing on windows, we recommend you first use the [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf). Executable of the latest stable version can be downloaded from the [Release tab](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/releases) (no need to compile code). It has nice GUI to configure connection settings.
 
