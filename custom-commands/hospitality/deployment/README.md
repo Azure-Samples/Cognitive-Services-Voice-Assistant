@@ -121,7 +121,6 @@ When you run the script deployAll.ps1, a new Azure resource group is created, a 
 ```powershell
 az group delete --name MyResourceGroupName
 ```
-2. Run "git status" in your git command prompt. Notice that three files got added (appearing under the "Untracked files") and two files were modifed (appearing under the "changes not staged for commit"). Run "git restore *" to revert the changes made to the two files. You must do that if you want to run the deployment script again. You can also delete the newly created files, but that is not a requirement to run the deployment script again.
 
 ## Deploying Azure resources - deep dive
 
