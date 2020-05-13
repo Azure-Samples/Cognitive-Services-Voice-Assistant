@@ -8,7 +8,7 @@
 
 <p align="center">UNDER DEVELOPMENT</p>
 
-This page will guide you through building a sample voice assistant using Microsoft's [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands). After following the steps below you will have:
+This page will guide you through building a sample [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) using Microsoft's [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands). After following the steps below you will have:
 * A new Azure resouces group deployed to your Azure subscription, and a new Custom Command project in your [Speech Studio](https://speech.microsoft.com/portal/66e6e1b725074035a9e4cfea48eae6e6) portal
 * A sample client application running, configured to connect to your Custom Command service and voice activated by a keyword of your choice
 * You will be able to speak to your device, issue commands, get spoken confirmation from the voice assistant (or it will ask you follow up questions), and see the resulting simulated actions displayed on a web page
