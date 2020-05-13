@@ -17,7 +17,9 @@ namespace AutomotiveApp
     public static class AutomotiveDemo
     {
         //Don't forget to fill in CloudAccess's CONNECTION_STRING!
-        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudAccess.CONNECTION_STRING);
+
+        private static string connectionString = "STORAGE_CONNECTION_STRING";
+        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
 
         private static CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 

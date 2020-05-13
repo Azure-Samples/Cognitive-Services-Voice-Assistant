@@ -16,8 +16,10 @@ namespace VirtualInventoryApp
 {
     public static class InventoryDemo
     {
+        private static string connectionString = "STORAGE_CONNECTION_STRING";
+
         //Don't forget to fill in CloudAccess's CONNECTION_STRING!
-        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(CloudAccess.CONNECTION_STRING);
+        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
 
         private static CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 
