@@ -1,0 +1,312 @@
+{
+  "type": "CommandsDialogModel",
+  "culture": "en-us",
+  "recognizer": {
+    "application": "bb7c1b6e-6062-4673-8cbd-458fc22beb58",
+    "isStaging": false,
+    "versionId": "0.1",
+    "endpointKey": "c8663b4523f2481d8b14d9ec00b9384d",
+    "region": "westus2",
+    "type": "luis"
+  },
+  "httpEndpoints": [
+    {
+      "name": "AutomotiveEndpoint",
+      "method": "GET",
+      "url": "https://automotivedemowidget.azurewebsites.net/api/AutomotiveDemo",
+      "headers": {
+        "room": "test1"
+      },
+      "sendFrame": false,
+      "updateFrame": false
+    }
+  ],
+  "lgTemplates": [
+    "# FallbackResponse",
+    "- Add your fallback message here",
+    "# TurnOnOffSubjectDevice",
+    "> You can start sentences with '>' to add comments.",
+    "> Documentation for templates: https://aka.ms/sc-lg-format",
+    "> Each response variation must start with a dash, i.e.",
+    "- Which setting do you want to set?",
+    "# TurnOnOffOnOff",
+    "> You can start sentences with '>' to add comments.",
+    "> Documentation for templates: https://aka.ms/sc-lg-format",
+    "> Each response variation must start with a dash, i.e.",
+    "- What is the value?",
+    "- Tell me the value?",
+    "# AdjustTemperatureTemperature",
+    "> You can start sentences with '>' to add comments.",
+    "> Documentation for templates: https://aka.ms/sc-lg-format",
+    "> Each response variation must start with a dash, i.e.",
+    "- What temperature?",
+    "# Help-AutomotiveEndpointonSuccess-77e2e7a08a7411eab5f27787a0c205ba",
+    "- You're in a virtual car and able to control features with your voice. Try saying \"Turn on the seat warmers\" or \"Set the temperature to 73 degrees\"",
+    "# Help-AutomotiveEndpointonFailure-77e2e7a08a7411eab5f27787a0c205ba",
+    "- Unable to connect to virtual automotive",
+    "- Unable to connect to virtual car"
+  ],
+  "globalParameters": [],
+  "commands": [
+    {
+      "name": "FallbackCommand",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "DefaultResponse",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# FallbackResponse"
+              }
+            }
+          ],
+          "postExecutionState": "None"
+        }
+      ],
+      "triggeringExamples": [
+        "> - You can start sentences with '>' to add comments.",
+        "> - You can also use parameters by adding the name of the parameter within curly braces, i.e.",
+        ">     Set an alarm to {YourDateParameterName}",
+        ">   Where YourDateParameterName is the name of a parameter defined in the 'Parameters' section.",
+        "Help",
+        "Help me",
+        "What can you do?",
+        "How can I start?",
+        "Hello",
+        "Hi"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "TurnOnOff",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "SubjectDevice",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "Defrost": [
+                  "defroster",
+                  "window heater"
+                ],
+                "Seatwarmer": [
+                  "Seat warmer",
+                  "seat heater",
+                  "chair warmer",
+                  "chair heater"
+                ]
+              }
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# TurnOnOffSubjectDevice"
+          }
+        },
+        {
+          "name": "OnOff",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "On": [
+                  "active",
+                  "activate",
+                  "engage",
+                  "enable"
+                ],
+                "Off": [
+                  "deactivate",
+                  "disable",
+                  "disengage",
+                  "kill"
+                ]
+              }
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# TurnOnOffOnOff"
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "Handle Completion",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [],
+          "nextTurnExpectations": [],
+          "postExecutionState": "None"
+        }
+      ],
+      "triggeringExamples": [
+        "i want to control a device",
+        "control a device",
+        "i want to control a setting",
+        "control a setting",
+        "turn it {OnOff}",
+        "turn {OnOff}",
+        "turn the {SubjectDevice}",
+        "{SubjectDevice} {OnOff}",
+        "{OnOff} the {SubjectDevice}",
+        "i want the {SubjectDevice} {OnOff}",
+        "{SubjectDevice} to be {OnOff}",
+        "turn the {SubjectDevice} {OnOff}",
+        "turn {OnOff} the {SubjectDevice}"
+      ]
+    },
+    {
+      "name": "AdjustTemperature",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "Operation",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "lower": [
+                  "decrease",
+                  "cooler",
+                  "colder",
+                  "turn down",
+                  "lowering",
+                  "cool off",
+                  "reduce",
+                  "drop"
+                ],
+                "raise": [
+                  "increase",
+                  "warmer",
+                  "turn up",
+                  "hotter",
+                  "higher",
+                  "raising"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "name": "Temperature",
+          "type": {
+            "name": "Number"
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# AdjustTemperatureTemperature"
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [],
+      "triggeringExamples": [
+        "{Operation} the temperature by {Temperature} degrees",
+        "change the temp by {Temperature} degrees",
+        "{Operation} {Temperature} degrees",
+        "{Temperature} degree {Operation}",
+        "{Operation} by {Temperature}",
+        "i want it {Operation}",
+        "{Operation} the temperature",
+        "{Operation} the temp",
+        "make it {Temperature} degrees {Operation}",
+        "make the temperature {Operation}",
+        "{Temperature} degrees",
+        "set it to {Temperature} degrees",
+        "i want it to be {Temperature} degrees",
+        "make it {Temperature} degrees",
+        "make it {Temperature} degree",
+        "change the temperature to {Temperature} degrees",
+        "set the temperature",
+        "change the temp",
+        "set to {Temperature} degrees",
+        "set to {Temperature}",
+        "set it to {Temperature}",
+        "set the temperature to {Temperature}",
+        "set the temp to {Temperature}",
+        "change the temp to {Temperature}",
+        "make it {Temperature}",
+        "adjust the temp to {Temperature}",
+        "change it to {Temperature} degrees",
+        "{Temperature} degrees"
+      ]
+    },
+    {
+      "name": "Help",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "Help",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "AutomotiveEndpoint",
+              "content": {},
+              "parameters": "operation=help",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# Help-AutomotiveEndpointonSuccess-77e2e7a08a7411eab5f27787a0c205ba"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# Help-AutomotiveEndpointonFailure-77e2e7a08a7411eab5f27787a0c205ba"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "triggeringExamples": [
+        "Help",
+        "Help me",
+        "What does this do",
+        "how do i make this work?",
+        "What can I do",
+        "What do I say",
+        "Instructions"
+      ]
+    }
+  ],
+  "modelMetadata": {
+    "modelId": "9dac0381-54bf-4c6c-9bd2-169d01163e64",
+    "lastTrainedModelId": "3aeb2dae-a915-49ed-9703-3eff4bdbc06e",
+    "lastTrainedVersionId": "PQFIVE83DF",
+    "published": false,
+    "publishedForTest": true,
+    "requiresTraining": true
+  }
+}
