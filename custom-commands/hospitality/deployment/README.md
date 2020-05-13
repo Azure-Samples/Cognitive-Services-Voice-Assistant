@@ -13,7 +13,7 @@
 
 You will be deploying a sample [Custom command](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) project in your [Speech Studio](https://speech.microsoft.com/portal) portal. To demonstrate successful task completion (e.g. lights have turned off when you said "lights off"), we created a web page with a simulated scene. The completion rules in the Custom Command project are configured to make web calls to an Azure function that manages the state of the scene. Therefore in addition to the Custom Command project, you will be deploying all the Azure resources needed to support this visualization, in your Azure subscription.
 
-The following block diagram describes how the demo runs: 
+The following block diagram describes how the demo works: 
 <p align="center">
 <img src="images/block-diagram.png"/>
 </a>
@@ -56,7 +56,7 @@ It will take a few minutes for the scripts to run.
 
 If you see errors while running the script, refer to the [Troubleshooting](#troubleshooting) section below. Before running the script again due to errors, please [clean up your Azure resources and Github repo state](#cleaning-up-your-azure-resources-and-github-repo).
 
-On a successful completion, you should see a message at the end similar to the following, with all the information you need to configure one of the selected Voice Assistant client samples, and a URL to visualize the results of your voice commands:
+On a successful completion, you should see a message at the end similar to the following, with all the information you need to configure one of the selected [Voice Assistant client samples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant#sample-client-applications), and a URL to visualize the results of your voice commands:
 ```console
 ***********************
 Custom commands has been published.
