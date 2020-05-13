@@ -10,8 +10,25 @@
 * .NET Core SDK 2.1 or higher. [Install SDK here](https://docs.microsoft.com/en-us/dotnet/core/install/sdk?pivots=os-windows).
 
 ## What are you deploying?
- 
- TODO: Need diagram of CC and Visualization, and a description of the components and how they interact
+
+You will be deploying a sample [Custom command](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) project in your [Speech Studio](https://speech.microsoft.com/portal) portal. To demonstrate successful task completion (e.g. lights have turned off when you said "lights off"), we created web page with a simulated scene. The completion rules in the Custom Command project are configured to make web calls to an Azure function that manages the state of the scene. Therefore in addition to the custom command project, you will be deploying all the Azure resources needed to support this visualization, in your Azure subscription. Everything will be under your control from that point on.
+
+The following block diagram describes how the demo runs: 
+<p align="center">
+<img src="images/block-diagram.png"/>
+</a>
+</p>
+We will assume here that you have read about Custom Commands and Speech SDK client applications, and focus on the visualization part:
+
+* An Azure storage is created, which holds an HTML file and associated images needed to visualize all the states of the scene 
+* Azure storage also includes a table with one row, which is used to save the state of the scene 
+* You can view the HTML file in your web browser, since it will have a unique URL. It will show the default scene at first
+* An Azure function is created. It has access to the storage. When your Custom Command project has completed a dialog (e.g. "turn on the lights"), its completion rule will make a web call invoking the Azure function with query URL parameters indicating the desired new state of the scene (lights are on)
+* The Azure function updates the row in Azure table storage to reflect the new state
+* While all that is happening, the Java Script embedded in the HTML page you are viewing, runs and periodically makes calls to the same Azure function to get the most recent scene state. In this demo the period is set to 1 second
+* If the state has changed, the Java Script code in the HTML builds the new visualization to reflect the current state, using the static images in storage 
+
+If all that sounds good, continue on to deploy the resources to your Azure subscription...
 
 ## Deploying Azure resources
 Open a command prompt and clone the repository if you have not done so already. Change directory to the custom commands deployment folder:
