@@ -119,13 +119,13 @@
 
     <main role="main">
         <div id="hotel-room" class="demoFrame ">
-            <img id="0" src="AZURE_STORAGE_URL/Background2.png" class="room-image" style="position:relative" />
-            <img id="room-light" src="AZURE_STORAGE_URL/LampOff.png" class="room-image overlays" />
-            <img id="television-notification" src="AZURE_STORAGE_URL/TV_NotificationOn.png" class="room-image overlays" />
-            <img id="television-content" src="AZURE_STORAGE_URL/TV_content.png" class="room-image overlays" />
-            <img id="bathroom-light" src="AZURE_STORAGE_URL/BathroomLightOn.png" class="room-image overlays" />
-            <img id="blinds" src="AZURE_STORAGE_URL/WindowShadeClosed.png" class="room-image overlays" />
-            <img id="ac" src="AZURE_STORAGE_URL/ACOff.png" class="room-image overlays" />
+            <img id="background" src="Background2.png" class="room-image" style="position:relative" />
+            <img id="room-light" src="LampOff.png" class="room-image overlays" />
+            <img id="television-notification" src="TV_NotificationOn.png" class="room-image overlays" />
+            <img id="television-content" src="TV_content.png" class="room-image overlays" />
+            <img id="bathroom-light" src="BathroomLightOn.png" class="room-image overlays" />
+            <img id="blinds" src="WindowShadeClosed.png" class="room-image overlays" />
+            <img id="ac" src="ACOff.png" class="room-image overlays" />
             <div id="thermostat" class="thermostat"><span id="temperature">70</span></div>
             <div class="col-sm list border rounded messages">
                 <p class="lead">
@@ -147,82 +147,88 @@
             crossorigin="anonymous"></script>
 
     <script>
+        
         $(function () {
             var urlParams = new URLSearchParams(window.location.search);
-            var jsonUrl = "AZURE_FUNCTION_URL";
-            var room = urlParams.get("room");
-            if (urlParams.has("room")) {
-                jsonUrl = jsonUrl + "?room=" + room;
-            }
-
-			var timesRun = 0;
-            setInterval(function () {
-				if(timesRun === 10800){
-					clearInterval(interval);
-				}
-                $.getJSON(jsonUrl, function (configuration) {
-                    clear();
-                    apply(configuration);
-                    console.log(configuration);
-                });
-				timesRun += 1;
-            }, 1000);
-
-			setTimeout(function(){ alert("Timed out, please refresh!"); }, 10800000);
-
-            function apply(configuration) {
-                $("#temperature").html(configuration.Temperature);
-
-                if (configuration.Lights_room) {
-                    $("#room-light").fadeOut('fast')
-                }
-                else {
-                    $("#room-light").fadeIn('fast')
+            var jsonUrl = "";
+            
+            $.getJSON("ConnectionURLS.json",function(data){
+                jsonUrl = data.AZURE_FUNCTION_URL;
+            
+                var room = urlParams.get("room");
+                if (urlParams.has("room")) {
+                    jsonUrl = jsonUrl + "?room=" + room;
                 }
 
-                if (configuration.Lights_bathroom) {
-                    $("#bathroom-light").fadeIn('fast')
-                }
-                else {
-                    $("#bathroom-light").fadeOut('fast')
+                var timesRun = 0;
+                setInterval(function () {
+                    if(timesRun === 10800){
+                        clearInterval(interval);
+                    }
+                    $.getJSON(jsonUrl, function (configuration) {
+                        clear();
+                        apply(configuration);
+                        console.log(configuration);
+                    });
+                    timesRun += 1;
+                }, 1000);
+
+                setTimeout(function(){ alert("Timed out, please refresh!"); }, 10800000);
+
+                function apply(configuration) {
+                    $("#temperature").html(configuration.Temperature);
+
+                    if (configuration.Lights_room) {
+                        $("#room-light").fadeOut('fast')
+                    }
+                    else {
+                        $("#room-light").fadeIn('fast')
+                    }
+
+                    if (configuration.Lights_bathroom) {
+                        $("#bathroom-light").fadeIn('fast')
+                    }
+                    else {
+                        $("#bathroom-light").fadeOut('fast')
+                    }
+
+                    if (configuration.Television) {
+                        $("#television-content").fadeIn('fast')
+                        $("#television-notification").fadeIn('fast')
+                    }
+                    else {
+                        $("#television-content").fadeOut('fast')
+                        $("#television-notification").fadeOut('fast')
+                    }
+
+                    if (configuration.Blinds) {
+                        $("#blinds").fadeOut('fast')
+                    }
+                    else {
+                        $("#blinds").fadeIn('fast')
+                    }
+
+                    if(configuration.AC){
+                        $("#ac").fadeOut('fast')
+                    }
+                    else{
+                        $("#ac").fadeIn('fast')
+                    }
+
+                    if (configuration.Message != null
+                        && configuration.Message != $("#item-ordered").text()) {
+                        $("#item-ordered").html(configuration.Message);
+                        $("#item-ordered")
+                            .finish()
+                            .fadeIn('fast')
+                            .delay(8000)
+                            .fadeOut('slow');
+                    }
                 }
 
-                if (configuration.Television) {
-                    $("#television-content").fadeIn('fast')
-                    $("#television-notification").fadeIn('fast')
+                function clear() {
                 }
-                else {
-                    $("#television-content").fadeOut('fast')
-                    $("#television-notification").fadeOut('fast')
-                }
-
-                if (configuration.Blinds) {
-                    $("#blinds").fadeOut('fast')
-                }
-                else {
-                    $("#blinds").fadeIn('fast')
-                }
-
-				if(configuration.AC){
-                    $("#ac").fadeOut('fast')
-                }
-                else{
-                    $("#ac").fadeIn('fast')
-                }
-
-                if (configuration.Message != null
-                    && configuration.Message != $("#item-ordered").text()) {
-                    $("#item-ordered").html(configuration.Message);
-                    $("#item-ordered")
-                        .finish()
-                        .fadeIn('fast')
-                        .delay(8000)
-                        .fadeOut('slow');
-                }
-            }
-
-            function clear() {
-            }
+            });
         });
     </script>
 

@@ -18,18 +18,6 @@ namespace VirtualRoomApp
 {
     public static class RoomDemo
     {
-        //private static string connectionsJson = File.ReadAllText("Connections.json");
-
-        //private static JObject ConnectionsObject = JObject.Parse(connectionsJson);
-
-        //private static string connectionString = ConnectionsObject["storageConnectionString"].ToString();
-
-        //private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
-
-        //private static CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-
-        //private static CloudTable table = tableClient.GetTableReference("virtualroomconfig");
-
         [FunctionName("RoomDemo")]
         public static async Task<HttpResponseMessage> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
@@ -41,7 +29,7 @@ namespace VirtualRoomApp
 
             JObject ConnectionsObject = JObject.Parse(connectionsJson);
 
-            string connectionString = ConnectionsObject["storageConnectionString"].ToString();
+            string connectionString = ConnectionsObject["AZURE_STORAGE_URL"].ToString();
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
 
