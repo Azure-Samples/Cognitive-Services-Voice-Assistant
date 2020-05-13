@@ -285,7 +285,7 @@
                       Grid.RowSpan="4" Grid.ColumnSpan="2" x:Name="ChatHistoryListView"
                       Margin="0,40,0,0"
                       Background="WhiteSmoke"
-                      ItemsSource="{x:Bind Conversations, Mode=OneWay}">
+                      ItemsSource="{x:Bind conversations, Mode=OneWay}">
                 <ListView.ItemsPanel >
                     <ItemsPanelTemplate>
                         <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>

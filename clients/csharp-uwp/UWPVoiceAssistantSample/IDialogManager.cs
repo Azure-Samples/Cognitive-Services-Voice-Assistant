@@ -11,6 +11,8 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public interface IDialogManager : IDisposable
     {
+        bool LockScreenTransitionOccurred { get; }
+
         /// <summary>
         /// Raised when the state machine for conversational agent state has finished setting
         /// a new state after requests to or responses from the dialog backend have required it.

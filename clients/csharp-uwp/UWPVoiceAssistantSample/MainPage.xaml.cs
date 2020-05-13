@@ -6,6 +6,7 @@ namespace UWPVoiceAssistantSample
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -19,6 +20,8 @@ namespace UWPVoiceAssistantSample
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
+    using Windows.ApplicationModel.Core;
+    using Windows.ApplicationModel.LockScreen;
     using Windows.Security.Authorization.AppCapabilityAccess;
     using Windows.Storage;
     using Windows.System;
@@ -31,6 +34,7 @@ namespace UWPVoiceAssistantSample
     using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Documents;
     using Windows.UI.Xaml.Media;
+    using Windows.UI.Xaml.Navigation;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -40,7 +44,10 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Collection of utterances from user and bot.
         /// </summary>
-        public static ObservableCollection<Conversation> Conversations;
+        public ObservableCollection<Conversation> conversations;
+
+        private static List<Conversation> globalConversations;
+
         private readonly ServiceProvider services;
         private readonly ILogProvider logger;
         private readonly IKeywordRegistration keywordRegistration;
@@ -54,12 +61,40 @@ namespace UWPVoiceAssistantSample
         private bool hypotheizedSpeechToggle;
         private Conversation activeConversation;
         private int logBufferIndex;
+        private bool handlersAdded;
+
+        private CoreDispatcher dispatcher
+        {
+            get
+            {
+                CoreApplicationView currentViewDispatcher;
+                try
+                {
+                    Debug.WriteLine("get dispatcher");
+                    currentViewDispatcher = CoreApplication.GetCurrentView();
+                }
+                catch (Exception e)
+                {
+                    return this.Dispatcher;
+                }
+
+                if (currentViewDispatcher != null)
+                {
+                    return CoreApplication.GetCurrentView().Dispatcher;
+                }
+                else
+                {
+                    return this.Dispatcher;
+                }
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainPage"/> class.
         /// </summary>
         public MainPage()
         {
+            Debug.WriteLine("Start page");
             this.logger = LogRouter.GetClassLogger();
 
             this.InitializeComponent();
@@ -106,9 +141,47 @@ namespace UWPVoiceAssistantSample
             // Ensure consistency between a few dependent controls and their settings
             this.UpdateUIBasedOnToggles();
 
-            MainPage.Conversations = new ObservableCollection<Conversation>();
+            MainPage.globalConversations = MainPage.globalConversations ?? new List<Conversation>();
+            this.conversations = new ObservableCollection<Conversation>();
+
+            MainPage.globalConversations.ForEach((element) => this.conversations.Add(element));
+
+            this.conversations.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => 
+            {
+                foreach (Conversation conversation in e.NewItems)
+                {
+                    MainPage.globalConversations.Add(conversation);
+                }
+            };
 
             this.ChatHistoryListView.ContainerContentChanging += this.OnChatHistoryListViewContainerChanging;
+
+            if (!CoreApplication.GetCurrentView().IsMain)
+            {
+                LockApplicationHost lockHost = LockApplicationHost.GetForCurrentView();
+                if (lockHost != null)
+                {
+                    lockHost.Unlocking += this.LockHost_Unlocking;
+                }
+            }
+
+            Window.Current.CoreWindow.Activated += (sender, e) =>
+            {
+                if (!this.handlersAdded)
+                {
+                    this.handlersAdded = true;
+                    this.AddSystemAvailabilityHandlers();
+                    this.AddDialogHandlersAsync();
+                }
+            };
+
+            Debug.WriteLine("Render");
+        }
+
+        private void LockHost_Unlocking(LockApplicationHost sender, LockScreenUnlockingEventArgs args)
+        {
+            // save any unsaved work and gracefully exit the app
+            App.Current.Exit();
         }
 
         private bool BackgroundTaskRegistered
@@ -123,12 +196,14 @@ namespace UWPVoiceAssistantSample
 
         private void AddUIHandlersAsync()
         {
-            this.AddSystemAvailabilityHandlers();
-            this.AddDialogHandlersAsync();
-
             this.DismissButton.Click += (_, __) =>
             {
-                WindowService.CloseWindow();
+                LockApplicationHost lockHost = LockApplicationHost.GetForCurrentView();
+                if (lockHost != null)
+                {
+                    Debug.WriteLine("request unlock");
+                    lockHost.RequestUnlock();
+                }
             };
             this.MicrophoneButton.Click += async (_, __) =>
             {
@@ -139,11 +214,11 @@ namespace UWPVoiceAssistantSample
             {
                 await this.dialogManager.FinishConversationAsync();
                 await this.dialogManager.StopAudioPlaybackAsync();
-                MainPage.Conversations.Clear();
+                MainPage.globalConversations.Clear();
                 this.RefreshStatus();
             };
             this.ClearLogsButton.Click += async (_, __)
-                => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                => await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
                     this.ChangeLogStackPanel.Children.Clear();
                 });
@@ -240,7 +315,7 @@ namespace UWPVoiceAssistantSample
         private async Task UpdateUIForSharedStateAsync()
         {
             // UI changes must be performed on the UI thread.
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 this.RefreshStatus();
 
@@ -371,7 +446,7 @@ namespace UWPVoiceAssistantSample
                "No current agent session"
                : $"{session.AgentState.ToString()} {(this.app.InvokedViaSignal ? "[via signal]" : string.Empty)}";
 
-            _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            _ = this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 this.ConversationStateTextBlock.Text = $"System: {agentStatusMessage}";
             });
@@ -379,20 +454,23 @@ namespace UWPVoiceAssistantSample
 
         private void AddBotResponse(string message)
         {
-            _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            _ = this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                MainPage.Conversations.Add(new Conversation
+                var newConversation = new Conversation
                 {
                     Body = message,
                     Time = DateTime.Now.ToString(CultureInfo.CurrentCulture),
                     Sent = false,
-                });
+                };
+
+                MainPage.globalConversations.Add(newConversation);
+                this.conversations.Add(newConversation);
             });
         }
 
         private void AddHypothesizedSpeechToTextBox(string message)
         {
-            _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            _ = this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (this.hypotheizedSpeechToggle)
                 {
@@ -405,19 +483,20 @@ namespace UWPVoiceAssistantSample
                             Sent = true,
                         };
 
-                        MainPage.Conversations.Add(this.activeConversation);
+                        MainPage.globalConversations.Add(this.activeConversation);
+                        this.conversations.Add(this.activeConversation);
                     }
 
                     this.activeConversation.Body = message;
 
-                    MainPage.Conversations.Last().Body = message;
+                    this.conversations.Last().Body = message;
                 }
             });
         }
 
         private void AddMessageToStatus(string message)
         {
-            _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            _ = this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 if (this.activeConversation == null)
                 {
@@ -428,7 +507,8 @@ namespace UWPVoiceAssistantSample
                         Sent = true,
                     };
 
-                    MainPage.Conversations.Add(this.activeConversation);
+                    MainPage.globalConversations.Add(this.activeConversation);
+                    this.conversations.Add(this.activeConversation);
                 }
 
                 this.activeConversation.Body = message;
@@ -517,7 +597,8 @@ namespace UWPVoiceAssistantSample
 
         private async void WriteLog()
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            var dispatcher = this.dispatcher;
+            await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 int nextLogIndex = this.logBufferIndex;
                 for (; nextLogIndex < this.logger.LogBuffer.Count; nextLogIndex++)
@@ -544,7 +625,7 @@ namespace UWPVoiceAssistantSample
 
         private async void FilterLogs()
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 foreach (TextBlock textBlock in this.informationLogs)
                 {
@@ -990,7 +1071,7 @@ namespace UWPVoiceAssistantSample
             var fileName = $"chatHistory_{DateTime.Now.ToString("yyyyMMdd_HHmmss", null)}.txt";
             var writeChatHistory = await localFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 
-            foreach (var message in MainPage.Conversations)
+            foreach (var message in this.conversations)
             {
                 await File.AppendAllTextAsync(writeChatHistory.Path, "\r\n" + "Text: " + message.Body + "\r\n" + "BotReply: " + message.Received + "\r\n" + "Timestamp: " + message.Time + "\r\n" + "========");
             }
@@ -1005,7 +1086,7 @@ namespace UWPVoiceAssistantSample
 
         private async void TriggerLogAvailable(object sender, RoutedEventArgs e)
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 this.FilterLogs();
             });

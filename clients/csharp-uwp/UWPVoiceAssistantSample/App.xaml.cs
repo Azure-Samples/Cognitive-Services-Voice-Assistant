@@ -5,6 +5,7 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace UWPVoiceAssistantSample
     using Windows.ApplicationModel.Background;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.ApplicationModel.Core;
+    using Windows.ApplicationModel.LockScreen;
     using Windows.Storage;
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
@@ -136,14 +138,30 @@ namespace UWPVoiceAssistantSample
             {
                 if (rootFrame.Content == null)
                 {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    rootFrame.Navigate(typeof(MainPage), null);
+                    LockApplicationHost host = LockApplicationHost.GetForCurrentView();
+                    if (host == null)
+                    {
+                        Debug.Write("On load, unlocked");
+
+                        // if call to LockApplicationHost is null, this app is running under lock
+                        // render MainPage normally
+                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    }
+                    else
+                    {
+                        Debug.Write("On load, locked");
+
+                        // If LockApplicationHost was successfully obtained
+                        // this app is running as a lock screen app, or above lock screen app
+                        // render a different page for assigned access use
+                        // to avoid showing regular main page to keep secure information safe
+                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    }
                 }
 
                 // Ensure the current window is active
                 Window.Current.Activate();
+                Debug.WriteLine("Activate");
             }
 
             this.AddVersionToTitle();
@@ -167,10 +185,24 @@ namespace UWPVoiceAssistantSample
 
             if (rootFrame.Content == null)
             {
-                // When the navigation stack isn't restored navigate to the first page,
-                // configuring the new page by passing required information as a navigation
-                // parameter
-                rootFrame.Navigate(typeof(MainPage), null);
+                LockApplicationHost host = LockApplicationHost.GetForCurrentView();
+                if (host == null)
+                {
+                    // if call to LockApplicationHost is null, this app is running under lock
+                    // render MainPage normally
+                    Debug.Write("On activated, unlocked");
+                    rootFrame.Navigate(typeof(MainPage), args);
+                }
+                else
+                {
+                    Debug.Write("On activated, locked");
+
+                    // If LockApplicationHost was successfully obtained
+                    // this app is running as a lock screen app, or above lock screen app
+                    // render a different page for assigned access use
+                    // to avoid showing regular main page to keep secure information safe
+                    rootFrame.Navigate(typeof(MainPage), args);
+                }
             }
 
             this.AddVersionToTitle();
@@ -261,7 +293,7 @@ namespace UWPVoiceAssistantSample
                 // commonly, this is when an application can be brought to the foreground.
                 var session = await this.agentSessionManager.GetSessionAsync();
                 var success = await session.RequestForegroundActivationAsync();
-                ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1280, Height = 800 });
+                //ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1280, Height = 800 });
                 this.logger.Log(LogMessageLevel.Noise, $"Foreground activation {(success == ConversationalAgentSessionUpdateResponse.Success ? "succeeded" : "failed")}");
             }
         }

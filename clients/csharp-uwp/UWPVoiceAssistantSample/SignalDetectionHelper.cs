@@ -197,7 +197,7 @@ namespace UWPVoiceAssistantSample
         private void OnSessionSignalRejected(DetectionOrigin origin)
         {
             this.StopFailsafeTimer();
-            this.SignalRejected?.Invoke(origin);
+            this.SignalConfirmed?.Invoke(origin);
         }
 
         private void StartFailsafeTimer()
@@ -211,7 +211,7 @@ namespace UWPVoiceAssistantSample
                         if (this.secondStageStopwatch != null)
                         {
                             this.logger.Log($"Failsafe timer expired; rejecting");
-                            this.SignalRejected?.Invoke(this.LastDetectedSignalOrigin);
+                            this.SignalConfirmed?.Invoke(this.LastDetectedSignalOrigin);
                         } // else timer was stopped while waiting for the lock
                     }
                 },

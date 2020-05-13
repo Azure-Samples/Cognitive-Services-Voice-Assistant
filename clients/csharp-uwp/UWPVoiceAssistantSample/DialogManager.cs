@@ -33,7 +33,8 @@ namespace UWPVoiceAssistantSample
         private IAgentSessionManager agentSessionManager;
         private DialogResponseQueue dialogResponseQueue;
         private DetectionOrigin? detectionOriginFromBelowLock;
-        private bool lockTransitionOccured;
+        public bool lockTransitionOccured;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogManager{TInputType}"/> class.
@@ -132,6 +133,14 @@ namespace UWPVoiceAssistantSample
         /// Gets a value indicating whether this object has already processed a Dispose() call.
         /// </summary>
         protected bool AlreadyDisposed { get; private set; } = false;
+
+        public bool LockScreenTransitionOccurred
+        {
+            get
+            {
+                return this.lockTransitionOccured;
+            }
+        }
 
         /// <summary>
         /// Completes async initialization for dialog manager, including initialization of dialog output.
@@ -292,7 +301,9 @@ namespace UWPVoiceAssistantSample
                 }
                 else
                 {
-                    await this.dialogAudioInput.InitializeFromAgentSessionAsync(session);
+                    await this.dialogAudioInput.InitializeFromNowAsync();
+
+                    //await this.dialogAudioInput.InitializeFromAgentSessionAsync(session);
                 }
             }
             catch (Exception ex)
