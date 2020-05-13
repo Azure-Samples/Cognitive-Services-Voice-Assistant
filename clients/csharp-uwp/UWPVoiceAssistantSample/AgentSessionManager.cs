@@ -54,6 +54,15 @@ namespace UWPVoiceAssistantSample
                     this.cachedAgentSession.InitializeHandlers();
 
                     this.cachedAgentSession.SignalDetected += this.OnInAppSignalEventDetected;
+
+                    // When the app changes lock state, close the application to prevent duplicates running at once	
+                    this.cachedAgentSession.SystemStateChanged += (s, e) =>
+                    {
+                        if (e.SystemStateChangeType == ConversationalAgentSystemStateChangeType.UserAuthentication)
+                        {
+                            WindowService.CloseWindow();
+                        }
+                    };
                 }
             }
             catch (Exception ex)
