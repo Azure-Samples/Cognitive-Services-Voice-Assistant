@@ -18,13 +18,12 @@ The following block diagram describes how the demo runs:
 <img src="images/block-diagram.png"/>
 </a>
 </p>
-We assume that you read about Custom Commands and Speech SDK client applications, and here we describe the visualization part:
+We assume that you read about Custom Commands and Speech SDK client applications, so here we only describe the visualization part:
 
-* An Azure storage is created, which holds an HTML file and associated images needed to visualize all the states of the scene 
-* Azure storage also includes a table with one row, which is used to save the state of the scene 
-* You can view the HTML file in your web browser, since it will have a unique URL. It will show the default scene at first
-* An Azure function is created. It has access to the storage. When your Custom Command project has completed a dialog (e.g. "turn on the lights"), its completion rule will make a web call invoking the Azure function with query URL parameters indicating the desired new state of the scene (lights are on)
-* The Azure function updates the row in Azure table storage to reflect the new state
+* An Azure Blob storage is created, which holds an HTML file and associated images needed to visualize all the states of the scene 
+* You can view the HTML file in your web browser, since it has a unique URL. It will show the default scene at first
+* An Azure function is created. It has access to the storage. When your Custom Command project completed a dialog (e.g. "turn on the lights"), its completion rule directs it to make a web call invoking the Azure function. The web call includes the desired new scene state (e.g. lights are on)
+* The Azure function updates a row in the Azure Table in storage (or creates the row on first call), to hold the new scene state
 * While all that is happening, the Java Script embedded in the HTML page you are viewing, runs and periodically makes calls to the same Azure function to get the most recent scene state. In this demo the period is set to 1 second
 * If the state has changed, the Java Script code in the HTML builds the new visualization to reflect the current state, using the static images in storage
 
@@ -136,8 +135,6 @@ az group delete --name MyResourceGroupName
 2. Run "git status" in your git command prompt. Notice that three files got added (appearing under the "Untracked files") and two files were modifed (appearing under the "changes not staged for commit"). Run "git restore *" to revert the changes made to the two files. You must do that if you want to run the deployment script again. You can also delete the newly created files, but that is not a requirement to run the deployment script again.
 
 ## Deploying Azure resources - deep dive
-
-*This section needs to be updated.*
 
 First an Azure resource group was created using the resourceName parameter of the Powershell script as the name.
 
