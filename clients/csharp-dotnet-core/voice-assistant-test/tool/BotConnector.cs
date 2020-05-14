@@ -56,7 +56,13 @@ namespace VoiceAssistantTest
         /// </summary>
         public string RecognizedKeyword { get; set; }
 
+        /// <summary>
+        /// Gets or sets the actual length of speech in WavFile obtained from Recognized Event.
+        /// </summary>
         public int LengthOfSpeechInWavFile { get; set; }
+
+        public int ConnectorLatency { get; set; }
+
         /// <summary>
         /// Gets or sets the duration if WAVFile in milliseconds.
         /// </summary>
@@ -157,6 +163,7 @@ namespace VoiceAssistantTest
             if (this.appsettings.RealTimeAudio)
             {
                 config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100");
+                config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "0");
             }
 
             if (this.connector != null)
@@ -544,6 +551,8 @@ namespace VoiceAssistantTest
                 this.LengthOfSpeechInWavFile = (int)e.Result.Duration.TotalMilliseconds;
 
                 Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
+
+                this.ConnectorLatency = (int)this.stopWatch.ElapsedMilliseconds - this.LengthOfSpeechInWavFile;
 
                 this.stopWatch.Restart();
                 this.elapsedTime = 0;

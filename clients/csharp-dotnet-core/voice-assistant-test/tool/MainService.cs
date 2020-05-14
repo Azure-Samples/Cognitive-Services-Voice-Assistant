@@ -281,15 +281,8 @@ namespace VoiceAssistantTest
                         botConnector.SetInputValues(testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.Keyword);
 
                         // Send up WAV File if present
-                        if (turn.WAVFile != null)
+                        if (turn.WAVFile != null && !string.IsNullOrEmpty(turn.WAVFile[0]))
                         {
-                            if (turn.WAVFile.Count > 1)
-                            {
-                                //for (var i = 0; i < turn.WAVFile.Count; i++)
-                                //{
-                                //    botConnector.SendAudio(turn.WAVFile[0]);
-                                //}
-                            }
                             botConnector.SendAudio(turn.WAVFile[0]);
                         }
 
@@ -319,9 +312,11 @@ namespace VoiceAssistantTest
                         {
                             if (!string.IsNullOrEmpty(turn.WAVFile[0]))
                             {
-                                turnResult.ActualWavFileDuration = botConnector.LengthOfSpeechInWavFile;
+                                turnResult.ActualLengthOfSpeechInWavFile = botConnector.LengthOfSpeechInWavFile;
                             }
                         }
+
+                        turnResult.ActualConnectorLatency = botConnector.ConnectorLatency;
 
                         // Add the turn result to the list of turn results.
                         turnResults.Add(turnResult);

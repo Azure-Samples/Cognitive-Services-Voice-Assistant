@@ -52,12 +52,15 @@ namespace VoiceAssistantTest
         /// Gets or sets the actual duration of the input WavFile (in milliseconds).
         /// </summary>
         [JsonProperty(Order = 8, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int ActualWavFileDuration { get; set; }
+        public int ActualLengthOfSpeechInWavFile { get; set; }
+
+        [JsonProperty(Order = 9, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int ActualConnectorLatency { get; set; }
 
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.
         /// </summary>
-        [JsonProperty(Order = 9)]
+        [JsonProperty(Order = 10)]
         public int ActualResponseLatency { get; set; }
 
         /// <summary>
