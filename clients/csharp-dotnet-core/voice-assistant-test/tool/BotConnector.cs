@@ -66,16 +66,6 @@ namespace VoiceAssistantTest
         /// </summary>
         public int UserPerceivedLatency { get; set; }
 
-        /// <summary>
-        /// Gets or sets the expected length of speech from input test file.
-        /// </summary>
-        public int ExpectedLengthOfSpeech { get; set; }
-
-        /// <summary>
-        /// Gets or sets the duration if WAVFile in milliseconds.
-        /// </summary>
-        public string WavFileDuration { get; set; }
-
         private List<BotReply> BotReplyList { get; set; }
 
         /// <summary>
@@ -276,7 +266,6 @@ namespace VoiceAssistantTest
                 this.pushAudioInputStream.Write(dataBuffer, readBytes);
             }
 
-            this.WavFileDuration = waveFileReader.TotalTime.TotalMilliseconds.ToString(CultureInfo.CurrentCulture);
             waveFileReader.Dispose();
         }
 

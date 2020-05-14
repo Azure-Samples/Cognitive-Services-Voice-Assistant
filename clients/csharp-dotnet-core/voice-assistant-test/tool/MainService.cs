@@ -285,7 +285,6 @@ namespace VoiceAssistantTest
                         {
                             if (turn.WAVFile.Split(",").Length == 2)
                             {
-                                botConnector.ExpectedLengthOfSpeech = int.Parse(turn.WAVFile.Split(",")[1], CultureInfo.CurrentCulture);
                                 botConnector.SendAudio(turn.WAVFile.Split(",")[0]);
                             }
                             else
