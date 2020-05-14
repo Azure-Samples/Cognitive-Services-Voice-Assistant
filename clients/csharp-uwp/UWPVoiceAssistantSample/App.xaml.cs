@@ -114,6 +114,8 @@ namespace UWPVoiceAssistantSample
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            Debug.Write("On load, start");
+
             ApplicationView.GetForCurrentView().TryResizeView(new Windows.Foundation.Size { Width = 1280, Height = 800 });
 
             var rootFrame = Window.Current.Content as Frame;
@@ -155,7 +157,7 @@ namespace UWPVoiceAssistantSample
                         // this app is running as a lock screen app, or above lock screen app
                         // render a different page for assigned access use
                         // to avoid showing regular main page to keep secure information safe
-                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                        rootFrame.Navigate(typeof(BlankPage1), e.Arguments);
                     }
                 }
 
@@ -165,6 +167,8 @@ namespace UWPVoiceAssistantSample
             }
 
             this.AddVersionToTitle();
+            Debug.Write("On load, end");
+
         }
 
         /// <summary>
@@ -174,6 +178,8 @@ namespace UWPVoiceAssistantSample
         /// <param name="args">RootFrame.</param>
         protected override void OnActivated(IActivatedEventArgs args)
         {
+            Debug.Write("On activated, start");
+
             base.OnActivated(args);
 
             if (!(Window.Current.Content is Frame rootFrame))
@@ -201,12 +207,13 @@ namespace UWPVoiceAssistantSample
                     // this app is running as a lock screen app, or above lock screen app
                     // render a different page for assigned access use
                     // to avoid showing regular main page to keep secure information safe
-                    rootFrame.Navigate(typeof(MainPage), args);
+                    rootFrame.Navigate(typeof(BlankPage1), args);
                 }
             }
 
             this.AddVersionToTitle();
             Window.Current.Activate();
+            Debug.Write("On activated, finished");
         }
 
         /// <summary>

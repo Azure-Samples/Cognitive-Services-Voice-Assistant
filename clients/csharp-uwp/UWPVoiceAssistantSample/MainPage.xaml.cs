@@ -181,7 +181,7 @@ namespace UWPVoiceAssistantSample
         private void LockHost_Unlocking(LockApplicationHost sender, LockScreenUnlockingEventArgs args)
         {
             // save any unsaved work and gracefully exit the app
-            App.Current.Exit();
+            Window.Current.Close();
         }
 
         private bool BackgroundTaskRegistered
