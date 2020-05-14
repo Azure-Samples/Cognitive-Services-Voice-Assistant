@@ -589,8 +589,6 @@ namespace VoiceAssistantTest
 
             this.UserPerceivedLatency = this.elapsedTime - this.LengthOfSpeechInWavFile;
 
-            this.elapsedTime = 0;
-
             int activityIndex = 0;
             int ttsDuration = 0;
 
@@ -599,6 +597,8 @@ namespace VoiceAssistantTest
                 this.BotReplyList.Add(new BotReply(activity, this.elapsedTime, false));
                 activityIndex = this.BotReplyList.Count - 1;
             }
+
+            this.elapsedTime = 0;
 
             if (e.HasAudio)
             {
