@@ -1,0 +1,16 @@
+{
+    "micArrayType": "Linear",
+    "numberOfMicrophones": 2,
+    "micCoord": [
+        {
+            "xCoord": 0,
+            "yCoord": 0,
+            "zCoord": 0
+        },
+        {
+            "xCoord": 0,
+            "yCoord": 0,
+            "zCoord": 0
+        }
+    ]
+}
