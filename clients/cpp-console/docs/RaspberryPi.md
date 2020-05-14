@@ -46,8 +46,35 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 
   ```sh
   cd scripts
-  sh ./buildArm32.sh
+  ./buildArm32Linux.sh
   ```
+  
+## Build directly on Linux arm32 with Microsoft Audio Stack
+
+Microsoft Audio Stack can be used to enhance the experience.
+
+Benefits include:
+* Software Audio Echo Cancellation
+* Beamforming
+* Noise Suppression
+* Automatic Gain Control
+* Dereverberation
+
+In order to use Microsoft Audio Stack you must specify in the config file the appropriate values. Below are the ones that we used on our pi:</br>
+"custom_mic_config_path" :"/home/ubuntu/cpp-console/configs/micConfig.json",
+"linux_capture_device_name": "hw:1,0"
+
+An example mic config.json is included in the configs folder of this repo.
+
+The config path can be anything that points to the micConfig.json file, but the capture device should be the one you intend to use. In this case it is the hardwar 1 subdevice 0. You can use arecord to discover which device you have set up. [arecord](https://linux.die.net/man/1/arecord)
+
+To build it simply run the buildArm32LinusWithMAS.sh file. This will download all necessary binaries and build the project with the MAS macro defined.
+
+```sh
+cd scripts
+./buildArm32LinuxWithMAS.sh
+```
+
 
 ## Running the sample
 
