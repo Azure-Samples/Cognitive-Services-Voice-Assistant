@@ -1,5 +1,19 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+
+// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace UWPVoiceAssistantSample
 {
@@ -39,7 +53,7 @@ namespace UWPVoiceAssistantSample
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class BlankPage1 : Page
     {
         /// <summary>
         /// Collection of utterances from user and bot.
@@ -70,7 +84,7 @@ namespace UWPVoiceAssistantSample
                 CoreApplicationView currentViewDispatcher;
                 try
                 {
-                    Debug.WriteLine("get dispatcher");
+                    Debug.WriteLine("blankpage: get dispatcher");
                     currentViewDispatcher = CoreApplication.GetCurrentView();
                 }
                 catch (Exception e)
@@ -90,11 +104,11 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainPage"/> class.
+        /// Initializes a new instance of the <see cref="BlankPage1"/> class.
         /// </summary>
-        public MainPage()
+        public BlankPage1()
         {
-            Debug.WriteLine("Start page");
+            Debug.WriteLine("blankpage: Start page");
             this.logger = LogRouter.GetClassLogger();
 
             this.InitializeComponent();
@@ -141,16 +155,16 @@ namespace UWPVoiceAssistantSample
             // Ensure consistency between a few dependent controls and their settings
             this.UpdateUIBasedOnToggles();
 
-            MainPage.globalConversations = MainPage.globalConversations ?? new List<Conversation>();
+            BlankPage1.globalConversations = BlankPage1.globalConversations ?? new List<Conversation>();
             this.conversations = new ObservableCollection<Conversation>();
 
-            MainPage.globalConversations.ForEach((element) => this.conversations.Add(element));
+            BlankPage1.globalConversations.ForEach((element) => this.conversations.Add(element));
 
-            this.conversations.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => 
+            this.conversations.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) =>
             {
                 foreach (Conversation conversation in e.NewItems)
                 {
-                    MainPage.globalConversations.Add(conversation);
+                    BlankPage1.globalConversations.Add(conversation);
                 }
             };
 
@@ -175,13 +189,18 @@ namespace UWPVoiceAssistantSample
                 }
             };
 
-            Debug.WriteLine("Render");
+            Debug.WriteLine("blankpage: Render");
         }
 
         private void LockHost_Unlocking(LockApplicationHost sender, LockScreenUnlockingEventArgs args)
         {
             // save any unsaved work and gracefully exit the app
-            Window.Current.Close();
+            //Window.Current.Close();
+            Task.Run(async () =>
+            {
+                var session = await this.agentSessionManager.GetSessionAsync();
+                session.SystemStateChanged -= this.System_State_Changed;
+            });
         }
 
         private bool BackgroundTaskRegistered
@@ -201,8 +220,9 @@ namespace UWPVoiceAssistantSample
                 LockApplicationHost lockHost = LockApplicationHost.GetForCurrentView();
                 if (lockHost != null)
                 {
-                    Debug.WriteLine("request unlock");
+                    Debug.WriteLine("blankpage: request unlock");
                     lockHost.RequestUnlock();
+                    Window.Current.Close();
                 }
             };
             this.MicrophoneButton.Click += async (_, __) =>
@@ -214,7 +234,7 @@ namespace UWPVoiceAssistantSample
             {
                 await this.dialogManager.FinishConversationAsync();
                 await this.dialogManager.StopAudioPlaybackAsync();
-                MainPage.globalConversations.Clear();
+                BlankPage1.globalConversations.Clear();
                 this.RefreshStatus();
             };
             this.ClearLogsButton.Click += async (_, __)
@@ -257,12 +277,16 @@ namespace UWPVoiceAssistantSample
             var session = await this.agentSessionManager.GetSessionAsync();
             if (session != null)
             {
-                session.SystemStateChanged += async (s, e)
-                    => await this.UpdateUIForSharedStateAsync();
+                session.SystemStateChanged += this.System_State_Changed;
             }
 
             PowerManager.EnergySaverStatusChanged += async (s, e)
                 => await this.UpdateUIForSharedStateAsync();
+        }
+
+        private async void System_State_Changed(ConversationalAgentSession session, ConversationalAgentSystemStateChangedEventArgs args)
+        {
+            await this.UpdateUIForSharedStateAsync();
         }
 
         private void AddDialogHandlersAsync()
@@ -463,7 +487,7 @@ namespace UWPVoiceAssistantSample
                     Sent = false,
                 };
 
-                MainPage.globalConversations.Add(newConversation);
+                BlankPage1.globalConversations.Add(newConversation);
                 this.conversations.Add(newConversation);
             });
         }
@@ -483,7 +507,7 @@ namespace UWPVoiceAssistantSample
                             Sent = true,
                         };
 
-                        MainPage.globalConversations.Add(this.activeConversation);
+                        BlankPage1.globalConversations.Add(this.activeConversation);
                         this.conversations.Add(this.activeConversation);
                     }
 
@@ -507,7 +531,7 @@ namespace UWPVoiceAssistantSample
                         Sent = true,
                     };
 
-                    MainPage.globalConversations.Add(this.activeConversation);
+                    BlankPage1.globalConversations.Add(this.activeConversation);
                     this.conversations.Add(this.activeConversation);
                 }
 
@@ -1086,7 +1110,10 @@ namespace UWPVoiceAssistantSample
 
         private async void TriggerLogAvailable(object sender, RoutedEventArgs e)
         {
-            this.FilterLogs();
+            await this.dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                this.FilterLogs();
+            });
         }
 
         private void ApplicationStateBadgeClick(object sender, RoutedEventArgs e)

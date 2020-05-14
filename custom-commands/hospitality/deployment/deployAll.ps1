@@ -35,7 +35,6 @@ if( $randomID){
 } else {
     $randomNumber = Get-Random -maximum 9999
     Write-Host "Using random ID = $randomNumber"
-    Write-Host "pass this ID back into the command if you need to retry -randomID $randomNumber"
 } 
 
 $functionName = "$resourceName-$randomNumber"
