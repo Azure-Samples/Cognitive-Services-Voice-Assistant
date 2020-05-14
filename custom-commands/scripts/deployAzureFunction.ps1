@@ -20,13 +20,13 @@ Write-Verbose "$output"
 # zip up the publish folder
 $absolutePublishFolder = Convert-Path($publishFolder)
 $absoluteCurrentFolder = Convert-Path(".")
-if (Test-path "$publishZip") { Remove-item "$publishZip" }
 Add-Type -assembly "system.io.compression.filesystem"
 [io.compression.zipfile]::CreateFromDirectory($absolutePublishFolder, "$absoluteCurrentFolder/$publishZip")
 
 Write-Host "Deploying zipped folder at $publishZip"
 # deploy the zipped package
 $output = az functionapp deployment source config-zip -g $resourceGroup -n $functionName --src $publishZip | ConvertFrom-Json
+if (Test-path "$publishZip") { Remove-item "$publishZip" }
 if (!$output) {
     Write-Error "Failed to deploy Azure function"
     Write-Error $output

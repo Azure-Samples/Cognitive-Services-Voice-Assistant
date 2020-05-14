@@ -10,7 +10,7 @@ Param(
 [Console]::ResetColor()
 $ErrorActionPreference = "Stop"
 
-if ( $resourceName.Length -gt 19 ) {
+if ($resourceName.Length -gt 19) {
     Write-Output "Resource Name cannot be longer than 19 characters. This is a requirement because we add up to 4 digits of a random number to try to keep the names unique and the storage resource has a limit of 23 characters. Please enter a shorter name."
     exit
 }
@@ -35,7 +35,6 @@ if ($randomID) {
 else {
     $randomNumber = Get-Random -maximum 9999
     Write-Host "Using random ID = $randomNumber"
-    Write-Host "pass this ID back into the command if you need to retry -randomID $randomNumber"
 }
 
 # get the current default subscription ID
