@@ -281,6 +281,23 @@ If the keyword has been recognized successfully, the identified keyword will be 
 
 Note that due to a bug in the way Speech SDK consumes audio from an input stream, keyword activation is limited to the first turn of the dialog. Therefore [Keyword](#keyword) can only be set to true when [TurnID](#turnid) is 0.
 
+### Using RealTimeAudio
+// Will be updated
+<br>
+<br>
+Speech SDK by default sends the beginning of an audio file as fast as it can to get the best UPL on short utterances but then throttles the speed to prevent the client from spamming the service too fast. This throttled speed is still faster than real-time microphone speed. To handle this, a couple of additional endpoints were exposed.
+```csharp
+config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100")
+config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "0");
+```
+The first property fixes the transmit speed at real time and the second removes the burst behavior at the start of speech recognition. Together they allow simulating speech recognition at real-time from an audio file.
+
+In the AppConfig, set `RealTimeAudio: true`, also to prevent the app from Timing out, you will have set the Timeout to the duration of the longest wav file example `Timeout: 7000`. By default the timeout is 5000 msec, so this may not be needed if all of the utterances are shorter than 5 seconds.
+
+We are also logging the user perceived latency. This value is from when the session starts (SessionStarted) till when a bot activity is received (ActivityReceived). The amount of elapsed time - duration of speech in wav file.
+
+To get the best results, it is recommended that authored audio files should contain minimal silence at the end of speech.
+
 ### Running tests in an Azure DevOps pipeline
 
 The Visual Studio Project is configured to published a self-contained Windows console executable that includes the .NET Core run-time and all NuGet dependencies. This means you only need to copy one file, VoiceAssistantText.exe, to the target Windows 10 PC or VM, together with your test configuration files and WAV files to run your test. The publishing is done by these lines at the end of [VoiceAssistantTest.csproj](tool/VoiceAssistantTest.csproj):
