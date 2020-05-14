@@ -57,13 +57,18 @@ namespace VoiceAssistantTest
         public string RecognizedKeyword { get; set; }
 
         /// <summary>
-        /// Gets or sets the actual length of speech in WavFile obtained from Recognized Event.
+        /// Gets or sets the actual length of speech in WavFile obtained from RecognizedSpeech event.
         /// </summary>
         public int LengthOfSpeechInWavFile { get; set; }
 
-        //user perceived latency
+        /// <summary>
+        /// Gets or sets the time in milliseconds between SessionStarted and ActivityReceived events.
+        /// </summary>
         public int UserPerceivedLatency { get; set; }
 
+        /// <summary>
+        /// Gets or sets the expected length of speech from input test file.
+        /// </summary>
         public int ExpectedLengthOfSpeech { get; set; }
 
         /// <summary>
@@ -581,7 +586,7 @@ namespace VoiceAssistantTest
             this.stopWatch.Stop();
 
             this.elapsedTime += (int)this.stopWatch.ElapsedMilliseconds;
-            // user perceived latency
+
             this.UserPerceivedLatency = this.elapsedTime - this.LengthOfSpeechInWavFile;
 
             int activityIndex = 0;

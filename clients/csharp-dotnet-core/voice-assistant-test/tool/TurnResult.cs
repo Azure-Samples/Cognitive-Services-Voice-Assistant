@@ -54,8 +54,11 @@ namespace VoiceAssistantTest
         [JsonProperty(Order = 8, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ActualLengthOfSpeechInWavFile { get; set; }
 
+        /// <summary>
+        /// Gets or sets the actual user perceived latency (in milliseconds).
+        /// </summary>
         [JsonProperty(Order = 9, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int ActualConnectorLatency { get; set; }
+        public int ActualUserPerceivedLatency { get; set; }
 
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.

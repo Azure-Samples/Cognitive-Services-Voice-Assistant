@@ -332,7 +332,7 @@ namespace VoiceAssistantTest
                             }
                         }
 
-                        turnResult.ActualConnectorLatency = botConnector.ConnectorLatency;
+                        turnResult.ActualUserPerceivedLatency = botConnector.UserPerceivedLatency;
 
                         // Add the turn result to the list of turn results.
                         turnResults.Add(turnResult);
