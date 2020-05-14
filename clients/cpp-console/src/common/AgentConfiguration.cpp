@@ -32,6 +32,8 @@ namespace FieldNames
     constexpr auto Volume = "volume";
     constexpr auto BargeInSupported = "barge_in_supported";
     constexpr auto LogFilePath = "log_file_path";
+    constexpr auto CustomMicConfigPath = "custom_mic_config_path";
+    constexpr auto LinuxCaptureDeviceName = "linux_capture_device_name";
 }
 
 AgentConfiguration::AgentConfiguration() : _loadResult(AgentConfigurationLoadResult::Undefined)
@@ -63,6 +65,8 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_keywordModelPath = j.value(FieldNames::KeywordModel, "");
     config->_keywordDisplayName = j.value(FieldNames::KeywordDisplay, "");
     config->_logFilePath = j.value(FieldNames::LogFilePath, "");
+    config->_customMicConfigPath = j.value(FieldNames::CustomMicConfigPath, "");
+    config->_linuxCaptureDeviceName = j.value(FieldNames::LinuxCaptureDeviceName, "");
     config->_volume = atoi(j.value(FieldNames::Volume, "").c_str());
     config->_barge_in_supported = j.value(FieldNames::BargeInSupported, "");
 

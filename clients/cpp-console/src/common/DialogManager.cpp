@@ -23,10 +23,17 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 void DialogManager::InitializeDialogServiceConnector()
 {
     log_t("Configuration loaded. Creating connector...");
-    auto config = _agentConfig->AsDialogServiceConfig();
-    auto audioConfig = AudioConfig::FromMicrophoneInput("hw:1,0");
-    config->SetProperty("MicArrayGeometryConfigFile", "/home/ubuntu/cpp-console/configs/mic.json");
-    _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
+    
+    // MAS stands for Microsoft Audio Stack
+    #ifdef MAS
+        auto config = _agentConfig->AsDialogServiceConfig();
+        auto audioConfig = AudioConfig::FromMicrophoneInput(_agentConfig->_linuxCaptureDeviceName);
+        config->SetProperty("MicArrayGeometryConfigFile", _agentConfig->_customMicConfigPath);
+        _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
+    #endif
+    #ifndef MAS
+        _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
+    #endif
     log_t("Connector created");
     auto future = _dialogServiceConnector->ConnectAsync();
 
