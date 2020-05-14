@@ -302,7 +302,7 @@ namespace VoiceAssistantTest
                 turnResult.ResponseLatencyMatch = true;
                 int margin = this.appSettings.TTSAudioDurationMargin;
 
-                if (!string.IsNullOrWhiteSpace(turnResult.Utterance))
+                if (!string.IsNullOrWhiteSpace(turnResult.WAVFile) && !string.IsNullOrWhiteSpace(turnResult.Utterance))
                 {
                     string normalizedActualRecognizedText = GetNormalizedText(turnResult.ActualRecognizedText);
                     string normalizedExpectedRecognizedText = GetNormalizedText(turnResult.Utterance);

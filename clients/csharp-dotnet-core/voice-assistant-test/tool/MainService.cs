@@ -329,6 +329,10 @@ namespace VoiceAssistantTest
                                         turnResult.WAVFile = arr[0] + ", " + arr[1];
                                     }
                                 }
+                                else
+                                {
+                                    turnResult.WAVFile = turnResult.WAVFile + $", {botConnector.LengthOfSpeechInWavFile}";
+                                }
                             }
                         }
 

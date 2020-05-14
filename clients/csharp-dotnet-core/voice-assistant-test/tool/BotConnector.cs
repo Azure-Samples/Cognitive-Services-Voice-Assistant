@@ -589,6 +589,8 @@ namespace VoiceAssistantTest
 
             this.UserPerceivedLatency = this.elapsedTime - this.LengthOfSpeechInWavFile;
 
+            this.elapsedTime = 0;
+
             int activityIndex = 0;
             int ttsDuration = 0;
 

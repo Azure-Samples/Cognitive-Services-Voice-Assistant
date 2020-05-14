@@ -49,21 +49,15 @@ namespace VoiceAssistantTest
         public List<int> ActualTTSAudioResponseDurations { get; set; }
 
         /// <summary>
-        /// Gets or sets the actual duration of the input WavFile (in milliseconds).
-        /// </summary>
-        [JsonProperty(Order = 8, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int ActualLengthOfSpeechInWavFile { get; set; }
-
-        /// <summary>
         /// Gets or sets the actual user perceived latency (in milliseconds).
         /// </summary>
-        [JsonProperty(Order = 9, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(Order = 8, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public int ActualUserPerceivedLatency { get; set; }
 
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.
         /// </summary>
-        [JsonProperty(Order = 10)]
+        [JsonProperty(Order = 9)]
         public int ActualResponseLatency { get; set; }
 
         /// <summary>
