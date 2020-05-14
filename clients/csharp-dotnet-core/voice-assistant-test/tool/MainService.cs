@@ -281,9 +281,17 @@ namespace VoiceAssistantTest
                         botConnector.SetInputValues(testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.Keyword);
 
                         // Send up WAV File if present
-                        if (turn.WAVFile != null && !string.IsNullOrEmpty(turn.WAVFile[0]))
+                        if (!string.IsNullOrEmpty(turn.WAVFile))
                         {
-                            botConnector.SendAudio(turn.WAVFile[0]);
+                            if (turn.WAVFile.Split(",").Length == 2)
+                            {
+                                botConnector.ExpectedLengthOfSpeech = int.Parse(turn.WAVFile.Split(",")[1], CultureInfo.CurrentCulture);
+                                botConnector.SendAudio(turn.WAVFile.Split(",")[0]);
+                            }
+                            else
+                            {
+                                botConnector.SendAudio(turn.WAVFile);
+                            }
                         }
 
                         // Send up Utterance if present
@@ -310,9 +318,17 @@ namespace VoiceAssistantTest
 
                         if (turn.WAVFile != null)
                         {
-                            if (!string.IsNullOrEmpty(turn.WAVFile[0]))
+                            if (!string.IsNullOrEmpty(turn.WAVFile))
                             {
-                                turnResult.ActualLengthOfSpeechInWavFile = botConnector.LengthOfSpeechInWavFile;
+                                if (turn.WAVFile.Contains(",", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    if (turnResult.WAVFile.Split(",").Length == 2)
+                                    {
+                                        string[] arr = turnResult.WAVFile.Split(",");
+                                        arr[1] = botConnector.LengthOfSpeechInWavFile.ToString(CultureInfo.CurrentCulture);
+                                        turnResult.WAVFile = arr[0] + ", " + arr[1];
+                                    }
+                                }
                             }
                         }
 
@@ -520,11 +536,7 @@ namespace VoiceAssistantTest
         {
             bool utterancePresentValid = CheckNotNullNotEmptyString(turn.Utterance);
             bool activityPresentValid = CheckNotNullNotEmptyString(turn.Activity);
-            bool wavFilePresentValid = false;
-            if (turn.WAVFile != null)
-            {
-                wavFilePresentValid = CheckNotNullNotEmptyString(turn.WAVFile[0]);
-            }
+            bool wavFilePresentValid = CheckNotNullNotEmptyString(turn.WAVFile);
             bool expectedLatencyPresentValid = CheckNotNullNotEmptyString(turn.ExpectedResponseLatency);
 
             List<string> exceptionMessage = new List<string>();

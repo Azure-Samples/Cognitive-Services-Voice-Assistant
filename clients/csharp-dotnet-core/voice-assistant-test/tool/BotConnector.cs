@@ -61,7 +61,10 @@ namespace VoiceAssistantTest
         /// </summary>
         public int LengthOfSpeechInWavFile { get; set; }
 
-        public int ConnectorLatency { get; set; }
+        //user perceived latency
+        public int UserPerceivedLatency { get; set; }
+
+        public int ExpectedLengthOfSpeech { get; set; }
 
         /// <summary>
         /// Gets or sets the duration if WAVFile in milliseconds.
@@ -551,11 +554,6 @@ namespace VoiceAssistantTest
                 this.LengthOfSpeechInWavFile = (int)e.Result.Duration.TotalMilliseconds;
 
                 Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
-
-                this.ConnectorLatency = (int)this.stopWatch.ElapsedMilliseconds - this.LengthOfSpeechInWavFile;
-
-                this.stopWatch.Restart();
-                this.elapsedTime = 0;
             }
             else if (e.Result.Reason == ResultReason.RecognizedKeyword)
             {
@@ -583,6 +581,8 @@ namespace VoiceAssistantTest
             this.stopWatch.Stop();
 
             this.elapsedTime += (int)this.stopWatch.ElapsedMilliseconds;
+            // user perceived latency
+            this.UserPerceivedLatency = this.elapsedTime - this.LengthOfSpeechInWavFile;
 
             int activityIndex = 0;
             int ttsDuration = 0;
