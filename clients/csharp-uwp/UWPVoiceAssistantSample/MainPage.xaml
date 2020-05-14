@@ -58,8 +58,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Content="&#xE106;"
-                Visibility="Visible"
-                Canvas.ZIndex="1"/>
+                Visibility="Visible"/>
 
         <Grid x:Name="ApplicationStateGrid" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
