@@ -1,6 +1,8 @@
 {
-    "micArrayType": "Linear",
-    "numberOfMicrophones": 2,
+    "micArrayType": "Planar",
+    "horizontalAngleBegin": 0,
+    "horizontalAngleEnd": 360,
+    "numberOfMicrophones": 4,
     "micCoord": [
         {
             "xCoord": 0,
@@ -8,8 +10,18 @@
             "zCoord": 0
         },
         {
-            "xCoord": 0,
+            "xCoord": 40,
             "yCoord": 0,
+            "zCoord": 0
+        },
+        {
+            "xCoord": -20,
+            "yCoord": -35,
+            "zCoord": 0
+        },
+        {
+            "xCoord": -20,
+            "yCoord": 35,
             "zCoord": 0
         }
     ]

@@ -51,10 +51,10 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
   
 ## Build directly on Linux arm32 with Microsoft Audio Stack
 
-Microsoft Audio Stack can be used to enhance the experience.
+Microsoft Audio Stack (MAS) can be used to enhance the experience.
 
 Benefits include:
-* Software Audio Echo Cancellation
+* Software Acoustic Echo Cancellation
 * Beamforming
 * Noise Suppression
 * Automatic Gain Control
@@ -64,7 +64,7 @@ In order to use Microsoft Audio Stack you must specify in the config file the ap
 "custom_mic_config_path" :"/home/ubuntu/cpp-console/configs/micConfig.json",
 "linux_capture_device_name": "hw:1,0"
 
-An example mic config.json is included in the configs folder of this repo.
+An example mic config.json is included in the configs folder of this repo. For more information on how to configure your device's mic array see [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-devices-microphone-array-configuration).
 
 The config path can be anything that points to the micConfig.json file, but the capture device should be the one you intend to use. In this case it is the hardwar 1 subdevice 0. You can use arecord to discover which device you have set up. [arecord](https://linux.die.net/man/1/arecord)
 
