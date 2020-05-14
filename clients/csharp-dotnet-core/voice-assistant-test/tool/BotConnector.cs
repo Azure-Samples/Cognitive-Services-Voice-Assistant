@@ -56,6 +56,7 @@ namespace VoiceAssistantTest
         /// </summary>
         public string RecognizedKeyword { get; set; }
 
+        public int LengthOfSpeechInWavFile { get; set; }
         /// <summary>
         /// Gets or sets the duration if WAVFile in milliseconds.
         /// </summary>
@@ -540,6 +541,7 @@ namespace VoiceAssistantTest
             if (e.Result.Reason == ResultReason.RecognizedSpeech)
             {
                 this.RecognizedText = e.Result.Text;
+                this.LengthOfSpeechInWavFile = (int)e.Result.Duration.TotalMilliseconds;
 
                 Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
 
@@ -617,7 +619,6 @@ namespace VoiceAssistantTest
 
         private void SpeechBotConnector_SessionStopped(object sender, SessionEventArgs e)
         {
-            this.stopWatch.Stop();
             Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Session Stopped event received. SessionId = {e.SessionId}");
         }
 

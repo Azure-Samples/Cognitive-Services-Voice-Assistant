@@ -281,9 +281,16 @@ namespace VoiceAssistantTest
                         botConnector.SetInputValues(testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.Keyword);
 
                         // Send up WAV File if present
-                        if (!string.IsNullOrEmpty(turn.WAVFile))
+                        if (turn.WAVFile != null)
                         {
-                            botConnector.SendAudio(turn.WAVFile);
+                            if (turn.WAVFile.Count > 1)
+                            {
+                                //for (var i = 0; i < turn.WAVFile.Count; i++)
+                                //{
+                                //    botConnector.SendAudio(turn.WAVFile[0]);
+                                //}
+                            }
+                            botConnector.SendAudio(turn.WAVFile[0]);
                         }
 
                         // Send up Utterance if present
@@ -308,9 +315,12 @@ namespace VoiceAssistantTest
                             testPass = false;
                         }
 
-                        if (!string.IsNullOrEmpty(turn.WAVFileDuration))
+                        if (turn.WAVFile != null)
                         {
-                            turnResult.ActualWavFileDuration = botConnector.WavFileDuration;
+                            if (!string.IsNullOrEmpty(turn.WAVFile[0]))
+                            {
+                                turnResult.ActualWavFileDuration = botConnector.LengthOfSpeechInWavFile;
+                            }
                         }
 
                         // Add the turn result to the list of turn results.
@@ -515,7 +525,11 @@ namespace VoiceAssistantTest
         {
             bool utterancePresentValid = CheckNotNullNotEmptyString(turn.Utterance);
             bool activityPresentValid = CheckNotNullNotEmptyString(turn.Activity);
-            bool wavFilePresentValid = CheckNotNullNotEmptyString(turn.WAVFile);
+            bool wavFilePresentValid = false;
+            if (turn.WAVFile != null)
+            {
+                wavFilePresentValid = CheckNotNullNotEmptyString(turn.WAVFile[0]);
+            }
             bool expectedLatencyPresentValid = CheckNotNullNotEmptyString(turn.ExpectedResponseLatency);
 
             List<string> exceptionMessage = new List<string>();

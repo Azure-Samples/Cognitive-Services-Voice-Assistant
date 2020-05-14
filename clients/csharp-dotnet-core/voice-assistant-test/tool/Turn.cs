@@ -40,7 +40,7 @@ namespace VoiceAssistantTest
         /// Gets or sets the WAVFile.
         /// </summary>
         [JsonProperty(Order = -2, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string WAVFile { get; set; }
+        public List<string> WAVFile { get; set; }
 
         /// <summary>
         /// Gets or sets the WAVFile Duration.
