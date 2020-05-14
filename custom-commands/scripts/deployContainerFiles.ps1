@@ -35,24 +35,37 @@ if (!$output) {
     exit
 }
 
-# create the actual container
-Write-Host "Creating container ContainerName = $containerName account-name = $storageName" 
-az storage container create --account-name $storageName --name $containerName --public-access container --auth-mode login
+# sometimes the container create can take a bit of time so we will retry the next step a few times.
+$retries = 5
+$retrycount = 0
+$completed = $false
+while (-not $completed) {
+    # create the actual container
+    Write-Host "Creating container ContainerName = $containerName account-name = $storageName" 
+    $output = az storage container create --account-name $storageName --name $containerName --public-access container --auth-mode login | ConvertFrom-Json
 
-# update the demo.html file with the correct urls
-$connectionString = az storage account show-connection-string -n $storageName -g $resourceGroup --query connectionString -o tsv
+    if ($retrycount -ge $retries) {
+        Write-Error ("Creating container command failed the maximum number of {1} times." -f $retrycount)
+        Write-Error "$output"
+        exit
+    }
+    
+    if ( !$output ) {
+        Write-Host ("Creating container command failed. Retrying in 30 seconds. Sometimes it takes a while for the creation of the storage to take effect.")
+        Start-Sleep -s 30
+        $retrycount++
+    }
+    else {
+        Write-Host "Container created!" 
+        $completed = $true
+    }
+}
 
-Write-Host "Getting blob url"
-$storageURL = az storage blob url --container-name $containerName --connection-string $connectionString --name $storageName
-$storageURL = $storageURL.Trim("`"")
-$storageURL = $storageURL.TrimEnd("/$storageName")
-
-Write-Host "Updating $appName.html with new blob url - $storageURL. Function - $functionURL"
-$demoHtmlFile = "../$appName/visualization/$appName.html"
-$newFile = (Get-Content $demoHtmlFile)
-$newFile = $newFile | Foreach-Object { $_ -replace "AZURE_STORAGE_URL", $storageURL }
-$newFile = $newFile | Foreach-Object { $_ -replace "AZURE_FUNCTION_URL", $functionURL }
-$newFile | Set-Content $demoHtmlFile
+# update ConnectionURLS.json with the correct function url
+Write-Host "Updating AZURE_FUNCTION_URL in ConnectionURLS.json with $functionURL"
+$newFile = (Get-Content “../$appName/visualization/ConnectionURLS.json”) | Out-String | ConvertFrom-Json
+$newFile.AZURE_FUNCTION_URL = $functionURL
+$newFile | ConvertTo-Json -depth 100 | Set-Content “../$appName/visualization/ConnectionURLS.json”
 
 # sometimes the role assignment can take a bit of time so we will retry the next step a few times.
 $retries = 5
@@ -63,7 +76,7 @@ while (-not $completed) {
     Write-Host "Uploading files to new container" 
     $output = az storage blob upload-batch -d $containerName -s ../$appName/visualization --auth-mode login --account-name $storageName | ConvertFrom-Json
     if ($retrycount -ge $retries) {
-        Write-Error ("Container command failed the maximum number of {1} times." -f $retrycount)
+        Write-Error ("Container upload command failed the maximum number of {1} times." -f $retrycount)
         Write-Error "$output"
         exit
     }
@@ -83,9 +96,8 @@ while (-not $completed) {
 Write-Host "Getting storage connection string"
 $storageConnectionString = az storage account show-connection-string --resource-group $resourceGroup --name $storageName | ConvertFrom-Json
 
+Write-Host "Updating Connections.json with new connection string"
 $titleAppName = (Get-Culture).TextInfo.ToTitleCase($appName)
-Write-Host "Updating ($titleAppName)Demo.cs with new connection string"
-$demoCSFile = "../$appName/azure-function/Virtual$($titleAppName)App/$($titleAppName)Demo.cs"
-$newFile = (Get-Content $demoCSFile)
-$newFile = $newFile | Foreach-Object { $_ -replace "STORAGE_CONNECTION_STRING", $storageConnectionString.connectionString }
-$newFile | Set-Content $demoCSFile
+$newFile = (Get-Content "../$appName/azure-function/Virtual$($titleAppName)App/Connections.json") | Out-String | ConvertFrom-Json
+$newFile.AZURE_STORAGE_URL = $storageConnectionString.connectionString
+$newFile | ConvertTo-Json -depth 100 | Set-Content "../$appName/azure-function/Virtual$($titleAppName)App/Connections.json"
