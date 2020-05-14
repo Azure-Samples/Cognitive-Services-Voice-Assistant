@@ -19,7 +19,7 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public static readonly List<string> LogBuffer = new List<string>();
         private Logger logger;
-        private int nextLogIndex = 0;
+        private static int nextLogIndex = 0;
 
         /// <summary>
         /// Event to indicate a log was generated.
@@ -95,7 +95,9 @@ namespace UWPVoiceAssistantSample
 
             Task.Run(() =>
             {
-                this.logger.Log(ConvertLogLevel(level), LogBuffer[this.nextLogIndex++]);
+                var indexToRead = nextLogIndex;
+                nextLogIndex += 1;
+                this.logger.Log(ConvertLogLevel(level), LogBuffer[indexToRead]);
                 this.OnLogAvailable();
             });
         }
