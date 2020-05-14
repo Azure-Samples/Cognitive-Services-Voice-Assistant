@@ -60,7 +60,7 @@ Benefits include:
 * Automatic Gain Control
 * Dereverberation
 
-In order to use Microsoft Audio Stack you must specify in the config file the appropriate values. Below are the ones that we used on our pi:</br>
+In order to use Microsoft Audio Stack you must specify in the config file the appropriate values. Below are the ones that we used on our Raspberry Pi:</br>
 "custom_mic_config_path" :"/home/ubuntu/cpp-console/configs/micConfig.json",
 "linux_capture_device_name": "hw:1,0"
 
