@@ -1,0 +1,1008 @@
+{
+  "type": "CommandsDialogModel",
+  "culture": "en-us",
+  "recognizer": {
+    "application": "b1ea623d-bf57-4444-9a60-9e30951039bc",
+    "isStaging": true,
+    "versionId": "CS8P4JR8Z7",
+    "endpointKey": "c8663b4523f2481d8b14d9ec00b9384d",
+    "region": "westus2",
+    "type": "luis"
+  },
+  "speechOutput": {
+    "font": "Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)",
+    "locale": "en-US"
+  },
+  "entityResolver": {
+    "searchConfiguration": {
+      "maxEdits": 0
+    },
+    "type": "internal",
+    "isGenerated": true
+  },
+  "httpEndpoints": [
+    {
+      "name": "InventoryEndpoint",
+      "method": "GET",
+      "url": "https://inventorydemowidget.azurewebsites.net/api/InventoryDemo",
+      "headers": {
+        "room": "test1"
+      },
+      "sendFrame": true,
+      "updateFrame": false
+    }
+  ],
+  "lgTemplates": [
+    "# SlackingInventorydd2b9c7007fb11eaa66f05c14664ae5a",
+    "- Type your response(s) here.",
+    "# SlackingInventoryWhichItem",
+    "- Which item?",
+    "# SlackingInventoryQuantity",
+    "- How many of those?",
+    "- In what quantity?",
+    "# ShrinkInventoryWhichItem",
+    "- Which item?",
+    "# ShrinkInventoryQuantity",
+    "- How many of those?",
+    "- In what quantity?",
+    "# ReceiveInventoryfea53b301b7011ea83f5997e3db07222",
+    "- recevied (sort of)",
+    "# ShrinkInventorye9107b401b7011ea83f5997e3db07222",
+    "- Shrunk {Quantity} {WhichItem} (sort of)",
+    "# FallbackResponse",
+    "- Command not recognized.",
+    "# ShipInventoryWhichItem",
+    "- Which item?",
+    "# ReceiveInventoryWhichItem",
+    "- Which item?",
+    "# ShipInventory-InventoryEndpointonSuccess-2ca40db0841511ea951cad79fbdb0805",
+    "",
+    "# ShipInventory-InventoryEndpointonFailure-2ca40db0841511ea951cad79fbdb0805",
+    "",
+    "# QueryInventory-InventoryEndpointonSuccess-6c1fd190834811eab7cd072e13afe120",
+    "- There are {InventoryEndpoint.FirstItem} yellow boxes.",
+    "# QueryInventory-InventoryEndpointonFailure-6c1fd190834811eab7cd072e13afe120",
+    "> You can start sentences with '>' to add comments.",
+    "> Each response variation must start with a dash, i.e.",
+    "- Unable to connect to the inventory.",
+    "# ShipInventory-InventoryEndpointonSuccess-----2ca40db0841511ea951cad79fbdb0805",
+    "- {Quantity} boxes have been shipped.",
+    "# ShipInventory-InventoryEndpointonFailure-----2ca40db0841511ea951cad79fbdb0805",
+    "- sorry, my pencil broke. Please try again.",
+    "# ReceiveInventory-InventoryEndpointonSuccess-----91d3fbf0841511ea951cad79fbdb0805",
+    "- {Quantity} {WhichItem} boxes have been added.",
+    "# ReceiveInventory-InventoryEndpointonFailure-----91d3fbf0841511ea951cad79fbdb0805",
+    "- sorry, my pencil broke. Please try again.",
+    "# QueryInventory-InventoryEndpointonSuccess--d5dc7d60841811eab0ed53b7bb0dce0a",
+    "- IF: ${InventoryEndpoint.ThirdItem > 1}",
+    "    - There are {InventoryEndpoint.ThirdItem} green boxes.",
+    "- ELSEIF: ${InventoryEndpoint.ThirdItem > 0}",
+    "    - There is now {InventoryEndpoint.ThirdItem} green box.",
+    "- ELSE:",
+    "    - There are now {InventoryEndpoint.ThirdItem} green boxes.",
+    "# QueryInventory-InventoryEndpointonFailure--d5dc7d60841811eab0ed53b7bb0dce0a",
+    "- Error connecting to inventory.",
+    "# ReceiveInventory-WhichItem",
+    "- Which item?",
+    "# ShipInventory-WhichItem",
+    "- Which item?",
+    "# QueryInventory-InventoryEndpointonSuccess---6c1fd190834811eab7cd072e13afe120",
+    "- There are {InventoryEndpoint.FirstItem} {WhichItem} boxes.",
+    "# QueryInventory-InventoryEndpointonFailure---6c1fd190834811eab7cd072e13afe120",
+    "- Connection to the warehouse failed.",
+    "# QueryInventory-InventoryEndpointonSuccess----6c1fd190834811eab7cd072e13afe120",
+    "- There are {InventoryEndpoint.FirstItem} {WhichItem} boxes.",
+    "# QueryInventory-InventoryEndpointonFailure----6c1fd190834811eab7cd072e13afe120",
+    "- Connection to the warehouse failed.",
+    "# QueryInventory-InventoryEndpointonSuccess--d9dbbcb07a8f11ea98f0ad6093021597",
+    "- There are {InventoryEndpoint.FirstItem} blue boxes, {InventoryEndpoint.SecondItem} yellow boxes, and {InventoryEndpoint.ThirdItem} yellow boxes in the inventory.",
+    "- The warehouse contains {InventoryEndpoint.FirstItem} blue boxes, {InventoryEndpoint.SecondItem} yellow boxes, and {InventoryEndpoint.ThirdItem} yellow boxes.",
+    "# QueryInventory-InventoryEndpointonFailure--d9dbbcb07a8f11ea98f0ad6093021597",
+    "- Sorry, there was an error contacting the warehouse.",
+    "# QueryInventory-InventoryEndpointonSuccess---d9dbbcb07a8f11ea98f0ad6093021597",
+    "- There are {InventoryEndpoint.FirstItem} blue boxes, {InventoryEndpoint.SecondItem} of yellow boxes, and {InventoryEndpoint.ThirdItem} of green boxes in the inventory.",
+    "# QueryInventory-InventoryEndpointonFailure---d9dbbcb07a8f11ea98f0ad6093021597",
+    "- Sorry, there was an error contacting the warehouse.",
+    "# QueryInventory-InventoryEndpointonSuccess----d9dbbcb07a8f11ea98f0ad6093021597",
+    "- There are {InventoryEndpoint.FirstItem} blue boxes, {InventoryEndpoint.SecondItem} of yellow boxes, and {InventoryEndpoint.ThirdItem} of green boxes in the inventory.",
+    "- The warehouse contains {InventoryEndpoint.FirstItem} blue boxes, {InventoryEndpoint.SecondItem} of yellow boxes, and {InventoryEndpoint.ThirdItem} of green boxes.",
+    "# QueryInventory-InventoryEndpointonFailure----d9dbbcb07a8f11ea98f0ad6093021597",
+    "- Sorry, there was an error contacting the warehouse.",
+    "# QueryInventory-InventoryEndpointonSuccess---6834dab0841711ea98b1037b09eb4510",
+    "- There are {InventoryEndpoint.SecondItem} {WhichItem} boxes.",
+    "# QueryInventory-InventoryEndpointonFailure---6834dab0841711ea98b1037b09eb4510",
+    "- There was an error connecting to the warehouse.",
+    "# ReceiveInventory-Quantity",
+    "- How many of those?",
+    "- In what quantity?",
+    "# Reset-InventoryEndpointonSuccess-c36b181089ab11ea8b766165e910c2a5",
+    "- Okay, resetting to default state.",
+    "- Roger, restocking the warehouse to default values.",
+    "# Reset-InventoryEndpointonFailure-c36b181089ab11ea8b766165e910c2a5",
+    "- Unable to connect to warehouse",
+    "# Help-InventoryEndpointonSuccess--96d04fd0841711ea98b1037b09eb4510",
+    "- some help message",
+    "# Help-InventoryEndpointonFailure--96d04fd0841711ea98b1037b09eb4510",
+    "",
+    "# Help-InventoryEndpointonSuccess-7af0aec08a7211eab9dcadec9125dcbd",
+    "- This is a command and controlled inventory demo. You can add blue, green or yellow boxes and remove the boxes. You can also query the state of the warehouse.",
+    "# Help-InventoryEndpointonSuccess-----7af0aec08a7211eab9dcadec9125dcbd",
+    "- This is a command and control inventory demo. You can add blue, green or yellow boxes and remove the boxes. You can also query the state of the warehouse.",
+    "- Try saying \"Receive 5 middle boxes\" or \"Ship 2 large boxes\" or \"What's in stock warehouse?\"",
+    "# Help-InventoryEndpointonFailure-----7af0aec08a7211eab9dcadec9125dcbd",
+    "- Unable to connect to warehouse.",
+    "- Failed to connect to warehouse.",
+    "# ShipEntireInventory-InventoryEndpointonSuccess--56f581208a7811eab9dcadec9125dcbd",
+    "- Shipping all blue boxes out of the warehouse.",
+    "# ShipEntireInventory-InventoryEndpointonFailure--56f581208a7811eab9dcadec9125dcbd",
+    "- Unable to connect to warehouse.",
+    "- Failed to connect to inventory.",
+    "# ShipEntireInventory-InventoryEndpointonSuccess-c429a1808a7911ea8a979b048c43bd05",
+    "- Shipping all yellow boxes out of the warehouse.",
+    "# ShipEntireInventory-InventoryEndpointonFailure-c429a1808a7911ea8a979b048c43bd05",
+    "- Unable to connect to the warehouse.",
+    "- Failed to connect to inventory",
+    "# ShipEntireInventory-InventoryEndpointonSuccess-ccbce9b08a7911ea8a979b048c43bd05",
+    "- Shipping all green boxes out of the warehouse.",
+    "# ShipEntireInventory-InventoryEndpointonFailure-ccbce9b08a7911ea8a979b048c43bd05",
+    "- Unable to connect to the warehouse.",
+    "- Failed to connect to inventory.",
+    "# ShipEntireInventory-InventoryEndpointonSuccess-d269dad08a7911ea8a979b048c43bd05",
+    "- Emptying the entire inventory.",
+    "- Shipping all boxes out of the inventory.",
+    "# ShipEntireInventory-InventoryEndpointonFailure-d269dad08a7911ea8a979b048c43bd05",
+    "- Unable to connect to the warehouse.",
+    "- Failed to connect to inventory."
+  ],
+  "globalParameters": [],
+  "commands": [
+    {
+      "name": "FallbackCommand",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "DefaultResponse",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# FallbackResponse"
+              }
+            }
+          ],
+          "postExecutionState": "None"
+        }
+      ],
+      "triggeringExamples": [
+        "> - You can start sentences with '>' to add comments.",
+        "> - You can also use parameters by adding the name of the parameter within curly braces, i.e.",
+        "parameters",
+        "debug",
+        "test",
+        "evaluation",
+        "connection"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "ShipInventory",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "WhichItem",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "yellow": [
+                  "yellows",
+                  "yellow box",
+                  "yellow boxes",
+                  "medium",
+                  "mediums",
+                  "medium box",
+                  "medium boxes",
+                  "middle box",
+                  "middle boxes",
+                  "middle shelf"
+                ],
+                "blue": [
+                  "blues",
+                  "blue box",
+                  "blue boxes",
+                  "small",
+                  "small box",
+                  "small boxes",
+                  "top box",
+                  "top boxes",
+                  "top shelf"
+                ],
+                "green": [
+                  "greens",
+                  "green boxes",
+                  "green box",
+                  "bottom box",
+                  "bottom boxes",
+                  "big box",
+                  "big boxes",
+                  "bottom shelf",
+                  "large",
+                  "large box",
+                  "large boxes"
+                ]
+              }
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# ShipInventory-WhichItem"
+          }
+        },
+        {
+          "name": "Quantity",
+          "type": {
+            "name": "Number"
+          },
+          "validations": [],
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# SlackingInventoryQuantity"
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "Finished Removing",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=remove&quantity={Quantity}&product={WhichItem}",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipInventory-InventoryEndpointonSuccess-----2ca40db0841511ea951cad79fbdb0805"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipInventory-InventoryEndpointonFailure-----2ca40db0841511ea951cad79fbdb0805"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "None"
+        }
+      ],
+      "triggeringExamples": [
+        "delete",
+        "delete {WhichItem}",
+        "delete {Quantity} {WhichItem}",
+        "cross out",
+        "cross out {WhichItem}",
+        "cross out {Quantity} {WhichItem}",
+        "sell",
+        "sell {WhichItem}",
+        "sell {Quantity} {WhichItem}",
+        "Remove",
+        "Remove {WhichItem}",
+        "Remove {Quantity} {WhichItem}",
+        "Ship",
+        "Ship {WhichItem}",
+        "Ship {Quantity} {WhichItem}"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "ReceiveInventory",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "WhichItem",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "blue": [
+                  "blues",
+                  "blue box",
+                  "blue boxes",
+                  "small",
+                  "small box",
+                  "small boxes",
+                  "top box",
+                  "top boxes",
+                  "top shelf"
+                ],
+                "yellow": [
+                  "yellows",
+                  "yellow box",
+                  "yellow boxes",
+                  "medium",
+                  "mediums",
+                  "medium box",
+                  "medium boxes",
+                  "middle box",
+                  "middle boxes",
+                  "middle shelf"
+                ],
+                "green": [
+                  "greens",
+                  "green boxes",
+                  "green box",
+                  "bottom box",
+                  "bottom boxes",
+                  "big box",
+                  "big boxes",
+                  "bottom shelf",
+                  "large",
+                  "large box",
+                  "large boxes"
+                ]
+              }
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# ReceiveInventory-WhichItem"
+          }
+        },
+        {
+          "name": "Quantity",
+          "type": {
+            "name": "Number"
+          },
+          "validations": [],
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# ReceiveInventory-Quantity"
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "Finished Receiving",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=add&quantity={Quantity}&product={WhichItem}",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ReceiveInventory-InventoryEndpointonSuccess-----91d3fbf0841511ea951cad79fbdb0805"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ReceiveInventory-InventoryEndpointonFailure-----91d3fbf0841511ea951cad79fbdb0805"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "None"
+        }
+      ],
+      "triggeringExamples": [
+        "add",
+        "add {WhichItem}",
+        "add a {WhichItem}",
+        "add {Quantity} {WhichItem}",
+        "receive",
+        "receive {WhichItem}",
+        "receive a {WhichItem}",
+        "receive {Quantity} {WhichItem}",
+        "take in",
+        "take in {WhichItem}",
+        "take in {Quantity} {WhichItem}",
+        "make",
+        "make a {WhichItem}",
+        "make {Quantity} {WhichItem}",
+        "I made",
+        "I made {WhichItem}",
+        "I made a {WhichItem}",
+        "I made {Quantity} {WhichItem}",
+        "store",
+        "store {WhichItem}",
+        "store a {WhichItem}",
+        "store {Quantity} {WhichItem}",
+        "order",
+        "order {WhichItem}",
+        "order a {WhichItem}",
+        "order {Quantity} {WhichItem}"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "QueryInventory",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "WhichItem",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "blue": [
+                  "blues",
+                  "blue box",
+                  "blue boxes",
+                  "small",
+                  "small box",
+                  "small boxes",
+                  "top box",
+                  "top boxes",
+                  "top shelf"
+                ],
+                "yellow": [
+                  "yellows",
+                  "yellow box",
+                  "yellow boxes",
+                  "medium",
+                  "mediums",
+                  "medium box",
+                  "medium boxes",
+                  "middle box",
+                  "middle boxes",
+                  "middle shelf"
+                ],
+                "green": [
+                  "greens",
+                  "green boxes",
+                  "green box",
+                  "bottom box",
+                  "bottom boxes",
+                  "big box",
+                  "big boxes",
+                  "bottom shelf",
+                  "large",
+                  "large box",
+                  "large boxes"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "Query All Items",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "ParameterValue",
+              "name": "WhichItem",
+              "value": ""
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=query",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# QueryInventory-InventoryEndpointonSuccess----d9dbbcb07a8f11ea98f0ad6093021597"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# QueryInventory-InventoryEndpointonFailure----d9dbbcb07a8f11ea98f0ad6093021597"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "None"
+        },
+        {
+          "name": "Query First Item",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "ParameterValue",
+              "name": "WhichItem",
+              "value": "blue"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=query&product={WhichItem}",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# QueryInventory-InventoryEndpointonSuccess----6c1fd190834811eab7cd072e13afe120"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# QueryInventory-InventoryEndpointonFailure----6c1fd190834811eab7cd072e13afe120"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "None"
+        },
+        {
+          "name": "Query Second Item",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "ParameterValue",
+              "name": "WhichItem",
+              "value": "yellow"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=query&product={WhichItem}",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# QueryInventory-InventoryEndpointonSuccess---6834dab0841711ea98b1037b09eb4510"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# QueryInventory-InventoryEndpointonFailure---6834dab0841711ea98b1037b09eb4510"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        },
+        {
+          "name": "Query Third Item",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "ParameterValue",
+              "name": "WhichItem",
+              "value": "green"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=query&product={WhichItem}",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# QueryInventory-InventoryEndpointonSuccess--d5dc7d60841811eab0ed53b7bb0dce0a"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# QueryInventory-InventoryEndpointonFailure--d5dc7d60841811eab0ed53b7bb0dce0a"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "triggeringExamples": [
+        "What do we have in stock?",
+        "What's the stock look like?",
+        "What's in stock?",
+        "What's in the warehouse?",
+        "What do we have?",
+        "Take stock",
+        "Query",
+        "Query inventory",
+        "Query the warehouse",
+        "Take stock of whats in the warehouse",
+        "How many {WhichItem} are in stock?",
+        "Query {WhichItem}",
+        "Count {WhichItem}",
+        "What's the count of {WhichItem}",
+        "Tell me how many {WhichItem} we have?"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "Help",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "Provide Help",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=help",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# Help-InventoryEndpointonSuccess-----7af0aec08a7211eab9dcadec9125dcbd"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# Help-InventoryEndpointonFailure-----7af0aec08a7211eab9dcadec9125dcbd"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "None"
+        }
+      ],
+      "triggeringExamples": [
+        "help",
+        "Help me",
+        "What does this do",
+        "how do i make this work?",
+        "What can I do",
+        "What can you do",
+        "What do I say",
+        "Instructions"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "Reset",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "Reset Inventory",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=reset",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# Reset-InventoryEndpointonSuccess-c36b181089ab11ea8b766165e910c2a5"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# Reset-InventoryEndpointonFailure-c36b181089ab11ea8b766165e910c2a5"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "triggeringExamples": [
+        "Reset",
+        "go back to default",
+        "undo all changes",
+        "revert all changes",
+        "Reset to starting room",
+        "restart"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "ShipEntireInventory",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "WhichItem",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "blue": [
+                  "blues",
+                  "blue box",
+                  "blue boxes",
+                  "small",
+                  "small box",
+                  "small boxes",
+                  "top box",
+                  "top boxes",
+                  "top shelf"
+                ],
+                "yellow": [
+                  "yellows",
+                  "yellow box",
+                  "yellow boxes",
+                  "medium",
+                  "mediums",
+                  "medium box",
+                  "medium boxes",
+                  "middle box",
+                  "middle boxes",
+                  "middle shelf"
+                ],
+                "green": [
+                  "greens",
+                  "green boxes",
+                  "green box",
+                  "bottom box",
+                  "bottom boxes",
+                  "big box",
+                  "big boxes",
+                  "bottom shelf",
+                  "large",
+                  "large box",
+                  "large boxes"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "Ship All First Items",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "ParameterValue",
+              "name": "WhichItem",
+              "value": "blue"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=deplete&product={WhichItem}",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipEntireInventory-InventoryEndpointonSuccess--56f581208a7811eab9dcadec9125dcbd"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipEntireInventory-InventoryEndpointonFailure--56f581208a7811eab9dcadec9125dcbd"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        },
+        {
+          "name": "Ship All Second Items",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "ParameterValue",
+              "name": "WhichItem",
+              "value": "yellow"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=deplete&product={WhichItem}",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipEntireInventory-InventoryEndpointonSuccess-c429a1808a7911ea8a979b048c43bd05"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipEntireInventory-InventoryEndpointonFailure-c429a1808a7911ea8a979b048c43bd05"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        },
+        {
+          "name": "Ship All Third Items",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "ParameterValue",
+              "name": "WhichItem",
+              "value": "green"
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=deplete&product={WhichItem}",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipEntireInventory-InventoryEndpointonSuccess-ccbce9b08a7911ea8a979b048c43bd05"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipEntireInventory-InventoryEndpointonFailure-ccbce9b08a7911ea8a979b048c43bd05"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        },
+        {
+          "name": "Ship All Items",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "ParameterValue",
+              "name": "WhichItem",
+              "value": ""
+            }
+          ],
+          "actions": [
+            {
+              "type": "CallHttpEndpoint",
+              "name": "InventoryEndpoint",
+              "content": {},
+              "parameters": "operation=deplete",
+              "onSuccess": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipEntireInventory-InventoryEndpointonSuccess-d269dad08a7911ea8a979b048c43bd05"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# ShipEntireInventory-InventoryEndpointonFailure-d269dad08a7911ea8a979b048c43bd05"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "triggeringExamples": [
+        "delete all {WhichItem}",
+        "cross out all {WhichItem}",
+        "sell all {WhichItem}",
+        "Remove all {WhichItem}",
+        "Ship all {WhichItem}",
+        "Sell all inventory",
+        "ship all stock",
+        "Sell everything in the warehouse",
+        "Ship everything in the warehouse",
+        "delete everything in the warehouse",
+        "empty the warehouse",
+        "Sell everything in stock",
+        "Ship everything in stock",
+        "delete everything in stock",
+        "empty stock",
+        "Sell everything in inventory",
+        "Ship everything in inventory",
+        "delete everything in inventory",
+        "empty inventory"
+      ],
+      "multiTurnExamples": []
+    }
+  ],
+  "modelMetadata": {
+    "modelId": "82c76e19-6397-4c90-8713-7a7e727d022e",
+    "lastTrainedModelId": "82c76e19-6397-4c90-8713-7a7e727d022e",
+    "lastPublishedModelId": "cf6b9fc5-07bf-4a47-9432-ef0cab71f251",
+    "lastPublishedVersionId": "962GYIZDFB",
+    "lastPublishedVersionIdForTest": "C7Q0SM62FC",
+    "lastTrainedVersionId": "C7Q0SM62FC",
+    "published": false,
+    "publishedForTest": true,
+    "requiresTraining": false
+  }
+}
