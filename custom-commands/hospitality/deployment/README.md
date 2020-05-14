@@ -127,11 +127,15 @@ The URL to visualize the voice command results is always in the form ```https://
 
 ## Cleaning up your Azure resources and GitHub repo
 
-When you run the script deployAll.ps1, a new Azure resource group is created, a few files on disk get automatically modified and a few new ones created. If you want to undo the effects of the script, follow the instructions below. Do that when you are done with this demo and want to clean things up. Also do the clean up if you encountered an error while running the script, and would like to re-run it. It's important to do clean up before you re-run the script.
-1. Run this command in your Powershell prompt to delete the resource group (replace MyResourceGroupName with the name you picked):
+If you want to undo the effects of the script, run this command in your Powershell prompt to delete the resource group (replace MyResourceGroupName with the name you picked):
 ```powershell
 az group delete --name MyResourceGroupName
 ```
+Do this when you are done with this demo. Also do this if you encountered an error while running the script, and would like to re-run it. It's important to do this clean up before you re-run the script.
+
+Also note that when you run the deployment script, three files on disk get automatically modified and a two new files created. They will show up as "changes not staged for commit" and "untracked files" when running ```git status```, respectively. That should not however prevent you from re-running the deployment script after deleting the Azure resource group.
+
+If you want to bring your git repo to the original state, you will need to run ```git restore``` to revert the changed files and you will need to delete the added files.
 
 ## Deploying Azure resources - deep dive
 
