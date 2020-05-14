@@ -2,7 +2,7 @@
 
 ## Overview
 
-This readme should go over setting up a Linux OS. In our example we are using Ubuntu 18.04 on a raspberry pi
+This readme should go over setting up a Linux OS. In our example we are using Ubuntu 18.04 on a [Raspberry Pi] (https://www.raspberrypi.org/).
 
 ## Useful tools
 
