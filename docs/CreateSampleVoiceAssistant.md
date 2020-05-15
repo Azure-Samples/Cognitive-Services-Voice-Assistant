@@ -24,7 +24,7 @@ We have three demos for you to select from. Read about what voice commands they 
 
 Run a Powershell script to deploy all the Azure resources needed for your selected demo, in your own Azure subscription. The script will also create and provision the selected Custom Command project.
 
-[Follow the instructions here](../custom-commands/hospitality/deployment/README.md).
+[Follow the instructions here](../custom-commands/README.md).
 
 At the end of this step, you will have the following values:
 * Azure Cognitive Services Speech subscription key (e.g. ```b587d36063dd458daea151a1b969720a```)
