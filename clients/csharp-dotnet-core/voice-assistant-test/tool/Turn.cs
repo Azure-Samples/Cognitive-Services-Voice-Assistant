@@ -43,12 +43,6 @@ namespace VoiceAssistantTest
         public string WAVFile { get; set; }
 
         /// <summary>
-        /// Gets or sets the WAVFile Duration.
-        /// </summary>
-        [JsonProperty(Order = -2, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string WAVFileDuration { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether WAVFile contains Keyword.
         /// </summary>
         [JsonProperty(Order = -2)]

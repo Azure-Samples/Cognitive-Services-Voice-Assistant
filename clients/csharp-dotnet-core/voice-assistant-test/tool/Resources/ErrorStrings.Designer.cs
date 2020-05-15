@@ -401,5 +401,14 @@ namespace VoiceAssistantTest.Resources {
                 return ResourceManager.GetString("WAV_FILE_ACTIVITY_PRESENT", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WAV file string is invalid..
+        /// </summary>
+        public static string WAV_FILE_STRING_INVALID {
+            get {
+                return ResourceManager.GetString("WAV_FILE_STRING_INVALID", resourceCulture);
+            }
+        }
     }
 }

@@ -181,8 +181,8 @@ The value following the comma is the ExpectedLengthOfSpeech in the wav file. Thi
 >>##### ExpectedResponseLatency 
 >>`string | optional | null | "500", or "500,0" or "500,1"`. The expected time the tool should have received a particular bot-response activity. If the tool did not receive that activity by this latency value, the test will fail. There are two formats for the string. The first one just includes a positive integer. In this case the bot-response that is timed is the last one expected to arrive (based on the length of the [ExpectedResponses](#ExpectedResponses) array). So for example of the length of ExpectedResponses is 3, it means the tool will wait until it receives three bot response activities. If the 3rd one was not received by the time specified by ExpectedResponseLatency, the test will fail. The second format of the string is a positive integer (the duration), followed by a comma, followed by a zero-based index. The index specifies which of the bot-response activities should be time-measured, with 0 being the first one specified in the ExpectedResponses array. This second format allows you to put an upper limit on either one of the bot responses, not just the last one.
 >>
->>##### [RealTimeAudio](###Using-RealTimeAudio)
->>`bool | optional | false | true or false`. The default behavior of PushAudioInputStream is to send the first few seconds of audio as fast as possible to accomodate for short utterances. Following audio is throttled back to prevent client from spamming the service too fast but this throttled speed is faster than real-time microphone input. Set this optional flag to true to send audio at real-time x1 speed. If this flag is set to true, the app config Timeout should be set to the duration of the longest wav file.
+>>##### [RealTimeAudio](#Measuring-User-Perceived-Latency)
+>>`bool | optional | false | true or false`. The default behavior of PushAudioInputStream is to send the first few seconds of audio as fast as possible to accomodate for short utterances. Following audio is throttled back to prevent client from spamming the service too fast but this throttled speed is faster than real-time microphone input. Set this optional flag to true to send audio at real-time (x1) speed. If this flag is set to true, the app config [Timeout](#Timeout) should be larger than the duration of the longest WAV file in the test.
 
 ## Topics
 
@@ -281,7 +281,7 @@ If the keyword has been recognized successfully, the identified keyword will be 
 
 Note that due to a bug in the way Speech SDK consumes audio from an input stream, keyword activation is limited to the first turn of the dialog. Therefore [Keyword](#keyword) can only be set to true when [TurnID](#turnid) is 0.
 
-### Using RealTimeAudio
+### Measuring User Perceived Latency
 // Will be updated
 <br>
 <br>
@@ -292,11 +292,13 @@ config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "0");
 ```
 The first property fixes the transmit speed at real time and the second removes the burst behavior at the start of speech recognition. Together they allow simulating speech recognition at real-time from an audio file.
 
-In the AppConfig, set `RealTimeAudio: true`, also to prevent the app from Timing out, you will have set the Timeout to the duration of the longest wav file example `Timeout: 7000`. By default the timeout is 5000 msec, so this may not be needed if all of the utterances are shorter than 5 seconds.
+In the AppConfig, set `RealTimeAudio: true`, also to prevent the app from Timing out, you will have set the [Timeout](#Timeout) to the duration of the longest wav file example `Timeout: 7000`. By default the timeout is 5000 msec, so this may not be needed if all of the utterances are shorter than 5 seconds.
 
-We are also logging the user perceived latency. This value is from when the session starts (SessionStarted) till when a bot activity is received (ActivityReceived). The amount of elapsed time - duration of speech in wav file.
+We are also logging the user perceived latency. This value is from when the session starts (SessionStarted) till when a bot activity is received (ActivityReceived) or when the first text-to-speech audio buffer is received (if the bot reply has a text-to-speech audio stream). UPL = amount of elapsed time - duration of speech in wav file.
 
-To get the best results, it is recommended that authored audio files should contain minimal silence at the end of speech.
+To get the best results, it is recommended that authored audio files should not have silence at the beginning of the WAV file and have at least 1 second of non speech at the end to allow proper segmentation to occur in the speech engine. 
+
+<font color="red">TODO: Polish above section (Measuring UPL)</font>
 
 ### Running tests in an Azure DevOps pipeline
 

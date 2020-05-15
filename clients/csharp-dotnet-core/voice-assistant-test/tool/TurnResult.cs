@@ -23,7 +23,6 @@ namespace VoiceAssistantTest
             this.Utterance = turn.Utterance;
             this.Activity = turn.Activity;
             this.WAVFile = turn.WAVFile;
-            this.WAVFileDuration = turn.WAVFileDuration;
             this.Keyword = turn.Keyword;
             this.ExpectedTTSAudioResponseDurations = turn.ExpectedTTSAudioResponseDurations;
             this.ExpectedResponses = turn.ExpectedResponses;

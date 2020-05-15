@@ -231,4 +231,7 @@
   <data name="WAV_FILE_ACTIVITY_PRESENT" xml:space="preserve">
     <value>Both WAV fIle and Activity field present. </value>
   </data>
+  <data name="WAV_FILE_STRING_INVALID" xml:space="preserve">
+    <value>WAV file string is invalid.</value>
+  </data>
 </root>

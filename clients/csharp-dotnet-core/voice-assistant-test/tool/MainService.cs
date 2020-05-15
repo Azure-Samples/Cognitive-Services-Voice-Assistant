@@ -327,6 +327,10 @@ namespace VoiceAssistantTest
                                         arr[1] = botConnector.LengthOfSpeechInWavFile.ToString(CultureInfo.CurrentCulture);
                                         turnResult.WAVFile = arr[0] + ", " + arr[1];
                                     }
+                                    else
+                                    {
+                                        throw new ArgumentException(ErrorStrings.WAV_FILE_STRING_INVALID);
+                                    }
                                 }
                                 else
                                 {
