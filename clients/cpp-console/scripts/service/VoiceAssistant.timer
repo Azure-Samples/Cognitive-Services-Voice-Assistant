@@ -1,5 +1,5 @@
 [Unit]
-Description=Timer for the hospitality demo
+Description=Timer for the Voice Assistant
 
 [Timer]
 OnStartupSec=45

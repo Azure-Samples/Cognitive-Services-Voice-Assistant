@@ -88,6 +88,9 @@ cd scripts
   ./sample.exe ../configs/config.json
   ```  
 
+### Installing as a service
+
+
 #### [Main Devices Readme](README.md)
 
 ### Common Troubleshooting
