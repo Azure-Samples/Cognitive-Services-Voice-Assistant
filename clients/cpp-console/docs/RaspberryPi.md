@@ -109,6 +109,15 @@ This will register a service called VoiceAssistant and a timer for that service 
 
 reboot your device to see the effect.
 
+To stop the service run:
+
+  ```sh
+  systemctl disable VoiceAssistant.timer
+  systemctl daemon-reload
+  ```
+  
+  Then reboot your device.
+  
 #### [Main Devices Readme](README.md)
 
 ### Common Troubleshooting
