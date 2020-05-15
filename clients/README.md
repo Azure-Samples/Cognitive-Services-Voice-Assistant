@@ -2,9 +2,14 @@
 
 ## Overview
 
-This folder includes sample Voice Assistant client application. Voice Assistants clients use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to manage microphone input and audio streaming to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) service and connection to your [Bot-Framework](https://dev.botframework.com/) bot. Speech SDK can also manage connection to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application. The clients can be configured for [keyword activation](https://speech.microsoft.com/customkeyword) using [keyword model files in this repository](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/keyword-models) or new ones you create. All samples support playback of the Voice Assistant's text-to-speech response.
+This folder includes sample Voice Assistant client application
+* Voice Assistants clients use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) to manage microphone input and audio streaming to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) service and connection to your [Bot-Framework](https://dev.botframework.com/) bot. 
+* Speech SDK is used to manage connection to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application.
+* All client samples support multi-turn dialogs, managing microphone state [based on hints](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#input-hint) from the bot or your Custom Command application
+* All client samples can be configured for [keyword activation](https://speech.microsoft.com/customkeyword) using [keyword model files in this repository](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/keyword-models) or new ones you create. 
+* All client samples support playback of the Voice Assistant's text-to-speech response. 
 
-For more details on each client sample, see the individual folders.
+For more details on each sample, see their individual folders.
 
 ## Client configuration
 
@@ -16,8 +21,7 @@ This is an example config.json file that shows all the common properties. If you
 {
   "SpeechSubscriptionKey": "b587d36063dd458daea151a1b969720a",
   "SpeechRegion": "westus",
-  "SRLanguage": "en-US",
-  "CustomCommandsAppId": "32d06e92-1bd0-4f3f-2c3b-8cf036d0518f",
+  "SRLanguage": "en-US",  "CustomCommandsAppId": "32d06e92-1bd0-4f3f-2c3b-8cf036d0518f",
   "CustomSREndpointId": "c31ad51b-efef-7ec6-b262-a4be7cd251f2",
   "CustomVoiceDeploymentIds": "53bcf7be-80a2-47dc-2bd3-ba6f62eccfe3",
   "UrlOverride": "",
@@ -54,3 +58,4 @@ If barge-in is NOT supported (the default option):
 * Once the Voice Assistant finishes talking, the device will resume listening for a keyword
 
 Note that in both cases, the user can always press a mic button to trigger a ListenOnceAsync call, which will immediately stop TTS playback and the client will wait for the bot to process the new utterance.
+
