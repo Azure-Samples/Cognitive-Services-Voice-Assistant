@@ -1,5 +1,5 @@
 [Unit]
-Description=Hospitality Demo service
+Description=Voice Assistant service
 
 [Service]
 Requires=connectivity-manager.service audio-manager.service

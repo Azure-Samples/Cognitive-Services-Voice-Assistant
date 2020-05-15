@@ -1,6 +1,6 @@
 @echo off
 setlocal
-cd ..
+cd ..\..
 
 mkdir out
 

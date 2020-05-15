@@ -88,6 +88,36 @@ cd scripts
   ./sample.exe ../configs/config.json
   ```  
 
+### Installing as a service
+
+There is a script in the scripts/linux directory that can be run to install the Voice Assistant sample as a service that runs at boot and tries to recover if it exits for any reason. This script makes some assumptions that you can change if you wish. This section will go over the assumptions made and what it does.
+
+The script assumes the following:
+* The config.json file in the configs directory is the one you want to use.
+* sample.exe is the name of the application you have built.
+* The build for the app is already completed.
+* /data/cppSample is the directory where the exe, binaries, configs, and keyword models will be copied.
+* You have correct configurations and confirmed the app will run without issues.
+
+To run the script you will need root permissions because we are registering a service.
+
+  ```sh
+  sudo ./installService.sh
+  ```
+
+This will register a service called VoiceAssistant and a timer for that service to start 45 seconds after boot.
+
+reboot your device to see the effect.
+
+To stop the service run:
+
+  ```sh
+  systemctl disable VoiceAssistant.timer
+  systemctl daemon-reload
+  ```
+  
+  Then reboot your device.
+  
 #### [Main Devices Readme](README.md)
 
 ### Common Troubleshooting
@@ -99,3 +129,9 @@ Add the following line to /boot/firmware/config.txt
     dtparam=audio=on
   
 Then reboot the device to ensure all settings are properly configured.
+
+## Service is not working
+
+change the startService.sh file in the directory where you installed the service (default: /data/cppSample). Change the line that says "2>/dev/null" to point to a file to log the output. "2>/data/cppSample/log.txt" In this case we just used a log.txt file in our /data/cppSample folder.
+
+Check this log for more data, but beware it will be overwritten every time the service starts. To stop the service from restarting, alter the VoiceAssistant.service file and change the Restart value to = "no". Reboot your device and the service should only attempt to run once. After this the log file should provide more information about what is wrong.
