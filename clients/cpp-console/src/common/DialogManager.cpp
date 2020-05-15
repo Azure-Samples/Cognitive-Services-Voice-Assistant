@@ -7,6 +7,7 @@
 
 using namespace std;
 using namespace Microsoft::CognitiveServices::Speech;
+using namespace Microsoft::CognitiveServices::Speech::Audio;
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
 using namespace AudioPlayer;
 
@@ -22,7 +23,17 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 void DialogManager::InitializeDialogServiceConnector()
 {
     log_t("Configuration loaded. Creating connector...");
-    _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
+    
+    // MAS stands for Microsoft Audio Stack
+    #ifdef MAS
+        auto config = _agentConfig->AsDialogServiceConfig();
+        auto audioConfig = AudioConfig::FromMicrophoneInput(_agentConfig->_linuxCaptureDeviceName);
+        config->SetProperty("MicArrayGeometryConfigFile", _agentConfig->_customMicConfigPath);
+        _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
+    #endif
+    #ifndef MAS
+        _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
+    #endif
     log_t("Connector created");
     auto future = _dialogServiceConnector->ConnectAsync();
 

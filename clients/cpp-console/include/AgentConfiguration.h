@@ -50,6 +50,8 @@ public:
     std::string _keywordDisplayName;
     std::string _logFilePath;
     std::string _barge_in_supported;
+    std::string _customMicConfigPath;
+    std::string _linuxCaptureDeviceName;
     unsigned int _volume = 0;
 
     AgentConfiguration();

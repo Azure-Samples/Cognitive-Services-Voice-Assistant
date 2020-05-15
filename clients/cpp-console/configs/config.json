@@ -7,5 +7,7 @@
   "commands_app_id": "",
   "custom_voice_deployment_ids": "",
   "log_file_path": "",
-  "barge_in_supported": "true"
+  "barge_in_supported": "true",
+  "custom_mic_config_path" :"/home/ubuntu/cpp-console/configs/micConfig.json",
+  "linux_capture_device_name": "hw:1,0"
 }
