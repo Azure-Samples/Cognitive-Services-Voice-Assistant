@@ -14,11 +14,11 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json.Linq;
 
-namespace VirtualRoomApp
+namespace HospitalityApp
 {
-    public static class RoomDemo
+    public static class HospitalityDemo
     {
-        [FunctionName("RoomDemo")]
+        [FunctionName("HospitalityDemo")]
         public static async Task<HttpResponseMessage> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log, ExecutionContext context)

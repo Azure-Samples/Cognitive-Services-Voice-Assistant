@@ -2,7 +2,7 @@
 
 # Hospitality - A Custom Commands Demo
 
-![scene image](images/hospitality-scene.png)
+![scene image](../images/hospitality-scene.png)
 
 ## Domain
 
