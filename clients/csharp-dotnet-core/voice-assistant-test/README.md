@@ -296,7 +296,15 @@ In the AppConfig, set `RealTimeAudio: true`, also to prevent the app from Timing
 
 We are also logging the user perceived latency. This value is from when the session starts (SessionStarted) till when a bot activity is received (ActivityReceived) or when the first text-to-speech audio buffer is received (if the bot reply has a text-to-speech audio stream). UPL = amount of elapsed time - duration of speech in wav file.
 
-To get the best results, it is recommended that authored audio files should not have silence at the beginning of the WAV file and have at least 1 second of non speech at the end to allow proper segmentation to occur in the speech engine. 
+To get the best results, it is recommended that authored audio files should not have silence at the beginning of the WAV file and have at least 1 second of non speech at the end to allow proper segmentation to occur in the speech engine.
+
+The [Wav file](#WavFile) string also has an optional format to specify the duration of speech in the wavfile. 
+<br>
+Example: 
+```json
+"WAVFile": "BookFlight.wav, 8000"
+```
+If the optional value (duration of speech) is omitted or incorrect, the test tool will append the [duration of recognized speech](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.recognitionresult.duration?view=azure-dotnet#Microsoft_CognitiveServices_Speech_RecognitionResult_Duration) in the ouput file.
 
 <font color="red">TODO: Polish above section (Measuring UPL)</font>
 
