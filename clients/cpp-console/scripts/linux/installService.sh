@@ -7,7 +7,7 @@ mkdir /data/cppSample
 
 cp ../../lib/arm32/* /data/cppSample
 cp ../../out/sample.exe /data/cppSample
-cp ../../configs/config.json /data/cppSample
+cp ../../configs/* /data/cppSample
 cp ../../../../keyword-models/* /data/cppSample
 cp ../service/startService.sh /data/cppSample/startService.sh
 chmod +x /data/cppSample/sample.exe

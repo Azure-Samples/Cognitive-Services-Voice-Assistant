@@ -52,4 +52,4 @@ rm -R ./SDK
 echo Done. To start the demo execute:
 echo cd ../../out
 echo export LD_LIBRARY_PATH="../lib/arm32"
-echo ./sampleMAS.exe [path_to_configFile]
+echo ./sample.exe [path_to_configFile]
