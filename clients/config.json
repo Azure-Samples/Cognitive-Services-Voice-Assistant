@@ -1,0 +1,11 @@
+{
+  "SpeechSubscriptionKey": "0123456789abcdef0123456789abcdef",
+  "SpeechRegion": "westus",
+  "SRLanguage": "en-US",
+  "CustomCommandsAppId": "",
+  "CustomSREndpointId": "",
+  "CustomVoiceDeploymentIds": "",
+  "UrlOverride":"",
+  "TTSBargeInSupported": false,
+  "SpeechSDKLogEnabled": false
+}
