@@ -144,7 +144,7 @@ speaker-test
 If you do not hear anything check the Alsa configuration
 
 ```sh
-aplay -L
+aplay -l
 ```
 
 If a USB speaker is being used it typically shows as card 1, device 0
