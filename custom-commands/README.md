@@ -1,7 +1,5 @@
 # Deploying a Sample Custom Command Application to Your Azure Subscription
 
-<p align="center">UNDER DEVELOPMENT</p>
-
 ## Things you will need
 * An Azure account. [Sign up for free](https://azure.microsoft.com/free/ai/).
 * Powershell 6.0 or greater. [Download Powershell here](https://github.com/PowerShell/PowerShell/releases). 
@@ -30,10 +28,10 @@ We assume that you read about Custom Commands and Speech SDK client applications
 If all that sounds good, continue on to deploy the resources to your Azure subscription.
 
 ## Deploying Azure resources
-Open a command prompt and clone the repository if you have not done so already. Change directory to the custom commands deployment folder:
+Open a command prompt and clone the repository if you have not done so already. Change directory to the Custom Commands scripts folder:
 ```cmd
     git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-    cd Cognitive-Services-Voice-Assistant\custom-commands\hospitality\deployment
+    cd Cognitive-Services-Voice-Assistant\custom-commands\scripts
 ```
 
 Open a Powershell 6.0 or higher administrator prompt. You will need to unrestrict Powershell's script execution policy by running the following in an administrator Powershell:
@@ -46,13 +44,16 @@ Call az login to log your Powershell into Azure. If you have more than one Azure
 ```powershell
     az login
 ```
- Run the following Powershell script. 
+ Run the following Powershell script, with the following arguments:
+ * Replace "DemoName" with one of three available values: [hospitality](hospitality/README.md), [inventory](inventory/README.md) or [automotive](automotive/README.md). Click on those links to get a description of the supported dialog and the virtual scene.
  * Replace "MyResourceGroupName" with the an Azure Resource Group name of your choice. This name should be no more than 19 characters, alphanumeric only. Make sure an Azure resource group by this name does not already exist in your subscription. This name will also be used to construct names of all the Azure resources and URL that will be associated with this Custom Commands application and visualization. Some of these names need to be globally unique, so the script will append a random number to the name you selected
- * Replace "westus" with an Azure region near you, form the list of [Voice Assistant supported regions](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#voice-assistants). Read more about Azure Regions [here](https://azure.microsoft.com/en-us/global-infrastructure/regions/). Note that if you are using a free trial Azure subscription, you are limited to Azure regions westus or northeurope
+ * Replace "AzureRegion" with an Azure region near you, form the list of [Voice Assistant supported regions](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#voice-assistants) (e.g. westus). Read more about Azure Regions [here](https://azure.microsoft.com/en-us/global-infrastructure/regions/). Note that if you are using a free trial Azure subscription, you are limited to Azure regions westus or northeurope
 ```powershell
-    ./deployAll.ps1 -resourceName MyResourceGroupName -region westus
+    ./deployAll.ps1 -appName DemoName -resourceName MyResourceGroupName -region AzureRegion
 ```
-It will take a few minutes for the scripts to run. 
+When you run the above, it will first display information derived from the above parameters, and will ask you to enter 'y' to proceed, or any other character to quit.
+
+The script may take a few minutes to run.
 
 If you see errors while running the script, refer to the [Troubleshooting](#troubleshooting) section below. Before running the script again due to errors, please [clean up your Azure resources and Github repo state](#cleaning-up-your-azure-resources-and-github-repo).
 
@@ -108,6 +109,10 @@ Write-Error: Failed to create resource group"</p>* - This may be because your fr
 * *<p style='color:red'>"The template deployment 'azuredeploy' is not valid according to the validation procedure... See inner errors for details.... Operation failed. Only one free account is allowed for account type 'SpeechServices'....  Write-Error: Failed to deploy template"</p>* - The script uses the Azure free tier (F0) when deploying Cognitive Service Azure resources. In this tier there can only be one Speech resource per subscription. If you already deployed one Custom Command demo, and you are running the script again with a different resource group name, you will get this error. There are two ways to fix this:
   * [Delete the first Azure resource group](#cleaning-up-your-azure-resources-and-github-repo) before running another deployment script if you don't need both, or
   * Find the line ```"kind": "SpeechServices"``` in the file ```azuredeploy.json``` and change F0 to S0 above it. This will remove the limitation of single speech resource per subscription, but you may be charged for it.
+* *<p style='color:red'>"You do not have the required permissions needed to perform this operation.
+Depending on your operation, you may need to be assigned one of the following roles:
+    "Storage Blob Data Contributor"
+    "Storage Blob Data Reader" ... Container upload command failed. Retrying in 30 seconds. Sometimes it takes a while for the permissions to take effect."</p>* - This is common but usually does not mean the script has failed. The script has a retry policy, so you may see this message more than once, but eventually this operation should succeed and you will see *"Uploading files to new container ... Uploading files completed!"*. Okay to ignore the error in this case. We are working to change the script to avoid showing this error.
 
 ## Retrieving client connection information and visualization URL
 
