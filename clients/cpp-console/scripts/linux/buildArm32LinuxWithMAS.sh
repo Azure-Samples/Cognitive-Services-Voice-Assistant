@@ -1,8 +1,12 @@
 #!/bin/bash
 clear
 cd ../..
-mkdir out
-mkdir SDK
+if [ ! -d out ]; then
+    mkdir out # only create directory if does not exist
+fi
+if [ ! -d SDK ]; then
+    mkdir SDK # only create directory if does not exist
+fi
 
 echo "Cleaning up libs and include directories that we will overwrite"
 rm -R ./lib/*

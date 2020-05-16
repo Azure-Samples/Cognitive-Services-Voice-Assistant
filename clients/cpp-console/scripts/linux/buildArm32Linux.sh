@@ -1,8 +1,12 @@
 #!/bin/bash
 clear
 cd ../..
-mkdir out
-mkdir SDK
+if [ ! -d out ]; then
+    mkdir out # only create directory if does not exist
+fi
+if [ ! -d SDK ]; then
+    mkdir SDK # only create directory if does not exist
+fi
 
 echo "Cleaning up libs and include directories that we will overwrite"
 rm -R ./lib/*
@@ -17,7 +21,7 @@ cp -Rf ./SDK/SpeechSDK*/* .
 
 echo "Building Raspberry Pi sample"
 g++ -Wno-psabi \
-src/common/mainAudio.cpp \
+src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
 src/common/AgentConfiguration.cpp \
@@ -45,4 +49,4 @@ rm -R ./SDK
 echo Done. To start the demo execute:
 echo cd ../../out
 echo export LD_LIBRARY_PATH="../lib/arm32"
-echo ./sampleMAS.exe [path_to_configFile]
+echo ./sample.exe [path_to_configFile]

@@ -2,8 +2,10 @@
 
 cp ../service/VoiceAssistant.service /lib/systemd/system/VoiceAssistant.service
 cp ../service/VoiceAssistant.timer /lib/systemd/system/VoiceAssistant.timer
-mkdir /data
-mkdir /data/cppSample
+
+if [ ! -d /data/cppSample ]; then
+    mkdir -p /data/cppSample # only create directory if does not exist
+fi
 
 cp ../../lib/arm32/* /data/cppSample
 cp ../../out/sample.exe /data/cppSample

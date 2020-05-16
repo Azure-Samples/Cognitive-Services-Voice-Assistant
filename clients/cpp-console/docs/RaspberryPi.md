@@ -2,19 +2,20 @@
 
 ## Overview
 
-This readme should go over setting up a Linux OS. In our example we are using Ubuntu 18.04 on a [Raspberry Pi] (https://www.raspberrypi.org/).
+This readme describes how to run the C++ client on a Linux OS. In our example we are using Ubuntu 20.04 LTS on a [Raspberry Pi](https://www.raspberrypi.org/).
 
-## Useful tools
+## SSH Clients
 
-There are many ways to do development on a Raspberry pi. It may be useful to take advantage of these tools:
+There are many ways to do development on a Raspberry pi. It may be useful to use one of these SSH clients to connect to the device:
+
 * [Visual Studio Code remote SSH plugin](https://code.visualstudio.com/docs/remote/ssh)
 * [PuTTY SSH client](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
 * [Bitvise SSH client](https://www.bitvise.com/)
 
 ## Setting up the device
 
-* Install Ubuntu Server on a Raspberry Pi, connecting it to the internet and using it remotely.
-  * [install instructions](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi)
+* Install Ubuntu on a Raspberry Pi, connecting it to the internet and using it remotely.
+  * Follow the [install instructions](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi) and choose Ubuntu 20.04 LTS, 32 bit server OS. There is no need to install a desktop.
 
 * Make sure you have speakers and a microphone attached
 
@@ -24,28 +25,29 @@ There are many ways to do development on a Raspberry pi. It may be useful to tak
 
 ## Setting up the code
 
-* Clone the Voice Assistant git repo onto your device
+* Clone the Voice Assistant git repo onto your device, it will download to /home/ubuntu/Cognitive-Services-Voice-Assistant
 
   ```sh
   git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
   ```
 
-* Download the Speech SDK: The speech SDK will be downloaded as part of the build script. Otherwise it can be found here: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
+* The speech SDK will be downloaded as part of the build script. For reference it can be found here: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
 
-* Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used (.table file), these are in /home/ubuntu/keyword-models
+* Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used (.table file), these are in /home/ubuntu/Cognitive-Services-Voice-Assistant/keyword-models
 
 ## Build directly on Linux arm32
 
 * You will need to install some packages.
 
   ```sh
-  sudo apt-get install g++ libasound2-dev
+  sudo apt-get install g++ libasound2-dev alsa-utils
   ```
 
 * Then run the build script.
 
   ```sh
-  cd scripts
+  cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux
+  chmod a+x *.sh
   ./buildArm32Linux.sh
   ```
   
@@ -60,18 +62,18 @@ Benefits include:
 * Automatic Gain Control
 * Dereverberation
 
-In order to use Microsoft Audio Stack you must specify in the config file the appropriate values. Below are the ones that we used on our Raspberry Pi:</br>
-"custom_mic_config_path" :"/home/ubuntu/cpp-console/configs/micConfig.json",
+In order to use Microsoft Audio Stack you must specify additional configuration details in the config.json. Below are the ones that we used on our Raspberry Pi:</br>
+"custom_mic_config_path" :"/home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console",</br>
 "linux_capture_device_name": "hw:1,0"
 
-An example mic config.json is included in the configs folder of this repo. For more information on how to configure your device's mic array see [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-devices-microphone-array-configuration).
+The custom_mic_config_path points to your microphone configuration file. The linux_capture_device_name is the one you intend to use, with the default of hardware 1 subdevice 0. You can use arecord -l to discover which device you have set up. [arecord](https://linux.die.net/man/1/arecord)
 
-The config path can be anything that points to the micConfig.json file, but the capture device should be the one you intend to use. In this case it is the hardwar 1 subdevice 0. You can use arecord to discover which device you have set up. [arecord](https://linux.die.net/man/1/arecord)
+Examples of a single microphone and a 4 mic linear array are included in the configs folder of this repo. For more information on how to configure your device's mic array see [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-devices-microphone-array-configuration).
 
-To build it simply run the buildArm32LinusWithMAS.sh file. This will download all necessary binaries and build the project with the MAS macro defined.
+To build it simply run buildArm32LinusWithMAS.sh. This will download all necessary binaries and build the project with MAS.
 
 ```sh
-cd scripts
+cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux
 ./buildArm32LinuxWithMAS.sh
 ```
 
@@ -82,11 +84,11 @@ cd scripts
 
 * Run the sample from the out folder
 
-  ```sh
-  cd ../out
-  export LD_LIBRARY_PATH="../lib/arm32"
-  ./sample.exe ../configs/config.json
-  ```  
+```sh
+cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/out
+export LD_LIBRARY_PATH="../lib/arm32"
+./sample.exe ../configs/config.json
+```  
 
 ### Installing as a service
 
@@ -96,12 +98,13 @@ The script assumes the following:
 * The config.json file in the configs directory is the one you want to use.
 * sample.exe is the name of the application you have built.
 * The build for the app is already completed.
-* /data/cppSample is the directory where the exe, binaries, configs, and keyword models will be copied.
+* /data/cppSample is the directory where the exe, binaries, configs, and keyword models will be copied. This directory will be created if it does not exist.
 * You have correct configurations and confirmed the app will run without issues.
 
 To run the script you will need root permissions because we are registering a service.
 
   ```sh
+  cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux
   sudo ./installService.sh
   ```
 
@@ -129,6 +132,38 @@ Add the following line to /boot/firmware/config.txt
     dtparam=audio=on
   
 Then reboot the device to ensure all settings are properly configured.
+
+## More Alsa troubleshooting
+
+To test if the audio output iw working run the speaker test
+
+```sh
+speaker-test
+```
+
+If you do not hear anything check the Alsa configuration
+
+```sh
+aplay -L
+```
+
+If a USB speaker is being used it typically shows as card 1, device 0
+
+    card 1: USB [Jabra SPEAK 410 USB], device 0: USB Audio [USB Audio]
+      Subdevices: 1/1
+      Subdevice #0: subdevice #0
+
+In that case update the Alsa configuration in /usr/share/alsa/alsa.conf to reference card 1 device 0 in the following lines
+
+    defaults.ctl.card 1
+    defaults.pcm.card 1
+    defaults.pcm.device 0
+
+Edit the alsa.conf file
+
+```sh
+sudo vi /usr/share/alsa/alsa.conf
+```
 
 ## Service is not working
 
