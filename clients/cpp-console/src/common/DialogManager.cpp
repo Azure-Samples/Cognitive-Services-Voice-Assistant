@@ -235,7 +235,7 @@ void DialogManager::StartKws()
 
     if (_keywordActivationState == KeywordActivationState::Paused)
     {
-        auto modelPath = _agentConfig->KeywordModel();
+        auto modelPath = _agentConfig->KeywordRecognitionModel();
         log_t("Initializing keyword recognition with: ", modelPath);
         auto model = KeywordRecognitionModel::FromFile(modelPath);
         auto _ = _dialogServiceConnector->StartKeywordRecognitionAsync(model);

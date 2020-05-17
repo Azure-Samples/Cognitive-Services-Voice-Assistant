@@ -40,13 +40,13 @@ enum class AgentConfigurationLoadResult
 class AgentConfiguration
 {
 public:
-    std::string _commandsAppId;
+    std::string _customCommandsAppId;
     std::string _speechKey;
     std::string _speechRegion;
     std::string _customVoiceIds;
     std::string _customSpeechId;
-    std::string _customEndpoint;
-    std::string _keywordModelPath;
+    std::string _urlOverride;
+    std::string _keywordRecognitionModel;
     std::string _keywordDisplayName;
     std::string _logFilePath;
     std::string _barge_in_supported;
@@ -60,7 +60,7 @@ public:
 
 public:
     const AgentConfigurationLoadResult LoadResult() { return _loadResult; }
-    const std::string KeywordModel() { return _keywordModelPath; }
+    const std::string KeywordRecognitionModel() { return _keywordRecognitionModel; }
     const std::string KeywordDisplayName() { return _keywordDisplayName; }
     std::string LoadMessage();
     std::shared_ptr<Microsoft::CognitiveServices::Speech::Dialog::DialogServiceConfig> AsDialogServiceConfig();
