@@ -601,7 +601,7 @@ namespace UWPVoiceAssistantSample
             var speechKeyModified = LocalSettingsHelper.SpeechSubscriptionKey != appSettings.SpeechSubscriptionKey;
             var speechRegionModified = LocalSettingsHelper.SpeechRegion != appSettings.SpeechRegion;
             var srLanguageModified = LocalSettingsHelper.SRLanguage != appSettings.SRLanguage;
-            var customSpeechIdModified = LocalSettingsHelper.CustomSREndpointId != appSettings.CustomSREndpointId;
+            var customSpeechIdModified = LocalSettingsHelper.CustomSpeechEndpointId != appSettings.CustomSpeechEndpointId;
             var customVoiceIdModified = LocalSettingsHelper.CustomVoiceDeploymentIds != appSettings.CustomVoiceDeploymentIds;
             var customCommandsAppIdModified = LocalSettingsHelper.CustomCommandsAppId != appSettings.CustomCommandsAppId;
             var botIdModified = LocalSettingsHelper.BotId != appSettings.BotId;
@@ -635,8 +635,8 @@ namespace UWPVoiceAssistantSample
 
                 if (customSpeechIdModified)
                 {
-                    LocalSettingsHelper.CustomSREndpointId = appSettings.CustomSREndpointId;
-                    this.logger.Log($"Custom Speech Id: {LocalSettingsHelper.CustomSREndpointId}");
+                    LocalSettingsHelper.CustomSpeechEndpointId = appSettings.CustomSpeechEndpointId;
+                    this.logger.Log($"Custom Speech Id: {LocalSettingsHelper.CustomSpeechEndpointId}");
                 }
 
                 if (customVoiceIdModified)

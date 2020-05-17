@@ -2,7 +2,7 @@
   "SpeechSubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
   "SpeechRegion": "westus",
   "SRLanguage": "en-US",
-  "CustomSREndpointId ": "",
+  "CustomSpeechEndpointId ": "",
   "CustomVoiceDeploymentIds": "",
   "CustomCommandsAppId": "",
   "SpeechSDKLogEnabled": false,

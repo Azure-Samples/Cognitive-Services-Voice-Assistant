@@ -83,10 +83,10 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets the optional custom speech endpoint ID as provided through Speech Studio.
         /// </summary>
-        public static string CustomSREndpointId
+        public static string CustomSpeechEndpointId
         {
-            get => ReadValueWithDefault<string>("DialogServiceConnector_customSREndpointID", string.Empty);
-            set => WriteValue("DialogServiceConnector_customSREndpointID", value);
+            get => ReadValueWithDefault<string>("DialogServiceConnector_customSpeechEndpointID", string.Empty);
+            set => WriteValue("DialogServiceConnector_customSpeechEndpointID", value);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace UWPVoiceAssistantSample
                 SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
                 SpeechRegion = appSettings.SpeechRegion;
                 SRLanguage = appSettings.SRLanguage;
-                CustomSREndpointId = appSettings.CustomSREndpointId;
+                CustomSpeechEndpointId = appSettings.CustomSpeechEndpointId;
                 CustomVoiceDeploymentIds = appSettings.CustomVoiceDeploymentIds;
                 CustomCommandsAppId = appSettings.CustomCommandsAppId;
                 UrlOverride = appSettings.UrlOverride;

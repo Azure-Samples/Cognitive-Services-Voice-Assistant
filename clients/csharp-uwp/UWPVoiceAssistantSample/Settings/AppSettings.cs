@@ -34,9 +34,9 @@ namespace UWPVoiceAssistantSample
         public string SRLanguage { get; set; }
 
         /// <summary>
-        /// Gets or sets CustomSREndpointId.
+        /// Gets or sets CustomSpeechEndpointId.
         /// </summary>
-        public string CustomSREndpointId { get; set; }
+        public string CustomSpeechEndpointId { get; set; }
 
         /// <summary>
         /// Gets or sets CustomVoiceDeploymentIds.
@@ -147,7 +147,7 @@ namespace UWPVoiceAssistantSample
 
             LogIfFalse(IsValidResourceId(instance.SpeechSubscriptionKey, optional: false), "Failed to validate speech key");
             LogIfFalse(IsValidAzureRegion(instance.SpeechRegion), "Failed to validate Azure region");
-            LogIfFalse(IsValidResourceId(instance.CustomSREndpointId, optional: true), "Failed to validate custom speech id");
+            LogIfFalse(IsValidResourceId(instance.CustomSpeechEndpointId, optional: true), "Failed to validate custom speech id");
             LogIfFalse(
                 instance.CustomVoiceDeploymentIds.Split(',')
                     .All(customVoiceId => IsValidResourceId(customVoiceId, optional: true)),
