@@ -47,10 +47,10 @@ namespace UWPVoiceAssistantSample
         /// Gets or sets a value indicating whether the chosen dialog backend should emit a log
         /// file to application local state for diagnostic purposes.
         /// </summary>
-        public static bool EnableSdkLogging
+        public static bool SpeechSDKLogEnabled
         {
-            get => ReadValueWithDefault<bool>("enableSdkLogging", false);
-            set => WriteValue("enableSdkLogging", value);
+            get => ReadValueWithDefault<bool>("speechSdkLogEnabled", false);
+            set => WriteValue("speechSdkLogEnabled", value);
         }
 
         /// <summary>
@@ -65,16 +65,25 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets the Azure service region for the selected speech subscription.
         /// </summary>
-        public static string AzureRegion
+        public static string SpeechRegion
         {
-            get => ReadValueWithDefault<string>("DialogServiceConnector_azureRegion", string.Empty);
-            set => WriteValue("DialogServiceConnector_azureRegion", value);
+            get => ReadValueWithDefault<string>("DialogServiceConnector_speechRegion", string.Empty);
+            set => WriteValue("DialogServiceConnector_speechRegion", value);
+        }
+
+        /// <summary>
+        /// Get or sets the language used by the dialog.
+        /// </summary>
+        public static string SRLanguage
+        {
+            get => ReadValueWithDefault<string>("DialogServiceConnector_srLanguage", string.Empty);
+            set => WriteValue("DialogServiceConnector_srLanguage", value);
         }
 
         /// <summary>
         /// Gets or sets the optional custom speech endpoint ID as provided through Speech Studio.
         /// </summary>
-        public static string CustomSpeechId
+        public static string CustomSREndpointId
         {
             get => ReadValueWithDefault<string>("DialogServiceConnector_customSREndpointID", string.Empty);
             set => WriteValue("DialogServiceConnector_customSREndpointID", value);
@@ -84,10 +93,10 @@ namespace UWPVoiceAssistantSample
         /// Gets or sets the optional collection of comma-separated custom voice IDs as provided
         /// through Speech Studio.
         /// </summary>
-        public static string CustomVoiceIds
+        public static string CustomVoiceDeploymentIds
         {
-            get => ReadValueWithDefault<string>("DialogServiceConnector_customVoiceID", string.Empty);
-            set => WriteValue("DialogServiceConnector_customVoiceID", value);
+            get => ReadValueWithDefault<string>("DialogServiceConnector_customVoiceDeploymentID", string.Empty);
+            set => WriteValue("DialogServiceConnector_customVoiceDeploymentID", value);
         }
 
         /// <summary>
@@ -97,6 +106,15 @@ namespace UWPVoiceAssistantSample
         {
             get => ReadValueWithDefault<string>("DialogServiceConnector_customCommandsAppID", string.Empty);
             set => WriteValue("DialogServiceConnector_customCommandsAppID", value);
+        }
+
+        /// <summary>
+        /// Gets or sets the optional URL override for enabling a flighting flag.
+        /// </summary>
+        public static Uri UrlOverride
+        {
+            get => ReadValueWithDefault<Uri>("DialogServiceConnector_urlOverride", null);
+            set => WriteValue("DialogServiceConnector_urlOverride", value);
         }
 
         /// <summary>
@@ -156,7 +174,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets the KeywordConfirmationModelPath.
         /// </summary>
-        public static string KeywordConfirmationModelPath
+        public static string KeywordRecognitionModel
         {
             get => ReadValueWithDefault<string>("keywordConfirmationModelPath", string.Empty);
             set => WriteValue("keywordConfirmationModelPath", value);
@@ -223,17 +241,20 @@ namespace UWPVoiceAssistantSample
                 AppSettings appSettings = await AppSettings.Load(configFile);
 
                 SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
-                AzureRegion = appSettings.AzureRegion;
-                CustomSpeechId = appSettings.CustomSpeechId;
-                CustomVoiceIds = appSettings.CustomVoiceIds;
+                SpeechRegion = appSettings.SpeechRegion;
+                SRLanguage = appSettings.SRLanguage;
+                CustomSREndpointId = appSettings.CustomSREndpointId;
+                CustomVoiceDeploymentIds = appSettings.CustomVoiceDeploymentIds;
                 CustomCommandsAppId = appSettings.CustomCommandsAppId;
+                UrlOverride = appSettings.UrlOverride;
+                SpeechSDKLogEnabled = appSettings.SpeechSDKLogEnabled;
                 BotId = appSettings.BotId;
                 KeywordDisplayName = appSettings.KeywordActivationModel.DisplayName;
                 KeywordActivationModelPath = appSettings.KeywordActivationModel.Path;
                 KeywordId = appSettings.KeywordActivationModel.KeywordId;
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
-                KeywordConfirmationModelPath = appSettings.KeywordModel;
+                KeywordRecognitionModel = appSettings.KeywordRecognitionModel;
             }
         }
 
