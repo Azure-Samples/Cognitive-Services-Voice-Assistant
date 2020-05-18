@@ -2,7 +2,9 @@
 
 ## Overview
 
-This readme describes how to run the C++ client on a Linux OS. In our example we are using Ubuntu 20.04 LTS on a [Raspberry Pi](https://www.raspberrypi.org/).
+This readme describes how to run the C++ client on a ARM32 Linux OS, it uses Ubuntu 20.04 LTS on a [Raspberry Pi 3 or 4](https://www.raspberrypi.org/).
+
+Note: [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) is not currently supported.
 
 ## SSH Clients
 
