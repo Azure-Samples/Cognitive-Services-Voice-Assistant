@@ -87,8 +87,15 @@ If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/
 
 If you enter the visualization URL in your browser (```https://myresourcegroupname####.blob.core.windows.net/www/demo.html?room=test1```) you will see a default scene, simulating an environment you will soon manipulate with your voice.
 
-For the Hospitality demo, you should see this scene:
-![hospitality scene](images/hospitality-scene.png)
+For the Hospitality demo, you should see something similar to this scene:
+<p align="center">
+<img src="images/hospitality-scene.png" width="360"/>
+</p>
+
+For the Inventory demo:
+<p align="center">
+<img src="images/inventory-scene.png" width="360"/>
+</p>
 
 ## See your Custom Command application in Speech Studio
 
