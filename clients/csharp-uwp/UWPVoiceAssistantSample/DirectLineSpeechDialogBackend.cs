@@ -29,7 +29,7 @@ namespace UWPVoiceAssistantSample
         private string speechKey;
         private string speechRegion;
         private string srLanguage;
-        private string customSpeechEndpointId;
+        private string customSREndpointId;
         private string customVoiceDeploymentIds;
         private string customCommandsAppId;
         private Uri urlOverride;
@@ -335,9 +335,9 @@ namespace UWPVoiceAssistantSample
             var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
             config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
 
-            if (!string.IsNullOrEmpty(this.customSpeechEndpointId))
+            if (!string.IsNullOrEmpty(this.customSREndpointId))
             {
-                config.SetServiceProperty("cid", this.customSpeechEndpointId, ServicePropertyChannel.UriQueryParameter);
+                config.SetServiceProperty("cid", this.customSREndpointId, ServicePropertyChannel.UriQueryParameter);
 
                 // Custom Speech does not support Keyword Verification - Remove line below when supported.
                 config.SetProperty("KeywordConfig_EnableKeywordVerification", "false");
@@ -362,7 +362,7 @@ namespace UWPVoiceAssistantSample
             var speechKey = LocalSettingsHelper.SpeechSubscriptionKey;
             var speechRegion = LocalSettingsHelper.SpeechRegion;
             var srLanguage = LocalSettingsHelper.SRLanguage;
-            var customSpeechEndpointId = LocalSettingsHelper.CustomSpeechEndpointId;
+            var customSREndpointId = LocalSettingsHelper.CustomSREndpointId;
             var customVoiceDeploymentIds = LocalSettingsHelper.CustomVoiceDeploymentIds;
             var customCommandsAppId = LocalSettingsHelper.CustomCommandsAppId;
             var urlOverride = LocalSettingsHelper.UrlOverride;
@@ -372,7 +372,7 @@ namespace UWPVoiceAssistantSample
             if (this.speechKey == speechKey
                 && this.speechRegion == speechRegion
                 && this.srLanguage == srLanguage
-                && this.customSpeechEndpointId == customSpeechEndpointId
+                && this.customSREndpointId == customSREndpointId
                 && this.customVoiceDeploymentIds == customVoiceDeploymentIds
                 && this.customCommandsAppId == customCommandsAppId
                 && this.urlOverride == urlOverride
@@ -385,7 +385,7 @@ namespace UWPVoiceAssistantSample
             this.speechKey = speechKey;
             this.speechRegion = speechRegion;
             this.srLanguage = srLanguage;
-            this.customSpeechEndpointId = customSpeechEndpointId;
+            this.customSREndpointId = customSREndpointId;
             this.customVoiceDeploymentIds = customVoiceDeploymentIds;
             this.customCommandsAppId = customCommandsAppId;
             this.urlOverride = urlOverride;

@@ -1,7 +1,7 @@
 {
   "SpeechSubscriptionKey": "aaaa1234bbbbccccddddeeee12345678",
   "SpeechRegion": "westus",
-  "CustomSpeechEndpointId": "",
+  "CustomSREndpointId": "",
   "CustomVoiceDeploymentIds": "",
   "CustomCommandsAppId": "",
   "SpeechSDKLogEnabled":  false,
