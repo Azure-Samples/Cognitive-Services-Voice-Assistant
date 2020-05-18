@@ -42,7 +42,7 @@ $completed = $false
 while (-not $completed) {
     
     if ($retrycount -ge $retries) {
-        Write-Error ("Creating container command failed the maximum number of {0} times." -f $retrycount)
+        Write-Error -Message ("Creating container command failed the maximum number of {0} times." -f $retrycount) -Category OperationTimeout
         exit
     }
     
