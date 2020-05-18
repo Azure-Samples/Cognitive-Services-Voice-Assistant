@@ -15,7 +15,7 @@ This page will guide you through building a sample [Voice Assistant](https://doc
 
 <p align="center">
 <a href="https://www.youtube.com/watch?v=1zr0umHGFyc">
-<img src="images/channel9videolink.png" width="394" height="231"/>
+<img src="images/channel9-video-link.png" width="394" height="231"/>
 </a>
 </p>
 
