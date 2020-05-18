@@ -36,14 +36,13 @@ if (!$output) {
 }
 
 # sometimes the container create can take a bit of time so we will retry the next step a few times.
-$retries = 5
+$retries = 10
 $retrycount = 0
 $completed = $false
 while (-not $completed) {
     
     if ($retrycount -ge $retries) {
         Write-Error ("Creating container command failed the maximum number of {0} times." -f $retrycount)
-        Write-Error "$output"
         exit
     }
     
