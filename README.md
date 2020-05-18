@@ -44,7 +44,14 @@ This repository includes everything needed to build a sample [Voice Assistant](h
 </a>
 </p>
 <p>&nbsp;</p>
-Or browse individual components per the repository content below.
+Or browse individual components per the repository content below. You may also find the following 12-minute overview video useful:
+
+<p align="center">
+<a href="https://www.youtube.com/watch?v=1zr0umHGFyc">
+<img src="docs/images/channel9videolink.png" width="316" height="185"/>
+</a>
+</p>
+
 
 <!--
 The repo has sample clients in C++, C# and Java, samples of [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes a client tool for end-to-end regression testing of a Voice Assistant system.
