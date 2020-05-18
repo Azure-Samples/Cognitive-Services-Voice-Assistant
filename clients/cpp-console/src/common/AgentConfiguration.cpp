@@ -26,7 +26,7 @@ namespace FieldNames
     constexpr auto SpeechSubscriptionKey = "SpeechSubscriptionKey";
     constexpr auto SpeechRegion = "SpeechRegion";
     constexpr auto CustomVoiceDeploymentIds = "CustomVoiceDeploymentIds";
-    constexpr auto CustomSpeechEndpointId = "CustomSpeechEndpointId";
+    constexpr auto CustomSREndpointId = "CustomSREndpointId";
     constexpr auto UrlOverride = "UrlOverride";
     constexpr auto KeywordDisplay = "Keyword";
     constexpr auto Volume = "Volume";
@@ -61,7 +61,7 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_speechRegion = j.value(FieldNames::SpeechRegion, "");
     config->_urlOverride = j.value(FieldNames::UrlOverride, "");
     config->_customVoiceIds = j.value(FieldNames::CustomVoiceDeploymentIds, "");
-    config->_customSpeechId = j.value(FieldNames::CustomSpeechEndpointId, "");
+    config->_customSREndpointId = j.value(FieldNames::CustomSREndpointId, "");
     config->_keywordRecognitionModel = j.value(FieldNames::KeywordRecognitionModel, "");
     config->_keywordDisplayName = j.value(FieldNames::KeywordDisplay, "");
     config->_logFilePath = j.value(FieldNames::LogFilePath, "");
@@ -168,9 +168,9 @@ shared_ptr<DialogServiceConfig> AgentConfiguration::CreateDialogServiceConfig()
         config->SetProperty(PropertyId::Speech_LogFilename, _logFilePath);
     }
 
-    if (_customSpeechId.length() > 0)
+    if (_customSREndpointId.length() > 0)
     {
-        config->SetServiceProperty("cid", _customSpeechId, ServicePropertyChannel::UriQueryParameter);
+        config->SetServiceProperty("cid", _customSREndpointId, ServicePropertyChannel::UriQueryParameter);
     }
 
     return config;

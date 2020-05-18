@@ -44,7 +44,7 @@ public:
     std::string _speechKey;
     std::string _speechRegion;
     std::string _customVoiceIds;
-    std::string _customSpeechId;
+    std::string _customSREndpointId;
     std::string _urlOverride;
     std::string _keywordRecognitionModel;
     std::string _keywordDisplayName;
