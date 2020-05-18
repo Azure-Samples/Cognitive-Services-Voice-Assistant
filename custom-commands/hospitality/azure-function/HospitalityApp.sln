@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualHospitalityApp", "VirtualHospitalityApp\VirtualHospitalityApp.csproj", "{6280BB0A-0855-44BA-A5A2-F4B8F6E77B90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HospitalityApp", "HospitalityApp\HospitalityApp.csproj", "{BEA1EF38-0B24-4C91-A12A-CB25329842D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6280BB0A-0855-44BA-A5A2-F4B8F6E77B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6280BB0A-0855-44BA-A5A2-F4B8F6E77B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6280BB0A-0855-44BA-A5A2-F4B8F6E77B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6280BB0A-0855-44BA-A5A2-F4B8F6E77B90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEA1EF38-0B24-4C91-A12A-CB25329842D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEA1EF38-0B24-4C91-A12A-CB25329842D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEA1EF38-0B24-4C91-A12A-CB25329842D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEA1EF38-0B24-4C91-A12A-CB25329842D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

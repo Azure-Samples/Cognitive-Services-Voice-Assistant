@@ -98,6 +98,6 @@ $storageConnectionString = az storage account show-connection-string --resource-
 
 Write-Host "Updating Connections.json with new connection string"
 $titleAppName = (Get-Culture).TextInfo.ToTitleCase($appName)
-$newFile = (Get-Content "../$appName/azure-function/Virtual$($titleAppName)App/Connections.json") | Out-String | ConvertFrom-Json
+$newFile = (Get-Content "../$appName/azure-function/$($titleAppName)App/Connections.json") | Out-String | ConvertFrom-Json
 $newFile.AZURE_STORAGE_URL = $storageConnectionString.connectionString
-$newFile | ConvertTo-Json -depth 100 | Set-Content "../$appName/azure-function/Virtual$($titleAppName)App/Connections.json"
+$newFile | ConvertTo-Json -depth 100 | Set-Content "../$appName/azure-function/$($titleAppName)App/Connections.json"

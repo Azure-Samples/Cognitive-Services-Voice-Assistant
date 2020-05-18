@@ -8,8 +8,8 @@ Param(
 $ErrorActionPreference = "Stop"
 $resourceGroup = $resourceName
 $publishZip = "publish.zip"
-$publishFolder = "../$appName/azure-function/Virtual$((Get-Culture).TextInfo.ToTitleCase($appName))App/bin/Release/netcoreapp2.1/publish"
-$sln = "../$appName/azure-function/Virtual$((Get-Culture).TextInfo.ToTitleCase($appName))App.sln"
+$publishFolder = "../$appName/azure-function/$((Get-Culture).TextInfo.ToTitleCase($appName))App/bin/Release/netcoreapp2.1/publish"
+$sln = "../$appName/azure-function/$((Get-Culture).TextInfo.ToTitleCase($appName))App.sln"
 
 Write-Host "Cleaning and building solution at $sln"
 $output = dotnet clean $sln -c Release
