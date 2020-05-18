@@ -4,14 +4,24 @@
 
 ## Domain
 
-In this demo we simulate a warehouse with inventory (boxes with different colors and sizes). We use voice to control removing or adding boxes, or query the inventory.
+In this demo we simulate a car interior, and use voice to adjust the temperature, turn on and off the seat warmers and defroster.
 
 ## Example sentences
 
 Here are a few examples. Try these or others of your choice:
-* 
+* Make it warmer
+* Change the temperature
+* Set to 72 degrees
+* Increase the temperature by 3 degrees
+* Turn the heater
+* Turn on defroster
+* Activate defroster
+* Turn if on
+* Seat heater on
+* Turn off the chair warmer
+* Deactivate seat warmer
 
-If you configured your client application to listen for a keyword, say the keyword first followed by the above (or other) sentences (e.g. "computer, turn on the lights")
+If you configured your client application to listen for a keyword, say the keyword first followed by the above (or other) sentences (e.g. "computer, turn on the seat warmer")
 
 ## Links
 

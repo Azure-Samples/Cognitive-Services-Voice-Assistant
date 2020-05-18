@@ -97,6 +97,11 @@ For the Inventory demo:
 <img src="images/inventory-scene.png" width="360"/>
 </p>
 
+For the Automotive demo:
+<p align="center">
+<img src="images/automotive-scene.png" width="360"/>
+</p>
+
 ## See your Custom Command application in Speech Studio
 
 * Open [Speech Studio](http://speech.microsoft.com)
@@ -145,9 +150,9 @@ az group delete --name MyResourceGroupName
 ```
 Do this when you are done with this demo. Also do this if you encountered an error while running the script, and would like to re-run it. It's important to do this clean up before you re-run the script.
 
-Also note that when you run the deployment script, three files on disk get automatically modified and a two new files created. They will show up as "changes not staged for commit" and "untracked files" when running ```git status```, respectively. That should not however prevent you from re-running the deployment script after deleting the Azure resource group.
+Also note that when you run the deployment script, two files on disk get automatically modified (```AutomotiveApp/Connections.json``` and ```ConnectionURLS.json```). They will show up as "changes not staged for commit" when running ```git status```. That should not however prevent you from re-running the deployment script after deleting the Azure resource group.
 
-If you want to bring your git repo to the original state, you will need to run ```git restore``` to revert the changed files and you will need to delete the added files.
+If you want to bring your git repo to the original state, you will need to run ```git restore``` to revert the two changed files.
 
 ## Deploying Azure resources - deep dive
 
