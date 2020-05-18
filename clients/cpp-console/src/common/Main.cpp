@@ -30,15 +30,23 @@ int main(int argc, char** argv)
 {
     if (argc < 2)
     {
-        log("Usage:\n", argv[0], " [config file path]\n");
+        log("Usage with Microphone Input:\n", argv[0], " config_file_path\n");
+        log("Usage with Audio File Input:\n", argv[0], " config_file_path audio_file_path\n");
         return 0;
     }
 
     string configFilePath = argv[1];
+    string wavFilePath = "";
+
+    if (argc >= 3)
+    {
+        wavFilePath = argv[2];
+    }
 
     DeviceStatusIndicators::SetStatus(DeviceStatus::Initializing);
 
     log_t("Loading configuration from file: ", configFilePath);
+
     shared_ptr<AgentConfiguration> agentConfig = AgentConfiguration::LoadFromFile(configFilePath);
     if (agentConfig->LoadResult() != AgentConfigurationLoadResult::Success)
     {
@@ -46,43 +54,58 @@ int main(int argc, char** argv)
         return (int)agentConfig->LoadResult();
     }
 
-    DialogManager dialogManager(agentConfig);
-
-    // Activate keyword listening on start up if keyword model file exists
-    if (agentConfig->KeywordModel().length() > 0)
+    // Wavfile path to send to Speech Service
+    if (wavFilePath != "")
     {
-        dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
-        dialogManager.StartKws();
+        DialogManager dialogManager(agentConfig, wavFilePath);
+        dialogManager.ListenFromFile();
     }
-    else
+    else 
     {
-        dialogManager.SetKeywordActivationState(KeywordActivationState::NotSupported);
-    }
-
-    DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
-
-    DisplayKeystrokeOptions(dialogManager);
-
-    string s = "";
-    while (s != "x")
-    {
-        cin >> s;
-        if (s == "1")
-        {
-            dialogManager.StartListening();
-        }
-        if (s == "2" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+        DialogManager dialogManager(agentConfig);
+    
+        // Activate keyword listening on start up if keyword model file exists
+        if (agentConfig->KeywordModel().length() > 0)
         {
             dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
             dialogManager.StartKws();
         }
-        if (s == "3" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+        else
         {
-            dialogManager.StopKws();
+            dialogManager.SetKeywordActivationState(KeywordActivationState::NotSupported);
         }
-        DisplayKeystrokeOptions(dialogManager);
-    }
+    
+        DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
 
+        DisplayKeystrokeOptions(dialogManager);
+
+        string input = "";
+        while (input != "x")
+        {
+            cin >> input;
+            if (wavFilePath != "")
+            {
+                if (input == "1")
+                {
+                    dialogManager.StartListening();
+                }
+                if (input == "2" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+                {
+                    dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
+                    dialogManager.StartKws();
+                }
+                if (input == "3" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+                {
+                    dialogManager.StopKws();
+                }
+                DisplayKeystrokeOptions(dialogManager);
+            }
+            else 
+            {
+                log_t("Initialized with audio file. Enter 'x' to exit.");
+            }
+        }
+    }
     cout << "Closing down and freeing variables." << endl;
 
     return 0;
