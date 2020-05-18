@@ -68,7 +68,7 @@ $newFile.AZURE_FUNCTION_URL = $functionURL
 $newFile | ConvertTo-Json -depth 100 | Set-Content “../$appName/visualization/ConnectionURLS.json”
 
 # sometimes the role assignment can take a bit of time so we will retry the next step a few times.
-$retries = 5
+$retries = 10
 $retrycount = 0
 $completed = $false
 while (-not $completed) {
