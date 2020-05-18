@@ -40,15 +40,16 @@ $retries = 5
 $retrycount = 0
 $completed = $false
 while (-not $completed) {
-    # create the actual container
-    Write-Host "Creating container ContainerName = $containerName account-name = $storageName" 
-    $output = az storage container create --account-name $storageName --name $containerName --public-access container --auth-mode login | ConvertFrom-Json
-
+    
     if ($retrycount -ge $retries) {
-        Write-Error ("Creating container command failed the maximum number of {1} times." -f $retrycount)
+        Write-Error ("Creating container command failed the maximum number of {0} times." -f $retrycount)
         Write-Error "$output"
         exit
     }
+    
+    # create the actual container
+    Write-Host "Creating container ContainerName = $containerName account-name = $storageName" 
+    $output = az storage container create --account-name $storageName --name $containerName --public-access container --auth-mode login | ConvertFrom-Json
     
     if ( !$output ) {
         Write-Host ("Creating container command failed. Retrying in 30 seconds. Sometimes it takes a while for the creation of the storage to take effect.")
