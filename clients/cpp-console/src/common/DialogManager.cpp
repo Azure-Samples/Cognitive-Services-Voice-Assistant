@@ -355,7 +355,6 @@ void DialogManager::ListenFromFile()
 {
     PushData(_audioFilePath);
     _dialogServiceConnector->ListenOnceAsync();
-    // if keyword startkws else listenonceAsync
 }
 
 void DialogManager::InitializeDialogServiceConnectorFromFile()
@@ -372,7 +371,6 @@ void DialogManager::InitializeDialogServiceConnectorFromFile()
 void DialogManager::InitializeConnection()
 {
     auto future = _dialogServiceConnector->ConnectAsync();
-
     log_t("Creating prime activity");
     nlohmann::json keywordPrimingActivity =
     {

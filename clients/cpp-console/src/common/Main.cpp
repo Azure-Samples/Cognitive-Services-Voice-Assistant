@@ -25,6 +25,7 @@ using namespace Microsoft::CognitiveServices::Speech;
 using namespace Microsoft::CognitiveServices::Speech::Audio;
 
 void DisplayKeystrokeOptions(DialogManager&);
+void HandleKeystrokeOptions(DialogManager&, string);
 
 int main(int argc, char** argv)
 {
@@ -59,6 +60,10 @@ int main(int argc, char** argv)
     {
         DialogManager dialogManager(agentConfig, wavFilePath);
         dialogManager.ListenFromFile();
+        log_t("Initialized with audio file. Enter 'x' to exit.");
+        string keystroke = "";
+        cin >> keystroke;
+        HandleKeystrokeOptions(dialogManager, keystroke);
     }
     else 
     {
@@ -78,47 +83,47 @@ int main(int argc, char** argv)
         DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
 
         DisplayKeystrokeOptions(dialogManager);
-
-        string input = "";
-        while (input != "x")
-        {
-            cin >> input;
-            if (wavFilePath != "")
-            {
-                if (input == "1")
-                {
-                    dialogManager.StartListening();
-                }
-                if (input == "2" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
-                {
-                    dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
-                    dialogManager.StartKws();
-                }
-                if (input == "3" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
-                {
-                    dialogManager.StopKws();
-                }
-                DisplayKeystrokeOptions(dialogManager);
-            }
-            else 
-            {
-                log_t("Initialized with audio file. Enter 'x' to exit.");
-            }
-        }
+        log_t("Initialized with audio file. Enter 'x' to exit.");
+        string keystroke = "";
+        cin >> keystroke;
+        HandleKeystrokeOptions(dialogManager, keystroke);
     }
-    cout << "Closing down and freeing variables." << endl;
+
+    fprintf(stdout, "Closing down and freeing variables.\n");
 
     return 0;
 }
 
 void DisplayKeystrokeOptions(DialogManager& dialogManager)
 {
-    cout << "Commands:" << endl;
-    cout << "1 [listen once]" << endl;
+    fprintf(stdout, "Commands:\n");
+    fprintf(stdout, "1 [listen once]\n");
     if (dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
     {
-        cout << "2 [start keyword listening]" << endl;
-        cout << "3 [stop keyword listening]" << endl;
+        fprintf(stdout, "2 [start keyword listening]\n");
+        fprintf(stdout, "3 [stop keyword listening]\n");
     }
-    cout << "x [exit]" << endl;
+    fprintf(stdout, "x [exit]\n");
 };
+
+void HandleKeystrokeOptions(DialogManager& dialogManager, string keystroke)
+{
+    while (keystroke != "x")
+    {
+        cin >> keystroke;
+        if (keystroke == "1")
+        {
+            dialogManager.StartListening();
+        }
+        if (keystroke == "2" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+        {
+            dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
+            dialogManager.StartKws();
+        }
+        if (keystroke == "3" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+        {
+            dialogManager.StopKws();
+        }
+        DisplayKeystrokeOptions(dialogManager);
+    }
+}
