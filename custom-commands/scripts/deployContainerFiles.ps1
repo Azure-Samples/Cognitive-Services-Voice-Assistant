@@ -36,19 +36,19 @@ if (!$output) {
 }
 
 # sometimes the container create can take a bit of time so we will retry the next step a few times.
-$retries = 5
+$retries = 10
 $retrycount = 0
 $completed = $false
 while (-not $completed) {
+    
+    if ($retrycount -ge $retries) {
+        Write-Error -Message ("Creating container command failed the maximum number of {0} times." -f $retrycount) -Category OperationTimeout
+        exit
+    }
+    
     # create the actual container
     Write-Host "Creating container ContainerName = $containerName account-name = $storageName" 
     $output = az storage container create --account-name $storageName --name $containerName --public-access container --auth-mode login | ConvertFrom-Json
-
-    if ($retrycount -ge $retries) {
-        Write-Error ("Creating container command failed the maximum number of {1} times." -f $retrycount)
-        Write-Error "$output"
-        exit
-    }
     
     if ( !$output ) {
         Write-Host ("Creating container command failed. Retrying in 30 seconds. Sometimes it takes a while for the creation of the storage to take effect.")
@@ -68,18 +68,19 @@ $newFile.AZURE_FUNCTION_URL = $functionURL
 $newFile | ConvertTo-Json -depth 100 | Set-Content “../$appName/visualization/ConnectionURLS.json”
 
 # sometimes the role assignment can take a bit of time so we will retry the next step a few times.
-$retries = 5
+$retries = 10
 $retrycount = 0
 $completed = $false
 while (-not $completed) {
+    #check for max retries
+    if ($retrycount -ge $retries) {
+        Write-Error -Message ("Container upload command failed the maximum number of {0} times." -f $retrycount) -Category OperationTimeout
+        exit
+    }
+    
     # upload the files
     Write-Host "Uploading files to new container" 
     $output = az storage blob upload-batch -d $containerName -s ../$appName/visualization --auth-mode login --account-name $storageName | ConvertFrom-Json
-    if ($retrycount -ge $retries) {
-        Write-Error ("Container upload command failed the maximum number of {1} times." -f $retrycount)
-        Write-Error "$output"
-        exit
-    }
     
     if (!$output) {
         Write-Host ("Container upload command failed. Retrying in 30 seconds. Sometimes it takes a while for the permissions to take effect.")
