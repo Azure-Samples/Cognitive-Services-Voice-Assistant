@@ -72,14 +72,15 @@ $retries = 5
 $retrycount = 0
 $completed = $false
 while (-not $completed) {
+    #check for max retries
+    if ($retrycount -ge $retries) {
+        Write-Error -Message ("Container upload command failed the maximum number of {0} times." -f $retrycount) -Category OperationTimeout
+        exit
+    }
+    
     # upload the files
     Write-Host "Uploading files to new container" 
     $output = az storage blob upload-batch -d $containerName -s ../$appName/visualization --auth-mode login --account-name $storageName | ConvertFrom-Json
-    if ($retrycount -ge $retries) {
-        Write-Error ("Container upload command failed the maximum number of {1} times." -f $retrycount)
-        Write-Error "$output"
-        exit
-    }
     
     if (!$output) {
         Write-Host ("Container upload command failed. Retrying in 30 seconds. Sometimes it takes a while for the permissions to take effect.")
