@@ -49,7 +49,7 @@ int main(int argc, char** argv)
     DialogManager dialogManager(agentConfig);
 
     // Activate keyword listening on start up if keyword model file exists
-    if (agentConfig->KeywordModel().length() > 0)
+    if (agentConfig->KeywordRecognitionModel().length() > 0)
     {
         dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
         dialogManager.StartKws();
