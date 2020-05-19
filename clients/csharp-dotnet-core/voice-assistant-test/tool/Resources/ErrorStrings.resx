@@ -184,7 +184,7 @@
     <value>Expected Latency string is malformed - not a valid expected latency.</value>
   </data>
   <data name="LATENCY_STRING_PRESENT" xml:space="preserve">
-    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedResponseLatency.</value>
+    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedUserPerceivedLatency.</value>
   </data>
   <data name="NEGATIVE_SLEEP_DURATION" xml:space="preserve">
     <value>Sleep duration cannot be a negative number.</value>

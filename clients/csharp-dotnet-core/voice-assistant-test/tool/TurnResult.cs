@@ -26,7 +26,7 @@ namespace VoiceAssistantTest
             this.Keyword = turn.Keyword;
             this.ExpectedTTSAudioResponseDurations = turn.ExpectedTTSAudioResponseDurations;
             this.ExpectedResponses = turn.ExpectedResponses;
-            this.ExpectedResponseLatency = turn.ExpectedResponseLatency;
+            this.ExpectedUserPerceivedLatency = turn.ExpectedUserPerceivedLatency;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace VoiceAssistantTest
         public string ActualRecognizedText { get; set; }
 
         /// <summary>
-        /// Gets or sets the Actual TTS Audio Reponse Duratio (in milliseconds).
+        /// Gets or sets the Actual TTS Audio Response Duration (in milliseconds).
         /// </summary>
         [JsonProperty(Order = 7, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<int> ActualTTSAudioResponseDurations { get; set; }
@@ -50,8 +50,8 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.
         /// </summary>
-        [JsonProperty(Order = 9)]
-        public int ActualResponseLatency { get; set; }
+        [JsonProperty(Order = 8)]
+        public int ActualUserPerceivedLatency { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Actual Responses match Expected Responses.
@@ -72,10 +72,10 @@ namespace VoiceAssistantTest
         public bool TTSAudioResponseDurationMatch { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether ActualResponseLatency is less than ExpectedResponseLatency.
+        /// Gets or sets a value indicating whether ActualUserPerceivedLatency is less than ExpectedUserPerceivedLatency.
         /// </summary>
         [JsonProperty(Order = 11)]
-        public bool ResponseLatencyMatch { get; set; }
+        public bool UserPerceivedLatencyMatch { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Keyword was verified by Speech Service.

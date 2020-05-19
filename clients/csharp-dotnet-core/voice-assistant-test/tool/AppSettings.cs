@@ -138,6 +138,11 @@ namespace VoiceAssistantTest
         public JObject SetServiceProperty { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to send audio in real time through PushAudioInputStream.
+        /// </summary>
+        public bool RealTimeAudio { get; set; }
+
+        /// <summary>
         /// Obtain values from AppSettings.json and populate an instance with associated values.
         /// </summary>
         /// <param name="configFile">Input JSON configuration file.</param>

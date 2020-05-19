@@ -56,6 +56,16 @@ namespace VoiceAssistantTest
         /// </summary>
         public string RecognizedKeyword { get; set; }
 
+        /// <summary>
+        /// Gets or sets the actual length of speech in WavFile obtained from RecognizedSpeech event.
+        /// </summary>
+        public int LengthOfSpeechInWavFile { get; set; }
+
+        /// <summary>
+        /// Gets or sets the time in milliseconds between SessionStarted and ActivityReceived events.
+        /// </summary>
+        public int UserPerceivedLatency { get; set; }
+
         private List<BotReply> BotReplyList { get; set; }
 
         /// <summary>
@@ -146,6 +156,12 @@ namespace VoiceAssistantTest
                 {
                     config.SetServiceProperty(setServicePropertyPair.Key.ToString(CultureInfo.CurrentCulture), setServicePropertyPair.Value.ToString(), ServicePropertyChannel.UriQueryParameter);
                 }
+            }
+
+            if (this.appsettings.RealTimeAudio)
+            {
+                config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100");
+                config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "0");
             }
 
             if (this.connector != null)
@@ -529,11 +545,9 @@ namespace VoiceAssistantTest
             if (e.Result.Reason == ResultReason.RecognizedSpeech)
             {
                 this.RecognizedText = e.Result.Text;
+                this.LengthOfSpeechInWavFile = (int)e.Result.Duration.TotalMilliseconds;
 
                 Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
-
-                this.stopWatch.Restart();
-                this.elapsedTime = 0;
             }
             else if (e.Result.Reason == ResultReason.RecognizedKeyword)
             {
@@ -562,6 +576,8 @@ namespace VoiceAssistantTest
 
             this.elapsedTime += (int)this.stopWatch.ElapsedMilliseconds;
 
+            this.UserPerceivedLatency = this.elapsedTime - this.LengthOfSpeechInWavFile;
+
             int activityIndex = 0;
             int ttsDuration = 0;
 
@@ -570,6 +586,8 @@ namespace VoiceAssistantTest
                 this.BotReplyList.Add(new BotReply(activity, this.elapsedTime, false));
                 activityIndex = this.BotReplyList.Count - 1;
             }
+
+            this.elapsedTime = 0;
 
             if (e.HasAudio)
             {
@@ -600,6 +618,7 @@ namespace VoiceAssistantTest
 
         private void SpeechBotConnector_SessionStarted(object sender, SessionEventArgs e)
         {
+            this.stopWatch.Start();
             Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Session Started event received. SessionId = {e.SessionId}");
         }
 
