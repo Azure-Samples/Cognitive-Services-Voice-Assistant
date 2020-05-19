@@ -259,7 +259,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedResponseLatency..
+        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedUserPerceivedLatency..
         /// </summary>
         public static string LATENCY_STRING_PRESENT {
             get {
@@ -399,15 +399,6 @@ namespace VoiceAssistantTest.Resources {
         public static string WAV_FILE_ACTIVITY_PRESENT {
             get {
                 return ResourceManager.GetString("WAV_FILE_ACTIVITY_PRESENT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to WAV file string is invalid..
-        /// </summary>
-        public static string WAV_FILE_STRING_INVALID {
-            get {
-                return ResourceManager.GetString("WAV_FILE_STRING_INVALID", resourceCulture);
             }
         }
     }

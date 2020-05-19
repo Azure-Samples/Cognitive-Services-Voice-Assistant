@@ -65,6 +65,6 @@ namespace VoiceAssistantTest
         /// Gets or sets the Maximum Latency for responses from the bot.
         /// </summary>
         [JsonProperty(Order = 8, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string ExpectedResponseLatency { get; set; }
+        public string ExpectedUserPerceivedLatency { get; set; }
     }
 }

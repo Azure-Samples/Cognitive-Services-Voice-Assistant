@@ -243,29 +243,29 @@ namespace VoiceAssistantTest
 
             if (bootstrapMode)
             {
-                // In bootstrapping mode, ExpectedResponses field does not exist (or is null), and ExpectedResponseLatency does not exist
+                // In bootstrapping mode, ExpectedResponses field does not exist (or is null), and ExpectedUserPerceivedLatency does not exist
                 if (this.BotResponses.Count > 0)
                 {
                     // Report the latency of the last bot response
-                    turnsOutput.ActualResponseLatency = this.BotResponses[this.BotResponses.Count - 1].Latency;
+                    turnsOutput.ActualUserPerceivedLatency = this.BotResponses[this.BotResponses.Count - 1].Latency;
                 }
             }
             else
             {
-                // In normal mode, ExpectedResponses exists with one or more activities. ExpectedResponseLatency may or may not exist
+                // In normal mode, ExpectedResponses exists with one or more activities. ExpectedUserPerceivedLatency may or may not exist
                 int activityIndexForLatency = 0;
 
-                if (string.IsNullOrWhiteSpace(turnsOutput.ExpectedResponseLatency))
+                if (string.IsNullOrWhiteSpace(turnsOutput.ExpectedUserPerceivedLatency))
                 {
                     activityIndexForLatency = turn.ExpectedResponses.Count - 1;
                 }
                 else
                 {
-                    if (turnsOutput.ExpectedResponseLatency.Split(",").Length == 2)
+                    if (turnsOutput.ExpectedUserPerceivedLatency.Split(",").Length == 2)
                     {
                         // The user has specified an expected response latency in the two-integer string format "latency,index". Extract the index
                         // Note: the index has already been verified to be in the range [0, turns.ExpectedResponses.Count - 1]
-                        activityIndexForLatency = int.Parse(turnsOutput.ExpectedResponseLatency.Split(",")[1], CultureInfo.CurrentCulture);
+                        activityIndexForLatency = int.Parse(turnsOutput.ExpectedUserPerceivedLatency.Split(",")[1], CultureInfo.CurrentCulture);
                     }
                     else
                     {
@@ -276,7 +276,7 @@ namespace VoiceAssistantTest
 
                 if (activityIndexForLatency < this.BotResponses.Count)
                 {
-                    turnsOutput.ActualResponseLatency = this.BotResponses[activityIndexForLatency].Latency;
+                    turnsOutput.ActualUserPerceivedLatency = this.BotResponses[activityIndexForLatency].Latency;
                 }
             }
 
@@ -299,7 +299,7 @@ namespace VoiceAssistantTest
                 turnResult.ResponseMatch = true;
                 turnResult.UtteranceMatch = true;
                 turnResult.TTSAudioResponseDurationMatch = true;
-                turnResult.ResponseLatencyMatch = true;
+                turnResult.UserPerceivedLatencyMatch = true;
                 int margin = this.appSettings.TTSAudioDurationMargin;
 
                 if (!string.IsNullOrWhiteSpace(turnResult.WAVFile) && !string.IsNullOrWhiteSpace(turnResult.Utterance))
@@ -345,17 +345,17 @@ namespace VoiceAssistantTest
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(turnResult.ExpectedResponseLatency) && turnResult.ActualResponseLatency > 0)
+                if (!string.IsNullOrWhiteSpace(turnResult.ExpectedUserPerceivedLatency) && turnResult.ActualUserPerceivedLatency > 0)
                 {
-                    int expectedResponseLatency = int.Parse(turnResult.ExpectedResponseLatency.Split(",")[0], CultureInfo.CurrentCulture);
-                    if (turnResult.ActualResponseLatency > expectedResponseLatency)
+                    int expectedUserPerceivedLatency = int.Parse(turnResult.ExpectedUserPerceivedLatency.Split(",")[0], CultureInfo.CurrentCulture);
+                    if (turnResult.ActualUserPerceivedLatency > expectedUserPerceivedLatency)
                     {
-                        Trace.TraceInformation($"Actual bot response latency {turnResult.ActualResponseLatency} msec exceeds expected latency {expectedResponseLatency} msec");
-                        turnResult.ResponseLatencyMatch = false;
+                        Trace.TraceInformation($"Actual bot response latency {turnResult.ActualUserPerceivedLatency} msec exceeds expected latency {expectedUserPerceivedLatency} msec");
+                        turnResult.UserPerceivedLatencyMatch = false;
                     }
                 }
 
-                turnResult.Pass = turnResult.ResponseMatch && turnResult.UtteranceMatch && turnResult.TTSAudioResponseDurationMatch && turnResult.ResponseLatencyMatch;
+                turnResult.Pass = turnResult.ResponseMatch && turnResult.UtteranceMatch && turnResult.TTSAudioResponseDurationMatch && turnResult.UserPerceivedLatencyMatch;
             }
 
             this.DisplayTestResultMessage(turnResult);
@@ -438,7 +438,7 @@ namespace VoiceAssistantTest
                 string failMessage = $"Turn failed (DialogId {this.DialogID}, TurnID {turnResult.TurnID}) due to: ";
                 bool commaNeeded = false;
 
-                if (!turnResult.ResponseLatencyMatch)
+                if (!turnResult.UserPerceivedLatencyMatch)
                 {
                     failMessage += "latency mismatch";
                     commaNeeded = true;

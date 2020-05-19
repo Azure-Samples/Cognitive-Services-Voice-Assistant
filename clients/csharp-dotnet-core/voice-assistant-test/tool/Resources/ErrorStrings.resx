@@ -184,7 +184,7 @@
     <value>Expected Latency string is malformed - not a valid expected latency.</value>
   </data>
   <data name="LATENCY_STRING_PRESENT" xml:space="preserve">
-    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedResponseLatency.</value>
+    <value>When ExpectedResponses is missing or an empty array ("bootstraping mode"), you should not specify ExpectedUserPerceivedLatency.</value>
   </data>
   <data name="NEGATIVE_SLEEP_DURATION" xml:space="preserve">
     <value>Sleep duration cannot be a negative number.</value>
@@ -230,8 +230,5 @@
   </data>
   <data name="WAV_FILE_ACTIVITY_PRESENT" xml:space="preserve">
     <value>Both WAV fIle and Activity field present. </value>
-  </data>
-  <data name="WAV_FILE_STRING_INVALID" xml:space="preserve">
-    <value>WAV file string is invalid.</value>
   </data>
 </root>
