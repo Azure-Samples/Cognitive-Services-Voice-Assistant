@@ -127,9 +127,12 @@ namespace UWPVoiceAssistantSample
                 "westus2",
                 "eastus",
                 "eastus2",
+                "westcentralus",
                 "westeurope",
                 "northeurope",
                 "southeastasia",
+                "eastasia",
+                "centralindia",
             }.Contains(region, StringComparer.CurrentCultureIgnoreCase);
 
         /// <summary>
