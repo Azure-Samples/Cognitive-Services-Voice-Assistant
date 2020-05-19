@@ -150,7 +150,7 @@ az group delete --name MyResourceGroupName
 ```
 Do this when you are done with this demo. Also do this if you encountered an error while running the script, and would like to re-run it. It's important to do this clean up before you re-run the script.
 
-Also note that when you run the deployment script, two files on disk get automatically modified (```AutomotiveApp/Connections.json``` and ```ConnectionURLS.json```). They will show up as "changes not staged for commit" when running ```git status```. That should not however prevent you from re-running the deployment script after deleting the Azure resource group.
+Also note that when you run the deployment script, two files on disk get automatically modified (```Connections.json``` and ```ConnectionURLS.json```). They will show up as "changes not staged for commit" when running ```git status```. That should not however prevent you from re-running the deployment script after deleting the Azure resource group.
 
 If you want to bring your git repo to the original state, you will need to run ```git restore``` to revert the two changed files.
 
