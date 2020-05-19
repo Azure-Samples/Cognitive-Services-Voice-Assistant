@@ -77,6 +77,14 @@ The config.json file in this project should be updated with the credentials you 
 
 Note: The Speech Key and any other resource integrations must be registered in the same Azure Region.
 
+#### Generating Keyword Spotting Performance Metrics
+
+An optional key can be added to generate a performance log for your keyword activation and confirmation models. In the config.json add **EnableKwsLogging: true**. This is create a csv file with timestamps indicating if the keyword was accepted or rejected for each stage. 
+If your first stage keyword model is a hardware keyword, the bin file can be omitted in config.json and two optional parameters will need to be set. 
+**EnableHardwareDetector: true** and **SetModelData: false**.
+<br>
+By default, EnableKwsLogging and EnableHardwareDetector are false and SetModelData is true.
+
 ## Modifying the sample
 
 ### Using a Custom Wake Word
