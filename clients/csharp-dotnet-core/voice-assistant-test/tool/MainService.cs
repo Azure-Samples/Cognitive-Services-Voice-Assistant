@@ -315,31 +315,7 @@ namespace VoiceAssistantTest
                             testPass = false;
                         }
 
-                        if (turn.WAVFile != null)
-                        {
-                            if (!string.IsNullOrEmpty(turn.WAVFile))
-                            {
-                                if (turn.WAVFile.Contains(",", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    if (turnResult.WAVFile.Split(",").Length == 2)
-                                    {
-                                        string[] arr = turnResult.WAVFile.Split(",");
-                                        arr[1] = botConnector.LengthOfSpeechInWavFile.ToString(CultureInfo.CurrentCulture);
-                                        turnResult.WAVFile = arr[0] + ", " + arr[1];
-                                    }
-                                    else
-                                    {
-                                        throw new ArgumentException(ErrorStrings.WAV_FILE_STRING_INVALID);
-                                    }
-                                }
-                                else
-                                {
-                                    turnResult.WAVFile = turnResult.WAVFile + $", {botConnector.LengthOfSpeechInWavFile}";
-                                }
-                            }
-                        }
-
-                        turnResult.ActualUserPerceivedLatency = botConnector.UserPerceivedLatency;
+                        turnResult.UserPerceivedLatency = botConnector.UserPerceivedLatency;
 
                         // Add the turn result to the list of turn results.
                         turnResults.Add(turnResult);

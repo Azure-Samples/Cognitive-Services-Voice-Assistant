@@ -51,7 +51,7 @@ namespace VoiceAssistantTest
         /// Gets or sets the actual user perceived latency (in milliseconds).
         /// </summary>
         [JsonProperty(Order = 8, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int ActualUserPerceivedLatency { get; set; }
+        public int UserPerceivedLatency { get; set; }
 
         /// <summary>
         /// Gets or sets the actual latency recorded for the response marked for measurement.

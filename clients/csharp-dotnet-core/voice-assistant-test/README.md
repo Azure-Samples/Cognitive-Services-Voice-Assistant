@@ -117,6 +117,9 @@ Here is the full list:
 >#### SetServiceProperty
 >`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the Speech Service. Each pair results in a call to [DialogServiceConfig.SetServiceProperty(String, String, ServicePropertyChannel)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setserviceproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetServiceProperty_System_String_System_String_Microsoft_CognitiveServices_Speech_ServicePropertyChannel_), where ServicePropertyChannel is set to ServicePropertyChannel.UriQueryParameter. Or the equivalent method on CustomCommandsConfig for custom command applications. For more detail, see the section [Custom Settings](#custom-settings)
 
+>#### [RealTimeAudio](#Measuring-User-Perceived-Latency)
+>`bool | optional | false | true or false`. The default behavior of PushAudioInputStream is to send the first few seconds of audio as fast as possible to accomodate for short utterances. Following audio is throttled back to prevent client from spamming the service too fast but this throttled speed is faster than real-time microphone input. Set this optional flag to true to send audio at real-time (x1) speed. If this flag is set to true, the app config [Timeout](#Timeout) should be larger than the duration of the longest WAV file in the test.
+
 >#### Tests
 >`JSON string | required | [{"FileName":"MyTestFile.json", "SingleConnection": true}]`. An array of JSON objects, each related to a single test configuration. Each of these JSON objects includes:
 >
@@ -163,8 +166,7 @@ Here is the full list:
 >>`string | optional | null | "what is the weather tomorrow?"`. The field has two usages. If [WavFile](#wavfile) is not specified, this is the text that will be sent up to the bot as a Bot-Framework activity of type "message". Representing a user typed-text input. If [WavFile](#wavfile) is defined, this is the expected recognition result of the audio in the WAV file. If the recognition result does not match what is specified in this field, the test will fail. Note that the text comparison in this case is done while ignoring punctuation marks, upper/lower case differences and white space.
 >>
 >>##### WavFile
->>` string | optional | null | "test1.WAV" or "test1.WAV,750"`. Audio from this WAV file is streaming to Direct Line Speech as the input in the turn, by calling the [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet) method (or [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet) method if [Keyword](#keyword) is true). This represents a user speaking to a microphone. It's good practice to have at least one second of silence (non speech) at the end of the WAV file to make sure the speech service properly detects end-of-speech, as it would with a live audio stream from a microphone. When this field is present, you can specify the expected recognition result in the [Utterance](#utterance) field.
-The value following the comma is the ExpectedLengthOfSpeech in the wav file. This value is optional and will be added to the WavFile string in the output file.
+>>` string | optional | null | "test1.WAV"`. Audio from this WAV file is streaming to Direct Line Speech as the input in the turn, by calling the [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet) method (or [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet) method if [Keyword](#keyword) is true). This represents a user speaking to a microphone. It's good practice to have at least one second of silence (non speech) at the end of the WAV file to make sure the speech service properly detects end-of-speech, as it would with a live audio stream from a microphone. When this field is present, you can specify the expected recognition result in the [Utterance](#utterance) field.
 >>
 >>##### Activity
 >>`JSON string | optional | null | "{\"type\": \"message\",\"text\":\"Test sending text via activity\"}"`. A bot-framework JSON activity string. If this field is specified, you cannot specify the [WavFile](#wavfile) or [Utterance](#utterance) fields. Use this to send any custom activity to your bot using the [SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet) method.
@@ -180,9 +182,6 @@ The value following the comma is the ExpectedLengthOfSpeech in the wav file. Thi
 >>
 >>##### ExpectedResponseLatency 
 >>`string | optional | null | "500", or "500,0" or "500,1"`. The expected time the tool should have received a particular bot-response activity. If the tool did not receive that activity by this latency value, the test will fail. There are two formats for the string. The first one just includes a positive integer. In this case the bot-response that is timed is the last one expected to arrive (based on the length of the [ExpectedResponses](#ExpectedResponses) array). So for example of the length of ExpectedResponses is 3, it means the tool will wait until it receives three bot response activities. If the 3rd one was not received by the time specified by ExpectedResponseLatency, the test will fail. The second format of the string is a positive integer (the duration), followed by a comma, followed by a zero-based index. The index specifies which of the bot-response activities should be time-measured, with 0 being the first one specified in the ExpectedResponses array. This second format allows you to put an upper limit on either one of the bot responses, not just the last one.
->>
->>##### [RealTimeAudio](#Measuring-User-Perceived-Latency)
->>`bool | optional | false | true or false`. The default behavior of PushAudioInputStream is to send the first few seconds of audio as fast as possible to accomodate for short utterances. Following audio is throttled back to prevent client from spamming the service too fast but this throttled speed is faster than real-time microphone input. Set this optional flag to true to send audio at real-time (x1) speed. If this flag is set to true, the app config [Timeout](#Timeout) should be larger than the duration of the longest WAV file in the test.
 
 ## Topics
 
@@ -294,17 +293,9 @@ The first property fixes the transmit speed at real time and the second removes 
 
 In the AppConfig, set `RealTimeAudio: true`, also to prevent the app from Timing out, you will have set the [Timeout](#Timeout) to the duration of the longest wav file example `Timeout: 7000`. By default the timeout is 5000 msec, so this may not be needed if all of the utterances are shorter than 5 seconds.
 
-We are also logging the user perceived latency. This value is from when the session starts (SessionStarted) till when a bot activity is received (ActivityReceived) or when the first text-to-speech audio buffer is received (if the bot reply has a text-to-speech audio stream). UPL = amount of elapsed time - duration of speech in wav file.
+We are also logging the user perceived latency. This value is from when the session starts (SessionStarted) till when a bot activity is received (ActivityReceived) or when the first text-to-speech audio buffer is received (if the bot reply has a text-to-speech audio stream). UPL = amount of elapsed time - duration of speech in wav file. This (UserPerceivedLatency) value is logged in the TestOutput. 
 
 To get the best results, it is recommended that authored audio files should not have silence at the beginning of the WAV file and have at least 1 second of non speech at the end to allow proper segmentation to occur in the speech engine.
-
-The [Wav file](#WavFile) string also has an optional format to specify the duration of speech in the wavfile. 
-<br>
-Example: 
-```json
-"WAVFile": "BookFlight.wav, 8000"
-```
-If the optional value (duration of speech) is omitted or incorrect, the test tool will append the [duration of recognized speech](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.recognitionresult.duration?view=azure-dotnet#Microsoft_CognitiveServices_Speech_RecognitionResult_Duration) in the ouput file.
 
 <font color="red">TODO: Polish above section (Measuring UPL)</font>
 
