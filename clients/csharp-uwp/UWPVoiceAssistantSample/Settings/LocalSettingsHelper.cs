@@ -7,10 +7,9 @@ namespace UWPVoiceAssistantSample
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Newtonsoft.Json.Linq;
     using UWPVoiceAssistantSample.AudioCommon;
-    using Windows.ApplicationModel;
     using Windows.Storage;
-    using Windows.UI.Xaml;
 
     /// <summary>
     /// A convenience wrapper for getting and setting well-known properties from AppLocal settings.
@@ -180,6 +179,28 @@ namespace UWPVoiceAssistantSample
             set => WriteValue("keywordConfirmationModelPath", value);
         }
 
+        /// <summary>
+        /// Gets or sets the property Id for BotFrameworkConfig.
+        /// </summary>
+        public static JObject SetProperty { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether kws logging is enabled or disabled.
+        /// </summary>
+        public static bool EnableKwsLogging { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use 1st stage hardware keyword spotter.
+        /// </summary>
+        public static bool EnableHardwareDetector { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to set model data for a keyword configuration.
+        /// Set this value to false if using a keyword including in the windows image.
+        /// AAR will load it from system folder. No need to reset it.
+        /// </summary>
+        public static bool SetModelData { get; set; }
+
         public static DialogAudio OutputFormat
         {
             get
@@ -255,6 +276,10 @@ namespace UWPVoiceAssistantSample
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
                 KeywordRecognitionModel = appSettings.KeywordRecognitionModel;
+                SetProperty = appSettings.SetProperty;
+                EnableKwsLogging = appSettings.EnableKwsLogging;
+                EnableHardwareDetector = appSettings.EnableHardwareDetector;
+                SetModelData = appSettings.SetModelData;
             }
         }
 

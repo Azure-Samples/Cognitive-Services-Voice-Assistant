@@ -9,6 +9,7 @@ namespace UWPVoiceAssistantSample
     using System.Linq;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Windows.Storage;
 
     /// <summary>
@@ -75,6 +76,28 @@ namespace UWPVoiceAssistantSample
         public string KeywordRecognitionModel { get; set; }
 
         /// <summary>
+        /// Gets or sets the property Id for BotFrameworkConfig.
+        /// </summary>
+        public JObject SetProperty { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether kws logging is enabled or disabled.
+        /// </summary>
+        public bool EnableKwsLogging { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use 1st stage hardware keyword spotter.
+        /// </summary>
+        public bool EnableHardwareDetector { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to set model data for a keyword configuration.
+        /// Set this value to false if using a keyword including in the windows image.
+        /// AAR will load it from system folder. No need to reset it.
+        /// </summary>
+        public bool SetModelData { get; set; }
+
+        /// <summary>
         /// Reads and deserializes the configuration file.
         /// </summary>
         /// <param name="configFile">config.json.</param>
@@ -104,9 +127,12 @@ namespace UWPVoiceAssistantSample
                 "westus2",
                 "eastus",
                 "eastus2",
+                "westcentralus",
                 "westeurope",
                 "northeurope",
                 "southeastasia",
+                "eastasia",
+                "centralindia",
             }.Contains(region, StringComparer.CurrentCultureIgnoreCase);
 
         /// <summary>

@@ -77,6 +77,23 @@ The config.json file in this project should be updated with the credentials you 
 
 Note: The Speech Key and any other resource integrations must be registered in the same Azure Region.
 
+#### Generating Keyword Spotting Performance Metrics
+
+An optional key can be added to generate a performance log for your keyword activation and confirmation models. In the config.json add **EnableKwsLogging: true**. This will create a csv file with timestamps indicating if the keyword was accepted or rejected for each stage found in the LocalState Folder. 
+If your first stage keyword model is a hardware keyword, the bin file can be omitted in config.json and two optional parameters will need to be set. 
+**EnableHardwareDetector: true** and **SetModelData: false**.
+<br>
+By default, EnableKwsLogging and EnableHardwareDetector are false and SetModelData is true.
+
+#### Enabling KWS+KWV+SR only mode
+
+Each utterance returns a bot response, this response can be ignored by the client by adding a property to the DialogServiceConnector object. When using this property you will have to set the SpeechRegion to an empty string and the following in the SetProperty key:
+```json
+  "SetProperty": {
+    "SPEECH-Endpoint": "wss://westus.convai.speech.microsoft.com/orchestrate/api/v1"
+  }
+```
+
 ## Modifying the sample
 
 ### Using a Custom Wake Word

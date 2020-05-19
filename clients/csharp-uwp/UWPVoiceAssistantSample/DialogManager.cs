@@ -7,6 +7,7 @@ namespace UWPVoiceAssistantSample
     using System.Diagnostics.Contracts;
     using System.Threading;
     using System.Threading.Tasks;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
 
     /// <summary>
@@ -25,6 +26,7 @@ namespace UWPVoiceAssistantSample
     public class DialogManager<TInputType> : IDialogManager, IDisposable
     {
         private ILogProvider logger;
+        private KwsPerformanceLogger kwsPerformanceLogger;
         private IDialogBackend<TInputType> dialogBackend;
         private IDialogAudioInputProvider<TInputType> dialogAudioInput;
         private IDialogAudioOutputAdapter dialogAudioOutput;
@@ -51,6 +53,7 @@ namespace UWPVoiceAssistantSample
             Contract.Requires(dialogBackend != null);
             Contract.Requires(agentSessionManager != null);
             this.logger = LogRouter.GetClassLogger();
+            this.kwsPerformanceLogger = new KwsPerformanceLogger();
             this.dialogBackend = dialogBackend;
             this.dialogBackend.SessionStarted += (id)
                 => this.logger.Log($"DialogManager: Session start: {id}");
@@ -306,6 +309,8 @@ namespace UWPVoiceAssistantSample
                 : ConversationalAgentState.Listening;
             await this.ChangeAgentStateAsync(newState);
 
+            KwsPerformanceLogger.KwsStartTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
+
             await this.dialogBackend.StartAudioTurnAsync(signalVerificationRequired);
 
             var audioToSkip = signalVerificationRequired
@@ -391,7 +396,6 @@ namespace UWPVoiceAssistantSample
                 await this.StopAudioCaptureAsync();
                 this.logger.Log($"Failsafe timer expired; rejecting");
                 await this.FinishConversationAsync();
-
                 this.SignalRejected.Invoke(origin);
             };
 

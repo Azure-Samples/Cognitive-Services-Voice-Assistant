@@ -5,10 +5,10 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Diagnostics.Contracts;
-    using System.IO;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Storage;
 
@@ -24,13 +24,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Initializes a new instance of the <see cref="KeywordRegistration"/> class.
         /// </summary>
-        /// <param name="keywordDisplayName">Display name shown for the keyword in settings.</param>
-        /// <param name="keywordId">Id of the keyword.</param>
-        /// <param name="keywordModelId">Model id of the keyword.</param>
-        /// <param name="keywordActivationModelDataFormat">Data format of the keyword activation model.</param>
-        /// <param name="keywordActivationModelFilePath">File path of the keyword activation model.</param>
         /// <param name="availableActivationKeywordModelVersion">Version of the most recent keyword model that is available.</param>
-        /// <param name="confirmationKeywordModelPath">Path of the confirmation keyword model.</param>
         public KeywordRegistration(Version availableActivationKeywordModelVersion)
         {
             this.AvailableActivationKeywordModelVersion = availableActivationKeywordModelVersion;
@@ -238,23 +232,29 @@ namespace UWPVoiceAssistantSample
             }
         }
 
-        private static async Task<ActivationSignalDetector> GetFirstEligibleDetectorAsync(
-            string dataFormat)
+        private static async Task<ActivationSignalDetector> GetDetectorAsync(
+            string dataFormat, bool canCreateConfigurations = true)
         {
             var detectorManager = ConversationalAgentDetectorManager.Default;
             var allDetectors = await detectorManager.GetAllActivationSignalDetectorsAsync();
-            var configurableDetectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations
+            var detectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations
                 && candidate.Kind == ActivationSignalDetectorKind.AudioPattern
                 && (string.IsNullOrEmpty(dataFormat) || candidate.SupportedModelDataTypes.Contains(dataFormat)));
 
-            if (configurableDetectors.Count() != 1)
+            if (detectors.Count() != 1)
             {
-                throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {configurableDetectors.Count()}.");
+                if (canCreateConfigurations)
+                {
+                    throw new NotSupportedException($"System expects one eligible configurable keyword spotter; actual is {detectors.Count()}.");
+                }
+                else
+                {
+                    throw new NotSupportedException($"System expects one eligible hardware keyword spotter; actual is {detectors.Count()}.");
+                }
             }
 
-            var detector = configurableDetectors.First();
-
-            return detector;
+            KwsPerformanceLogger.Spotter = "SWKWS";
+            return detectors.First();
         }
 
         private static async Task<ActivationSignalDetectionConfiguration> GetOrCreateConfigurationOnDetectorAsync(
@@ -282,7 +282,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task SetModelDataIfNeededAsync(ActivationSignalDetectionConfiguration configuration)
         {
-            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0)
+            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0 || !LocalSettingsHelper.SetModelData)
             {
                 // Keyword is already up to date according to this data; nothing to do here!
                 return;
@@ -327,13 +327,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
         {
-            var detector = await GetFirstEligibleDetectorAsync(this.KeywordActivationModelDataFormat);
-
-            if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
-                is ActivationSignalDetectionConfiguration existingConfiguration)
-            {
-                return existingConfiguration;
-            }
+            var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
 
             // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
             // are disabled to avoid collisions.
@@ -343,21 +337,44 @@ namespace UWPVoiceAssistantSample
                 await configuration.SetEnabledAsync(false);
             }
 
-            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                detector,
+            if (!LocalSettingsHelper.EnableHardwareDetector)
+            {
+                var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                    detector,
+                    this.KeywordDisplayName,
+                    this.KeywordId,
+                    this.KeywordModelId);
+                await this.SetModelDataIfNeededAsync(targetConfiguration);
+
+                if (!targetConfiguration.IsActive)
+                {
+                    await targetConfiguration.SetEnabledAsync(true);
+                }
+
+                this.keywordConfiguration = targetConfiguration;
+
+                return targetConfiguration;
+            }
+            else
+            {
+                var hwDetector = await GetDetectorAsync(this.KeywordActivationModelDataFormat, false);
+
+                var hardwareConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                hwDetector,
                 this.KeywordDisplayName,
                 this.KeywordId,
                 this.KeywordModelId);
-            await this.SetModelDataIfNeededAsync(targetConfiguration);
 
-            if (!targetConfiguration.IsActive)
-            {
-                await targetConfiguration.SetEnabledAsync(true);
+                await this.SetModelDataIfNeededAsync(hardwareConfiguration);
+
+                await hardwareConfiguration.SetEnabledAsync(true);
+
+                KwsPerformanceLogger.Spotter = "HWKWS";
+
+                this.keywordConfiguration = hardwareConfiguration;
+
+                return hardwareConfiguration;
             }
-
-            this.keywordConfiguration = targetConfiguration;
-
-            return targetConfiguration;
         }
 
         private async Task<StorageFile> GetFileFromPathAsync(string path)

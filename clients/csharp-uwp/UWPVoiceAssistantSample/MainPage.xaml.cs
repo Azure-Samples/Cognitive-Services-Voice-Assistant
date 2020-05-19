@@ -6,16 +6,11 @@ namespace UWPVoiceAssistantSample
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.UI.Xaml.Controls;
-    using Newtonsoft.Json;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
@@ -25,11 +20,9 @@ namespace UWPVoiceAssistantSample
     using Windows.System.Power;
     using Windows.UI;
     using Windows.UI.Core;
-    using Windows.UI.Notifications;
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
-    using Windows.UI.Xaml.Documents;
     using Windows.UI.Xaml.Media;
 
     /// <summary>
@@ -611,11 +604,16 @@ namespace UWPVoiceAssistantSample
             var keywordActivationModelDataFormatModified = LocalSettingsHelper.KeywordActivationModelDataFormat != appSettings.KeywordActivationModel.ModelDataFormat;
             var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModel.Path;
             var keywordRecognitionModelPathModified = LocalSettingsHelper.KeywordRecognitionModel != appSettings.KeywordRecognitionModel;
+            var setPropertyIdModified = LocalSettingsHelper.SetProperty != appSettings.SetProperty;
+            var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging != appSettings.EnableKwsLogging;
+            var enabledHardwareDetector = LocalSettingsHelper.EnableHardwareDetector != appSettings.EnableHardwareDetector;
+            var enableSetModelData = LocalSettingsHelper.SetModelData != appSettings.SetModelData;
 
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
                 keywordDisplayNameModified || keywordIdModified || keywordModelIdModified ||
-                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordRecognitionModelPathModified;
+                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordRecognitionModelPathModified ||
+                setPropertyIdModified || enableKwsLogging || enabledHardwareDetector || enableSetModelData;
 
             if (this.configModified)
             {
@@ -691,6 +689,30 @@ namespace UWPVoiceAssistantSample
                 {
                     LocalSettingsHelper.KeywordRecognitionModel = appSettings.KeywordRecognitionModel;
                     this.logger.Log($"Keyword Recognition Model Path: {LocalSettingsHelper.KeywordRecognitionModel}");
+                }
+
+                if (setPropertyIdModified)
+                {
+                    LocalSettingsHelper.SetProperty = appSettings.SetProperty;
+                    this.logger.Log($"KWS Performance Logging: {LocalSettingsHelper.SetProperty}");
+                }
+
+                if (enableKwsLogging)
+                {
+                    LocalSettingsHelper.EnableKwsLogging = appSettings.EnableKwsLogging;
+                    this.logger.Log($"KwsLoggins is set to: {LocalSettingsHelper.EnableKwsLogging}");
+                }
+
+                if (enabledHardwareDetector)
+                {
+                    LocalSettingsHelper.EnableHardwareDetector = appSettings.EnableHardwareDetector;
+                    this.logger.Log($"Enable Hardware Detector: {LocalSettingsHelper.EnableHardwareDetector}");
+                }
+
+                if (enableSetModelData)
+                {
+                    LocalSettingsHelper.SetModelData = appSettings.SetModelData;
+                    this.logger.Log($"Set Model Data: {LocalSettingsHelper.SetModelData}");
                 }
 
                 if (keywordActivationModelDataFormatModified

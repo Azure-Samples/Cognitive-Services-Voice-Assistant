@@ -12,6 +12,7 @@ namespace UWPVoiceAssistantSample
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
     using Newtonsoft.Json.Linq;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.Storage;
 
     /// <summary>
@@ -26,6 +27,7 @@ namespace UWPVoiceAssistantSample
         private PushAudioInputStream connectorInputStream;
         private bool alreadyDisposed = false;
         private ILogProvider logger;
+        private KwsPerformanceLogger kwsPerformanceLogger;
         private string speechKey;
         private string speechRegion;
         private string srLanguage;
@@ -34,9 +36,11 @@ namespace UWPVoiceAssistantSample
         private string customCommandsAppId;
         private Uri urlOverride;
         private string botId;
+        private bool enableKwsLogging;
         private bool speechSdkLogEnabled;
         private string keywordFilePath;
         private bool startEventReceived;
+        private bool secondStageConfirmed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
@@ -44,6 +48,7 @@ namespace UWPVoiceAssistantSample
         public DirectLineSpeechDialogBackend()
         {
             this.logger = LogRouter.GetClassLogger();
+            this.kwsPerformanceLogger = new KwsPerformanceLogger();
         }
 
         /// <summary>
@@ -120,6 +125,17 @@ namespace UWPVoiceAssistantSample
 
             var refreshConnector = configRefreshRequired || (this.keywordFilePath != keywordFile.Path);
 
+            if (LocalSettingsHelper.SetProperty != null)
+            {
+                this.enableKwsLogging = true;
+            }
+
+            if (this.enableKwsLogging)
+            {
+                refreshConnector = true;
+                this.enableKwsLogging = false;
+            }
+
             if (refreshConnector)
             {
                 var newConnectorConfiguration = this.CreateConfiguration();
@@ -143,6 +159,7 @@ namespace UWPVoiceAssistantSample
                         case ResultReason.RecognizingKeyword:
                             this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognizing?.Invoke(e.Result.Text);
+                            this.secondStageConfirmed = true;
                             break;
                         case ResultReason.RecognizingSpeech:
                             this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
@@ -154,11 +171,16 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.Recognized += (s, e) =>
                 {
+                    KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizedKeyword:
+                            var thirdStageStartTime = KwsPerformanceLogger.KwsStartTime.Ticks;
+                            thirdStageStartTime = DateTime.Now.Ticks;
                             this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
+                            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
+                            this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
                             this.logger.Log($"Recognized final speech: \"{e.Result.Text}\"");
@@ -168,6 +190,14 @@ namespace UWPVoiceAssistantSample
                             // If a KeywordRecognized handler is available, this is a final stage
                             // keyword verification rejection.
                             this.logger.Log($"Cloud model rejected keyword");
+                            if (this.secondStageConfirmed)
+                            {
+                                var thirdStageStartTimeRejected = KwsPerformanceLogger.KwsStartTime.Ticks;
+                                thirdStageStartTimeRejected = DateTime.Now.Ticks;
+                                this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
+                                this.secondStageConfirmed = false;
+                            }
+
                             this.KeywordRecognized?.Invoke(null);
                             break;
                         default:
@@ -326,6 +356,14 @@ namespace UWPVoiceAssistantSample
                 config = BotFrameworkConfig.FromSubscription(
                     this.speechKey,
                     this.speechRegion);
+
+                if (LocalSettingsHelper.SetProperty != null)
+                {
+                    foreach (KeyValuePair<string, JToken> setPropertyId in LocalSettingsHelper.SetProperty)
+                    {
+                        config.SetProperty(setPropertyId.Key, setPropertyId.Value.ToString());
+                    }
+                }
             }
 
             // Disable throttling of input audio (send it as fast as we can!)
@@ -368,6 +406,7 @@ namespace UWPVoiceAssistantSample
             var urlOverride = LocalSettingsHelper.UrlOverride;
             var botId = LocalSettingsHelper.BotId;
             var speechSdkLogEnabled = LocalSettingsHelper.SpeechSDKLogEnabled;
+            var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging;
 
             if (this.speechKey == speechKey
                 && this.speechRegion == speechRegion
@@ -377,7 +416,8 @@ namespace UWPVoiceAssistantSample
                 && this.customCommandsAppId == customCommandsAppId
                 && this.urlOverride == urlOverride
                 && this.botId == botId
-                && this.speechSdkLogEnabled == speechSdkLogEnabled)
+                && this.speechSdkLogEnabled == speechSdkLogEnabled
+                && this.enableKwsLogging == enableKwsLogging)
             {
                 return false;
             }
@@ -391,6 +431,7 @@ namespace UWPVoiceAssistantSample
             this.urlOverride = urlOverride;
             this.botId = botId;
             this.speechSdkLogEnabled = speechSdkLogEnabled;
+            this.enableKwsLogging = enableKwsLogging;
 
             return true;
         }
