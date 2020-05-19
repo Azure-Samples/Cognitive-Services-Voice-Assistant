@@ -140,7 +140,7 @@ namespace UWPVoiceAssistantSample
 
             this.SignalReceived?.Invoke(detectionOrigin, this.signalNeedsVerification);
 
-            this.kwsPerformanceLogger.LogSignalReceived(KwsPerformanceLogger.Spotter, "A", "1", KwsPerformanceLogger.KwsEventFireTime.Ticks, session.SignalStart.Ticks, session.SignalEnd.Ticks);
+            this.kwsPerformanceLogger.LogSignalReceived(KwsPerformanceLogger.Spotter, "A", "1", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
 
             if (this.signalNeedsVerification)
             {
