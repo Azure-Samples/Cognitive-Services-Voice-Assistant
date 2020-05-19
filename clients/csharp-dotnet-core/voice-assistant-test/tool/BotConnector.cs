@@ -76,20 +76,20 @@ namespace VoiceAssistantTest
                 // - The Custom commands application ID
                 // - Cognitive services speech subscription key.
                 // - The Azure region of the subscription key(e.g. "westus").
-                config = CustomCommandsConfig.FromSubscription(this.appsettings.CustomCommandsAppId, this.appsettings.SubscriptionKey, this.appsettings.Region);
+                config = CustomCommandsConfig.FromSubscription(this.appsettings.CustomCommandsAppId, this.appsettings.SpeechSubscriptionKey, this.appsettings.SpeechRegion);
             }
             else
             {
                 // Set the bot framework configuration object based on two items:
                 // - Cognitive services speech subscription key. It is needed for billing and is tied to the bot registration.
                 // - The Azure region of the subscription key(e.g. "westus").
-                config = BotFrameworkConfig.FromSubscription(this.appsettings.SubscriptionKey, this.appsettings.Region);
+                config = BotFrameworkConfig.FromSubscription(this.appsettings.SpeechSubscriptionKey, this.appsettings.SpeechRegion);
             }
 
             if (this.appsettings.SpeechSDKLogEnabled)
             {
                 // Speech SDK has verbose logging to local file, which may be useful when reporting issues.
-                config.SetProperty(PropertyId.Speech_LogFilename, $"{this.appsettings.OutputFolder}SpeechSDKLog-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.CurrentCulture)}.txt");
+                config.SetProperty(PropertyId.Speech_LogFilename, $"{this.appsettings.OutputFolder}SpeechSDKLog-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.CurrentCulture)}.log");
             }
 
             if (!string.IsNullOrWhiteSpace(this.appsettings.SRLanguage))

@@ -27,13 +27,13 @@ namespace VoiceAssistantTest
         /// Gets or sets Speech Subscription Key.
         /// </summary>
         [JsonProperty(Required = Required.Always)]
-        public string SubscriptionKey { get; set; }
+        public string SpeechSubscriptionKey { get; set; }
 
         /// <summary>
         /// Gets or sets Speech Subscription Region.
         /// </summary>
         [JsonProperty(Required = Required.Always)]
-        public string Region { get; set; }
+        public string SpeechRegion { get; set; }
 
         /// <summary>
         /// Gets or sets the margin for the duration of the Text-To-Speech audio sent by the bot, if any.
@@ -52,7 +52,7 @@ namespace VoiceAssistantTest
         /// Gets or sets a value indicating whether a Speech SDK log should be written when the test is run.
         /// Beware, this log is very verbose. Turn on only for a small number of
         /// test runs when you want to report a Speech SDK bug to Microsoft.
-        /// The file name will have the time-stamped format SpeechSDKLog-yyyy-MM-dd-HH-mm-ss.txt,
+        /// The file name will have the time-stamped format SpeechSDKLog-yyyy-MM-dd-HH-mm-ss.log,
         /// and it will be written to the folder specified by the OutputFolder property.
         /// </summary>
         public bool SpeechSDKLogEnabled { get; set; } = false;
@@ -237,16 +237,16 @@ namespace VoiceAssistantTest
         /// <param name="instance">An instance of AppSettings.</param>
         public static void ValidateAppSettings(AppSettings instance)
         {
-            if (ValidateSubscriptionKey(instance.SubscriptionKey) == false)
+            if (ValidateSubscriptionKey(instance.SpeechSubscriptionKey) == false)
             {
                 throw new ArgumentException(ErrorStrings.SUBSCRIPTION_KEY_INVALID);
             }
 
-            if (string.IsNullOrWhiteSpace(instance.Region) && instance.SetPropertyString == null)
+            if (string.IsNullOrWhiteSpace(instance.SpeechRegion) && instance.SetPropertyString == null)
             {
                 throw new MissingFieldException(ErrorStrings.AZURE_REGION_MISSING);
             }
-            else if (!string.IsNullOrWhiteSpace(instance.Region) && ValidateRegion(instance.Region) == false)
+            else if (!string.IsNullOrWhiteSpace(instance.SpeechRegion) && ValidateRegion(instance.SpeechRegion) == false)
             {
                 throw new ArgumentException(ErrorStrings.AZURE_REGION_INVALID);
             }

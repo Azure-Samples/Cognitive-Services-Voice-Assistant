@@ -78,7 +78,7 @@ namespace VoiceAssistantClient
             this.CustomSpeechEnabledBox.IsChecked = this.settings.Profile.CustomSpeechEnabled;
             this.VoiceDeploymentIdsTextBox.Text = this.settings.Profile.VoiceDeploymentIds;
             this.VoiceDeploymentEnabledBox.IsChecked = this.settings.Profile.VoiceDeploymentEnabled;
-            
+
             if (this.settings.ConnectionProfileNameHistory.Count == 1)
             {
                 this.ConnectionProfileComboBox.Text = string.Empty;

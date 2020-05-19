@@ -48,7 +48,7 @@ Or browse individual components per the repository content below. You may also f
 
 <p align="center">
 <a href="https://www.youtube.com/watch?v=1zr0umHGFyc">
-<img src="docs/images/channel9-video-link.png" width="316" height="185"/>
+<img src="docs/images/channel9-video-link.png" width="316"/>
 </a>
 </p>
 

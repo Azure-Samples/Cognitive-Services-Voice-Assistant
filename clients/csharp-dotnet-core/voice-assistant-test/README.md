@@ -67,11 +67,11 @@ Here is the full list:
 >#### OutputFolder
 >`string | optional | empty string | "C:\\Tests\\TestOutputFolder\\"`. Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
 
->#### SubscriptionKey
+>#### SpeechSubscriptionKey
 >`string | required | "01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
 
->#### Region
->`string | required | "westus"`. Azure region associated with your [SubscriptionKey](#subscriptionkey).
+>#### SpeechRegion
+>`string | required | "westus"`. Azure region associated with your [SpeechSubscriptionKey](#speechubscriptionkey).
 
 >#### SRLanguage
 >`string | optional | "en-US" | "es-MX"`. Speech Recognition Language. It is the source language of your audio. Must be one of the Locale values mentioned in this [Speech-to-text table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).

@@ -87,8 +87,20 @@ If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/
 
 If you enter the visualization URL in your browser (```https://myresourcegroupname####.blob.core.windows.net/www/demo.html?room=test1```) you will see a default scene, simulating an environment you will soon manipulate with your voice.
 
-For the Hospitality demo, you should see this scene:
-![hospitality scene](images/hospitality-scene.png)
+For the Hospitality demo, you should see something similar to this scene:
+<p align="center">
+<img src="images/hospitality-scene.png" width="360"/>
+</p>
+
+For the Inventory demo:
+<p align="center">
+<img src="images/inventory-scene.png" width="360"/>
+</p>
+
+For the Automotive demo:
+<p align="center">
+<img src="images/automotive-scene.png" width="360"/>
+</p>
 
 ## See your Custom Command application in Speech Studio
 
@@ -138,9 +150,9 @@ az group delete --name MyResourceGroupName
 ```
 Do this when you are done with this demo. Also do this if you encountered an error while running the script, and would like to re-run it. It's important to do this clean up before you re-run the script.
 
-Also note that when you run the deployment script, three files on disk get automatically modified and a two new files created. They will show up as "changes not staged for commit" and "untracked files" when running ```git status```, respectively. That should not however prevent you from re-running the deployment script after deleting the Azure resource group.
+Also note that when you run the deployment script, two files on disk get automatically modified (```Connections.json``` and ```ConnectionURLS.json```). They will show up as "changes not staged for commit" when running ```git status```. That should not however prevent you from re-running the deployment script after deleting the Azure resource group.
 
-If you want to bring your git repo to the original state, you will need to run ```git restore``` to revert the changed files and you will need to delete the added files.
+If you want to bring your git repo to the original state, you will need to run ```git restore``` to revert the two changed files.
 
 ## Deploying Azure resources - deep dive
 

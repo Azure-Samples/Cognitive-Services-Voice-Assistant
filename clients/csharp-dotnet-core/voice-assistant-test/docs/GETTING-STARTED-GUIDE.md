@@ -57,12 +57,12 @@ First, we will write the Application configuration. Copy and paste the following
       "FileName": "TestConfig.json",
     }
   ],
-  "SubscriptionKey": "0123456789abcdef0123456789abcdef",
-  "Region": "westus2",
+  "SpeechSubscriptionKey": "0123456789abcdef0123456789abcdef",
+  "SpeechRegion": "westus2",
   "BotGreeting": true,
 }
 ```
-Replace "SubscriptionKey" and "Region" fields with your own speech key and region, and save it as file "[AppConfig.json](core-bot-examples/greeting/AppConfig.json)" in your test folder (e.g. c:\test).
+Replace "SpeechSubscriptionKey" and "SpeechRegion" fields with your own speech key and region, and save it as file "[AppConfig.json](core-bot-examples/greeting/AppConfig.json)" in your test folder (e.g. c:\test).
 
 The application configuration file instructs the tool to execute the dialogs listed in a single test file "GreetingTest.json". We will create that file shortly. 
 
