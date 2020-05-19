@@ -22,7 +22,7 @@ Here are a few examples. Try these or others of your choice:
 * What can I do?
 * Ship everything in stock
 
-If you configured your client application to listen for a keyword, say the keyword first followed by the above (or other) sentences (e.g. "computer, turn on the lights")
+If you configured your client application to listen for a keyword, say the keyword first followed by the above (or other) sentences (e.g. "computer, count green boxes")
 
 ## Links
 
