@@ -161,7 +161,7 @@ namespace VoiceAssistantTest
             if (this.appsettings.RealTimeAudio)
             {
                 config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100");
-                config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "0");
+                config.SetProperty("SPEECH-TransmitLengthBeforeThrottleMs", "0");
             }
 
             if (this.connector != null)
