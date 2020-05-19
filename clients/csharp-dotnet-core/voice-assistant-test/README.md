@@ -117,8 +117,8 @@ Here is the full list:
 >#### SetServiceProperty
 >`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the Speech Service. Each pair results in a call to [DialogServiceConfig.SetServiceProperty(String, String, ServicePropertyChannel)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setserviceproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetServiceProperty_System_String_System_String_Microsoft_CognitiveServices_Speech_ServicePropertyChannel_), where ServicePropertyChannel is set to ServicePropertyChannel.UriQueryParameter. Or the equivalent method on CustomCommandsConfig for custom command applications. For more detail, see the section [Custom Settings](#custom-settings)
 
->#### [RealTimeAudio](#Measuring-User-Perceived-Latency)
->`bool | optional | false | true or false`. The default behavior of PushAudioInputStream is to send the first few seconds of audio as fast as possible to accomodate for short utterances. Following audio is throttled back to prevent client from spamming the service too fast but this throttled speed is faster than real-time microphone input. Set this optional flag to true to send audio at real-time (x1) speed. If this flag is set to true, the app config [Timeout](#Timeout) should be larger than the duration of the longest WAV file in the test. For more information see [Measuring User Perceived Latency](#Measuring-User-Perceived-Latency) section.
+>#### RealTimeAudio
+>`bool | optional | false | true`. The default behavior of PushAudioInputStream is to send the first few seconds of audio as fast as possible to accommodate for short utterances. Following audio is throttled back to prevent client from spamming the service too fast but this throttled speed is faster than real-time microphone input. Set this optional flag to true to send audio at real-time (x1) speed. If this flag is set to true, the app config [Timeout](#Timeout) should be larger than the duration of the longest WAV file in the test. For more information see [Measuring User Perceived Latency](#Measuring-User-Perceived-Latency) section.
 
 >#### Tests
 >`JSON string | required | [{"FileName":"MyTestFile.json", "SingleConnection": true}]`. An array of JSON objects, each related to a single test configuration. Each of these JSON objects includes:
@@ -282,23 +282,29 @@ If the keyword has been recognized successfully, the identified keyword will be 
 Note that due to a bug in the way Speech SDK consumes audio from an input stream, keyword activation is limited to the first turn of the dialog. Therefore [Keyword](#keyword) can only be set to true when [TurnID](#turnid) is 0.
 
 ### Measuring User Perceived Latency
-// Will be updated
-<br>
-<br>
-Speech SDK by default sends the beginning of an audio file as fast as it can to get the best UPL on short utterances but then throttles the speed to prevent the client from spamming the service too fast. This throttled speed is still faster than real-time microphone speed. To handle this, a couple of additional endpoints were exposed.
+
+We define User Perceived Latency (UPL) as the duration between the time the user stops speaking (or submitting text input) and the time the uses sees an action taken by the Voice Assistant as a response. This test tool is generic and does not execute any real actions other than TTS playback. Therefore we define the "action" to be receiving the the first TTS audio butter (if there is a TTS response), or receiving the bot reply activity (if it does not include a TTS response). So it's easy to know when to stop the timer when measuring UPL.
+
+It's harder to know when to start the timer. For that we need to estimate the time speech has stopped. Here of course we use WAV files, but we can't simply measure the duration of the WAV file because speech may have stopped before the WAV file has ended. In fact there should be some short silence at the end of speech in the WAV file to make sure the speech recognition engine detects end-of-speech as if it was audio coming from a live microphone. To solve this we rely on an argument in the Speech recognition event called [RecognitionResult.Duration](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.recognitionresult.duration?view=azure-dotnet#Microsoft_CognitiveServices_Speech_RecognitionResult_Duration). This gives us the duration of the speech excluding any pre or post silence/noise. Assuming the WAV file is authored to make sure there is no silence at the beginning, we can use this value to estimate the duration of the speech portion in the WAV file. We therefore start the timer in the [SessionStarted](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sessionstarted?view=azure-dotnet) event. We stop the timer when the bot reply activity was received (or first TTS buffer received). But then we adust the elapsed time by subtracting the duration of the speech in the WAV file.
+
+The above will only work if Speech SDK is consuming input audio at real-time, as if it was a live microphone input. Turns out that by default this is not the case. When processing audio from an input stream, as done in this test tool, Speech SDK by default sends the first few seconds of audio as fast as it can, then throttles down the speed to a constant rate to prevent the client from flooding the service. The throttled speed is still faster than real-time microphone speed. This was done to help speed up speech recognition in mass batch-processing of WAV files for transcription.
+
+In our case we need to set the input stream consumption rate to real-time. For that we added a boolean application configuration file called [RealTimeAudio](#RealTimeAudio). It is off by default. Setting it to true will result in these to Speech SDK calls:
 ```csharp
 config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100")
-config.SetProperty("SPEECH-TransmitLengthBeforThrottleMs", "0");
+config.SetProperty("SPEECH-TransmitLengthBeforeThrottleMs", "0");
 ```
-The first property fixes the transmit speed at real time and the second removes the burst behavior at the start of speech recognition. Together they allow simulating speech recognition at real-time from an audio file.
+The first property fixes the transmit speed at real time and the second removes the burst behavior at the start of speech recognition. Together they allow simulating speech recognition at real-time from an audio stream, as if it was live microphone input.
 
-In the AppConfig, set `RealTimeAudio: true`, also to prevent the app from Timing out, you will have set the [Timeout](#Timeout) to the duration of the longest wav file example `Timeout: 7000`. By default the timeout is 5000 msec, so this may not be needed if all of the utterances are shorter than 5 seconds.
+Since now audio is consumed at real-time instead of faster than real time, you may need to adjust the [Timeout](#Timeout) duration. Make sure that this time is larger than the longest duration WAV file. 
 
-We are also logging the user perceived latency. This value is from when the session starts (SessionStarted) till when a bot activity is received (ActivityReceived) or when the first text-to-speech audio buffer is received (if the bot reply has a text-to-speech audio stream). UPL = amount of elapsed time - duration of speech in wav file. This (UserPerceivedLatency) value is logged in the TestOutput. 
+In summary, to accurately measure UPL do these three things:
+1. Make sure your WAV files do not have silence at the beginning. Speech should start right at the beginning of the WAV file
+1. Set the value of [RealTimeAudio](#RealTimeAudio) to true in your application configuration file
+1. Make sure the value for [Timeout](#Timeout) in your application configuration file is set to a value higher than the longest duration WAV file
 
-To get the best results, it is recommended that authored audio files should not have silence at the beginning of the WAV file and have at least 1 second of non speech at the end to allow proper segmentation to occur in the speech engine.
+Note: This has not been tested when keyword activation is used. At this time we do not recommend measuring UPL using the above method when [Keyword](#Keyword) is set to true.
 
-TODO: Polish above section (Measuring UPL)
 
 ### Running tests in an Azure DevOps pipeline
 

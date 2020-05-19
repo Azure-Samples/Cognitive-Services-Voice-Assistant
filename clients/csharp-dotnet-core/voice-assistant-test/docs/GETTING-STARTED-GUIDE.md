@@ -99,7 +99,7 @@ Now, write the test configuration. Copy and paste the following to your text edi
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2300, 8200],
-        "ExpectedResponseLatency": 3000
+        "ExpectedUserPerceivedLatency": 3000
       }
     ]
   }
@@ -113,7 +113,7 @@ The test includes one dialog to verify the bot's greeting. It has the following 
     * TurnId - A non-negative integer that enumerates the turns, starting from 0.
     * ExpectedResponses - This is an array that lists the bot reply activities in the order you expect the client to receive them. Each activity is JSON string that follows the [Bot-Framework Activity schema](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md). You only need to list the activity fields that you care about. In the example above, we expect the bot greeting to include two activities of type "message". We list values for "text", "speak", "inputHint" and "attachments". If the actual activities received have different values for these fields, the test will fail. Note that the tool first orders the bot responses based on the [activity timestamp](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp) field, before comparing to the expected bot responses.
     * ExpectedTTSAudioResponseDurations - An optional array of integers, specifying the expected duration in msec of the resulting Text-to-Speech (TTS) audio stream associated with each bot-reply activity. The length of this array must equal the length of the ExpectedResponses array. If there is no TTS audio associated with any of the bot-reply activities, you can enter a value of -1. The duration does not need to be exact. When the tool compares expected duration to actual duration, there is a tolerance defined by the application configuration setting TTSAudioDurationMargin. Its default value is 200 msec.
-    * ExpectedResponseLatency - Specifies the maximum expected duration to receive all the bot responses, in msec. If the actual duration is larger than the value specified here, the test will fail.
+    * ExpectedUserPerceivedLatency - Specifies the maximum expected duration to receive all the bot responses, in msec. If the actual duration is larger than the value specified here, the test will fail.
 
 ## Step 4: Run your test
 
@@ -145,7 +145,7 @@ Notice that these files and folder were created by the tool:
     * ResponseMatch - True if ActualResponses matched ExpectedResponses
     * UtteranceMatch - True if expected speech recognition matched actual speech recognition result. This is only relevant for turns with WAV file input (to be discussed further down)
     * TTSAudioResponseDurationMatch - True if ActualTTSAudioResponseDuration values are all within the tolerance range of ExpectedTTSAudioResponseDurations.
-    * ResponseLatencyMatch - True if ActualResponseLatency is less or equal ExpectedResponseLatency.
+    * ResponseLatencyMatch - True if ActualUserPerceivedLatency is less or equal ExpectedUserPerceivedLatency.
     * Pass - True if all of the above are true.
 * [TestConfigOutput\WAVFiles\TestConfig-BotResponse-0-0-0.WAV](core-bot-examples/greeting/TestConfigOutput/WAVFiles/TestConfig-BotResponse-0-0-0.WAV) - This is the TTS audio stream associated with the first bot response ("welcome to Bot Framework"). The WAV file name is a concatenation of 
     - test configuration name ("TestConfig" here), followed by 
@@ -160,7 +160,7 @@ Notice that these files and folder were created by the tool:
 Experiment with changing test configurations to see an example of test failure and the corresponding error message. Here are some suggestions:
 * **Missing required field**. Remove the "Region" field in AppConfig.json, or the "DialogID" in TestConfig.json, re-run the test and see the "required property not found" failure message.
 * **Bot-response activity mismatch**. Change the "speak" field of the first expected bot-response in TestConfig.json from "Welcome to Bot Framework!" to just "Welcome". Re-run the test and see the "activity field mismatching values" failure message.
-* **Latency failure**. Update the "ExpectedResponseLatency" field in TestConfig.json to a very small, unrealistic value (e.g. 10 msec), re-run the test and see the "latency mismatch" failure message.
+* **Latency failure**. Update the "ExpectedUserPerceivedLatency" field in TestConfig.json to a very small, unrealistic value (e.g. 10 msec), re-run the test and see the "latency mismatch" failure message.
 
 ## Step 6: Add turns with WAV input
 
@@ -192,7 +192,7 @@ Now that you've verified the expected bot greeting, update your test configurati
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2300, 8200],
-        "ExpectedResponseLatency": 3000
+        "ExpectedUserPerceivedLatency": 3000
       },
       {
         "TurnID": 1,
@@ -207,7 +207,7 @@ Now that you've verified the expected bot greeting, update your test configurati
           }
         ],
         "ExpectedTTSAudioResponseDurations": [9221],
-        "ExpectedResponseLatency": 1000,
+        "ExpectedUserPerceivedLatency": 1000,
       },
       {
         "TurnID": 2,
@@ -228,7 +228,7 @@ Now that you've verified the expected bot greeting, update your test configurati
           }
         ],
         "ExpectedTTSAudioResponseDurations": [5100, 2200],
-        "ExpectedResponseLatency": 1000,
+        "ExpectedUserPerceivedLatency": 1000,
       }
     ]
   }
