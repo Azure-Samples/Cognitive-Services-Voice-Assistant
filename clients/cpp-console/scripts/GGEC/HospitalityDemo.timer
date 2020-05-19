@@ -1,8 +1,0 @@
-[Unit]
-Description=Timer for the hospitality demo
-
-[Timer]
-OnStartupSec=45
-
-[Install]
-WantedBy=default.target

@@ -24,7 +24,7 @@
           }
         ],
 		"ExpectedTTSAudioResponseDuration": [2300, 8200],
-		"ExpectedResponseLatency": 3000
+		"ExpectedUserPerceivedLatency": 3000
       }
     ]
   }

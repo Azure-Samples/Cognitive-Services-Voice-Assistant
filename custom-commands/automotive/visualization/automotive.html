@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<script type="text/javascript">window["_gaUserPrefs"] = { ioo: function () { return true; } }</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/x-icon"
+        href="https://landingdemowidget.blob.core.windows.net/www/favicon.ico">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Virtual Automotive</title>
+
+    <link rel="stylesheet" href="./bootstrap.min.css" crossorigin="anonymous">
+
+    <style>
+        .demoFrame {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            height: 100%;
+            max-width: 1440px;
+            max-height: 810px;
+            min-width: 960px;
+            min-height: 540px;
+        }
+
+        .room-image {
+            position: relative;
+            width: 100%;
+            max-width: 1440px;
+            min-width: 960px;
+        }
+
+        .overlays {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+        }
+
+        .thermostat {
+            position: absolute;
+            font-size: 60px;
+            font-weight: bolder;
+            color: azure;
+            top: 36%;
+            left: 62%;
+            z-index: 100;
+        }
+
+        #top-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 14%;
+            left: 17.5%;
+            z-index: 100;
+            width: 265px;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #middle-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 45%;
+            left: 67%;
+            z-index: 100;
+            width: 265px;
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        #bottom-hint {
+            position: absolute;
+            font-size: 22px;
+            color: white;
+            top: 69%;
+            left: 22%;
+            z-index: 100;
+            width: 436px;
+
+            font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
+        }
+
+        .try-saying {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: -20px;
+        }
+
+        .messages {
+            position: absolute;
+            height: 90px;
+            width: 400px;
+            margin-top: -9.5%;
+            margin-left: 1%;
+            z-index: 100;
+        }
+
+        #message-title {
+            padding-top: 5px;
+            font-size: smaller;
+        }
+
+        #item-ordered {
+            font-weight: bold;
+        }
+
+        .list {
+            background-image: repeating-linear-gradient(180deg, lightyellow, lightyellow 40px, lemonchiffon 40px, lemonchiffon 80px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <main role="main">
+        <div id="automotive-room" class="demoFrame ">
+            <img id="0" src="./Background.png" class="room-image" style="position:relative">
+            <img id="screen" src="./automotive-screen-off.png" class="room-image overlays" style="position:absolute">
+            <img id="screen-on" src="./automotive-screen-on.png" class="room-image overlays" style="position:absolute">
+            <img id="defrost" src="./automotive-defrost-on.png" class="room-image overlays" style="position:absolute">
+            <img id="heater-" src="./automotive-heater-on.png" class="room-image overlays" style="position:absolute">
+            <img id="seatwarmer" src="./automotive-seatwarmer-on.png" class="room-image overlays"
+                style="display:absolute;">
+            <div id="thermostat" class="thermostat"><span id="temperature">65°</span></div>
+
+            <div id="help-content">
+                <img id="helpboxes" src="./automotive-bluebox.png" class="room-image overlays"
+                    style="display:absolute;">
+
+                <div id="top-hint">
+                    <div class="try-saying">Try saying:</div></br>"Turn on defroster"
+                </div>
+                <div id="middle-hint">
+                    <div class="try-saying">Try saying:</div></br>"Set to 72 degrees"
+                </div>
+                <div id="bottom-hint">
+                    <div class="try-saying">Try saying:</div></br>"Turn on the seat heater"
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./jquery-3.2.1.min.js.download" crossorigin="anonymous"></script>
+    <script src="./popper.min.js.download" crossorigin="anonymous"></script>
+    <script src="./bootstrap.min.js.download" crossorigin="anonymous"></script>
+
+    <script>
+        $(function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var jsonUrl = "https://automotivedemowidget.azurewebsites.net/api/AutomotiveDemo";
+            $.getJSON("ConnectionURLS.json",function(data){
+                jsonUrl = data.AZURE_FUNCTION_URL;
+                if (urlParams.has("room")) {
+                    var room = urlParams.get("room");
+                    jsonUrl = jsonUrl + "?room=" + room;
+                }
+                else {
+                    var roomNumber = parseInt((Math.random() * 500000), 10)
+                    jsonUrl = jsonUrl + "?room=" + roomNumber;
+                }
+
+                var timesRun = 0;
+                interval = setInterval(function () {
+                    timesRun += 1;
+                    if (timesRun === 10800) {
+                        clearInterval(interval);
+                    }
+                    $.getJSON(jsonUrl, function (configuration) {
+                        clear();
+                        apply(configuration);
+                        console.log(configuration);
+                    });
+                }, 1000);
+
+                setTimeout(function () { alert("Timed out, please refresh!"); }, 10800000);
+
+                function apply(configuration) {
+                    $("#temperature").html(configuration.Temperature + "°");
+
+                    if (configuration.Help) {
+                        $("#help-content").fadeIn('fast')
+                    }
+                    else {
+                        $("#help-content").fadeOut('fast')
+                    }
+
+
+                    if (configuration.SeatWarmers) {
+                        $("#seatwarmer").fadeOut('fast')
+                    }
+                    else {
+                        $("#seatwarmer").fadeIn('fast')
+                    }
+
+                    if (configuration.Defrost) {
+                        $("#defrost").fadeOut('fast')
+                    }
+                    else {
+                        $("#defrost").fadeIn('fast')
+                    }
+
+                    if (configuration.Television) {
+                        $("#television-content").fadeIn('fast')
+                        $("#television-notification").fadeIn('fast')
+                    }
+                    else {
+                        $("#television-content").fadeOut('fast')
+                        $("#television-notification").fadeOut('fast')
+                    }
+                }
+
+                function clear() {
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

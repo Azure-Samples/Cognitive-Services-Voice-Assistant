@@ -220,7 +220,7 @@ namespace UWPVoiceAssistantSample
             var useSpeechSdk = LocalSettingsHelper.EnableSpeechSDK;
             var visibility = useSpeechSdk ? Visibility.Visible : Visibility.Collapsed;
             var useKws = useSpeechSdk && LocalSettingsHelper.EnableSecondStageKws;
-            var enableLogs = useSpeechSdk && LocalSettingsHelper.EnableSdkLogging;
+            var enableLogs = useSpeechSdk && LocalSettingsHelper.SpeechSDKLogEnabled;
 
             this.EnableSpeechSDKLoggingToggle.Visibility = visibility;
             this.EnableSecondStageKwsToggle.Visibility = visibility;
@@ -592,9 +592,10 @@ namespace UWPVoiceAssistantSample
             AppSettings appSettings = await AppSettings.Load(configFile);
 
             var speechKeyModified = LocalSettingsHelper.SpeechSubscriptionKey != appSettings.SpeechSubscriptionKey;
-            var speechRegionModified = LocalSettingsHelper.AzureRegion != appSettings.AzureRegion;
-            var customSpeechIdModified = LocalSettingsHelper.CustomSpeechId != appSettings.CustomSpeechId;
-            var customVoiceIdModified = LocalSettingsHelper.CustomVoiceIds != appSettings.CustomVoiceIds;
+            var speechRegionModified = LocalSettingsHelper.SpeechRegion != appSettings.SpeechRegion;
+            var srLanguageModified = LocalSettingsHelper.SRLanguage != appSettings.SRLanguage;
+            var customSpeechIdModified = LocalSettingsHelper.CustomSREndpointId != appSettings.CustomSREndpointId;
+            var customVoiceIdModified = LocalSettingsHelper.CustomVoiceDeploymentIds != appSettings.CustomVoiceDeploymentIds;
             var customCommandsAppIdModified = LocalSettingsHelper.CustomCommandsAppId != appSettings.CustomCommandsAppId;
             var botIdModified = LocalSettingsHelper.BotId != appSettings.BotId;
             var keywordDisplayNameModified = LocalSettingsHelper.KeywordDisplayName != appSettings.KeywordActivationModel.DisplayName;
@@ -602,7 +603,7 @@ namespace UWPVoiceAssistantSample
             var keywordModelIdModified = LocalSettingsHelper.KeywordModelId != appSettings.KeywordActivationModel.ModelId;
             var keywordActivationModelDataFormatModified = LocalSettingsHelper.KeywordActivationModelDataFormat != appSettings.KeywordActivationModel.ModelDataFormat;
             var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModel.Path;
-            var keywordConfirmationModelPathModified = LocalSettingsHelper.KeywordConfirmationModelPath != appSettings.KeywordModel;
+            var keywordRecognitionModelPathModified = LocalSettingsHelper.KeywordRecognitionModel != appSettings.KeywordRecognitionModel;
             var setPropertyIdModified = LocalSettingsHelper.SetProperty != appSettings.SetProperty;
             var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging != appSettings.EnableKwsLogging;
             var enabledHardwareDetector = LocalSettingsHelper.EnableHardwareDetector != appSettings.EnableHardwareDetector;
@@ -611,8 +612,8 @@ namespace UWPVoiceAssistantSample
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
                 keywordDisplayNameModified || keywordIdModified || keywordModelIdModified ||
-                keywordActivationModelDataFormatModified || keywordActivationModelPathModified ||
-                keywordConfirmationModelPathModified || setPropertyIdModified || enableKwsLogging || enabledHardwareDetector || enableSetModelData;
+                keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordRecognitionModelPathModified ||
+                setPropertyIdModified || enableKwsLogging || enabledHardwareDetector || enableSetModelData;
 
             if (this.configModified)
             {
@@ -626,20 +627,20 @@ namespace UWPVoiceAssistantSample
 
                 if (speechRegionModified)
                 {
-                    LocalSettingsHelper.AzureRegion = appSettings.AzureRegion;
-                    this.logger.Log($"Azure Region: {LocalSettingsHelper.AzureRegion}");
+                    LocalSettingsHelper.SpeechRegion = appSettings.SpeechRegion;
+                    this.logger.Log($"Azure Region: {LocalSettingsHelper.SpeechRegion}");
                 }
 
                 if (customSpeechIdModified)
                 {
-                    LocalSettingsHelper.CustomSpeechId = appSettings.CustomSpeechId;
-                    this.logger.Log($"Custom Speech Id: {LocalSettingsHelper.CustomSpeechId}");
+                    LocalSettingsHelper.CustomSREndpointId = appSettings.CustomSREndpointId;
+                    this.logger.Log($"Custom Speech Id: {LocalSettingsHelper.CustomSREndpointId}");
                 }
 
                 if (customVoiceIdModified)
                 {
-                    LocalSettingsHelper.CustomVoiceIds = appSettings.CustomVoiceIds;
-                    this.logger.Log($"Custom Voice Id: {LocalSettingsHelper.CustomVoiceIds}");
+                    LocalSettingsHelper.CustomVoiceDeploymentIds = appSettings.CustomVoiceDeploymentIds;
+                    this.logger.Log($"Custom Voice Id: {LocalSettingsHelper.CustomVoiceDeploymentIds}");
                 }
 
                 if (customCommandsAppIdModified)
@@ -684,10 +685,10 @@ namespace UWPVoiceAssistantSample
                     this.logger.Log($"Keyword Activation Model Path: {LocalSettingsHelper.KeywordActivationModelPath}");
                 }
 
-                if (keywordConfirmationModelPathModified)
+                if (keywordRecognitionModelPathModified)
                 {
-                    LocalSettingsHelper.KeywordConfirmationModelPath = appSettings.KeywordModel;
-                    this.logger.Log($"Keyword Confirmation Model Path: {LocalSettingsHelper.KeywordConfirmationModelPath}");
+                    LocalSettingsHelper.KeywordRecognitionModel = appSettings.KeywordRecognitionModel;
+                    this.logger.Log($"Keyword Recognition Model Path: {LocalSettingsHelper.KeywordRecognitionModel}");
                 }
 
                 if (setPropertyIdModified)
@@ -716,7 +717,7 @@ namespace UWPVoiceAssistantSample
 
                 if (keywordActivationModelDataFormatModified
                     || keywordActivationModelPathModified
-                    || keywordConfirmationModelPathModified
+                    || keywordRecognitionModelPathModified
                     || keywordDisplayNameModified
                     || keywordIdModified
                     || keywordModelIdModified)
@@ -1027,10 +1028,7 @@ namespace UWPVoiceAssistantSample
 
         private async void TriggerLogAvailable(object sender, RoutedEventArgs e)
         {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-            {
-                this.FilterLogs();
-            });
+            this.FilterLogs();
         }
 
         private void ApplicationStateBadgeClick(object sender, RoutedEventArgs e)

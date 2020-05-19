@@ -25,24 +25,39 @@ namespace UWPVoiceAssistantSample
         public string SpeechSubscriptionKey { get; set; }
 
         /// <summary>
-        /// Gets or sets Azure Region.
+        /// Gets or sets Speech Region.
         /// </summary>
-        public string AzureRegion { get; set; }
+        public string SpeechRegion { get; set; }
 
         /// <summary>
-        /// Gets or sets CustomSpeechId.
+        /// Gets or sets SR Language.
         /// </summary>
-        public string CustomSpeechId { get; set; }
+        public string SRLanguage { get; set; }
 
         /// <summary>
-        /// Gets or sets CustomVoiceId.
+        /// Gets or sets CustomSpeechEndpointId.
         /// </summary>
-        public string CustomVoiceIds { get; set; }
+        public string CustomSREndpointId { get; set; }
+
+        /// <summary>
+        /// Gets or sets CustomVoiceDeploymentIds.
+        /// </summary>
+        public string CustomVoiceDeploymentIds { get; set; }
 
         /// <summary>
         /// Gets or sets Custom Commands App Id.
         /// </summary>
         public string CustomCommandsAppId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URL override.
+        /// </summary>
+        public Uri UrlOverride { get; set; }
+
+        /// <summary>
+        /// Gets or sets SpeechSDKLogEnabled.
+        /// </summary>
+        public bool SpeechSDKLogEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets Bot Id.
@@ -58,7 +73,7 @@ namespace UWPVoiceAssistantSample
         /// Gets or sets the path of the keyword confirmation model used for confirming the inital detection of the
         /// activation model on the device.
         /// </summary>
-        public string KeywordModel { get; set; }
+        public string KeywordRecognitionModel { get; set; }
 
         /// <summary>
         /// Gets or sets the property Id for BotFrameworkConfig.
@@ -154,15 +169,15 @@ namespace UWPVoiceAssistantSample
             }
 
             LogIfFalse(IsValidResourceId(instance.SpeechSubscriptionKey, optional: false), "Failed to validate speech key");
-            LogIfFalse(IsValidAzureRegion(instance.AzureRegion), "Failed to validate Azure region");
-            LogIfFalse(IsValidResourceId(instance.CustomSpeechId, optional: true), "Failed to validate custom speech id");
+            LogIfFalse(IsValidAzureRegion(instance.SpeechRegion), "Failed to validate Azure region");
+            LogIfFalse(IsValidResourceId(instance.CustomSREndpointId, optional: true), "Failed to validate custom speech id");
             LogIfFalse(
-                instance.CustomVoiceIds.Split(',')
+                instance.CustomVoiceDeploymentIds.Split(',')
                     .All(customVoiceId => IsValidResourceId(customVoiceId, optional: true)),
                 "Failed to validate custom voice ids");
             LogIfFalse(IsValidResourceId(instance.CustomCommandsAppId, optional: true), "Failed to validate Custom Commands id");
             LogIfFalse(IsValidModelPath(instance.KeywordActivationModel.Path), "Failed to validate keyword activation model path");
-            LogIfFalse(IsValidModelPath(instance.KeywordModel), "Failed to validate keyword confirmation model path");
+            LogIfFalse(IsValidModelPath(instance.KeywordRecognitionModel), "Failed to validate keyword confirmation model path");
         }
     }
 }

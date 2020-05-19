@@ -171,7 +171,7 @@
                 OnContent="Microphone audio file capture is ON"
                 OffContent="Microphone audio file capture is OFF" />
             <ToggleSwitch x:Name="EnableSpeechSDKLoggingToggle"
-                IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableSdkLogging, Mode=TwoWay}"
+                IsOn="{x:Bind mvadls:LocalSettingsHelper.SpeechSDKLogEnabled, Mode=TwoWay}"
                 Margin="5,0,0,0"
                 Grid.Row="5"
                 Grid.Column="0"

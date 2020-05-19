@@ -30,12 +30,14 @@ namespace UWPVoiceAssistantSample
         private KwsPerformanceLogger kwsPerformanceLogger;
         private string speechKey;
         private string speechRegion;
-        private string customSpeechId;
-        private string customVoiceIds;
+        private string srLanguage;
+        private string customSREndpointId;
+        private string customVoiceDeploymentIds;
         private string customCommandsAppId;
+        private Uri urlOverride;
         private string botId;
-        private bool enableSdkLogging;
         private bool enableKwsLogging;
+        private bool speechSdkLogEnabled;
         private string keywordFilePath;
         private bool startEventReceived;
         private bool secondStageConfirmed;
@@ -371,22 +373,22 @@ namespace UWPVoiceAssistantSample
             var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
             config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
 
-            if (!string.IsNullOrEmpty(this.customSpeechId))
+            if (!string.IsNullOrEmpty(this.customSREndpointId))
             {
-                config.SetServiceProperty("cid", this.customSpeechId, ServicePropertyChannel.UriQueryParameter);
+                config.SetServiceProperty("cid", this.customSREndpointId, ServicePropertyChannel.UriQueryParameter);
 
                 // Custom Speech does not support Keyword Verification - Remove line below when supported.
                 config.SetProperty("KeywordConfig_EnableKeywordVerification", "false");
             }
 
-            if (!string.IsNullOrEmpty(this.customVoiceIds))
+            if (!string.IsNullOrEmpty(this.customVoiceDeploymentIds))
             {
-                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.customVoiceIds);
+                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.customVoiceDeploymentIds);
             }
 
-            if (this.enableSdkLogging)
+            if (this.speechSdkLogEnabled)
             {
-                var logPath = $"{ApplicationData.Current.LocalFolder.Path}\\sdklog.txt";
+                var logPath = $"{ApplicationData.Current.LocalFolder.Path}\\SpeechSDK.log";
                 config.SetProperty(PropertyId.Speech_LogFilename, logPath);
             }
 
@@ -396,21 +398,25 @@ namespace UWPVoiceAssistantSample
         private bool TryRefreshConfigValues()
         {
             var speechKey = LocalSettingsHelper.SpeechSubscriptionKey;
-            var speechRegion = LocalSettingsHelper.AzureRegion;
-            var customSpeechId = LocalSettingsHelper.CustomSpeechId;
-            var customVoiceIds = LocalSettingsHelper.CustomVoiceIds;
+            var speechRegion = LocalSettingsHelper.SpeechRegion;
+            var srLanguage = LocalSettingsHelper.SRLanguage;
+            var customSREndpointId = LocalSettingsHelper.CustomSREndpointId;
+            var customVoiceDeploymentIds = LocalSettingsHelper.CustomVoiceDeploymentIds;
             var customCommandsAppId = LocalSettingsHelper.CustomCommandsAppId;
+            var urlOverride = LocalSettingsHelper.UrlOverride;
             var botId = LocalSettingsHelper.BotId;
-            var enableSdkLogging = LocalSettingsHelper.EnableSdkLogging;
+            var speechSdkLogEnabled = LocalSettingsHelper.SpeechSDKLogEnabled;
             var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging;
 
             if (this.speechKey == speechKey
                 && this.speechRegion == speechRegion
-                && this.customSpeechId == customSpeechId
-                && this.customVoiceIds == customVoiceIds
+                && this.srLanguage == srLanguage
+                && this.customSREndpointId == customSREndpointId
+                && this.customVoiceDeploymentIds == customVoiceDeploymentIds
                 && this.customCommandsAppId == customCommandsAppId
+                && this.urlOverride == urlOverride
                 && this.botId == botId
-                && this.enableSdkLogging == enableSdkLogging
+                && this.speechSdkLogEnabled == speechSdkLogEnabled
                 && this.enableKwsLogging == enableKwsLogging)
             {
                 return false;
@@ -418,11 +424,13 @@ namespace UWPVoiceAssistantSample
 
             this.speechKey = speechKey;
             this.speechRegion = speechRegion;
-            this.customSpeechId = customSpeechId;
-            this.customVoiceIds = customVoiceIds;
+            this.srLanguage = srLanguage;
+            this.customSREndpointId = customSREndpointId;
+            this.customVoiceDeploymentIds = customVoiceDeploymentIds;
             this.customCommandsAppId = customCommandsAppId;
+            this.urlOverride = urlOverride;
             this.botId = botId;
-            this.enableSdkLogging = enableSdkLogging;
+            this.speechSdkLogEnabled = speechSdkLogEnabled;
             this.enableKwsLogging = enableKwsLogging;
 
             return true;

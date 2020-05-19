@@ -68,10 +68,6 @@ namespace UWPVoiceAssistantSample.KwsPerformance
         {
             if (!File.Exists(this.filePath))
             {
-                // StringBuilder sb = new StringBuilder();
-                // sb.AppendLine("Spotter, Confirmed, Stage, EventFireTime, StartTime, EndTime");
-                // await File.AppendAllTextAsync(this.filePath, sb.ToString());
-
                 this.csvFileCreated = true;
                 return;
             }
