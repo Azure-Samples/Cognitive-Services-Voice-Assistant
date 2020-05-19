@@ -75,7 +75,12 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public bool EnableHardwareDetector { get; set; }
 
-        public bool NeedSetModelData { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether to set model data for a keyword configuration.
+        /// Set this value to false if using a keyword including in the windows image.
+        /// AAR will load it from system folder. No need to reset it.
+        /// </summary>
+        public bool SetModelData { get; set; }
 
         /// <summary>
         /// Reads and deserializes the configuration file.

@@ -606,7 +606,7 @@ namespace UWPVoiceAssistantSample
             var setPropertyIdModified = LocalSettingsHelper.SetProperty != appSettings.SetProperty;
             var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging != appSettings.EnableKwsLogging;
             var enabledHardwareDetector = LocalSettingsHelper.EnableHardwareDetector != appSettings.EnableHardwareDetector;
-            var enableSetModelData = LocalSettingsHelper.NeedSetModelData != appSettings.NeedSetModelData;
+            var enableSetModelData = LocalSettingsHelper.SetModelData != appSettings.SetModelData;
 
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
@@ -710,8 +710,8 @@ namespace UWPVoiceAssistantSample
 
                 if (enableSetModelData)
                 {
-                    LocalSettingsHelper.NeedSetModelData = appSettings.NeedSetModelData;
-                    this.logger.Log($"Set Model Data: {LocalSettingsHelper.NeedSetModelData}");
+                    LocalSettingsHelper.SetModelData = appSettings.SetModelData;
+                    this.logger.Log($"Set Model Data: {LocalSettingsHelper.SetModelData}");
                 }
 
                 if (keywordActivationModelDataFormatModified

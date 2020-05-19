@@ -178,10 +178,10 @@ namespace UWPVoiceAssistantSample
 
         /// <summary>
         /// Gets or sets a value indicating whether to set model data for a keyword configuration.
-        /// Set this value to false if use Cortana keyword. Cortana model data is included into windows image
-        /// Aar will load it from system folder. No need to reset it.
+        /// Set this value to false if using a keyword including in the windows image.
+        /// AAR will load it from system folder. No need to reset it.
         /// </summary>
-        public static bool NeedSetModelData { get; set; }
+        public static bool SetModelData { get; set; }
 
         public static DialogAudio OutputFormat
         {
@@ -258,7 +258,7 @@ namespace UWPVoiceAssistantSample
                 SetProperty = appSettings.SetProperty;
                 EnableKwsLogging = appSettings.EnableKwsLogging;
                 EnableHardwareDetector = appSettings.EnableHardwareDetector;
-                NeedSetModelData = appSettings.NeedSetModelData;
+                SetModelData = appSettings.SetModelData;
             }
         }
 

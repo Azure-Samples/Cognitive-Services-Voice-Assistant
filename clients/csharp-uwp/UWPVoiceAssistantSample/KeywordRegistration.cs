@@ -284,7 +284,7 @@ namespace UWPVoiceAssistantSample
 
         private async Task SetModelDataIfNeededAsync(ActivationSignalDetectionConfiguration configuration)
         {
-            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0 || !LocalSettingsHelper.NeedSetModelData)
+            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0 || !LocalSettingsHelper.SetModelData)
             {
                 // Keyword is already up to date according to this data; nothing to do here!
                 return;
