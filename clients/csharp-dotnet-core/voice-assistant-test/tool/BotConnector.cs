@@ -45,7 +45,6 @@ namespace VoiceAssistantTest
         private bool keyword;
         private KeywordRecognitionModel kwsTable;
         private int speechDuration = 0;
-        private bool realTimeAudio = false;
 
         /// <summary>
         /// Gets or sets recognized text of the speech input.
@@ -151,7 +150,6 @@ namespace VoiceAssistantTest
 
             if (this.appsettings.RealTimeAudio)
             {
-                this.realTimeAudio = true;
                 config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100");
                 config.SetProperty("SPEECH-TransmitLengthBeforeThrottleMs", "0");
             }
@@ -567,7 +565,7 @@ namespace VoiceAssistantTest
             // TODO: When there is TTS audio, get the elapsed time only after first TTS buffer was received
             int elapsedTime = (int)this.stopWatch.ElapsedMilliseconds;
 
-            if (this.realTimeAudio)
+            if (this.appsettings.RealTimeAudio)
             {
                 // For WAV file input, the timer starts on SessionStart event. If we consume the audio from the input stream at real-time, then by subtracting
                 // the speech duration here, its as if we started the timer at the point that speech stopped. This is what we want to accurately measure UPL.
