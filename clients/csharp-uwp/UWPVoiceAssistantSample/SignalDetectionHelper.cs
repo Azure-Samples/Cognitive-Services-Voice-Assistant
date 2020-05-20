@@ -172,7 +172,7 @@ namespace UWPVoiceAssistantSample
 
             if (!isFinal)
             {
-                this.logger.Log(LogMessageLevel.Error, $"KeywordRecognitionDuringSignalVerification: Verifying : {recognitionText}");
+                this.logger.Log($"KeywordRecognitionDuringSignalVerification: Verifying : {recognitionText}");
             }
             else if (string.IsNullOrEmpty(recognitionText))
             {
