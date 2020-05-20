@@ -40,11 +40,11 @@ namespace VoiceAssistantTest
         private int turnID;
         private int indexActivityWithAudio = 0;
         private int ttsStreamDownloadCount = 0;
-        private int elapsedTime = 0;
         private List<Activity> ignoreActivitiesList;
         private Stopwatch stopWatch;
         private bool keyword;
         private KeywordRecognitionModel kwsTable;
+        private int speechDuration = 0;
 
         /// <summary>
         /// Gets or sets recognized text of the speech input.
@@ -55,16 +55,6 @@ namespace VoiceAssistantTest
         /// Gets or sets recognized keyword.
         /// </summary>
         public string RecognizedKeyword { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual length of speech in WavFile obtained from RecognizedSpeech event.
-        /// </summary>
-        public int LengthOfSpeechInWavFile { get; set; }
-
-        /// <summary>
-        /// Gets or sets the time in milliseconds between SessionStarted and ActivityReceived events.
-        /// </summary>
-        public int UserPerceivedLatency { get; set; }
 
         private List<BotReply> BotReplyList { get; set; }
 
@@ -177,7 +167,7 @@ namespace VoiceAssistantTest
             if (this.appsettings.BotGreeting)
             {
                 // Starting the timer to calculate latency for Bot Greeting.
-                this.stopWatch.Start();
+                this.stopWatch.Restart();
             }
 
             this.AttachHandlers();
@@ -295,7 +285,7 @@ namespace VoiceAssistantTest
         public async Task<BotConnector> SendActivity(string activity)
         {
             this.stopWatch.Restart();
-            this.elapsedTime = 0;
+            this.speechDuration = 0;
 
             lock (this.BotReplyList)
             {
@@ -545,9 +535,9 @@ namespace VoiceAssistantTest
             if (e.Result.Reason == ResultReason.RecognizedSpeech)
             {
                 this.RecognizedText = e.Result.Text;
-                this.LengthOfSpeechInWavFile = (int)e.Result.Duration.TotalMilliseconds;
+                this.speechDuration = (int)e.Result.Duration.TotalMilliseconds;
 
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}, Speech duration = {this.speechDuration}, Recognized text = {this.RecognizedText}");
             }
             else if (e.Result.Reason == ResultReason.RecognizedKeyword)
             {
@@ -572,22 +562,27 @@ namespace VoiceAssistantTest
             var json = e.Activity;
             var activity = JsonConvert.DeserializeObject<Activity>(json);
 
-            this.stopWatch.Stop();
+            // TODO: When there is TTS audio, get the elapsed time only after first TTS buffer was received
+            int elapsedTime = (int)this.stopWatch.ElapsedMilliseconds;
 
-            this.elapsedTime += (int)this.stopWatch.ElapsedMilliseconds;
+            if (this.appsettings.RealTimeAudio)
+            {
+                // For WAV file input, the timer starts on SessionStart event. If we consume the audio from the input stream at real-time, then by subtracting
+                // the speech duration here, its as if we started the timer at the point that speech stopped. This is what we want to accurately measure UPL.
+                // For any other input (text or Activity), the speechDuration value is not relevant and should be zero at this point.
+                elapsedTime -= this.speechDuration;
+            }
 
-            this.UserPerceivedLatency = this.elapsedTime - this.LengthOfSpeechInWavFile;
+            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Activity received, elapsedTime = {elapsedTime}, speechDuration = {this.speechDuration}");
 
             int activityIndex = 0;
             int ttsDuration = 0;
 
             lock (this.BotReplyList)
             {
-                this.BotReplyList.Add(new BotReply(activity, this.elapsedTime, false));
+                this.BotReplyList.Add(new BotReply(activity, elapsedTime, false));
                 activityIndex = this.BotReplyList.Count - 1;
             }
-
-            this.elapsedTime = 0;
 
             if (e.HasAudio)
             {
@@ -600,8 +595,6 @@ namespace VoiceAssistantTest
                     this.BotReplyList[activityIndex].TTSAudioDuration = ttsDuration;
                 }
             }
-
-            this.stopWatch.Restart();
         }
 
         private void SpeechBotConnector_Canceled(object sender, SpeechRecognitionCanceledEventArgs e)
@@ -618,7 +611,7 @@ namespace VoiceAssistantTest
 
         private void SpeechBotConnector_SessionStarted(object sender, SessionEventArgs e)
         {
-            this.stopWatch.Start();
+            this.stopWatch.Restart();
             Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Session Started event received. SessionId = {e.SessionId}");
         }
 

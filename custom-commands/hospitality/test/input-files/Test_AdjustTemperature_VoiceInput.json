@@ -16,7 +16,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [4300],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 1,
@@ -31,7 +31,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -52,7 +52,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": ["3300 || 2000"],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 1,
@@ -67,7 +67,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 2,
@@ -82,7 +82,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -103,7 +103,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3950],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -124,7 +124,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3950],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -145,7 +145,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 1,
@@ -160,7 +160,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [4350],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 2,
@@ -175,7 +175,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -196,7 +196,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 1,
@@ -211,7 +211,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -232,7 +232,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3600],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -253,7 +253,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 1,
@@ -268,7 +268,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -289,7 +289,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 1,
@@ -304,7 +304,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -325,7 +325,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 1,
@@ -340,7 +340,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3900],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -361,7 +361,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2750],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       },
       {
         "TurnID": 1,
@@ -376,7 +376,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3850],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   }
