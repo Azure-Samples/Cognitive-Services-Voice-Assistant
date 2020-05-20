@@ -122,6 +122,10 @@ namespace UWPVoiceAssistantSample
                 case LogMessageLevel.Information:
                     return LogLevel.Info;
                 case LogMessageLevel.Noise:
+                case LogMessageLevel.ConversationalAgentSignal:
+                    return LogLevel.Info;
+                case LogMessageLevel.SignalDetection:
+                    return LogLevel.Info;
                 default:
                     return LogLevel.Trace;
             }

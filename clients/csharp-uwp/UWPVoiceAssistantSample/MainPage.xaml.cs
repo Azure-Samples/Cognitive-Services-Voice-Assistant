@@ -11,6 +11,7 @@ namespace UWPVoiceAssistantSample
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using NLog.Fluent;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
@@ -42,6 +43,8 @@ namespace UWPVoiceAssistantSample
         private readonly HashSet<TextBlock> informationLogs;
         private readonly HashSet<TextBlock> errorLogs;
         private readonly HashSet<TextBlock> noiseLogs;
+        private readonly HashSet<TextBlock> signalDetectionLogs;
+        private readonly HashSet<TextBlock> conversationAgentLogs;
         private readonly App app;
         private bool configModified;
         private bool hypotheizedSpeechToggle;
@@ -68,6 +71,8 @@ namespace UWPVoiceAssistantSample
             this.informationLogs = new HashSet<TextBlock>();
             this.errorLogs = new HashSet<TextBlock>();
             this.noiseLogs = new HashSet<TextBlock>();
+            this.signalDetectionLogs = new HashSet<TextBlock>();
+            this.conversationAgentLogs = new HashSet<TextBlock>();
 
             // Ensure that we restore the full view (not the compact mode) upon foreground launch
             _ = this.UpdateViewStateAsync();
@@ -508,6 +513,29 @@ namespace UWPVoiceAssistantSample
             return false;
         }
 
+        private bool LogSignalDetection(string signal)
+        {
+            if (signal.Contains("SignalDetection", StringComparison.OrdinalIgnoreCase))
+            {
+                TextBlock signalTextBlock = new TextBlock();
+                signalTextBlock.Foreground = new SolidColorBrush(Colors.DarkOrange);
+                signalTextBlock.TextWrapping = TextWrapping.Wrap;
+                string[] split = signal.Split("SignalDetection");
+                signalTextBlock.Text = split[1];
+
+                this.signalDetectionLogs.Add(signalTextBlock);
+
+                if (this.LogSignalDetectionFlyoutItem.IsChecked)
+                {
+                    this.ChangeLogStackPanel.Children.Add(signalTextBlock);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         private async void WriteLog()
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -521,6 +549,9 @@ namespace UWPVoiceAssistantSample
                     {
                     }
                     else if (this.LogErrors(text))
+                    {
+                    }
+                    else if (this.LogSignalDetection(text))
                     {
                     }
                     else
@@ -552,6 +583,16 @@ namespace UWPVoiceAssistantSample
                 foreach (TextBlock textBlock in this.errorLogs)
                 {
                     textBlock.Visibility = this.LogErrorFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                foreach (TextBlock textBlock in this.signalDetectionLogs)
+                {
+                    textBlock.Visibility = this.LogSignalDetectionFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                foreach (TextBlock textBlock in this.conversationAgentLogs)
+                {
+                    textBlock.Visibility = this.LogConversationalAgentSignalFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
                 }
 
                 this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);
@@ -617,102 +658,102 @@ namespace UWPVoiceAssistantSample
 
             if (this.configModified)
             {
-                this.logger.Log("Configuration file has been modified");
+                this.logger.Log(LogMessageLevel.Information, "Configuration file has been modified");
 
                 if (speechKeyModified)
                 {
                     LocalSettingsHelper.SpeechSubscriptionKey = appSettings.SpeechSubscriptionKey;
-                    this.logger.Log($"Speech Key: {LocalSettingsHelper.SpeechSubscriptionKey}");
+                    this.logger.Log(LogMessageLevel.Information, $"Speech Subscription Key: {LocalSettingsHelper.SpeechSubscriptionKey}");
                 }
 
                 if (speechRegionModified)
                 {
                     LocalSettingsHelper.SpeechRegion = appSettings.SpeechRegion;
-                    this.logger.Log($"Azure Region: {LocalSettingsHelper.SpeechRegion}");
+                    this.logger.Log(LogMessageLevel.Information, $"Speech Region: {LocalSettingsHelper.SpeechRegion}");
                 }
 
                 if (customSpeechIdModified)
                 {
                     LocalSettingsHelper.CustomSREndpointId = appSettings.CustomSREndpointId;
-                    this.logger.Log($"Custom Speech Id: {LocalSettingsHelper.CustomSREndpointId}");
+                    this.logger.Log(LogMessageLevel.Information, $"Custom SR Endpoint Id: {LocalSettingsHelper.CustomSREndpointId}");
                 }
 
                 if (customVoiceIdModified)
                 {
                     LocalSettingsHelper.CustomVoiceDeploymentIds = appSettings.CustomVoiceDeploymentIds;
-                    this.logger.Log($"Custom Voice Id: {LocalSettingsHelper.CustomVoiceDeploymentIds}");
+                    this.logger.Log(LogMessageLevel.Information, $"Custom Voice Deployment Id: {LocalSettingsHelper.CustomVoiceDeploymentIds}");
                 }
 
                 if (customCommandsAppIdModified)
                 {
                     LocalSettingsHelper.CustomCommandsAppId = appSettings.CustomCommandsAppId;
-                    this.logger.Log($"Custom Commands App Id: {LocalSettingsHelper.CustomCommandsAppId}");
+                    this.logger.Log(LogMessageLevel.Information, $"Custom Commands App Id: {LocalSettingsHelper.CustomCommandsAppId}");
                 }
 
                 if (botIdModified)
                 {
                     LocalSettingsHelper.BotId = appSettings.BotId;
-                    this.logger.Log($"Bot Id: {LocalSettingsHelper.BotId}");
+                    this.logger.Log(LogMessageLevel.Information, $"Bot Id: {LocalSettingsHelper.BotId}");
                 }
 
                 if (keywordDisplayNameModified)
                 {
                     LocalSettingsHelper.KeywordDisplayName = appSettings.KeywordActivationModel.DisplayName;
-                    this.logger.Log($"Keyword Display Name: {LocalSettingsHelper.KeywordDisplayName}");
+                    this.logger.Log(LogMessageLevel.Information, $"Keyword Display Name: {LocalSettingsHelper.KeywordDisplayName}");
                 }
 
                 if (keywordIdModified)
                 {
                     LocalSettingsHelper.KeywordId = appSettings.KeywordActivationModel.KeywordId;
-                    this.logger.Log($"Keyword Id: {LocalSettingsHelper.KeywordId}");
+                    this.logger.Log(LogMessageLevel.Information, $"Keyword Id: {LocalSettingsHelper.KeywordId}");
                 }
 
                 if (keywordModelIdModified)
                 {
                     LocalSettingsHelper.KeywordModelId = appSettings.KeywordActivationModel.ModelId;
-                    this.logger.Log($"Keyword Model Id: {LocalSettingsHelper.KeywordModelId}");
+                    this.logger.Log(LogMessageLevel.Information, $"Keyword Model Id: {LocalSettingsHelper.KeywordModelId}");
                 }
 
                 if (keywordActivationModelDataFormatModified)
                 {
                     LocalSettingsHelper.KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
-                    this.logger.Log($"Keyword Activation Model Data Format: {LocalSettingsHelper.KeywordActivationModelDataFormat}");
+                    this.logger.Log(LogMessageLevel.Information, $"Keyword Activation Model Data Format: {LocalSettingsHelper.KeywordActivationModelDataFormat}");
                 }
 
                 if (keywordActivationModelPathModified)
                 {
                     LocalSettingsHelper.KeywordActivationModelPath = appSettings.KeywordActivationModel.Path;
-                    this.logger.Log($"Keyword Activation Model Path: {LocalSettingsHelper.KeywordActivationModelPath}");
+                    this.logger.Log(LogMessageLevel.Information, $"Keyword Activation Model Path: {LocalSettingsHelper.KeywordActivationModelPath}");
                 }
 
                 if (keywordRecognitionModelPathModified)
                 {
                     LocalSettingsHelper.KeywordRecognitionModel = appSettings.KeywordRecognitionModel;
-                    this.logger.Log($"Keyword Recognition Model Path: {LocalSettingsHelper.KeywordRecognitionModel}");
+                    this.logger.Log(LogMessageLevel.Information, $"Keyword Recognition Model Path: {LocalSettingsHelper.KeywordRecognitionModel}");
                 }
 
                 if (setPropertyIdModified)
                 {
                     LocalSettingsHelper.SetProperty = appSettings.SetProperty;
-                    this.logger.Log($"KWS Performance Logging: {LocalSettingsHelper.SetProperty}");
+                    this.logger.Log(LogMessageLevel.Information, $"DialogServiceConnector Property: {LocalSettingsHelper.SetProperty}");
                 }
 
                 if (enableKwsLogging)
                 {
                     LocalSettingsHelper.EnableKwsLogging = appSettings.EnableKwsLogging;
-                    this.logger.Log($"KwsLoggins is set to: {LocalSettingsHelper.EnableKwsLogging}");
+                    this.logger.Log(LogMessageLevel.Information, $"KwsLogging is set to: {LocalSettingsHelper.EnableKwsLogging}");
                 }
 
                 if (enabledHardwareDetector)
                 {
                     LocalSettingsHelper.EnableHardwareDetector = appSettings.EnableHardwareDetector;
-                    this.logger.Log($"Enable Hardware Detector: {LocalSettingsHelper.EnableHardwareDetector}");
+                    this.logger.Log(LogMessageLevel.Information, $"Enable Hardware Detector: {LocalSettingsHelper.EnableHardwareDetector}");
                 }
 
                 if (enableSetModelData)
                 {
                     LocalSettingsHelper.SetModelData = appSettings.SetModelData;
-                    this.logger.Log($"Set Model Data: {LocalSettingsHelper.SetModelData}");
+                    this.logger.Log(LogMessageLevel.Information, $"Set Model Data: {LocalSettingsHelper.SetModelData}");
                 }
 
                 if (keywordActivationModelDataFormatModified
@@ -727,7 +768,7 @@ namespace UWPVoiceAssistantSample
             }
             else
             {
-                this.logger.Log("No changes in config");
+                this.logger.Log(LogMessageLevel.Information, "No changes in config");
             }
         }
 

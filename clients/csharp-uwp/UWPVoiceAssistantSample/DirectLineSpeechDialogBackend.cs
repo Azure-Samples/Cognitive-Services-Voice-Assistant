@@ -177,7 +177,7 @@ namespace UWPVoiceAssistantSample
                         case ResultReason.RecognizedKeyword:
                             var thirdStageStartTime = KwsPerformanceLogger.KwsStartTime.Ticks;
                             thirdStageStartTime = DateTime.Now.Ticks;
-                            this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
                             this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
                             this.secondStageConfirmed = false;
