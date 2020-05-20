@@ -193,7 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\ActivationKeywords\Contoso.bin" />
-    <Content Include="Assets\ActivationKeywords\contosoInfo.txt" />
+    <Content Include="Assets\ActivationKeywords\KeywordConfigurationsInfo.txt" />
     <Content Include="..\..\..\keyword-models\*.*">
       <Link>Assets\ConfirmationKeywords\%(RecursiveDir)%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
