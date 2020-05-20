@@ -15,12 +15,24 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 {
     _agentConfig = agentConfig;
 
-    InitializeDialogServiceConnector();
+    InitializeDialogServiceConnectorFromMicrophone();
     InitializePlayer();
     AttachHandlers();
+    InitializeConnection();
 }
 
-void DialogManager::InitializeDialogServiceConnector()
+DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath)
+{
+    _agentConfig = agentConfig;
+    _audioFilePath = audioFilePath;
+
+    InitializeDialogServiceConnectorFromFile();
+    InitializePlayer();
+    AttachHandlers();
+    InitializeConnection();
+}
+
+void DialogManager::InitializeDialogServiceConnectorFromMicrophone()
 {
     log_t("Configuration loaded. Creating connector...");
     
@@ -35,20 +47,6 @@ void DialogManager::InitializeDialogServiceConnector()
         _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
     #endif
     log_t("Connector created");
-    auto future = _dialogServiceConnector->ConnectAsync();
-
-    log_t("Creating prime activity");
-    nlohmann::json keywordPrimingActivity =
-    {
-        { "type", "event" },
-        { "name", "KeywordPrefix" },
-        { "value", _agentConfig->KeywordDisplayName() }
-    };
-    auto keywordPrimingActivityText = keywordPrimingActivity.dump();
-    log_t("Sending inform-of-keyword activity: ", keywordPrimingActivityText);
-    auto stringFuture = _dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
-
-    log_t("Connector successfully initialized!");
 }
 
 void DialogManager::InitializePlayer()
@@ -281,4 +279,108 @@ void DialogManager::StopKws()
     }
 
     log_t("Exit StopKws (state = ", uint32_t(_keywordActivationState), ")");
+}
+
+fstream DialogManager::OpenFile(const string& audioFilePath)
+{
+    if (audioFilePath.empty())
+    {
+        throw invalid_argument("Audio filename is empty");
+    }
+
+    fstream fs;
+    fs.open(audioFilePath, ios_base::binary | ios_base::in);
+    if (!fs.good())
+    {
+        throw invalid_argument("Failed to open the specified audio file.");
+    }
+
+    return fs;
+}
+
+int DialogManager::ReadBuffer(fstream& fs, uint8_t* dataBuffer, uint32_t size)
+{
+    if (fs.eof())
+    {
+        // returns 0 to indicate that the stream reaches end.
+        return 0;
+    }
+
+    fs.read((char*)dataBuffer, size);
+
+    if (!fs.eof() && !fs.good())
+    {
+        // returns 0 to close the stream on read error.
+        return 0;
+    }
+    else
+    {
+        // returns the number of bytes that have been read.
+        return (int)fs.gcount();
+    }
+}
+
+void DialogManager::PushData(const string& audioFilePath)
+{
+    fstream fs;
+    try
+    {
+        fs = OpenFile(audioFilePath);
+        //skip the wave header
+        fs.seekg(44);
+    }
+    catch (const exception& e)
+    {
+        cerr << "Error: exception in pushData, %s." << e.what() << endl;
+        cerr << "  can't open " << audioFilePath << endl;
+        throw e;
+        return;
+    }
+
+    std::array<uint8_t, 1000> buffer;
+    while (1)
+    {
+        auto readSamples = ReadBuffer(fs, buffer.data(), (uint32_t)buffer.size());
+        if (readSamples == 0)
+        {
+            break;
+        }
+        _pushStream.get()->Write(buffer.data(), readSamples);
+    }
+    fs.close();
+    _pushStream.get()->Close();
+}
+
+void DialogManager::ListenFromFile()
+{
+    PushData(_audioFilePath);
+    _dialogServiceConnector->ListenOnceAsync();
+}
+
+void DialogManager::InitializeDialogServiceConnectorFromFile()
+{
+    log_t("Configuration loaded. Creating connector...");
+    shared_ptr<DialogServiceConfig> config = _agentConfig->CreateDialogServiceConfig();
+    _pushStream = AudioInputStream::CreatePushStream();
+    auto audioConfig = AudioConfig::FromStreamInput(_pushStream);
+        
+    _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
+    log_t("Connector created");
+}
+
+void DialogManager::InitializeConnection()
+{
+    auto future = _dialogServiceConnector->ConnectAsync();
+    log_t("Creating prime activity");
+    nlohmann::json keywordPrimingActivity =
+    {
+        { "type", "event" },
+        { "name", "KeywordPrefix" },
+        { "value", _agentConfig->KeywordDisplayName() }
+    };
+    auto keywordPrimingActivityText = keywordPrimingActivity.dump();
+    log_t("Sending inform-of-keyword activity: ", keywordPrimingActivityText);
+    auto stringFuture = _dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
+
+    log_t("Connector successfully initialized!");
 }

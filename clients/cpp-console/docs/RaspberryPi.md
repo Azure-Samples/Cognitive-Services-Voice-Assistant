@@ -86,11 +86,19 @@ cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/l
 
 * Run the sample from the out folder
 
+### Using Microphone Input
 ```sh
 cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/out
 export LD_LIBRARY_PATH="../lib/arm32"
 ./sample.exe ../configs/config.json
-```  
+```
+
+### Using Audio Files as Input
+```sh
+cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/out
+export LD_LIBRARY_PATH="../lib/arm32"
+./sample.exe ../configs/config.json audioFilePath
+```
 
 ### Installing as a service
 
