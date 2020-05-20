@@ -13,6 +13,16 @@ namespace UWPVoiceAssistantSample
     public enum LogMessageLevel
     {
         /// <summary>
+        /// ConversationalAgent's session changes - these are related to the changes in Conversation State
+        /// </summary>
+        ConversationalAgentSignal,
+
+        /// <summary>
+        /// Signal Detection events and keyword verification stages.
+        /// </summary>
+        SignalDetection,
+
+        /// <summary>
         /// Verbose information that's generally diagnostic-only
         /// </summary>
         Noise,
