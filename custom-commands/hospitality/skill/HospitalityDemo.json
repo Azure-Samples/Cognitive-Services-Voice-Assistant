@@ -158,6 +158,14 @@
     "# AdjustTemperatureRoomControlBackendonFailurefd34ee9028f311ea88cde3d2ef24c102",
     "- Sorry, unable to connect to the room control service right now"
   ],
+  "registeredWakeWords": [
+    "computer",
+    "contohso",
+    "jayden",
+    "ok speaker",
+    "raspberry pie",
+    "exbox"
+  ],
   "globalParameters": [],
   "commands": [
     {

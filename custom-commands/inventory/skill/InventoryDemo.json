@@ -154,6 +154,14 @@
     "- Unable to connect to the warehouse.",
     "- Failed to connect to inventory."
   ],
+  "registeredWakeWords": [
+    "computer",
+    "contohso",
+    "jayden",
+    "ok speaker",
+    "raspberry pie",
+    "exbox"
+  ],
   "globalParameters": [],
   "commands": [
     {

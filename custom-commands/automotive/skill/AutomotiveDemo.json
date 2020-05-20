@@ -46,6 +46,14 @@
     "- Unable to connect to virtual automotive",
     "- Unable to connect to virtual car"
   ],
+  "registeredWakeWords": [
+    "computer",
+    "contohso",
+    "jayden",
+    "ok speaker",
+    "raspberry pie",
+    "exbox"
+  ],
   "globalParameters": [],
   "commands": [
     {
