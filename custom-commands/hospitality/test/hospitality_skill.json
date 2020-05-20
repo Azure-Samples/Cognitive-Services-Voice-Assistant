@@ -64,4 +64,6 @@
   "SpeechSubscriptionKey": "0123456789abcdef0123456789abcdef",
   "SpeechRegion": "westus2",
   "CustomCommandsAppId": "abcdef0123456789abcdef0123456789",
+  "RealTimeAudio": false,
+  "Timeout": 5000
 }

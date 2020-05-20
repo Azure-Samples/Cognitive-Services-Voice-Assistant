@@ -217,8 +217,8 @@ namespace VoiceAssistantTest
         /// </summary>
         /// <param name="turn"> Input Turns.</param>
         /// <param name="bootstrapMode">Boolean which defines if turn is in bootstrapping mode or not.</param>
-        /// <param name="recognizedText">Recognized text from Speech Recongition.</param>
-        /// <param name="recognizedKeyword">Recogized Keyword from Keyword Recognition.</param>
+        /// <param name="recognizedText">Recognized text from Speech Recognition.</param>
+        /// <param name="recognizedKeyword">Recognized Keyword from Keyword Recognition.</param>
         /// <returns>TurnsOutput.</returns>
         public TurnResult BuildOutput(Turn turn, bool bootstrapMode, string recognizedText, string recognizedKeyword)
         {

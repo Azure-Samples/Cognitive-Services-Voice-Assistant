@@ -1,6 +1,7 @@
 [
   {
     "DialogID": "0",
+    "Skip": false,
     "Description": "Testing 'turn it {OnOff}'",
     "Turns": [
       {
@@ -16,7 +17,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       },
       {
         "TurnID": 1,
@@ -31,12 +32,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "1",
+    "Skip": false,
     "Description": "Testing 'turn the {SubjectDevice} {OnOff}'",
     "Turns": [
       {
@@ -52,12 +54,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "2",
+    "Skip": false,
     "Description": "Testing 'turn the {SubjectContext} {SubjectDevice} {OnOff}'",
     "Turns": [
       {
@@ -73,12 +76,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "3",
+    "Skip": false,
     "Description": "Testing 'turn {OnOff} the {SubjectDevice}'",
     "Turns": [
       {
@@ -94,12 +98,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2500],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "4",
+    "Skip": false,
     "Description": "Testing 'turn {OnOff} the {SubjectContext} {SubjectDevice}'",
     "Turns": [
       {
@@ -115,12 +120,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "5",
+    "Skip": false,
     "Description": "Testing '{SubjectDevice} {OnOff}'",
     "Turns": [
       {
@@ -136,12 +142,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "6",
+    "Skip": false,
     "Description": "Testing 'I want the {SubjectDevice} {OnOff}'",
     "Turns": [
       {
@@ -157,12 +164,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "7",
+    "Skip": false,
     "Description": "Testing 'control a device'",
     "Turns": [
       {
@@ -178,7 +186,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       },
       {
         "TurnID": 1,
@@ -193,7 +201,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       },
       {
         "TurnID": 2,
@@ -208,12 +216,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "8",
+    "Skip": false,
     "Description": "Testing 'I want to control a device'",
     "Turns": [
       {
@@ -229,7 +238,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       },
       {
         "TurnID": 1,
@@ -244,7 +253,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       },
       {
         "TurnID": 2,
@@ -259,12 +268,13 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2600],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   },
   {
     "DialogID": "9",
+    "Skip": false,
     "Description": "Testing 'turn {OnOff}'",
     "Turns": [
       {
@@ -280,7 +290,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       },
       {
         "TurnID": 1,
@@ -295,7 +305,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [3000],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 10000
       }
     ]
   }
