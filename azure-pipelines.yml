@@ -173,8 +173,9 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    Contents: '**\$(sample3PublishedArtifactPath)\**\?(*.exe|*.dll|*.pdb)'
-    TargetFolder: '$(sample3PublishedArtifactName)'
+    sourceFolder: '$(sample3PublishedArtifactPath)'
+    contents: '**\$(sample3PublishedArtifactPath)\**\?(*.exe|*.dll|*.pdb)'
+    targetFolder: '$(sample3PublishedArtifactPath)'
 
 - task: PublishPipelineArtifact@1
   displayName: '$(sample3Name) - PublishPipelineArtifact'
