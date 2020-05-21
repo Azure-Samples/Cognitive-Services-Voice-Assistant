@@ -137,6 +137,14 @@
     "- I didn't quite understand that.",
     "- That functionality isn't supported yet."
   ],
+  "registeredWakeWords": [
+    "computer",
+    "contohso",
+    "jayden",
+    "ok speaker",
+    "raspberry pie",
+    "exbox"
+  ],
   "globalParameters": [],
   "commands": [
     {
