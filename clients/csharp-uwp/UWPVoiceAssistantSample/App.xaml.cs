@@ -5,17 +5,14 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioOutput;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
     using Windows.ApplicationModel.Background;
-    using Windows.ApplicationModel.ConversationalAgent;
     using Windows.ApplicationModel.Core;
-    using Windows.Storage;
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -189,6 +186,7 @@ namespace UWPVoiceAssistantSample
 
             if (args?.TaskInstance.Task.Name == MVARegistrationHelpers.BackgroundTriggerName)
             {
+                KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks / 10000);
                 this.logger.Log($"OnBackgroundActivated: 1st-stage keyword activation");
                 this.dialogManager.HandleSignalDetection();
 
@@ -214,6 +212,7 @@ namespace UWPVoiceAssistantSample
 
         private void InitializeSignalDetection()
         {
+            KwsPerformanceLogger.KwsStartTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
             this.dialogManager.SignalConfirmed += this.OnSignalConfirmed;
             this.dialogManager.SignalRejected += this.OnSignalRejected;
         }

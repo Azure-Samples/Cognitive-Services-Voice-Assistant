@@ -132,8 +132,8 @@
           2304,
           8197
         ],
-        "ExpectedResponseLatency": "3000",
-        "ActualResponseLatency": 460,
+        "ExpectedUserPerceivedLatency": "3000",
+        "ActualUserPerceivedLatency": 460,
         "ResponseMatch": true,
         "UtteranceMatch": true,
         "TTSAudioResponseDurationMatch": true,

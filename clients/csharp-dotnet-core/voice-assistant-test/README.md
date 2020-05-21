@@ -67,11 +67,11 @@ Here is the full list:
 >#### OutputFolder
 >`string | optional | empty string | "C:\\Tests\\TestOutputFolder\\"`. Full or relative path to the folder where output files will be written. The folder will be created if it does not exist. You will likely want the string to end with "\\\\" since output file names will be appended to this path.        |
 
->#### SubscriptionKey
+>#### SpeechSubscriptionKey
 >`string | required | "01234567890abcdef01234567890abcdef"`. Cognitive Services Speech API Key. Should be a GUID without dashes.
 
->#### Region
->`string | required | "westus"`. Azure region associated with your [SubscriptionKey](#subscriptionkey).
+>#### SpeechRegion
+>`string | required | "westus"`. Azure region associated with your [SpeechSubscriptionKey](#speechubscriptionkey).
 
 >#### SRLanguage
 >`string | optional | "en-US" | "es-MX"`. Speech Recognition Language. It is the source language of your audio. Must be one of the Locale values mentioned in this [Speech-to-text table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).
@@ -116,6 +116,9 @@ Here is the full list:
 
 >#### SetServiceProperty
 >`JSON string | optional | null | [{"PropertyKey", "PropertyValue"}]`. A JSON string that is an array of pairs of two string values, used for custom settings of the Speech Service. Each pair results in a call to [DialogServiceConfig.SetServiceProperty(String, String, ServicePropertyChannel)](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconfig.setserviceproperty?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConfig_SetServiceProperty_System_String_System_String_Microsoft_CognitiveServices_Speech_ServicePropertyChannel_), where ServicePropertyChannel is set to ServicePropertyChannel.UriQueryParameter. Or the equivalent method on CustomCommandsConfig for custom command applications. For more detail, see the section [Custom Settings](#custom-settings)
+
+>#### RealTimeAudio
+>`bool | optional | false | true`. The default behavior of PushAudioInputStream is to send the first few seconds of audio as fast as possible to accommodate for short utterances. Following audio is throttled back to prevent client from spamming the service too fast but this throttled speed is faster than real-time microphone input. Set this optional flag to true to send audio at real-time (x1) speed. If this flag is set to true, the app config [Timeout](#Timeout) should be larger than the duration of the longest WAV file in the test. For more information see [Measuring User Perceived Latency](#Measuring-User-Perceived-Latency) section.
 
 >#### Tests
 >`JSON string | required | [{"FileName":"MyTestFile.json", "SingleConnection": true}]`. An array of JSON objects, each related to a single test configuration. Each of these JSON objects includes:
@@ -163,7 +166,8 @@ Here is the full list:
 >>`string | optional | null | "what is the weather tomorrow?"`. The field has two usages. If [WavFile](#wavfile) is not specified, this is the text that will be sent up to the bot as a Bot-Framework activity of type "message". Representing a user typed-text input. If [WavFile](#wavfile) is defined, this is the expected recognition result of the audio in the WAV file. If the recognition result does not match what is specified in this field, the test will fail. Note that the text comparison in this case is done while ignoring punctuation marks, upper/lower case differences and white space.
 >>
 >>##### WavFile
->>` string | optional | null | "test1.WAV"`. Audio from this WAV file is streaming to Direct Line Speech as the input in the turn, by calling the [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet) method (or [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet) method if [Keyword](#keyword) is true). This represents a user speaking to a microphone. It's good practice to have at least one second of silence (non speech) at the end of the WAV file to make sure the speech service properly detects end-of-speech, as it would with a live audio stream from a microphone. When this field is present, you can specify the expected recognition result in the [Utterance](#utterance) field.
+>>`string | optional | null | "test1.WAV"`. Audio from this WAV file is streaming to Direct Line Speech as the input in the turn, by calling the [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet) method (or [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet) method if [Keyword](#keyword) is true). This represents a user speaking to a microphone. It's good practice to have at least one second of silence (non speech) at the end of the WAV file to make sure the speech service properly detects end-of-speech, as it would with a live audio stream from a microphone. When this field is present, you can specify the expected recognition result in the [Utterance](#utterance) field.
+To send WavFile's at real time (x1) speed, see the [Measuing User Perceived Latency](#Measuring-User-Perceived-Latency) and [RealTimeAudio](#RealTimeAudio) sections.
 >>
 >>##### Activity
 >>`JSON string | optional | null | "{\"type\": \"message\",\"text\":\"Test sending text via activity\"}"`. A bot-framework JSON activity string. If this field is specified, you cannot specify the [WavFile](#wavfile) or [Utterance](#utterance) fields. Use this to send any custom activity to your bot using the [SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet) method.
@@ -177,8 +181,8 @@ Here is the full list:
 >>##### ExpectedTTSAudioResponseDurations 
 >>`array of strings | optional | null | ["1500", "-1", "2000 || 1700"]`. Expected duration (in msec) of bot response TTS audio stream. This allows you to validate that the right audio stream duration was downloaded by the tool. Otherwise the test will fail. The length of this array (if exists) must match the length of the [ExpectedResponses](#expectedresponses) array. Not every bot-response will have a TTS audio stream associated with it. In that case, specify a value of -1 in the array cell. The expected duration does not have to exactly match the actual duration for the test to succeed. This is controlled by the field [TTSAudioDurationMargin](#ttsaudiodurationmargin). Only if the different between expected duration and actual duration is outside this margin, the test will fail. See the [Getting Started Guide](docs/GETTING-STARTED-GUIDE.md) for an example of using ExpectedTTSAudioResponseDurations.
 >>
->>##### ExpectedResponseLatency 
->>`string | optional | null | "500", or "500,0" or "500,1"'. The expected time the tool should have received a particular bot-response activity. If the tool did not receive that activity by this latency value, the test will fail. There are two formats for the string. The first one just includes a positive integer. In this case the bot-response that is timed is the last one expected to arrive (based on the length of the [ExpectedResponses](#ExpectedResponses) array). So for example of the length of ExpectedResponses is 3, it means the tool will wait until it receives three bot response activities. If the 3rd one was not received by the time specified by ExpectedResponseLatency, the test will fail. The second format of the string is a positive integer (the duration), followed by a comma, followed by a zero-based index. The index specifies which of the bot-response activities should be time-measured, with 0 being the first one specified in the ExpectedResponses array. This second format allows you to put an upper limit on either one of the bot responses, not just the last one.
+>>##### ExpectedUserPerceivedLatency 
+>>`string | optional | null | "500", or "500,0" or "500,1"`. The expected time the tool should have received a particular bot-response activity. If the tool did not receive that activity by this latency value, the test will fail. There are two formats for the string. The first one just includes a positive integer. In this case the bot-response that is timed is the last one expected to arrive (based on the length of the [ExpectedResponses](#ExpectedResponses) array). So for example of the length of ExpectedResponses is 3, it means the tool will wait until it receives three bot response activities. If the 3rd one was not received by the time specified by ExpectedUserPerceivedLatency, the test will fail. The second format of the string is a positive integer (the duration), followed by a comma, followed by a zero-based index. The index specifies which of the bot-response activities should be time-measured, with 0 being the first one specified in the ExpectedResponses array. This second format allows you to put an upper limit on either one of the bot responses, not just the last one.
 
 ## Topics
 
@@ -207,9 +211,9 @@ Here is the recipe to creating a new regression test from scratch:
 1. Run your test. As [ExpectedResponses](#ExpectedResponses) is not specified, in means Turn 0 will run in bootstrapping mode. The tool will wait for a period specified by  [Timeout](#timeout) to collect all bot-responses. Note the default value of Timeout. As long as connection to your bot succeeded, the test should be marked as passed after the Timeout duration.
 1. Open the detailed test result file. If your test file is named TestConfig.json, the detailed test result will be named TestConfigOutput.json. 
 1. Copy the ActualResponses field, and optionally the ActualTTSAudioResponseDuration and ActualResponseLatency fields, and paste them into TestConfig.json, in the Turn 0 scope.
-1. Renamed those fields to ExpectedResponses, ExpectedTTSAudioResponseDurations and ExpectedResponseLatency.
+1. Renamed those fields to ExpectedResponses, ExpectedTTSAudioResponseDurations and ExpectedUserPerceivedLatency.
 1. Now edit ExpectedResponses and remove bot-framework activity fields, such that only a few are left -- the ones that you care about when it comes to evaluating bot response regressions. This includes removing fields such as [ID](https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#id) and [Timesamp](#https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md#timestamp) that are not fixed.
-1. If you want your test to fail when the duration of the TTS audio changes (with [TTSAudioDurationMargin](#ttsaudiodurationmargin)), leave the ExpectedTTSAudioResponseDurations field. Otherwise don't include it. If you want the test to fail when the bot response latency exceeds a certain value, edit the ExpectedResponseLatency field to include the upper limit of the latency.
+1. If you want your test to fail when the duration of the TTS audio changes (with [TTSAudioDurationMargin](#ttsaudiodurationmargin)), leave the ExpectedTTSAudioResponseDurations field. Otherwise don't include it. If you want the test to fail when the bot response latency exceeds a certain value, edit the ExpectedUserPerceivedLatency field to include the upper limit of the latency.
 1. Run the test again and make sure it succeeds. 
 1. If your bot supports additional turns, you can continue the process described above to populate the test for the next turn. That is, edit your TestConfig.json by adding { "TurnID": 1 } in your Turns array and run the test. This means Turn 0 runs normally, and Turn 1 is in bootstrapping mode.
 
@@ -276,6 +280,31 @@ Therefore if [Keyword](#keyword) is true in a dialog turn, the test configuratio
 If the keyword has been recognized successfully, the identified keyword will be listed in the string field named "KeywordVerified" in the output JSON test result file.
 
 Note that due to a bug in the way Speech SDK consumes audio from an input stream, keyword activation is limited to the first turn of the dialog. Therefore [Keyword](#keyword) can only be set to true when [TurnID](#turnid) is 0.
+
+### Measuring User Perceived Latency
+
+We define User Perceived Latency (UPL) as the duration between the time the user stops speaking (or submitting text input) and the time the uses sees an action taken by the Voice Assistant as a response. This test tool is generic and does not execute any real actions other than TTS playback. Therefore we define the "action" to be receiving the the first TTS audio butter (if there is a TTS response), or receiving the bot reply activity (if it does not include a TTS response). So it's easy to know when to stop the timer when measuring UPL.
+
+It's harder to know when to start the timer. For that we need to estimate the time speech has stopped. Here of course we use WAV files, but we can't simply measure the duration of the WAV file because speech may have stopped before the WAV file has ended. In fact there should be some short silence at the end of speech in the WAV file to make sure the speech recognition engine detects end-of-speech as if it was audio coming from a live microphone. To solve this we rely on an argument in the Speech recognition event called [RecognitionResult.Duration](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.recognitionresult.duration?view=azure-dotnet#Microsoft_CognitiveServices_Speech_RecognitionResult_Duration). This gives us the duration of the speech excluding any pre or post silence/noise. Assuming the WAV file is authored to make sure there is no silence at the beginning, we can use this value to estimate the duration of the speech portion in the WAV file. We therefore start the timer in the [SessionStarted](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sessionstarted?view=azure-dotnet) event. We stop the timer when the bot reply activity was received (or first TTS buffer received). But then we adust the elapsed time by subtracting the duration of the speech in the WAV file.
+
+The above will only work if Speech SDK is consuming input audio at real-time, as if it was a live microphone input. Turns out that by default this is not the case. When processing audio from an input stream, as done in this test tool, Speech SDK by default sends the first few seconds of audio as fast as it can, then throttles down the speed to a constant rate to prevent the client from flooding the service. The throttled speed is still faster than real-time microphone speed. This was done to help speed up speech recognition in mass batch-processing of WAV files for transcription.
+
+In our case we need to set the input stream consumption rate to real-time. For that we added a boolean application configuration file called [RealTimeAudio](#RealTimeAudio). It is off by default. Setting it to true will result in these to Speech SDK calls:
+```csharp
+config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100")
+config.SetProperty("SPEECH-TransmitLengthBeforeThrottleMs", "0");
+```
+The first property fixes the transmit speed at real time and the second removes the burst behavior at the start of speech recognition. Together they allow simulating speech recognition at real-time from an audio stream, as if it was live microphone input.
+
+Since now audio is consumed at real-time instead of faster than real time, you may need to adjust the [Timeout](#Timeout) duration. Make sure that this time is larger than the longest duration WAV file. 
+
+In summary, to accurately measure UPL do these three things:
+1. Make sure your WAV files do not have silence at the beginning. Speech should start right at the beginning of the WAV file
+1. Set the value of [RealTimeAudio](#RealTimeAudio) to true in your application configuration file
+1. Make sure the value for [Timeout](#Timeout) in your application configuration file is set to a value higher than the longest duration WAV file
+
+Note: This has not been tested when keyword activation is used. At this time we do not recommend measuring UPL using the above method when [Keyword](#Keyword) is set to true.
+
 
 ### Running tests in an Azure DevOps pipeline
 

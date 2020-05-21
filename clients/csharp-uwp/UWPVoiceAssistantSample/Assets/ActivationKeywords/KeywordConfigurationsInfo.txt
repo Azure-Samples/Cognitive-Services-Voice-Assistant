@@ -1,0 +1,17 @@
+"KeywordActivationModel": {
+    "DisplayName": "Computer",
+    "Path": "ms-appx:///Assets/ActivationKeywords/computer_en.bin",
+    "KeywordId": "{6D6719CB-4254-413B-B71B-6B82D5DBBE36}",
+    "ModelId": "1033",
+    "ModelDataFormat": "MICROSOFT_KWSGRAPH_V1"
+},
+"KeywordRecognitionModel": "ms-appx:///Assets/ConfirmationKeywords/computer.table"
+
+"KeywordActivationModel": {
+    "DisplayName": "Contoso",
+    "Path": "ms-appx:///Assets/ActivationKeywords/Contoso.bin",
+    "KeywordId": "{C0F1842F-D389-44D1-8420-A32A63B35568}",
+    "ModelId": "1033",
+    "ModelDataFormat": "MICROSOFT_KWSGRAPH_V1"
+},
+"KeywordRecognitionModel": "ms-appx:///Assets/ConfirmationKeywords/contoso.table"

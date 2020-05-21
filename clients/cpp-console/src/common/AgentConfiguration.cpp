@@ -21,19 +21,19 @@ using namespace std;
 
 namespace FieldNames
 {
-    constexpr auto KeywordModel = "keyword_model";
-    constexpr auto CommandsAppId = "commands_app_id";
-    constexpr auto SpeechSubscriptionKey = "speech_subscription_key";
-    constexpr auto SpeechRegion = "speech_region";
-    constexpr auto CustomVoiceDeploymentIds = "custom_voice_deployment_ids";
-    constexpr auto CustomSpeechDeploymentId = "custom_speech_deployment_id";
-    constexpr auto CustomEndpoint = "custom_endpoint";
-    constexpr auto KeywordDisplay = "keyword_display";
-    constexpr auto Volume = "volume";
-    constexpr auto BargeInSupported = "barge_in_supported";
-    constexpr auto LogFilePath = "log_file_path";
-    constexpr auto CustomMicConfigPath = "custom_mic_config_path";
-    constexpr auto LinuxCaptureDeviceName = "linux_capture_device_name";
+    constexpr auto KeywordRecognitionModel = "KeywordRecognitionModel";
+    constexpr auto CustomCommandsAppId = "CustomCommandsAppId";
+    constexpr auto SpeechSubscriptionKey = "SpeechSubscriptionKey";
+    constexpr auto SpeechRegion = "SpeechRegion";
+    constexpr auto CustomVoiceDeploymentIds = "CustomVoiceDeploymentIds";
+    constexpr auto CustomSREndpointId = "CustomSREndpointId";
+    constexpr auto UrlOverride = "UrlOverride";
+    constexpr auto KeywordDisplay = "Keyword";
+    constexpr auto Volume = "Volume";
+    constexpr auto BargeInSupported = "TTSBargeInSupported";
+    constexpr auto LogFilePath = "SpeechSDKLogFile";
+    constexpr auto CustomMicConfigPath = "CustomMicConfigPath";
+    constexpr auto LinuxCaptureDeviceName = "LinuxCaptureDeviceName";
 }
 
 AgentConfiguration::AgentConfiguration() : _loadResult(AgentConfigurationLoadResult::Undefined)
@@ -56,13 +56,13 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     ifstream inputStream{ path.data() };
     inputStream >> j;
 
-    config->_commandsAppId = j.value(FieldNames::CommandsAppId, "");
+    config->_customCommandsAppId = j.value(FieldNames::CustomCommandsAppId, "");
     config->_speechKey = j.value(FieldNames::SpeechSubscriptionKey, "");
     config->_speechRegion = j.value(FieldNames::SpeechRegion, "");
-    config->_customEndpoint = j.value(FieldNames::CustomEndpoint, "");
+    config->_urlOverride = j.value(FieldNames::UrlOverride, "");
     config->_customVoiceIds = j.value(FieldNames::CustomVoiceDeploymentIds, "");
-    config->_customSpeechId = j.value(FieldNames::CustomSpeechDeploymentId, "");
-    config->_keywordModelPath = j.value(FieldNames::KeywordModel, "");
+    config->_customSREndpointId = j.value(FieldNames::CustomSREndpointId, "");
+    config->_keywordRecognitionModel = j.value(FieldNames::KeywordRecognitionModel, "");
     config->_keywordDisplayName = j.value(FieldNames::KeywordDisplay, "");
     config->_logFilePath = j.value(FieldNames::LogFilePath, "");
     config->_customMicConfigPath = j.value(FieldNames::CustomMicConfigPath, "");
@@ -70,16 +70,16 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     config->_volume = atoi(j.value(FieldNames::Volume, "").c_str());
     config->_barge_in_supported = j.value(FieldNames::BargeInSupported, "");
 
-    if (config->_keywordModelPath.length() > 0)
+    if (config->_keywordRecognitionModel.length() > 0)
     {
-        if (!std::experimental::filesystem::exists(config->_keywordModelPath))
+        if (!std::experimental::filesystem::exists(config->_keywordRecognitionModel))
         {
             config->_loadResult = AgentConfigurationLoadResult::KWFileNotFound;
             return config;
         }
 
         // this check should be removed once the SDK properly validates KWS model files
-        std::experimental::filesystem::path pathObj(config->_keywordModelPath);
+        std::experimental::filesystem::path pathObj(config->_keywordRecognitionModel);
         if (!pathObj.has_extension() || pathObj.extension().string() != ".table")
         {
             config->_loadResult = AgentConfigurationLoadResult::KWFileWrongExtension;
@@ -93,13 +93,13 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
         return config;
     }
 
-    if (config->_customEndpoint.length() > 0 && config->_speechRegion.length() > 0)
+    if (config->_urlOverride.length() > 0 && config->_speechRegion.length() > 0)
     {
         config->_loadResult = AgentConfigurationLoadResult::RegionWithCustom;
         return config;
     }
 
-    if (config->_customEndpoint.empty() && config->_speechRegion.empty())
+    if (config->_urlOverride.empty() && config->_speechRegion.empty())
     {
         config->_loadResult = AgentConfigurationLoadResult::MissingRegion;
         return config;
@@ -149,13 +149,13 @@ shared_ptr<DialogServiceConfig> AgentConfiguration::AsDialogServiceConfig()
 
 shared_ptr<DialogServiceConfig> AgentConfiguration::CreateDialogServiceConfig()
 {
-    auto config = _commandsAppId.length() > 0
-        ? dynamic_pointer_cast<DialogServiceConfig>(CustomCommandsConfig::FromSubscription(_commandsAppId, _speechKey, _speechRegion))
+    auto config = _customCommandsAppId.length() > 0
+        ? dynamic_pointer_cast<DialogServiceConfig>(CustomCommandsConfig::FromSubscription(_customCommandsAppId, _speechKey, _speechRegion))
         : dynamic_pointer_cast<DialogServiceConfig>(BotFrameworkConfig::FromSubscription(_speechKey, _speechRegion, ""));
 
-    if (_customEndpoint.length() > 0)
+    if (_urlOverride.length() > 0)
     {
-        config->SetProperty(PropertyId::SpeechServiceConnection_Endpoint, _customEndpoint);
+        config->SetProperty(PropertyId::SpeechServiceConnection_Endpoint, _urlOverride);
     }
 
     if (_customVoiceIds.length() > 0)
@@ -168,9 +168,9 @@ shared_ptr<DialogServiceConfig> AgentConfiguration::CreateDialogServiceConfig()
         config->SetProperty(PropertyId::Speech_LogFilename, _logFilePath);
     }
 
-    if (_customSpeechId.length() > 0)
+    if (_customSREndpointId.length() > 0)
     {
-        config->SetServiceProperty("cid", _customSpeechId, ServicePropertyChannel::UriQueryParameter);
+        config->SetServiceProperty("cid", _customSREndpointId, ServicePropertyChannel::UriQueryParameter);
     }
 
     return config;

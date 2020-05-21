@@ -15,11 +15,15 @@ This page will guide you through building a sample [Voice Assistant](https://doc
 
 <p align="center">
 <a href="https://www.youtube.com/watch?v=1zr0umHGFyc">
-<img src="images/channel9-video-link.png" width="394" height="231"/>
+<img src="images/channel9-video-link.png" width="394"/>
 </a>
 </p>
 
 ## Step 2 - Select a Custom Command demo
+
+<p align="center">
+<img src="../custom-commands/images/all-scenes.png" width="982"/>
+</p>
 
 We have three demos for you to select from. Read about what voice commands they support and see the associated visualization. When you selected the one you would like to deploy, continue to Step 3
 * [Hospitality demo](../custom-commands/hospitality/README.md)

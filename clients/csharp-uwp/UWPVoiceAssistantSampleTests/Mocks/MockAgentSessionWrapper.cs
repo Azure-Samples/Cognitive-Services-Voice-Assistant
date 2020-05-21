@@ -33,6 +33,8 @@ namespace UWPVoiceAssistantSampleTests
         public bool IsSignalVerificationRequired { get; set; }
 
         public string SignalName { get; set; }
+        public TimeSpan SignalStart { get; set; }
+        public TimeSpan SignalEnd { get; set; }
 
         public event TypedEventHandler<ConversationalAgentSession, ConversationalAgentSessionInterruptedEventArgs> SessionInterrupted;
         public event TypedEventHandler<ConversationalAgentSession, ConversationalAgentSignalDetectedEventArgs> SignalDetected;

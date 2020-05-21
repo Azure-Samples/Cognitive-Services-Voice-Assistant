@@ -183,6 +183,14 @@
     "raspberry pie",
     "exbox"
   ],
+  "registeredWakeWords": [
+    "computer",
+    "contohso",
+    "jayden",
+    "ok speaker",
+    "raspberry pie",
+    "exbox"
+  ],
   "globalParameters": [],
   "commands": [
     {

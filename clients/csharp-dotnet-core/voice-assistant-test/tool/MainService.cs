@@ -511,7 +511,7 @@ namespace VoiceAssistantTest
             bool utterancePresentValid = CheckNotNullNotEmptyString(turn.Utterance);
             bool activityPresentValid = CheckNotNullNotEmptyString(turn.Activity);
             bool wavFilePresentValid = CheckNotNullNotEmptyString(turn.WAVFile);
-            bool expectedLatencyPresentValid = CheckNotNullNotEmptyString(turn.ExpectedResponseLatency);
+            bool expectedLatencyPresentValid = CheckNotNullNotEmptyString(turn.ExpectedUserPerceivedLatency);
 
             List<string> exceptionMessage = new List<string>();
 
@@ -528,7 +528,7 @@ namespace VoiceAssistantTest
             {
                 if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0)
                 {
-                    var expectedLatencyObjectValid = CheckValidExpectedLatency(turn.ExpectedResponseLatency, turn.ExpectedResponses.Count);
+                    var expectedLatencyObjectValid = CheckValidExpectedLatency(turn.ExpectedUserPerceivedLatency, turn.ExpectedResponses.Count);
                     if (!expectedLatencyObjectValid)
                     {
                         exceptionMessage.Add(ErrorStrings.LATENCY_STRING_MALFORMED);
