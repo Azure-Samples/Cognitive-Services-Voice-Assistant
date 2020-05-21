@@ -329,6 +329,12 @@ namespace UWPVoiceAssistantSample
         {
             var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
 
+            //if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
+            //        is ActivationSignalDetectionConfiguration existingConfiguration)
+            //{
+            //    return existingConfiguration;
+            //}
+
             // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
             // are disabled to avoid collisions.
             var configurations = await detector.GetConfigurationsAsync();
