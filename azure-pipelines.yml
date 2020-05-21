@@ -171,6 +171,19 @@ steps:
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
 
+- task: DeleteFiles@1
+  inputs:
+    sourceFolder: $(sample3PublishedArtifactPath)
+    contents: |
+      *.txt
+      *.sarif
+      *.obj
+      *.xml
+      *.ilk
+      *.tlog
+      *.iobj
+      *.ipdb
+
 - task: PublishPipelineArtifact@1
   displayName: '$(sample3Name) - PublishPipelineArtifact'
   inputs:
