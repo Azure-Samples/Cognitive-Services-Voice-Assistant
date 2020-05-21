@@ -157,12 +157,12 @@ namespace UWPVoiceAssistantSample
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizingKeyword:
-                            this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Local model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognizing?.Invoke(e.Result.Text);
                             this.secondStageConfirmed = true;
                             break;
                         case ResultReason.RecognizingSpeech:
-                            this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Recognized speech in progress: \"{e.Result.Text}\"");
                             this.SpeechRecognizing?.Invoke(e.Result.Text);
                             break;
                         default:
@@ -183,13 +183,13 @@ namespace UWPVoiceAssistantSample
                             this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
-                            this.logger.Log($"Recognized final speech: \"{e.Result.Text}\"");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Recognized final speech: \"{e.Result.Text}\"");
                             this.SpeechRecognized?.Invoke(e.Result.Text);
                             break;
                         case ResultReason.NoMatch:
                             // If a KeywordRecognized handler is available, this is a final stage
                             // keyword verification rejection.
-                            this.logger.Log($"Cloud model rejected keyword");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Cloud model rejected keyword");
                             if (this.secondStageConfirmed)
                             {
                                 var thirdStageStartTimeRejected = KwsPerformanceLogger.KwsStartTime.Ticks;

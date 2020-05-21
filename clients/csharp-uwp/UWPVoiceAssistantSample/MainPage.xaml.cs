@@ -618,8 +618,8 @@ namespace UWPVoiceAssistantSample
                 if (file.Path != null)
                 {
                     await Launcher.LaunchFileAsync(file);
-                    this.logger.Log("Config file opened");
-                    this.logger.Log("Click Load Config to use modified values");
+                    this.logger.Log(LogMessageLevel.Information, "Config file opened");
+                    this.logger.Log(LogMessageLevel.Information, "Click Load Config to use modified values");
                 }
 
                 this.configModified = true;

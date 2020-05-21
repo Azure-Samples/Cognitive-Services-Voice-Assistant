@@ -23,6 +23,11 @@ namespace UWPVoiceAssistantSample
         SignalDetection,
 
         /// <summary>
+        /// Logs relating to audio output.
+        /// </summary>
+        AudioOutput,
+
+        /// <summary>
         /// Verbose information that's generally diagnostic-only
         /// </summary>
         Noise,

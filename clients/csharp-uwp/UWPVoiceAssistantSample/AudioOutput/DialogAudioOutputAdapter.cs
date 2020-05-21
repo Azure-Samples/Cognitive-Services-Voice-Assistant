@@ -164,7 +164,7 @@ namespace UWPVoiceAssistantSample
                         // to the same device.
                         if (device.Id == args.Id && args.Id != this.lastOutputDeviceId)
                         {
-                            this.log.Log($"New audio output device: {device.Name}");
+                            this.log.Log(LogMessageLevel.AudioOutput, $"New audio output device: {device.Name}");
                             await this.RegenerateAudioGraphAsync();
                         }
                     }

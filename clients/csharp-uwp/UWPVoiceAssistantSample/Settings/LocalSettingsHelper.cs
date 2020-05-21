@@ -71,7 +71,7 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Get or sets the language used by the dialog.
+        /// Gets or sets the language used by the dialog.
         /// </summary>
         public static string SRLanguage
         {
