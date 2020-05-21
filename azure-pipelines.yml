@@ -22,8 +22,17 @@ pr:
 #pool:
 #  vmImage: 'windows-latest'
 
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
+    # mac:
+    #   imageName: 'macos-10.14'
+    windowsCustom:
+      imageName: 'Voice Assistant Agent Pool'
+
 # Use this for self-hosted build agents, when you need to build on a pre-release version of Windows: 
-pool: 'Voice Assistant Agent Pool'
+pool: $(imageName)
 
 
 variables:
@@ -106,6 +115,7 @@ variables:
 steps:
 
 - task: NuGetToolInstaller@1
+  condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 # Build Windows Voice Assistant Client (C#, WPF)
 
@@ -113,6 +123,7 @@ steps:
   displayName: '$(sample1Name) - NuGetCommand'
   inputs:
     restoreSolution: '$(sample1Solution)'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 - task: VSBuild@1
   displayName: '$(sample1Name) - VSBuild'
@@ -121,6 +132,7 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   displayName: '$(sample1Name) - EsrpCodeSigning'
@@ -131,12 +143,14 @@ steps:
     FolderPath: '$(sample1PublishedArtifactPath)'
     Pattern: 'VoiceAssistantClient.exe'
     SessionTimeout: '60'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 - task: PublishPipelineArtifact@1
   displayName: '$(sample1Name) - PublishPipelineArtifact'
   inputs:
     path: $(sample1PublishedArtifactPath)
     artifact: $(sample1PublishedArtifactName)
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 # Build Voice Assistant Test (C# .NET Core)
 
@@ -148,13 +162,15 @@ steps:
     publishWebProjects: false
     Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(sample2PublishedArtifactPath)  /p:PublishSingleFile=true'
     zipAfterPublish: false
-    modifyOutputPath: true    
+    modifyOutputPath: true
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 - task: PublishPipelineArtifact@1
   displayName: '$(sample2Name) - PublishPipelineArtifact'
   inputs:
     path: $(sample2PublishedArtifactPath)
     artifact: $(sample2PublishedArtifactName)
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
     
 # Build C++ console application
 
@@ -162,6 +178,7 @@ steps:
   displayName: '$(sample3Name) - NuGetCommand'
   inputs:
     restoreSolution: '$(sample3Solution)'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
     
 - task: VSBuild@1
   displayName: '$(sample3Name) - VSBuild'
@@ -170,6 +187,7 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 # Build UWP Voice Assistant Sample (C# UWP)
 
@@ -177,6 +195,7 @@ steps:
   displayName: '$(sample4Name) - NuGetCommand'
   inputs:
     restoreSolution: '$(sample4Solution)'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 - task: VSBuild@1
   displayName: '$(sample4Name) - VSBuild'
@@ -185,12 +204,14 @@ steps:
     msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatformNative)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 - task: PublishPipelineArtifact@1
   displayName: '$(sample4Name) - PublishPipelineArtifact'
   inputs:
     path: $(sample4PublishedArtifactPath)
     artifact: $(sample4PublishedArtifactName)
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 #- task: VSTest@2
 #  inputs:
@@ -202,6 +223,7 @@ steps:
     scanType: 'Register'
     verbosity: 'Verbose'
     alertWarningLevel: 'High'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 - task: PoliCheck@1
   inputs:
@@ -209,9 +231,11 @@ steps:
     targetType: 'F'
     targetArgument: '$(Build.SourcesDirectory)'
     result: 'PoliCheck.xml'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
 # This does not work on self-hosted agent for some reason
 - task: notice@0
   inputs:
     outputformat: 'text'
+    condition: eq($(imageName), 'Voice Assistant Agent Pool')
 
