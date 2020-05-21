@@ -3,8 +3,8 @@
 
 namespace UWPVoiceAssistantSample
 {
-    using Microsoft.CognitiveServices.Speech.Audio;
     using System.Diagnostics.Contracts;
+    using Microsoft.CognitiveServices.Speech.Audio;
     using UWPVoiceAssistantSample.AudioCommon;
 
     /// <summary>

@@ -25,7 +25,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Logs relating to audio output.
         /// </summary>
-        AudioOutput,
+        AudioLogs,
 
         /// <summary>
         /// Verbose information that's generally diagnostic-only

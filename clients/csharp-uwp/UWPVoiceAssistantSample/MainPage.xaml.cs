@@ -536,6 +536,29 @@ namespace UWPVoiceAssistantSample
             return false;
         }
 
+        private bool LogConversationalAgent(string agentSignal)
+        {
+            if (agentSignal.Contains("ConversationalAgentSignal", StringComparison.OrdinalIgnoreCase))
+            {
+                TextBlock conversationalAgentSignalTextBlock = new TextBlock();
+                conversationalAgentSignalTextBlock.Foreground = new SolidColorBrush(Colors.LightSkyBlue);
+                conversationalAgentSignalTextBlock.TextWrapping = TextWrapping.Wrap;
+                string[] split = agentSignal.Split("ConversationalAgentSignal");
+                conversationalAgentSignalTextBlock.Text = split[1];
+
+                this.conversationAgentLogs.Add(conversationalAgentSignalTextBlock);
+
+                if (this.LogSignalDetectionFlyoutItem.IsChecked)
+                {
+                    this.ChangeLogStackPanel.Children.Add(conversationalAgentSignalTextBlock);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         private async void WriteLog()
         {
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
@@ -552,6 +575,9 @@ namespace UWPVoiceAssistantSample
                     {
                     }
                     else if (this.LogSignalDetection(text))
+                    {
+                    }
+                    else if (this.LogConversationalAgent(text))
                     {
                     }
                     else
