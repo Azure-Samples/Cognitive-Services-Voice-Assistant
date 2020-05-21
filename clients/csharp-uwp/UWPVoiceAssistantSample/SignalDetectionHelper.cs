@@ -116,6 +116,7 @@ namespace UWPVoiceAssistantSample
         public async void HandleSignalDetection(
             DetectionOrigin detectionOrigin = DetectionOrigin.FromBackgroundTask)
         {
+            KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
             var now = DateTime.Now;
             if (this.lastSignalReceived.HasValue && now.Subtract(this.lastSignalReceived.Value).TotalMilliseconds < MinimumSignalSeparation.TotalMilliseconds)
             {
@@ -144,6 +145,7 @@ namespace UWPVoiceAssistantSample
 
             if (this.signalNeedsVerification)
             {
+                KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                 this.StartFailsafeTimer();
             }
             else
@@ -174,11 +176,13 @@ namespace UWPVoiceAssistantSample
             }
             else if (string.IsNullOrEmpty(recognitionText))
             {
+                KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: NoMatch");
                 this.OnSessionSignalRejected(this.LastDetectedSignalOrigin);
             }
             else
             {
+                KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: Verified : {recognitionText}");
                 this.OnSessionSignalConfirmed(session, this.LastDetectedSignalOrigin);
             }
@@ -210,6 +214,7 @@ namespace UWPVoiceAssistantSample
         private void StartFailsafeTimer()
         {
             this.secondStageStopwatch = Stopwatch.StartNew();
+            KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
             this.secondStageFailsafeTimer = new Timer(
                 _ =>
                 {
