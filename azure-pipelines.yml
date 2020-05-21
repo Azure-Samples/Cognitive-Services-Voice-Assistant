@@ -176,7 +176,7 @@ steps:
 #     sourceFolder: '$(sample3Folder)\src\windows\$(buildPlatformNative)\$(buildConfiguration)'
 #     contents: '**\$(sample3PublishedArtifactPath)\?(*.exe|*.dll|*.pdb)'
 #     targetFolder: '$(sample3PublishedArtifactPath)'
--task: DeleteFiles@1
+- task: DeleteFiles@1
   inputs:
     sourceFolder: $(sample3PublishedArtifactPath)
     contents: |
