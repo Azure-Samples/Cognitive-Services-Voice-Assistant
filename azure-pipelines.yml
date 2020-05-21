@@ -53,8 +53,8 @@ variables:
   sample3Name: VoiceAssistantCPPClient
   sample3Folder: 'clients\cpp-console'
   sample3Solution: '$(sample3Folder)\src\windows\cppSample.sln'
-  sample3PublishedArtifactPath: '$(sample3Folder)\out'
-  sample3PublishedArtifactName: 'CppSample-$(Build.BuildNumber)'
+  sample3PublishedArtifactPath: '$(sample3Folder)\src\windows\$(buildPlatformNative)\$(buildConfiguration)'
+  sample3PublishedArtifactName: '$(sample3Name)-$(Build.BuildNumber)'
  
   # Sample 4: UWP Voice Assistant Sample (\clients\csharp-uwp)
   sample4Name: UWPVoiceAssistantSample
@@ -170,6 +170,12 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
+
+- task: PublishPipelineArtifact@1
+  displayName: '$(sample3Name) - PublishPipelineArtifact'
+  inputs:
+    path: $(sample3PublishedArtifactPath)
+    artifact: $(sample3PublishedArtifactName)
 
 # Build UWP Voice Assistant Sample (C# UWP)
 
