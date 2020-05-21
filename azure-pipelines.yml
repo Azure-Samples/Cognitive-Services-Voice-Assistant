@@ -53,7 +53,7 @@ variables:
   sample3Name: VoiceAssistantCPPClient
   sample3Folder: 'clients\cpp-console'
   sample3Solution: '$(sample3Folder)\src\windows\cppSample.sln'
-  sample3PublishedArtifactPath: '$(sample3Folder)\out'
+  sample3PublishedArtifactPath: '$(sample3Folder)\$(sample3Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
   sample3PublishedArtifactName: 'CppSample-$(Build.BuildNumber)'
  
   # Sample 4: UWP Voice Assistant Sample (\clients\csharp-uwp)
