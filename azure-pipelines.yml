@@ -53,7 +53,7 @@ variables:
   sample3Name: VoiceAssistantCPPClient
   sample3Folder: 'clients\cpp-console'
   sample3Solution: '$(sample3Folder)\src\windows\cppSample.sln'
-  sample3PublishedArtifactPath: '$(sample3Folder)\src\windows\$(buildPlatformNative)\$(buildConfiguration)
+  sample3PublishedArtifactPath: '$(sample3Folder)\src\windows\$(buildPlatformNative)\$(buildConfiguration)'
   sample3PublishedArtifactName: '$(sample3Name)-$(Build.BuildNumber)'
  
   # Sample 4: UWP Voice Assistant Sample (\clients\csharp-uwp)
@@ -150,11 +150,6 @@ steps:
     zipAfterPublish: false
     modifyOutputPath: true    
 
-- task: CopyFiles@2
-  inputs:
-  Contents: '$(sample3PublishedArtifactPath)\**\?(*.exe|*.dll|*.pdb)'
-  TargetFolder: $(sample3PublishedArtifactName)
-
 - task: PublishPipelineArtifact@1
   displayName: '$(sample2Name) - PublishPipelineArtifact'
   inputs:
@@ -175,6 +170,11 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
+
+- task: CopyFiles@2
+  inputs:
+  Contents: '$(sample3PublishedArtifactPath)\**\?(*.exe|*.dll|*.pdb)'
+  TargetFolder: $(sample3PublishedArtifactName)
 
 - task: PublishPipelineArtifact@1
   displayName: '$(sample3Name) - PublishPipelineArtifact'
