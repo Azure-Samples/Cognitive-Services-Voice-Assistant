@@ -171,11 +171,21 @@ steps:
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
 
-- task: CopyFiles@2
+# - task: CopyFiles@2
+#   inputs:
+#     sourceFolder: '$(sample3Folder)\src\windows\$(buildPlatformNative)\$(buildConfiguration)'
+#     contents: '**\$(sample3PublishedArtifactPath)\?(*.exe|*.dll|*.pdb)'
+#     targetFolder: '$(sample3PublishedArtifactPath)'
+-task: DeleteFiles@1
   inputs:
-    sourceFolder: '$(sample3Folder)\src\windows\$(buildPlatformNative)\$(buildConfiguration)'
-    contents: '**\$(sample3PublishedArtifactPath)\?(*.exe|*.dll|*.pdb)'
-    targetFolder: '$(sample3PublishedArtifactPath)'
+    sourceFolder: $(sample3PublishedArtifactPath)
+    contents: |
+      *.txt
+      *.sarif
+      *.obj
+      *.xml
+      *.ilk
+      *.tlog
 
 - task: PublishPipelineArtifact@1
   displayName: '$(sample3Name) - PublishPipelineArtifact'
