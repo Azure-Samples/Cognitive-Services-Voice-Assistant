@@ -171,6 +171,12 @@ steps:
     platform: '$(buildPlatformNative)'
     configuration: '$(buildConfiguration)'
 
+- task: PublishPipelineArtifact@1
+  displayName: '$(sample3Name) - PublishPipelineArtifact'
+  inputs:
+    path: $(sample3PublishedArtifactPath)
+    artifact: $(sample3PublishedArtifactName)
+
 # Build UWP Voice Assistant Sample (C# UWP)
 
 - task: NuGetCommand@2
