@@ -20,7 +20,7 @@ echo "Copying SDK binaries to lib folder and headers to include"
 cp -Rf ./SDK/SpeechSDK*/* .
 
 echo "Building Raspberry Pi sample"
-error=g++ -Wno-psabi \
+if g++ -Wno-psabi \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
@@ -38,7 +38,12 @@ src/common/DialogManager.cpp \
 -pthread \
 -lstdc++fs \
 -lasound \
--lMicrosoft.CognitiveServices.Speech.core
+-lMicrosoft.CognitiveServices.Speech.core; 
+then
+error=0;
+else
+error=1;
+fi
 
 cp ./scripts/run.sh ./out
 chmod +x ./out/run.sh
@@ -51,8 +56,4 @@ echo cd ../../out
 echo export LD_LIBRARY_PATH="../lib/arm32"
 echo ./sample.exe [path_to_configFile]
 
-if error; then 
-exit 0
-else
-exit 1
-fi
+exit $error
