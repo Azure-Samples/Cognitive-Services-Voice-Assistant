@@ -255,4 +255,4 @@ jobs:
     inputs:
       targetType: 'inline'
       script: ./Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux/buildArm32Linux.sh
-      workingDirectory: /home/vsts/work/1/s/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux/
+      #workingDirectory: /home/vsts/work/1/s/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux/
