@@ -25,7 +25,7 @@ pr:
 strategy:
   matrix:
     linux:
-      imageName: 'Hosted Ubuntu 16.04'
+      imageName: 'Hosted Ubuntu 1604'
     # mac:
     #   imageName: 'macos-10.14'
     windowsCustom:
