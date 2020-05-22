@@ -254,4 +254,4 @@ jobs:
   - task: Bash@3
     inputs:
       targetType: 'inline'
-      script: echo "$(System.DefaultWorkingDirectory)"
+      script: echo "$(System.DefaultWorkingDirectory)"\nls -a
