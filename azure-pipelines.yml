@@ -254,6 +254,5 @@ jobs:
   - task: Bash@3
     inputs:
       targetType: 'inline'
-      script: ls -a
-      #script: ./Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux/buildArm32Linux.sh
-      #workingDirectory: /home/vsts/work/1/s/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux/
+      script: ./clients/cpp-console/scripts/linux/buildArm32Linux.sh
+      workingDirectory: ./clients/cpp-console/scripts/linux/
