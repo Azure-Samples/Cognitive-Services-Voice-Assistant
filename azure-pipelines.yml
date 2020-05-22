@@ -113,7 +113,7 @@ variables:
     ]
     
 jobs:
-- job: Windows Builds
+- job: Windows_Builds
   pool: 'Voice Assistant Agent Pool'
   steps:
 
@@ -246,7 +246,7 @@ jobs:
     inputs:
       outputformat: 'text'
       
-- job: Linux Builds
+- job: Linux_Builds
   pool: 'ubuntu-latest'
   steps:
   - task: Bash@3
