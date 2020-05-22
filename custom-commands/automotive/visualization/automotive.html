@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<script type="text/javascript">window["_gaUserPrefs"] = { ioo: function () { return true; } }</script>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" type="image/x-icon"
-        href="https://landingdemowidget.blob.core.windows.net/www/favicon.ico">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Virtual Automotive</title>
+    <title>Virtual car</title>
 
-    <link rel="stylesheet" href="./bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.css"
+        crossorigin="anonymous">
 
     <style>
-        .demoFrame {
+        body {
+            background-color: #f4f5f6;
+        }
+
+        #automotive-room {
+            display: none;
+        }
+
+        .demo-frame {
             position: relative;
             margin-left: auto;
             margin-right: auto;
@@ -28,7 +33,7 @@
             min-height: 540px;
         }
 
-        .room-image {
+        .automotive-image {
             position: relative;
             width: 100%;
             max-width: 1440px;
@@ -51,7 +56,7 @@
             font-size: 60px;
             font-weight: bolder;
             color: azure;
-            top: 36%;
+            top: 35%;
             left: 62%;
             z-index: 100;
         }
@@ -71,8 +76,8 @@
             position: absolute;
             font-size: 22px;
             color: white;
-            top: 45%;
-            left: 67%;
+            top: 50.5%;
+            left: 62.5%;
             z-index: 100;
             width: 265px;
             font-family: Segoe UI, Frutiger, Frutiger Linotype, Dejavu Sans, Helvetica Neue, Arial, sans-serif;
@@ -91,31 +96,19 @@
         }
 
         .try-saying {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 22px;
+            font-weight: bold;
             margin-bottom: -20px;
         }
 
-        .messages {
-            position: absolute;
-            height: 90px;
-            width: 400px;
-            margin-top: -9.5%;
-            margin-left: 1%;
-            z-index: 100;
+        .message {
+            font-size: 20px;
+            font-weight: normal;
         }
 
-        #message-title {
-            padding-top: 5px;
-            font-size: smaller;
-        }
-
-        #item-ordered {
-            font-weight: bold;
-        }
-
-        .list {
-            background-image: repeating-linear-gradient(180deg, lightyellow, lightyellow 40px, lemonchiffon 40px, lemonchiffon 80px);
+        .restart-message {
+            font-size: 20px;
+            font-weight: normal;
         }
     </style>
 </head>
@@ -123,28 +116,32 @@
 <body>
 
     <main role="main">
-        <div id="automotive-room" class="demoFrame ">
-            <img id="0" src="./Background.png" class="room-image" style="position:relative">
-            <img id="screen" src="./automotive-screen-off.png" class="room-image overlays" style="position:absolute">
-            <img id="screen-on" src="./automotive-screen-on.png" class="room-image overlays" style="position:absolute">
-            <img id="defrost" src="./automotive-defrost-on.png" class="room-image overlays" style="position:absolute">
-            <img id="heater-" src="./automotive-heater-on.png" class="room-image overlays" style="position:absolute">
-            <img id="seatwarmer" src="./automotive-seatwarmer-on.png" class="room-image overlays"
-                style="display:absolute;">
+        <div id="automotive-room" class="demo-frame">
+            <img id="0" src="./Background.png" class="automotive-image" style="position:relative" alt="">
+            <img id="screen" src="./automotive-screen-off.png" class="automotive-image overlays" style="position:absolute" alt="">
+            <img id="screen-on" src="./automotive-screen-on.png" class="automotive-image overlays" style="position:absolute" alt="">
+            <img id="defrost" src="./automotive-defrost-on.png" class="automotive-image overlays" style="position:absolute" alt="">
+            <img id="heater-" src="./automotive-heater-on.png" class="automotive-image overlays" style="position:absolute" alt="">
+            <img id="seatwarmer" src="./automotive-seatwarmer-on.png" class="automotive-image overlays" style="position:absolute;" alt="">
             <div id="thermostat" class="thermostat"><span id="temperature">65°</span></div>
 
             <div id="help-content">
-                <img id="helpboxes" src="./automotive-bluebox.png" class="room-image overlays"
-                    style="display:absolute;">
+                <img id="helpboxes" src="./automotive-bluebox.png" class="automotive-image overlays" style="position:absolute;" alt="">
 
                 <div id="top-hint">
-                    <div class="try-saying">Try saying:</div></br>"Turn on defroster"
+                    <div class="try-saying">Try saying:</div>
+                    <br>
+                    <div class="message">"Turn on defroster"</div>
                 </div>
                 <div id="middle-hint">
-                    <div class="try-saying">Try saying:</div></br>"Set to 72 degrees"
+                    <div class="try-saying">Try saying:</div>
+                    <br>
+                    <div class="message">"Set to 72 degrees"</div>
                 </div>
                 <div id="bottom-hint">
-                    <div class="try-saying">Try saying:</div></br>"Turn on the seat heater"
+                    <div class="try-saying">Try saying:</div>
+                    <br>
+                    <div class="message">"Turn on the seat heater"</div>
                 </div>
             </div>
         </div>
@@ -153,15 +150,14 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="./jquery-3.2.1.min.js.download" crossorigin="anonymous"></script>
-    <script src="./popper.min.js.download" crossorigin="anonymous"></script>
-    <script src="./bootstrap.min.js.download" crossorigin="anonymous"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js" crossorigin="anonymous"></script>
 
     <script>
         $(function () {
             var urlParams = new URLSearchParams(window.location.search);
-            var jsonUrl = "https://automotivedemowidget.azurewebsites.net/api/AutomotiveDemo";
-            $.getJSON("ConnectionURLS.json",function(data){
+            var jsonUrl = "https://automotivedemowidget.azurewebsites.net/api/AutomotiveDemo?room=" + urlParams.get("room");
+            $.getJSON("ConnectionURLS.json", function (data) {
                 jsonUrl = data.AZURE_FUNCTION_URL;
                 if (urlParams.has("room")) {
                     var room = urlParams.get("room");
@@ -172,62 +168,60 @@
                     jsonUrl = jsonUrl + "?room=" + roomNumber;
                 }
 
-                var timesRun = 0;
-                interval = setInterval(function () {
-                    timesRun += 1;
-                    if (timesRun === 10800) {
-                        clearInterval(interval);
-                    }
-                    $.getJSON(jsonUrl, function (configuration) {
-                        clear();
-                        apply(configuration);
-                        console.log(configuration);
-                    });
-                }, 1000);
+                var timesRun = 1;
+                $.getJSON(jsonUrl, function (configuration) {
+                    apply(configuration);
+                    $("#automotive-room").css("display", "inherit");
+                    setInterval(function () {
+                        timesRun += 1;
+                        if (timesRun < 10800) {
+                            $.getJSON(jsonUrl, function (configuration) {
+                                apply(configuration);
+                            });
+                        }
+                    }, 1000);
+                });
 
-                setTimeout(function () { alert("Timed out, please refresh!"); }, 10800000);
+                setTimeout(function () {
+                    $("#restartModal").modal();
+                }, 10800000);
 
                 function apply(configuration) {
                     $("#temperature").html(configuration.Temperature + "°");
 
                     if (configuration.Help) {
                         $("#help-content").fadeIn('fast')
-                    }
-                    else {
+                    } else {
                         $("#help-content").fadeOut('fast')
                     }
 
-
                     if (configuration.SeatWarmers) {
-                        $("#seatwarmer").fadeOut('fast')
-                    }
-                    else {
                         $("#seatwarmer").fadeIn('fast')
+                    } else {
+                        $("#seatwarmer").fadeOut('fast')
                     }
 
                     if (configuration.Defrost) {
+                        $("#defrost").fadeIn('fast')
+                    } else {
                         $("#defrost").fadeOut('fast')
                     }
-                    else {
-                        $("#defrost").fadeIn('fast')
-                    }
-
-                    if (configuration.Television) {
-                        $("#television-content").fadeIn('fast')
-                        $("#television-notification").fadeIn('fast')
-                    }
-                    else {
-                        $("#television-content").fadeOut('fast')
-                        $("#television-notification").fadeOut('fast')
-                    }
-                }
-
-                function clear() {
                 }
             });
         });
     </script>
-
+    <div class="modal fade" id="restartModal" tabindex="-1" role="dialog" aria-labelledby="restartModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p style="text-align: center;">
+                        <span class="restart-message">Demo stopped</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
