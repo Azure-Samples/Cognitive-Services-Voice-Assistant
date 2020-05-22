@@ -20,7 +20,7 @@ echo "Copying SDK binaries to lib folder and headers to include"
 cp -Rf ./SDK/SpeechSDK*/* .
 
 echo "Building Raspberry Pi sample"
-g++ -Wno-psabi \
+error=g++ -Wno-psabi \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
@@ -50,3 +50,9 @@ echo Done. To start the demo execute:
 echo cd ../../out
 echo export LD_LIBRARY_PATH="../lib/arm32"
 echo ./sample.exe [path_to_configFile]
+
+if error; then 
+exit 0
+else
+exit 1
+fi
