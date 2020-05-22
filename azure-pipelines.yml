@@ -22,17 +22,17 @@ pr:
 #pool:
 #  vmImage: 'windows-latest'
 
-strategy:
-  matrix:
-    linux:
-      imageName: 'Hosted Ubuntu 1604'
-    # mac:
-    #   imageName: 'macos-10.14'
-    windowsCustom:
-      imageName: 'Voice Assistant Agent Pool'
+# strategy:
+#   matrix:
+#     linux:
+#       imageName: 'Hosted Ubuntu 1604'
+#     # mac:
+#     #   imageName: 'macos-10.14'
+#     windowsCustom:
+#       imageName: 'Voice Assistant Agent Pool'
 
-# Use this for self-hosted build agents, when you need to build on a pre-release version of Windows: 
-pool: $(imageName)
+# # Use this for self-hosted build agents, when you need to build on a pre-release version of Windows: 
+# pool: $(imageName)
 
 
 variables:
@@ -112,130 +112,140 @@ variables:
        }
     ]
     
-steps:
-
-- task: NuGetToolInstaller@1
-  condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
-
-# Build Windows Voice Assistant Client (C#, WPF)
-
-- task: NuGetCommand@2
-  displayName: '$(sample1Name) - NuGetCommand'
-  inputs:
-    restoreSolution: '$(sample1Solution)'
+jobs:
+- job: Windows Builds
+  pool: 'Voice Assistant Agent Pool'
+  steps:
+  - task: NuGetToolInstaller@1 
     condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-- task: VSBuild@1
-  displayName: '$(sample1Name) - VSBuild'
-  inputs:
-    solution: '$(sample1Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  # Build Windows Voice Assistant Client (C#, WPF)
 
-- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  displayName: '$(sample1Name) - EsrpCodeSigning'
-  inputs:
-    ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing' 
-    signConfigType: inlineSignParams
-    inlineOperation: '$(signParams)'
-    FolderPath: '$(sample1PublishedArtifactPath)'
-    Pattern: 'VoiceAssistantClient.exe'
-    SessionTimeout: '60'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  - task: NuGetCommand@2 
+    displayName: '$(sample1Name) - NuGetCommand'
+    inputs:
+      restoreSolution: '$(sample1Solution)'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-- task: PublishPipelineArtifact@1
-  displayName: '$(sample1Name) - PublishPipelineArtifact'
-  inputs:
-    path: $(sample1PublishedArtifactPath)
-    artifact: $(sample1PublishedArtifactName)
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  - task: VSBuild@1
+    displayName: '$(sample1Name) - VSBuild'
+    inputs:
+      solution: '$(sample1Solution)'
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+      platform: '$(buildPlatformNative)'
+      configuration: '$(buildConfiguration)'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-# Build Voice Assistant Test (C# .NET Core)
+  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+    displayName: '$(sample1Name) - EsrpCodeSigning'
+    inputs:
+      ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing' 
+      signConfigType: inlineSignParams
+      inlineOperation: '$(signParams)'
+      FolderPath: '$(sample1PublishedArtifactPath)'
+      Pattern: 'VoiceAssistantClient.exe'
+      SessionTimeout: '60'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-- task: DotNetCoreCLI@2
-  displayName: '$(sample2Name) - DotNetCoreCLI'
-  inputs:
-    Command: 'publish'
-    Projects: $(sample2Solution)
-    publishWebProjects: false
-    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(sample2PublishedArtifactPath)  /p:PublishSingleFile=true'
-    zipAfterPublish: false
-    modifyOutputPath: true
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  - task: PublishPipelineArtifact@1
+    displayName: '$(sample1Name) - PublishPipelineArtifact'
+    inputs:
+      path: $(sample1PublishedArtifactPath)
+      artifact: $(sample1PublishedArtifactName)
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-- task: PublishPipelineArtifact@1
-  displayName: '$(sample2Name) - PublishPipelineArtifact'
-  inputs:
-    path: $(sample2PublishedArtifactPath)
-    artifact: $(sample2PublishedArtifactName)
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
-    
-# Build C++ console application
+  # Build Voice Assistant Test (C# .NET Core)
 
-- task: NuGetCommand@2
-  displayName: '$(sample3Name) - NuGetCommand'
-  inputs:
-    restoreSolution: '$(sample3Solution)'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
-    
-- task: VSBuild@1
-  displayName: '$(sample3Name) - VSBuild'
-  inputs:
-    solution: '$(sample3Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  - task: DotNetCoreCLI@2
+    displayName: '$(sample2Name) - DotNetCoreCLI'
+    inputs:
+      Command: 'publish'
+      Projects: $(sample2Solution)
+      publishWebProjects: false
+      Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(sample2PublishedArtifactPath)  /p:PublishSingleFile=true'
+      zipAfterPublish: false
+      modifyOutputPath: true
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-# Build UWP Voice Assistant Sample (C# UWP)
+  - task: PublishPipelineArtifact@1
+    displayName: '$(sample2Name) - PublishPipelineArtifact'
+    inputs:
+      path: $(sample2PublishedArtifactPath)
+      artifact: $(sample2PublishedArtifactName)
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+      
+  # Build C++ console application
 
-- task: NuGetCommand@2
-  displayName: '$(sample4Name) - NuGetCommand'
-  inputs:
-    restoreSolution: '$(sample4Solution)'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  - task: NuGetCommand@2
+    displayName: '$(sample3Name) - NuGetCommand'
+    inputs:
+      restoreSolution: '$(sample3Solution)'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+      
+  - task: VSBuild@1
+    displayName: '$(sample3Name) - VSBuild'
+    inputs:
+      solution: '$(sample3Solution)'
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+      platform: '$(buildPlatformNative)'
+      configuration: '$(buildConfiguration)'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-- task: VSBuild@1
-  displayName: '$(sample4Name) - VSBuild'
-  inputs:
-    solution: '$(sample4Solution)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatformNative)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  # Build UWP Voice Assistant Sample (C# UWP)
 
-- task: PublishPipelineArtifact@1
-  displayName: '$(sample4Name) - PublishPipelineArtifact'
-  inputs:
-    path: $(sample4PublishedArtifactPath)
-    artifact: $(sample4PublishedArtifactName)
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  - task: NuGetCommand@2
+    displayName: '$(sample4Name) - NuGetCommand'
+    inputs:
+      restoreSolution: '$(sample4Solution)'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-#- task: VSTest@2
-#  inputs:
-#    platform: '$(buildPlatformNative)'
-#    configuration: '$(buildConfiguration)'
+  - task: VSBuild@1
+    displayName: '$(sample4Name) - VSBuild'
+    inputs:
+      solution: '$(sample4Solution)'
+      msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatformNative)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+      platform: '$(buildPlatformNative)'
+      configuration: '$(buildConfiguration)'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-- task: ComponentGovernanceComponentDetection@0
-  inputs:
-    scanType: 'Register'
-    verbosity: 'Verbose'
-    alertWarningLevel: 'High'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  - task: PublishPipelineArtifact@1
+    displayName: '$(sample4Name) - PublishPipelineArtifact'
+    inputs:
+      path: $(sample4PublishedArtifactPath)
+      artifact: $(sample4PublishedArtifactName)
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
 
-- task: PoliCheck@1
-  inputs:
-    inputType: 'Basic'
-    targetType: 'F'
-    targetArgument: '$(Build.SourcesDirectory)'
-    result: 'PoliCheck.xml'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  #- task: VSTest@2
+  #  inputs:
+  #    platform: '$(buildPlatformNative)'
+  #    configuration: '$(buildConfiguration)'
 
-# This does not work on self-hosted agent for some reason
-- task: notice@0
-  inputs:
-    outputformat: 'text'
-    condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+  - task: ComponentGovernanceComponentDetection@0
+    inputs:
+      scanType: 'Register'
+      verbosity: 'Verbose'
+      alertWarningLevel: 'High'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+
+  - task: PoliCheck@1
+    inputs:
+      inputType: 'Basic'
+      targetType: 'F'
+      targetArgument: '$(Build.SourcesDirectory)'
+      result: 'PoliCheck.xml'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+
+  # This does not work on self-hosted agent for some reason
+  - task: notice@0
+    inputs:
+      outputformat: 'text'
+      condition: eq(variables['Agent.Name'], 'Voice Assistant Agent Pool')
+      
+- job: Linux Builds
+  pool: 'ubuntu-latest'
+  steps:
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: echo "Test Test Test"
 
