@@ -18,23 +18,6 @@ pr:
     include:
     - master
 
-# Use this for Microsoft-hosted build agents (released versions of Windows only):    
-#pool:
-#  vmImage: 'windows-latest'
-
-# strategy:
-#   matrix:
-#     linux:
-#       imageName: 'Hosted Ubuntu 1604'
-#     # mac:
-#     #   imageName: 'macos-10.14'
-#     windowsCustom:
-#       imageName: 'Voice Assistant Agent Pool'
-
-# # Use this for self-hosted build agents, when you need to build on a pre-release version of Windows: 
-# pool: $(imageName)
-
-
 variables:
 
   # Common Build configurations
