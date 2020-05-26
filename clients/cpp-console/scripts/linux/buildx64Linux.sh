@@ -1,8 +1,12 @@
 #!/bin/bash
 clear
 cd ../..
-mkdir out
-mkdir SDK
+if [ ! -d out ]; then
+    mkdir out # only create directory if does not exist
+fi
+if [ ! -d SDK ]; then
+    mkdir SDK # only create directory if does not exist
+fi
 
 echo "Cleaning up libs and include directories that we will overwrite"
 rm -R ./lib/*
@@ -10,7 +14,7 @@ rm -R ./include/c_api
 rm -R ./include/cxx_api
 
 echo "Downloading Speech SDK binaries"
-wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SpeechSDK
+wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SDK
 
 echo "Copying SDK binaries to lib folder and headers to include"
 cp -Rf ./SpeechSDK/SpeechSDK*/* .
