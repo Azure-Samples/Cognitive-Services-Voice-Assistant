@@ -250,11 +250,12 @@ jobs:
   pool: 
     name: Azure Pipelines
     vmImage: 'ubuntu-latest'
+    
   steps:
   - task: Bash@3
     inputs:
       targetType: 'inline'
-      script: apt-get install libasound2-dev
+      script: sudo apt-get install libasound2-dev
   - task: Bash@3
     inputs:
       targetType: 'inline'
