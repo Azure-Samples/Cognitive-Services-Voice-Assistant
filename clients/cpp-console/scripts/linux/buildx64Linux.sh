@@ -17,9 +17,9 @@ echo "Downloading Speech SDK binaries"
 wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SDK
 
 echo "Copying SDK binaries to lib folder and headers to include"
-cp -Rf ./SpeechSDK/SpeechSDK*/* .
+cp -Rf ./SDK/SpeechSDK*/* .
 
-echo "Building Raspberry Pi x64 sample"
+echo "Building Linux x64 sample"
 if g++ -Wno-psabi \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
