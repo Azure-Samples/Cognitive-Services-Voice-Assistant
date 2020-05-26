@@ -259,5 +259,5 @@ jobs:
   - task: Bash@3
     inputs:
       targetType: 'inline'
-      script: ./buildArm32Linux.sh
+      script: ./buildx64Linux.sh
       workingDirectory: ./clients/cpp-console/scripts/linux/
