@@ -1,8 +1,12 @@
 #!/bin/bash
 clear
 cd ../..
-mkdir out
-mkdir SDK
+if [ ! -d out ]; then
+    mkdir out # only create directory if does not exist
+fi
+if [ ! -d SDK ]; then
+    mkdir SDK # only create directory if does not exist
+fi
 
 echo "Cleaning up libs and include directories that we will overwrite"
 rm -R ./lib/*
@@ -10,13 +14,13 @@ rm -R ./include/c_api
 rm -R ./include/cxx_api
 
 echo "Downloading Speech SDK binaries"
-wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SpeechSDK
+wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SDK
 
 echo "Copying SDK binaries to lib folder and headers to include"
-cp -Rf ./SpeechSDK/SpeechSDK*/* .
+cp -Rf ./SDK/SpeechSDK*/* .
 
-echo "Building Raspberry Pi x64 sample"
-g++ -Wno-psabi \
+echo "Building Linux x64 sample"
+if g++ -Wno-psabi \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
@@ -33,10 +37,22 @@ src/common/DialogManager.cpp \
 -pthread \
 -lstdc++fs \
 -lasound \
--lMicrosoft.CognitiveServices.Speech.core
+-lMicrosoft.CognitiveServices.Speech.core; 
+then
+error=0;
+else
+error=1;
+fi
+
+cp ./scripts/run.sh ./out
+chmod +x ./out/run.sh
 
 echo Cleaning up downloaded files
 rm -R ./SDK
 
-cp ./scripts/run.sh ./out
-chmod +x ./out/run.sh
+echo Done. To start the demo execute:
+echo cd ../../out
+echo export LD_LIBRARY_PATH="../lib/x64"
+echo ./sample.exe [path_to_configFile]
+
+exit $error
