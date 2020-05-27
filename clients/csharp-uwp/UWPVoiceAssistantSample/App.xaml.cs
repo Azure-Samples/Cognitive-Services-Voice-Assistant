@@ -191,8 +191,8 @@ namespace UWPVoiceAssistantSample
                 this.dialogManager.HandleSignalDetection();
 
                 // NOTE: this will be restored in a future OS update.
-                //this.deferral.Complete();
-                //this.deferral = null;
+                // this.deferral.Complete();
+                // this.deferral = null;
             }
         }
 
