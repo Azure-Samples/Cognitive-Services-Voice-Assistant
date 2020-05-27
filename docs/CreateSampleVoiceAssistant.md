@@ -21,6 +21,10 @@ This page will guide you through building a sample [Voice Assistant](https://doc
 
 ## Step 2 - Select a Custom Command demo
 
+<p align="center">
+<img src="../custom-commands/images/all-scenes.png" width="982"/>
+</p>
+
 We have three demos for you to select from. Read about what voice commands they support and see the associated visualization. When you selected the one you would like to deploy, continue to Step 3
 * [Hospitality demo](../custom-commands/hospitality/README.md)
 * [Inventory management demo](../custom-commands/inventory/README.md)

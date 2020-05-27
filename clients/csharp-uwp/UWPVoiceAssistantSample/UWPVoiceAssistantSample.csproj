@@ -192,8 +192,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\ActivationKeywords\Contoso.bin" />
-    <Content Include="Assets\ActivationKeywords\contosoInfo.txt" />
+    <Content Include="Assets\ActivationKeywords\*.bin" />
+    <Content Include="Assets\ActivationKeywords\KeywordConfigurationsInfo.txt" />
     <Content Include="..\..\..\keyword-models\*.*">
       <Link>Assets\ConfirmationKeywords\%(RecursiveDir)%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -226,7 +226,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CognitiveServices.Speech">
-      <Version>1.11.0</Version>
+      <Version>1.12.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>3.1.2</Version>

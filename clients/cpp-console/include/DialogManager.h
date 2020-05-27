@@ -4,6 +4,7 @@
 #include "AgentConfiguration.h"
 #include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
+#include <fstream>
 
 #ifdef LINUX
 #include "LinuxAudioPlayer.h"
@@ -16,6 +17,7 @@
 
 using namespace std;
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
+using namespace Microsoft::CognitiveServices::Speech::Audio;
 
 enum class KeywordActivationState
 {
@@ -39,6 +41,7 @@ class DialogManager
 {
 public:
     DialogManager(shared_ptr<AgentConfiguration> agentConfig);
+    DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath);
     const KeywordActivationState GetKeywordActivationState() { return _keywordActivationState; }
     void SetKeywordActivationState(const KeywordActivationState& state) { _keywordActivationState = state; }
     void PauseKws();
@@ -46,15 +49,23 @@ public:
     void StartListening();
     void ContinueListening();
     void StopKws();
+    void ListenFromFile();
 
 private:
     bool _volumeOn = false;
     bool _bargeInSupported = false;
+    string _audioFilePath = "";
     KeywordActivationState _keywordActivationState = KeywordActivationState::Undefined;
     IAudioPlayer* _player;
     shared_ptr<AgentConfiguration> _agentConfig;
     shared_ptr<DialogServiceConnector> _dialogServiceConnector;
-    void InitializeDialogServiceConnector();
+    shared_ptr<PushAudioInputStream> _pushStream;
+    void InitializeDialogServiceConnectorFromMicrophone();
+    void InitializeDialogServiceConnectorFromFile();
     void InitializePlayer();
     void AttachHandlers();
+    void InitializeConnection();
+    fstream OpenFile(const string& audioFilePath);
+    int ReadBuffer(fstream& fs, uint8_t* dataBuffer, uint32_t size);
+    void PushData(const string& audioFilePath);
 };

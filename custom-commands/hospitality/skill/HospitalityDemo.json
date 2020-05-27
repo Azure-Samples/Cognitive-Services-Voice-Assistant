@@ -60,36 +60,16 @@
     "    - All right, opening the {Subject}",
     "- ELSE:",
     "    - All right, closing the {Subject}",
-    "# OpenClose8e767500f76b11e9a646c5f4b0d53c23",
-    "- IF: @{OpenCloseOperation == \"open\"}",
-    "    - All right, opening the {OpenCloseSubject}",
-    "- ELSE:",
-    "    - All right, closing the {OpenCloseSubject}",
     "# OpenClose5ac70780f77811e9a646c5f4b0d53c23",
     "- What do you want to {OpenCloseOperation}?",
     "# SetTemperatureAbsoluteTemperature",
     "- What temperature do you want to set it to?",
     "# SetTemperatureAbsoluteTemperature4bb83bd0fb6311e9a23949c0df95331c",
     "- I can only set between 68 and 80 degrees.  What temperature would you like?",
-    "# OpenCloseRoomControlBackendonSuccess9bd92d20fc2d11e9bf63b974d90bef6c",
-    "- ",
-    "# OpenCloseRoomControlBackendonFailure9bd92d20fc2d11e9bf63b974d90bef6c",
-    "- Sorry, unable to connect to the room control service right now",
     "# OpenCloseOpenCloseOperation",
     "- Open or close?",
     "# Helpeca6e6c0fcd711e99e14f1746e26f855",
     "- Hi, I am your friendly room assistant. I can control the lights, tv and blinds and set the room temperature. Try saying \"computer turn on the bath room light\".",
-    "# TurnOnOffRoomControlBackendonSuccess7ca4cca000e411ea97e43706794592d8",
-    "-",
-    "# TurnOnOffRoomControlBackendonFailure7ca4cca000e411ea97e43706794592d8",
-    "- Sorry, unable to connect to the room control service right now.",
-    "# TurnOnOfff4fb7370f5e011e9acddb71da08409fc",
-    "- IF: @{SubjectContext == \"all\" && SubjectDevice == \"lights\"}",
-    "    - Ok, turning all the lights {OnOff}",
-    "- ELSEIF: @{SubjectDevice == \"lights\"}",
-    "    - Ok, turning {OnOff} the {SubjectContext} {SubjectDevice}",
-    "- ELSE:",
-    "    - Ok, turning the {SubjectDevice} {OnOff}",
     "# TurnOnOffSubjectDevice",
     "- Which device do you want to control?",
     "# OpenCloseOpenCloseSubject",
@@ -156,7 +136,23 @@
     "# AdjustTemperatureRoomControlBackendonSuccessfd34ee9028f311ea88cde3d2ef24c102",
     "- ",
     "# AdjustTemperatureRoomControlBackendonFailurefd34ee9028f311ea88cde3d2ef24c102",
+    "- Sorry, unable to connect to the room control service right now",
+    "# TurnOnOff-RoomControlBackendonSuccess-7ca4cca000e411ea97e43706794592d8",
+    "- {RoomControlBackend.Message}",
+    "# TurnOnOff-RoomControlBackendonFailure-7ca4cca000e411ea97e43706794592d8",
+    "- Sorry, unable to connect to the room control service right now.",
+    "# OpenClose-RoomControlBackendonSuccess-9bd92d20fc2d11e9bf63b974d90bef6c",
+    "- {RoomControlBackend.Message}",
+    "# OpenCloseRoomControlBackendonFailure9bd92d20fc2d11e9bf63b974d90bef6c",
     "- Sorry, unable to connect to the room control service right now"
+  ],
+  "registeredWakeWords": [
+    "computer",
+    "contohso",
+    "jayden",
+    "ok speaker",
+    "raspberry pie",
+    "exbox"
   ],
   "globalParameters": [],
   "commands": [
@@ -188,7 +184,7 @@
       "triggeringExamples": [
         "> - You can start sentences with '>' to add comments.",
         "> - You can also use parameters by adding the name of the parameter within curly braces, i.e.",
-        ">     Set an alarm to {YourDateParameterName}",
+        ">   Set an alarm to {YourDateParameterName}",
         ">   Where YourDateParameterName is the name of a parameter defined in the 'Parameters' section.",
         "are the blinds closed",
         "some other sentence"
@@ -350,13 +346,6 @@
           ],
           "actions": [
             {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# TurnOnOfff4fb7370f5e011e9acddb71da08409fc"
-              }
-            },
-            {
               "type": "CallHttpEndpoint",
               "name": "RoomControlBackend",
               "content": {},
@@ -365,14 +354,14 @@
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# TurnOnOffRoomControlBackendonSuccess7ca4cca000e411ea97e43706794592d8"
+                  "templateName": "#  TurnOnOff-RoomControlBackendonSuccess-7ca4cca000e411ea97e43706794592d8"
                 }
               },
               "onFailure": {
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# TurnOnOffRoomControlBackendonFailure7ca4cca000e411ea97e43706794592d8"
+                  "templateName": "# TurnOnOff-RoomControlBackendonFailure-7ca4cca000e411ea97e43706794592d8"
                 }
               }
             }
@@ -1021,13 +1010,6 @@
           ],
           "actions": [
             {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# OpenClose8e767500f76b11e9a646c5f4b0d53c23"
-              }
-            },
-            {
               "type": "CallHttpEndpoint",
               "name": "RoomControlBackend",
               "content": {},
@@ -1036,7 +1018,7 @@
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# OpenCloseRoomControlBackendonSuccess9bd92d20fc2d11e9bf63b974d90bef6c"
+                  "templateName": "# OpenClose-RoomControlBackendonSuccess-9bd92d20fc2d11e9bf63b974d90bef6c"
                 }
               },
               "onFailure": {
