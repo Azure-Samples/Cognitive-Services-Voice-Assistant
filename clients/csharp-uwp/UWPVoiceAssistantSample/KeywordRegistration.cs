@@ -159,8 +159,10 @@ namespace UWPVoiceAssistantSample
                 if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
                     is ActivationSignalDetectionConfiguration existingConfiguration)
                 {
+                    LocalSettingsHelper.SetModelData = true;
                     await this.SetModelDataIfNeededAsync(existingConfiguration);
-                    return existingConfiguration;
+                    await existingConfiguration.SetEnabledAsync(true);
+                    return await this.CreateKeywordConfigurationAsyncInternal();
                 }
 
                 return await this.CreateKeywordConfigurationAsyncInternal();
