@@ -20,19 +20,52 @@ $storageResourceId = $storageResource.id
 
 # assign proper roles for this user
 Write-Host "Creating Blob Owner role assignee = $userName storageResourceId = $storageResourceId" 
-# az role assignment create --role "Storage Blob Data Owner" --assignee $userName --scope $storageResourceId
-$output = az role assignment create --role "Storage Blob Data Reader" --assignee $userName --scope $storageResourceId | ConvertFrom-Json
+$output = az role assignment create --role "Storage Blob Data Owner" --assignee $userName --scope $storageResourceId | ConvertFrom-Json
 if (!$output) {
-    Write-Error "Failed to create role Storage Blob Data Reader on $storageResource"
+    Write-Error "Failed to create role Owner on $storageResource"
     Write-Error $output
     exit
 }
 
-$output = az role assignment create --role "Storage Blob Data Contributor" --assignee $userName --scope $storageResourceId | ConvertFrom-Json
-if (!$output) {
-    Write-Error "Failed to create role Storage Blob Data Contributor on $storageResource"
-    Write-Error $output
-    exit
+
+$retries = 10
+$retrycount = 0
+$completed = $false
+while (-not $completed) {
+    
+    if ($retrycount -ge $retries) {
+        Write-Error -Message ("Creating container permissions failed the maximum number of {0} times." -f $retrycount) -Category OperationTimeout
+        exit
+    }
+    
+    # check if the permissions have taken effect
+    $printCount = $retrycount + 1
+    Write-Host "Checking if the storage permissions have taken effect. Attempt $printCount, Maximum $retries"
+    $output = az role assignment list --scope $storageResourceId | ConvertFrom-Json
+    
+    if( !$output ) {
+        Write-Error "Failed to get role assignment list from Storage resource."
+        Write-Error $output
+    }
+    
+    $permissionsSet = $false
+    foreach ($item in $output) {
+        if($item.roleDefinitionName -eq "Storage Blob Data Owner"){
+            $permissionsSet = $true
+            $completed = $true
+            Write-Host "SUCCCESS! Storage permissions have taken effect."
+        }
+    }
+    
+    #if not set sleep and check again
+    if($permissionsSet){
+        $completed = $true;
+    }
+    else{
+        Write-Host ("Container roles not set yet. Sleep for 30 seconds and try again.")
+        Start-Sleep -s 30
+        $retrycount++
+    }
 }
 
 # sometimes the container create can take a bit of time so we will retry the next step a few times.
