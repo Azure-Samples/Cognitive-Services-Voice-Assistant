@@ -64,33 +64,15 @@ write-host "Created project Id $appId"
 # update the dialog model of the app
 #
 
-# get the current model so that we can modify it
-write-host "getting the initial $speechAppName $appName commands model"
-try {
-    $model = invoke-restmethod -Method GET -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Header $headers
-}
-catch {
-    # dig into the exception to get the Response details.
-    # note that value__ is not a typo.
-    Write-Host $_.Exception
-    Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
-    Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
-    exit
-}
-
 # change the model based on the local json file
 write-host "patching the $speechAppName $appName commands model"
 $newModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
-$model.httpEndpoints = $newModel.httpEndpoints
-$model.httpEndpoints[0].url = $websiteAddress
-$model.lgTemplates = $newModel.lgTemplates
-$model.globalParameters = $newModel.globalParameters
-$model.commands = $newModel.commands
+$newModel.httpEndpoints[0].url = $websiteAddress
 
 # send the updated model up to the application
 write-host "updating $speechAppName with the new $appName commands model"
 try {
-    $response = invoke-restmethod -Method PUT -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Body ($model | ConvertTo-Json  -depth 100) -Header $headers
+    $response = invoke-restmethod -Method PUT -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Body ($newModel | ConvertTo-Json  -depth 100) -Header $headers
 }
 catch {
     # dig into the exception to get the Response details.

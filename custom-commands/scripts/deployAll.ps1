@@ -44,7 +44,7 @@ else {
 
 # get the current default subscription ID
 $userName = (az ad signed-in-user show | ConvertFrom-Json).userPrincipalName
-Write-Host -ForegroundColor Yellow "`nThe login Azure account ($userName) has following subscription(s):"
+Write-Host -ForegroundColor Yellow "`nThe logged in Azure account ($userName) has following subscription(s):"
 az account list --all --output json | ConvertFrom-Json | Select-Object -Property isDefault, state, name, id | Out-Default
 $defaultSubscription = az account list --all --output json | ConvertFrom-Json | Where-Object { $_.isDefault -eq "true" }
 $subscriptionName = $defaultSubscription.name
