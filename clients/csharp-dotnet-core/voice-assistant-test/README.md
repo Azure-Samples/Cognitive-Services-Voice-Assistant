@@ -168,6 +168,7 @@ Here is the full list:
 >>##### WavFile
 >>`string | optional | null | "test1.WAV"`. Audio from this WAV file is streaming to Direct Line Speech as the input in the turn, by calling the [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet) method (or [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet) method if [Keyword](#keyword) is true). This represents a user speaking to a microphone. It's good practice to have at least one second of silence (non speech) at the end of the WAV file to make sure the speech service properly detects end-of-speech, as it would with a live audio stream from a microphone. When this field is present, you can specify the expected recognition result in the [Utterance](#utterance) field.
 To send WavFile's at real time (x1) speed, see the [Measuing User Perceived Latency](#Measuring-User-Perceived-Latency) and [RealTimeAudio](#RealTimeAudio) sections.
+To generat WAV files using Speech CLI, see the [Generating WAV files using Speech CLI](#Generating-WAV-files-using-Speech-CLI) section.
 >>
 >>##### Activity
 >>`JSON string | optional | null | "{\"type\": \"message\",\"text\":\"Test sending text via activity\"}"`. A bot-framework JSON activity string. If this field is specified, you cannot specify the [WavFile](#wavfile) or [Utterance](#utterance) fields. Use this to send any custom activity to your bot using the [SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet) method.
@@ -345,9 +346,7 @@ TBD
 
 ### Generating WAV files using Speech CLI
 
-The Speech CLI is a command line tool for using the Speech service without writing any code. With your Speech subscription key and region information ready, within minutes you can run text-to-speech to generate WAV files for testing on a single string in a command line or a collection of strings from a file.
-
-Once you have your subscription key and region identifier (ex. eastus, westus), run the following commands to setup and generate a Hello world WAV file.
+When you write tests with voice input, instead of recording WAV files, you can create them by using Microsoft Text-to-Speech service. The Speech CLI is a command line tool for using the Speech service without writing any code. With your Speech subscription key and region information (ex. eastus, westus) ready, within minutes you can run text-to-speech to generate WAV files for testing on a single string directly from the command line or a collection of strings from a file. Following are commands to setup and generate a Hello world WAV file on the fly.
 
 spx config @key --set YOUR-SUBSCRIPTION-KEY\
 spx config @region --set YOUR-REGION-ID\
