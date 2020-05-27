@@ -1,8 +1,13 @@
 #Requires -Version 6
 
 Param(
-    [Parameter(Mandatory)][ValidateSet('automotive', 'hospitality', 'inventory', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")][string] $appName = $(Read-Host -prompt "appName"),
+    [Parameter(Mandatory, HelpMessage = "Please enter a supported app. automotive, hospitality, or inventory")]
+    [ValidateSet('automotive', 'hospitality', 'inventory', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")]
+    [string] $appName = $(Read-Host -prompt "appName"),
+    [Parameter (Mandatory, HelpMessage = "Please enter a name for your resource. It must be < 19 characters and  Alphanumeric only")]
+    [ValidatePattern("^\w+$", ErrorMessage = "resourceName must be alphanumeric")]
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
+    [Parameter (Mandatory, HelpMessage = "Please enter a region. Supported regions are westus, northeurope")]
     [string] $region = $(Read-Host -prompt "region"),
     [string] $randomID
 )
