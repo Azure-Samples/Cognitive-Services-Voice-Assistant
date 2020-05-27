@@ -208,6 +208,7 @@ namespace UWPVoiceAssistantSample
                 {
                     var code = (int)e.ErrorCode;
                     var message = $"{e.Reason.ToString()}: {e.ErrorDetails}";
+                    this.logger.Log(LogMessageLevel.SignalDetection, $"Connection cancelled, SessionId: {e.SessionId}; ErrorCode: {code}; ErrorMessage: {message}");
                     this.ErrorReceived?.Invoke(new DialogErrorInformation(code, message));
                 };
                 this.connector.ActivityReceived += (s, e) =>
