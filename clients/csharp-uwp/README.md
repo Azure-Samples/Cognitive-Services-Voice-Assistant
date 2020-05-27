@@ -63,8 +63,8 @@ To debug the app and then run it, press F5 or use **Debug > Start Debugging**. T
 
 ### Optional:
 
-- You can train a [Custom Speech Recognition Model](https://speech.microsoft.com/customspeech) to improve speech recognition quality. To use your custom model, [update the config file](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/fa8b68b4e65bbff75e5168888526109a606df29f/clients/csharp-uwp/UWPVoiceAssistantSample/Assets/defaultConfig.json#L4) with the Speech Recognition endpoint id.
-- You can create a [Custom Voice](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-voice-create-voice) for your application's output audio. When you have created your Custom Voice,  To use your custom model, [update the config file](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/fa8b68b4e65bbff75e5168888526109a606df29f/clients/csharp-uwp/UWPVoiceAssistantSample/Assets/defaultConfig.json#L5) with the Custom Voice ID.
+- You can train a [Custom Speech Recognition Model](https://speech.microsoft.com/customspeech) to improve speech recognition quality. To use your custom model, [update the config file](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/Assets/defaultConfig.json) with the Speech Recognition endpoint id.
+- You can create a [Custom Voice](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-voice-create-voice) for your application's output audio. When you have created your Custom Voice,  To use your custom model, [update the config file](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/Assets/defaultConfig.json) with the Custom Voice ID.
 - Toggle the controls for debugging purposes
     -Microphone file capture: creates log files of audio captured when the keyword was detected by MVA
     -SDK logging: enables logging from the DLS SDK to an output file.
@@ -87,7 +87,7 @@ By default, EnableKwsLogging and EnableHardwareDetector are false and SetModelDa
 
 #### Using a Hardware Keyword Spotter
 
-To use a Hardware Keyword Spotter create a folder called aarlog in C:/ and within a file called aarconfig.txt.
+To use a Hardware Keyword Spotter create a folder called aarlog in C:\ and within a file called aarconfig.txt.
 This file must have the following format
 
 ```
@@ -102,7 +102,7 @@ Note: This is an example, the Contoso is not a hardware keyword
 Contoso,{C0F1842F-D389-44D1-8420-A32A63B35568},1033,Microsoft.SDKSample.MVADLSSampleCS_8wekyb3d8bbwe!App,background
 ```
 
-After creating this file (C:/aarlog/aarconfig.txt), open the registry and navigate to Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Speech_OneCore\Settings\VoiceActivation and create a new DWORD (32-bit) Value with the name being "UseAarConfigFile" and set its value to Hexadecimal 1.
+After creating this file (C:\aarlog\aarconfig.txt), open the registry and navigate to Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Speech_OneCore\Settings\VoiceActivation and create a new DWORD (32-bit) Value with the name being "UseAarConfigFile" and set its value to Hexadecimal 1.
 
 Restart AarSvc_####
 
@@ -126,7 +126,7 @@ Each utterance returns a bot response, this response can be ignored by the clien
 - Visit [Create Custom Wake Word](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws) and save the .table file.
 - Obtain a whitelisted AppID, GUID, and Keyword Display Name from Microsoft, as well as a bin file containing a model for your keyword. 
 - Add the .table and .bin files to the UWPVoiceAssistantSample/SDKKeywords folder before building the application.
-- After running the application, [update the config file](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/fa8b68b4e65bbff75e5168888526109a606df29f/clients/csharp-uwp/UWPVoiceAssistantSample/Assets/defaultConfig.json#L9) by replacing all fields in the KeywordActivationModel and KeywordRecognitionModel. 
+- After running the application, [update the config file](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/blob/master/clients/csharp-uwp/UWPVoiceAssistantSample/Assets/defaultConfig.json) by replacing all fields in the KeywordActivationModel and KeywordRecognitionModel. 
 
 After First Run, you may want to verify that the Keyword was correctly registered to the device. To do so:
 - Open Registry Editor
