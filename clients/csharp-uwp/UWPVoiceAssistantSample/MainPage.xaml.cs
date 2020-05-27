@@ -3,6 +3,7 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -10,8 +11,6 @@ namespace UWPVoiceAssistantSample
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.DependencyInjection;
-    using NLog.Fluent;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
@@ -45,6 +44,7 @@ namespace UWPVoiceAssistantSample
         private readonly HashSet<TextBlock> noiseLogs;
         private readonly HashSet<TextBlock> signalDetectionLogs;
         private readonly HashSet<TextBlock> conversationAgentLogs;
+        private readonly HashSet<TextBlock> audioLogs;
         private readonly App app;
         private bool configModified;
         private bool hypotheizedSpeechToggle;
@@ -73,6 +73,7 @@ namespace UWPVoiceAssistantSample
             this.noiseLogs = new HashSet<TextBlock>();
             this.signalDetectionLogs = new HashSet<TextBlock>();
             this.conversationAgentLogs = new HashSet<TextBlock>();
+            this.audioLogs = new HashSet<TextBlock>();
 
             // Ensure that we restore the full view (not the compact mode) upon foreground launch
             _ = this.UpdateViewStateAsync();
@@ -541,7 +542,7 @@ namespace UWPVoiceAssistantSample
             if (agentSignal.Contains("ConversationalAgentSignal", StringComparison.OrdinalIgnoreCase))
             {
                 TextBlock conversationalAgentSignalTextBlock = new TextBlock();
-                conversationalAgentSignalTextBlock.Foreground = new SolidColorBrush(Colors.LightSkyBlue);
+                conversationalAgentSignalTextBlock.Foreground = new SolidColorBrush(Colors.DarkBlue);
                 conversationalAgentSignalTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = agentSignal.Split("ConversationalAgentSignal");
                 conversationalAgentSignalTextBlock.Text = split[1];
@@ -551,6 +552,29 @@ namespace UWPVoiceAssistantSample
                 if (this.LogSignalDetectionFlyoutItem.IsChecked)
                 {
                     this.ChangeLogStackPanel.Children.Add(conversationalAgentSignalTextBlock);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool LogAudio(string audioLogs)
+        {
+            if (audioLogs.Contains("AudioLogs", StringComparison.OrdinalIgnoreCase))
+            {
+                TextBlock audioLogTextBlock = new TextBlock();
+                audioLogTextBlock.Foreground = new SolidColorBrush(Colors.MediumTurquoise);
+                audioLogTextBlock.TextWrapping = TextWrapping.Wrap;
+                string[] split = audioLogs.Split("AudioLogs");
+                audioLogTextBlock.Text = split[1];
+
+                this.audioLogs.Add(audioLogTextBlock);
+
+                if (this.LogAudioFlyoutItem.IsChecked)
+                {
+                    this.ChangeLogStackPanel.Children.Add(audioLogTextBlock);
                 }
 
                 return true;
@@ -578,6 +602,9 @@ namespace UWPVoiceAssistantSample
                     {
                     }
                     else if (this.LogConversationalAgent(text))
+                    {
+                    }
+                    else if (this.LogAudio(text))
                     {
                     }
                     else
@@ -619,6 +646,11 @@ namespace UWPVoiceAssistantSample
                 foreach (TextBlock textBlock in this.conversationAgentLogs)
                 {
                     textBlock.Visibility = this.LogConversationalAgentSignalFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                foreach (TextBlock textBlock in this.audioLogs)
+                {
+                    textBlock.Visibility = this.LogAudioFlyoutItem.IsChecked ? Visibility.Visible : Visibility.Collapsed;
                 }
 
                 this.ChangeLogScrollViewer.ChangeView(0.0f, double.MaxValue, 1.0f);

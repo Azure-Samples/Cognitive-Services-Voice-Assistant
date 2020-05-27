@@ -238,10 +238,11 @@
             <Button x:Name="LogFilterButton" Content="Filter Logs" Grid.Column="1">
                 <Button.Flyout>
                     <MenuFlyout Placement="Bottom">
+                        <ToggleMenuFlyoutItem x:Name="LogAudioFlyoutItem" Text="Audio Logs" IsChecked="False" Click="TriggerLogAvailable"/>
                         <ToggleMenuFlyoutItem x:Name="LogConversationalAgentSignalFlyoutItem" Text="Conversational Agent Stage" IsChecked="True" Click="TriggerLogAvailable"/>
                         <ToggleMenuFlyoutItem x:Name="LogSignalDetectionFlyoutItem" Text="Signal Detection Events" IsChecked="True" Click="TriggerLogAvailable"/>
-                        <ToggleMenuFlyoutItem x:Name="LogInformationFlyoutItem" Text="Information" IsChecked="True" Click="TriggerLogAvailable"/>
-                        <ToggleMenuFlyoutItem x:Name="LogNoiseFlyoutItem" Text="Noise" IsChecked="True" Click="TriggerLogAvailable"/>
+                        <ToggleMenuFlyoutItem x:Name="LogInformationFlyoutItem" Text="Information" IsChecked="False" Click="TriggerLogAvailable"/>
+                        <ToggleMenuFlyoutItem x:Name="LogNoiseFlyoutItem" Text="Noise" IsChecked="False" Click="TriggerLogAvailable"/>
                         <ToggleMenuFlyoutItem x:Name="LogErrorFlyoutItem" Text="Errors" IsChecked="True" Click="TriggerLogAvailable"/>
                     </MenuFlyout>
                 </Button.Flyout>
