@@ -68,7 +68,7 @@ namespace UWPVoiceAssistantSample
             }
             catch (Exception ex)
             {
-                this.logger.Log($"Unable to configure a ConversationalAgentSession. Please check your registration with the MVA platform.\r\n{ex.Message}");
+                this.logger.Log(LogMessageLevel.Error, $"Unable to configure a ConversationalAgentSession. Please check your registration with the MVA platform.\r\n{ex.Message}");
             }
             finally
             {
@@ -108,7 +108,7 @@ namespace UWPVoiceAssistantSample
         {
             // KwsPerformanceLogger.kwsEventFireTime = DateTime.Now.Ticks;
             // this.kwsPerformanceLogger.LogSignalReceived("1", true, DateTime.Now.Ticks, startTime, endTime);
-            this.logger.Log($"'{sender.Signal.SignalName}' signal detected in session event handler");
+            this.logger.Log(LogMessageLevel.SignalDetection, $"'{sender.Signal.SignalName}' signal detected in session event handler");
 
             this.SignalDetected?.Invoke(this, DetectionOrigin.FromApplicationObject);
         }

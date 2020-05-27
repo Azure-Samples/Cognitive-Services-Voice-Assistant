@@ -120,7 +120,7 @@ namespace UWPVoiceAssistantSample
             var now = DateTime.Now;
             if (this.lastSignalReceived.HasValue && now.Subtract(this.lastSignalReceived.Value).TotalMilliseconds < MinimumSignalSeparation.TotalMilliseconds)
             {
-                this.logger.Log($"Ignoring signal received so soon after previous!");
+                this.logger.Log(LogMessageLevel.SignalDetection, $"Ignoring signal received so soon after previous!");
                 return;
             }
 
@@ -131,7 +131,7 @@ namespace UWPVoiceAssistantSample
             var signalName = (detectionOrigin == DetectionOrigin.FromPushToTalk)
                 ? "Push to talk" : session.SignalName;
 
-            this.logger.Log($"HandleSignalDetection, '{signalName}', {detectionOrigin.ToString()}");
+            this.logger.Log(LogMessageLevel.SignalDetection, $"HandleSignalDetection, '{signalName}', {detectionOrigin.ToString()}");
 
             var canSkipVerification =
                 detectionOrigin == DetectionOrigin.FromPushToTalk
@@ -164,7 +164,7 @@ namespace UWPVoiceAssistantSample
             var session = await this.agentSessionManager.GetSessionAsync();
             if (session.AgentState != ConversationalAgentState.Detecting)
             {
-                this.logger.Log("Abort reaction to keyword, not detecting");
+                this.logger.Log(LogMessageLevel.SignalDetection, "Abort reaction to keyword, not detecting");
                 return;
             }
 
@@ -172,18 +172,20 @@ namespace UWPVoiceAssistantSample
 
             if (!isFinal)
             {
-                this.logger.Log($"KeywordRecognitionDuringSignalVerification: Verifying : {recognitionText}");
+                this.logger.Log(LogMessageLevel.SignalDetection, $"KeywordRecognitionDuringSignalVerification: Verifying : {recognitionText}");
             }
             else if (string.IsNullOrEmpty(recognitionText))
             {
                 KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: NoMatch");
+                this.logger.Log(LogMessageLevel.SignalDetection, $"KeywordRecognitionDuringSignalVerification: NoMatch");
                 this.OnSessionSignalRejected(this.LastDetectedSignalOrigin);
             }
             else
             {
                 KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                 this.logger.Log($"KeywordRecognitionDuringSignalVerification: Verified : {recognitionText}");
+                this.logger.Log(LogMessageLevel.SignalDetection, $"KeywordRecognitionDuringSignalVerification: Verified : {recognitionText}");
                 this.OnSessionSignalConfirmed(session, this.LastDetectedSignalOrigin);
             }
         }
@@ -193,7 +195,7 @@ namespace UWPVoiceAssistantSample
             this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "2", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
             this.StopFailsafeTimer();
 
-            this.logger.Log($"Confirmed signal received, IsUserAuthenticated={session.IsUserAuthenticated.ToString(null)}");
+            this.logger.Log(LogMessageLevel.SignalDetection, $"Confirmed signal received, IsUserAuthenticated={session.IsUserAuthenticated.ToString(null)}");
             if (!session.IsUserAuthenticated)
             {
                 // This is a launch over the lock screen. It may be prudent to serialize state
@@ -207,6 +209,7 @@ namespace UWPVoiceAssistantSample
         private void OnSessionSignalRejected(DetectionOrigin origin)
         {
             this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "2", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
+            this.logger.Log(LogMessageLevel.SignalDetection, $"Session singal rejected, Signal Origin: {origin}");
             this.StopFailsafeTimer();
             this.SignalRejected?.Invoke(origin);
         }
@@ -223,7 +226,7 @@ namespace UWPVoiceAssistantSample
                         if (this.secondStageStopwatch != null)
                         {
                             this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "2", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
-                            this.logger.Log($"Failsafe timer expired; rejecting");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Failsafe timer expired; rejecting");
                             this.SignalRejected?.Invoke(this.LastDetectedSignalOrigin);
                         } // else timer was stopped while waiting for the lock
                     }
@@ -243,7 +246,7 @@ namespace UWPVoiceAssistantSample
                     return;
                 }
 
-                this.logger.Log($"{Environment.TickCount} : Cancelling 2nd-stage failsafe timer. Elapsed: {this.secondStageStopwatch?.ElapsedMilliseconds}ms");
+                this.logger.Log(LogMessageLevel.SignalDetection, $"{Environment.TickCount} : Cancelling 2nd-stage failsafe timer. Elapsed: {this.secondStageStopwatch?.ElapsedMilliseconds}ms");
                 this.secondStageFailsafeTimer?.Change(Timeout.Infinite, Timeout.Infinite);
                 this.secondStageFailsafeTimer?.Dispose();
                 this.secondStageFailsafeTimer = null;
