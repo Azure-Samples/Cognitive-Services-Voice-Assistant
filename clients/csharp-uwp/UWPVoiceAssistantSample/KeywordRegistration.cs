@@ -154,6 +154,15 @@ namespace UWPVoiceAssistantSample
                     return this.keywordConfiguration;
                 }
 
+                var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
+
+                if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
+                    is ActivationSignalDetectionConfiguration existingConfiguration)
+                {
+                    await this.SetModelDataIfNeededAsync(existingConfiguration);
+                    return existingConfiguration;
+                }
+
                 return await this.CreateKeywordConfigurationAsyncInternal();
             }
         }
@@ -334,6 +343,7 @@ namespace UWPVoiceAssistantSample
             var configurations = await detector.GetConfigurationsAsync();
             foreach (var configuration in configurations)
             {
+                await this.SetModelDataIfNeededAsync(configuration);
                 await configuration.SetEnabledAsync(false);
             }
 
