@@ -346,10 +346,18 @@ TBD
 
 ### Generating WAV files using Speech CLI
 
-When you write tests with voice input, instead of recording WAV files, you can create them by using Microsoft Text-to-Speech service. The Speech CLI is a command line tool for using the Speech service without writing any code. With your Speech subscription key and region information (ex. eastus, westus) ready, within minutes you can run text-to-speech to generate WAV files for testing on a single string directly from the command line or a collection of strings from a file. Following are commands to setup and generate a Hello world WAV file on the fly.
+When you write tests with voice input, instead of recording WAV files, you can create them by using Microsoft Text-to-Speech service. The Speech CLI is a command line tool for using the Speech service without writing any code. With your Speech subscription key and region information (ex. eastus, westus) ready, within minutes you can run text-to-speech to generate WAV files for testing on a single string directly from the command line or a collection of strings from a file. [Learn the basics of the Speech CLI](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/spx-basics?tabs=windowsinstall) shows how to download and install Speech CLI, and how to run commands with SPX.
+
+To get started, run following commands to setup and generate a Hello world WAV file on the fly.
 
 spx config @key --set YOUR-SUBSCRIPTION-KEY\
 spx config @region --set YOUR-REGION-ID\
 spx synthesize --text "Hello world! " --audio output hello.wav
 
-You can find more information [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/spx-basics?tabs=windowsinstall) about how to download and install Speech CLI, and how to run commands with SPX.
+The above commands generate WAV file in default en-US standard voice. The text-to-speech service provides many options for synthesized voices, under [text-to-speech language support](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support#text-to-speech). Following commands show how to list supported voices, synthesize with a specific voice in English, and synthesize in German.
+
+spx synthesize --voices\
+spx synthesize --voice en-US-GuyNeural --text "Hello world!"\
+spx synthesize --voice de-DE-KatjaNeural --text "Hallo Welt!"
+
+To learn how you can configure and adjust neural voices, see [Speech synthesis markup language](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup#adjust-speaking-styles). 
