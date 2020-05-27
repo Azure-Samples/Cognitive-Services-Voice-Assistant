@@ -85,31 +85,6 @@ If your first stage keyword model is a hardware keyword, the bin file can be omi
 <br>
 By default, EnableKwsLogging and EnableHardwareDetector are false and SetModelData is true.
 
-#### Using a Hardware Keyword Spotter
-
-To use a Hardware Keyword Spotter create a folder called aarlog in C:\ and within a file called aarconfig.txt.
-This file must have the following format
-
-```
-KeywordDisplayName,{KeywordId},KeywordModelId,Microsoft.SDKSample.MVADLSSampleCS_8wekyb3d8bbwe!App,background
-```
-
-This arrconfig.txt file should look like this for a hardware keyword spotter for Contoso.
-<br>
-Note: This is an example, the Contoso is not a hardware keyword
-
-```
-Contoso,{C0F1842F-D389-44D1-8420-A32A63B35568},1033,Microsoft.SDKSample.MVADLSSampleCS_8wekyb3d8bbwe!App,background
-```
-
-After creating this file (C:\aarlog\aarconfig.txt), open the registry and navigate to Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Speech_OneCore\Settings\VoiceActivation and create a new DWORD (32-bit) Value with the name being "UseAarConfigFile" and set its value to Hexadecimal 1.
-
-Restart AarSvc_####
-
-Open the config file and add two additional Key-Value pairs. **EnableHardwareDetector: true** and **SetModelData: false**
-
-The path to the bin file should be omitted in the KeywordActivationModel when using a hardware keyword spotter.
-
 #### Enabling KWS+KWV+SR only mode
 
 Each utterance returns a bot response, this response can be ignored by the client by adding a property to the DialogServiceConnector object. When using this property you will have to set the SpeechRegion to an empty string and the following in the SetProperty key:
