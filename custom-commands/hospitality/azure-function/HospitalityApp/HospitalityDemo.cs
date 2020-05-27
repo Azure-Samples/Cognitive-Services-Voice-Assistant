@@ -101,40 +101,82 @@ namespace HospitalityApp
                         {
                             if (instance.Equals("all"))
                             {
-                                currRoomConfig.Lights_bathroom = (bool)valueBool;
-                                currRoomConfig.Lights_room = (bool)valueBool;
-                                currRoomConfig.Message = "All lights " + value;
+                                if (currRoomConfig.Lights_bathroom == (bool)valueBool && currRoomConfig.Lights_room == (bool)valueBool)
+                                {
+                                    currRoomConfig.Message = $"All lights already {value}";
+                                }
+                                else
+                                {
+                                    currRoomConfig.Lights_bathroom = (bool)valueBool;
+                                    currRoomConfig.Lights_room = (bool)valueBool;
+                                    currRoomConfig.Message = $"Ok, turning all the lights {value}";
+                                }
                                 updated = true;
                             }
                             else if (instance.Equals("room"))
                             {
-                                currRoomConfig.Lights_room = (bool)valueBool;
-                                currRoomConfig.Message = "room light " + value;
+                                if (currRoomConfig.Lights_room == (bool)valueBool)
+                                {
+                                    currRoomConfig.Message = $"Room light already {value}";
+                                }
+                                else
+                                {
+                                    currRoomConfig.Lights_room = (bool)valueBool;
+                                    currRoomConfig.Message = $"Ok, turning {value} the room light";
+                                }
                                 updated = true;
                             }
                             else if (instance.Equals("bathroom"))
                             {
-                                currRoomConfig.Lights_bathroom = (bool)valueBool;
-                                currRoomConfig.Message = "bathroom light " + value;
+                                if (currRoomConfig.Lights_bathroom == (bool)valueBool)
+                                {
+                                    currRoomConfig.Message = $"Bathroom light already {value}";
+                                }
+                                else
+                                {
+                                    currRoomConfig.Lights_bathroom = (bool)valueBool;
+                                    currRoomConfig.Message = $"Ok, turning {value} the bathroom light";
+                                }
                                 updated = true;
                             }
                         }
                         else if (item.Equals("tv"))
                         {
-                            currRoomConfig.Television = (bool)valueBool;
-                            currRoomConfig.Message = "TV " + value;
+                            if (currRoomConfig.Television == (bool)valueBool)
+                            {
+                                currRoomConfig.Message = $"TV already {value}";
+                            }
+                            else
+                            {
+                                currRoomConfig.Television = (bool)valueBool;
+                                currRoomConfig.Message = $"Ok, turning the TV {value}";
+                            }
                             updated = true;
                         }
                         else if (item.Equals("blinds"))
                         {
-                            currRoomConfig.Blinds = (bool)valueBool;
-                            currRoomConfig.Message = (bool)valueBool ? "blinds opened" : "blinds closed";
+                            if (currRoomConfig.Blinds == (bool)valueBool)
+                            {
+                                currRoomConfig.Message = (bool)valueBool ? "Blinds already opened" : "Blinds already closed";
+                            }
+                            else
+                            {
+                                currRoomConfig.Blinds = (bool)valueBool;
+                                currRoomConfig.Message = (bool)valueBool ? "All right, opening the blinds" : "All right, closing the blinds";
+                            }
                             updated = true;
                         }
                         else if (item.Equals("ac"))
                         {
-                            currRoomConfig.AC = (bool)valueBool;
-                            currRoomConfig.Message = "AC " + value;
+                            if (currRoomConfig.AC == (bool)valueBool)
+                            {
+                                currRoomConfig.Message = $"AC already {value}";
+                            }
+                            else
+                            {
+                                currRoomConfig.AC = (bool)valueBool;
+                                currRoomConfig.Message = $"Ok, turning the AC {value}";
+                            }
                             updated = true;
                         }
                     }
@@ -170,7 +212,7 @@ namespace HospitalityApp
                     Content = new StringContent(JsonConvert.SerializeObject(currRoomConfig, Formatting.Indented), Encoding.UTF8, "application/json")
                 };
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 log.LogError(e.Message);
                 return new HttpResponseMessage(HttpStatusCode.BadRequest)
