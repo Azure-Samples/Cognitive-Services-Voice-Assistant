@@ -341,3 +341,16 @@ TBD
 
 ### Other custom settings
 -->
+
+
+### Generating WAV files using Speech CLI
+
+The Speech CLI is a command line tool for using the Speech service without writing any code. With your Speech subscription key and region information ready, within minutes you can run text-to-speech to generate WAV files for testing on a single string in a command line or a collection of strings from a file.
+
+Once you have your subscription key and region identifier (ex. eastus, westus), run the following commands to setup and generate a Hello world WAV file.
+
+spx config @key --set YOUR-SUBSCRIPTION-KEY\
+spx config @region --set YOUR-REGION-ID\
+spx synthesize --text "Hello world! " --audio output hello.wav
+
+You can find more information [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/spx-basics?tabs=windowsinstall) about how to download and install Speech CLI, and how to run commands with SPX.
