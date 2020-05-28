@@ -168,6 +168,7 @@ Here is the full list:
 >>##### WavFile
 >>`string | optional | null | "test1.WAV"`. Audio from this WAV file is streaming to Direct Line Speech as the input in the turn, by calling the [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet) method (or [StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet) method if [Keyword](#keyword) is true). This represents a user speaking to a microphone. It's good practice to have at least one second of silence (non speech) at the end of the WAV file to make sure the speech service properly detects end-of-speech, as it would with a live audio stream from a microphone. When this field is present, you can specify the expected recognition result in the [Utterance](#utterance) field.
 To send WavFile's at real time (x1) speed, see the [Measuing User Perceived Latency](#Measuring-User-Perceived-Latency) and [RealTimeAudio](#RealTimeAudio) sections.
+To generate WAV files using Speech CLI, see the [Generating WAV files using Speech CLI](#Generating-WAV-files-using-Speech-CLI) section.
 >>
 >>##### Activity
 >>`JSON string | optional | null | "{\"type\": \"message\",\"text\":\"Test sending text via activity\"}"`. A bot-framework JSON activity string. If this field is specified, you cannot specify the [WavFile](#wavfile) or [Utterance](#utterance) fields. Use this to send any custom activity to your bot using the [SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet) method.
@@ -341,3 +342,22 @@ TBD
 
 ### Other custom settings
 -->
+
+
+### Generating WAV files using Speech CLI
+
+When you write tests with voice input, instead of recording WAV files, you can create them by using Microsoft Text-to-Speech service. The Speech CLI is a command line tool for using the Speech service without writing any code. With your Speech subscription key and region information (ex. eastus, westus) ready, within minutes you can run text-to-speech to generate WAV files for testing on a single string directly from the command line or a collection of strings from a file. [Learn the basics of the Speech CLI](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/spx-basics?tabs=windowsinstall) shows how to download and install Speech CLI, and how to run commands with SPX.
+
+To get started, run following commands to setup and generate a Hello world WAV file on the fly.
+```
+spx config @key --set YOUR-SUBSCRIPTION-KEY
+spx config @region --set YOUR-REGION-ID
+spx synthesize --text "Hello world! " --audio output hello.wav
+```
+The above commands generate WAV file in default en-US standard voice. The text-to-speech service provides many options for synthesized voices, under [text-to-speech language support](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support#text-to-speech). Following commands show how to list supported voices, synthesize with a specific voice in English, and synthesize in German.
+```
+spx synthesize --voices
+spx synthesize --voice en-US-GuyNeural --text "Hello world!"
+spx synthesize --voice de-DE-KatjaNeural --text "Hallo Welt!"
+```
+To learn how you can configure and adjust neural voices, see [Speech synthesis markup language](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup#adjust-speaking-styles). 
