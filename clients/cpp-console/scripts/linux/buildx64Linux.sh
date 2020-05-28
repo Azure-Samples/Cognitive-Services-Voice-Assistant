@@ -17,7 +17,8 @@ echo "Downloading Speech SDK binaries"
 wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SDK
 
 echo "Copying SDK binaries to lib folder and headers to include"
-cp -Rf ./SDK/SpeechSDK*/* .
+cp -Rf ./SDK/SpeechSDK*/lib .
+cp -Rf ./SDK/SpeechSDK*/include .
 else
 echo "Speech SDK lib found. Skipping download."
 fi
