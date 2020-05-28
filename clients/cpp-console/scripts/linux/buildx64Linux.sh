@@ -23,7 +23,6 @@ else
 echo "Speech SDK lib found. Skipping download."
 fi
 
-
 echo "Building Linux x64 sample ..."
 if g++ -Wno-psabi \
 src/common/Main.cpp \

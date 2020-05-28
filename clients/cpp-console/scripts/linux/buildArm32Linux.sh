@@ -24,7 +24,6 @@ else
 echo "Speech SDK lib found. Skipping download."
 fi
 
-
 echo "Building Linux Arm32 sample ..."
 if g++ -Wno-psabi \
 src/common/Main.cpp \
