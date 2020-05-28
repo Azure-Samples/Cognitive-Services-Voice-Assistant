@@ -36,9 +36,9 @@ Wait until the LED ring glows green.
 
 The repo should be cloned onto your dev machine and we will operate out of the cpp-console folder
 
-To utilize the audio processing from the Microsoft Audio Stack, we will also download the specific binaries for the GGEC speaker. This will happen automatically if you used the build script. Otherwise they can be found here: [binaries](https://aka.ms/sdsdk-download).
+To utilize the audio processing from the Microsoft Audio Stack, we will also download the specific binaries for the GGEC speaker. This will happen automatically if you used the build script. Otherwise they can be found here: [binaries](https://aka.ms/sdsdk-download). To force an update delete the binaries in the lib folder.
 
-Download the Speech SDK: The speech SDK will be downloaded as part of the build script. Otherwise it can be found here: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
+Download the Speech SDK: The speech SDK will be downloaded as part of the build script if necessary. Otherwise it can be found here: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary). To force an update of the binaries delete the contents of the lib folder and the c_api and cxx_api folders in your include directory.
 
 Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword (.table file) being used.
 

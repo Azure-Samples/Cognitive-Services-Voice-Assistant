@@ -13,7 +13,7 @@ if exist .\lib\arm32\libMicrosoft.CognitiveServices.Speech.core.so (
     tar -xf .\SDK\sdk.tar -C .\SDK
 
     echo Copying SDK binaries to lib folder and headers to include
-    for /f %%i in ('dir /b .\SDK\SpeechSDK*') do xcopy /s /y .\SDK\%%i\* .
+    for /f %%i in ('dir /b/a:d .\SDK\SpeechSDK*') do xcopy /s /y .\SDK\%%i\* .
 
     echo Downloading GGEC Device SDK binaries
     curl -L "https://aka.ms/sdsdk-download-speaker" --output .\SDK\speaker.zip
@@ -54,3 +54,6 @@ echo Building (this is slow): %tgt%
 set finalCommand=%buildCmd% -o %tgt% %src% %commonTargets% %defines%
 echo build command = %finalCommand%
 %finalCommand%
+
+echo Cleaning up unnecesary downloaded files
+DEL /S /F /Q .\SDK >NUL
