@@ -8,6 +8,7 @@ if [ ! -d SDK ]; then
     mkdir SDK # only create directory if does not exist
 fi
 
+if [ ! -f ./lib/arm32/libMicrosoft.CognitiveServices.Speech.core.so ]; then
 echo "Cleaning up libs and include directories that we will overwrite"
 rm -R ./lib/*
 rm -R ./include/c_api
@@ -18,15 +19,21 @@ wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SDK
 
 echo "Copying SDK binaries to lib folder and headers to include"
 cp -Rf ./SDK/SpeechSDK*/* .
+else
+echo "Speech SDK lib found. Skipping download."
+fi
 
+if [ ! -f ./lib/arm32/libpma.so ]; then
 echo "Downloading Microsoft Audio Stack (MAS) binaries"
 curl -L "https://aka.ms/sdsdk-download-linux-arm32" --output ./SDK/Linux-arm.tgz
 tar -xzf ./SDK/Linux-arm.tgz -C ./SDK
 
 echo "Copying MAS binaries to lib folder"
 cp -Rf ./SDK/Linux-arm/* ./lib/arm32
+else 
+echo "MAS binaries found. Skipping download."
 
-echo "Building Raspberry Pi sample"
+echo "Building Raspberry Pi sample ..."
 g++ -Wno-psabi \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
