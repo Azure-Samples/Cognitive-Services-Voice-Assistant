@@ -16,6 +16,16 @@
       "headers": {},
       "sendFrame": false,
       "updateFrame": false
+    },
+    {
+      "name": "UpdateDeviceState",
+      "method": "POST",
+      "url": "https://webendpointexample.azurewebsites.net/api/DeviceState",
+      "headers": {
+        "app": "041ffb1f"
+      },
+      "sendFrame": false,
+      "updateFrame": false
     }
   ],
   "lgTemplates": [
@@ -44,7 +54,9 @@
     "    - Ok, turning {OnOff} the {SubjectContext} {SubjectDevice}",
     "- ELSE:",
     "    - Ok, turning the {SubjectDevice} {OnOff}",
-    "    - Done, turned {OnOff} the {SubjectDevice}"
+    "    - Done, turned {OnOff} the {SubjectDevice}",
+    "# TurnOnOff-UpdateDeviceStateonFailure-167f1de0a17011eab7f28d032b4d6ad7",
+    "- Sorry, {WebEndpointErrorMessage}"
   ],
   "globalParameters": [],
   "commands": [
@@ -158,6 +170,28 @@
               "response": {
                 "type": "Template",
                 "templateName": "# TurnOn-ed6f14b0a15a11eaabc57d77114ef68a"
+              }
+            },
+            {
+              "type": "CallHttpEndpoint",
+              "name": "UpdateDeviceState",
+              "content": {},
+              "parameters": "item={SubjectDevice}&&value={OnOff}",
+              "onSuccess": {
+                "type": "SendActivity",
+                "activity": {
+                  "type": "event",
+                  "name": "UpdateDeviceState",
+                  "state": "{OnOff}",
+                  "device": "{SubjectDevice}"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# TurnOnOff-UpdateDeviceStateonFailure-167f1de0a17011eab7f28d032b4d6ad7"
+                }
               }
             }
           ],
