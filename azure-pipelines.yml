@@ -191,12 +191,26 @@ jobs:
     displayName: '$(sample4Name) - NuGetCommand'
     inputs:
       restoreSolution: '$(sample4Solution)'
+  
+  - task: DownloadSecureFile@1
+    name: signingCert
+    displayName: 'Download UWP VA Sample certificate'
+    inputs:
+      secureFile: 'mvaDlsSelfSignCert_password.pfx'
 
   - task: VSBuild@1
     displayName: '$(sample4Name) - VSBuild'
     inputs:
       solution: '$(sample4Solution)'
-      msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatformNative)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+      msbuildArgs: 
+        '/p:AppxBundlePlatforms="$(buildPlatformNative)" 
+        /p:AppxPackageDir="$(appxPackageDir)" 
+        /p:AppxBundle=Always 
+        /p:UapAppxPackageBuildMode=StoreUpload
+        /p:AppxPackageSigningEnabled=true
+        /p:PackageCertificateThumbprint=""
+        /p:PackageCertificateKeyFile="$(signingCert.secureFilePath"
+        /p:PackageCertificatePassword="$(signingCertPassword)"'
       platform: '$(buildPlatformNative)'
       configuration: '$(buildConfiguration)'
 
