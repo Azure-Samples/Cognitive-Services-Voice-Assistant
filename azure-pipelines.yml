@@ -208,9 +208,9 @@ jobs:
         /p:AppxPackageDir="$(sample4AppxPackageDir)" 
         /p:AppxBundle=Always 
         /p:UapAppxPackageBuildMode=StoreUpload
-        /p:AppxPackageSigningEnabled=false
+        /p:AppxPackageSigningEnabled=true
         /p:PackageCertificateThumbprint=""
-        /p:PackageCertificateKeyFile="$(signingCert.secureFilePath"
+        /p:PackageCertificateKeyFile="$(signingCert.secureFilePath)"
         /p:PackageCertificatePassword="$(signingCertPassword)"'
       platform: '$(buildPlatformNative)'
       configuration: '$(buildConfiguration)'
