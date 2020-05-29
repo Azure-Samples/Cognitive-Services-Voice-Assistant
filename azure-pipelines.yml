@@ -54,6 +54,7 @@ variables:
   sample4Solution: '$(sample4Folder)\$(sample4Name).sln'
   sample4PublishedArtifactPath: '$(sample4Folder)\$(sample4Name)\bin\$(buildPlatformNative)\$(buildConfiguration)'
   sample4PublishedArtifactName: '$(sample4Name)-$(Build.BuildNumber)'
+  sample4AppxPackageDir: '$(sample4PublishedArtifactPath)\AppXPackages\\'
 
   # ESRP code signing
   signParams: |
@@ -204,7 +205,7 @@ jobs:
       solution: '$(sample4Solution)'
       msbuildArgs: 
         '/p:AppxBundlePlatforms="$(buildPlatformNative)" 
-        /p:AppxPackageDir="$(appxPackageDir)" 
+        /p:AppxPackageDir="$(sample4AppxPackageDir)" 
         /p:AppxBundle=Always 
         /p:UapAppxPackageBuildMode=StoreUpload
         /p:AppxPackageSigningEnabled=true
