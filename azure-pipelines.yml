@@ -194,10 +194,10 @@ jobs:
       restoreSolution: '$(sample4Solution)'
   
   - task: DownloadSecureFile@1
-    name: uwpCert
+    name: signingCert
     displayName: 'Download certificate'
     inputs:
-      secureFile: '$(signingCert.secureFilePath)'
+      secureFile: 'mvaDlsSelfSignCert_password.pfx'
 
   - task: VSBuild@1
     displayName: '$(sample4Name) - VSBuild'
@@ -210,7 +210,7 @@ jobs:
         /p:UapAppxPackageBuildMode=SideloadOnly
         /p:AppxPackageSigningEnabled=true
         /p:PackageCertificateThumbprint=""
-        /p:PackageCertificateKeyFile="$(uwpCert.secureFilePath)"
+        /p:PackageCertificateKeyFile="$(signingCert.secureFilePath)"
         /p:PackageCertificatePassword="$(signingCertPassword)"'
       platform: '$(buildPlatformNative)'
       configuration: '$(buildConfiguration)'
