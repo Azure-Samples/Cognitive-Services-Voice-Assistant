@@ -7,7 +7,7 @@ fi
 if [ ! -d SDK ]; then
     mkdir SDK # only create directory if does not exist
 fi
-
+if [ ! -f ./lib/x64/libMicrosoft.CognitiveServices.Speech.core.so ]; then
 echo "Cleaning up libs and include directories that we will overwrite"
 rm -R ./lib/*
 rm -R ./include/c_api
@@ -17,9 +17,13 @@ echo "Downloading Speech SDK binaries"
 wget -c https://aka.ms/csspeech/linuxbinary -O - | tar -xz -C ./SDK
 
 echo "Copying SDK binaries to lib folder and headers to include"
-cp -Rf ./SDK/SpeechSDK*/* .
+cp -Rf ./SDK/SpeechSDK*/lib .
+cp -Rf ./SDK/SpeechSDK*/include .
+else
+echo "Speech SDK lib found. Skipping download."
+fi
 
-echo "Building Linux x64 sample"
+echo "Building Linux x64 sample ..."
 if g++ -Wno-psabi \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
