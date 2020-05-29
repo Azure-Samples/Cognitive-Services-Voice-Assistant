@@ -207,7 +207,7 @@ jobs:
         '/p:AppxBundlePlatforms="$(buildPlatformNative)" 
         /p:AppxPackageDir="$(sample4AppxPackageDir)" 
         /p:AppxBundle=Always 
-        /p:UapAppxPackageBuildMode=SideloadOnly
+        /p:UapAppxPackageBuildMode=StoreUpload
         /p:AppxPackageSigningEnabled=true
         /p:PackageCertificateThumbprint=""
         /p:PackageCertificateKeyFile="$(signingCert.secureFilePath)"
