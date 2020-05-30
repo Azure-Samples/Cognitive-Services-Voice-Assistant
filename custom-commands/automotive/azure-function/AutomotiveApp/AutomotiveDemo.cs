@@ -75,19 +75,23 @@ namespace AutomotiveApp
                     currentAutomotiveData = (AutomotiveData)(await table.ExecuteAsync(getRoom)).Result;
                 }
 
-                var operation = req.Query["operation"].ToString().ToLower();
-                var updated = false;
+                string operation = req.Query["operation"].ToString().ToLower();
+                string strValue = req.Query["value"].ToString().ToLower();
+                int.TryParse(strValue, out int intValue);
+                bool updated = false;
 
                 if (!string.IsNullOrEmpty(operation))
                 {
                     if (operation.Equals("reset"))
                     {
                         currentAutomotiveData.LoadDefaultData();
+                        currentAutomotiveData.Message = "Okay, reset to default state.";
                         updated = true;
                     }
                     else if (operation.Equals("help"))
                     {
                         currentAutomotiveData.Help = true;
+                        currentAutomotiveData.Message = "You're in a virtual car and able to control features with your voice. Try saying \"Turn on the seat warmers\" or \"Set the temperature to 73 degrees\"";
                         updated = true;
                     }
                     else
@@ -96,26 +100,25 @@ namespace AutomotiveApp
 
                         if (operation.Equals("settemperature"))
                         {
-                            currentAutomotiveData.Temperature = int.Parse(req.Query["value"]);
-                            currentAutomotiveData.Message = "set temperature to " + req.Query["value"];
+                            currentAutomotiveData.Temperature = intValue;
+                            currentAutomotiveData.Message = $"Okay, set temperature to {intValue} degrees";
                             updated = true;
                         }
                         else if (operation.Equals("increasetemperature"))
                         {
-                            currentAutomotiveData.Temperature += int.Parse(req.Query["value"]);
-                            currentAutomotiveData.Message = "raised temperature by " + req.Query["value"] + " degrees";
+                            currentAutomotiveData.Temperature += intValue;
+                            currentAutomotiveData.Message = $"All right, raise the temperature by {intValue} degrees";
                             updated = true;
                         }
                         else if (operation.Equals("decreasetemperature"))
                         {
-                            currentAutomotiveData.Temperature -= int.Parse(req.Query["value"]);
-                            currentAutomotiveData.Message = "decreased temperature by " + req.Query["value"] + " degrees";
+                            currentAutomotiveData.Temperature -= intValue;
+                            currentAutomotiveData.Message = $"All right, lower the temperature by {intValue} degrees";
                             updated = true;
                         }
                         else if (operation.Equals("defrost") || operation.Equals("seatwarmer"))
                         {
-                            var value = req.Query["value"].ToString().ToLower();
-                            bool? valueBool = (value.Equals("on")) ? true : ((value.Equals("off")) ? (bool?)false : null);
+                            bool? valueBool = (strValue.Equals("on")) ? true : ((strValue.Equals("off")) ? (bool?)false : null);
 
                             if (valueBool == null)
                             {
@@ -123,14 +126,28 @@ namespace AutomotiveApp
                             }
                             else if (operation.Equals("defrost"))
                             {
-                                currentAutomotiveData.Defrost = (bool)valueBool;
-                                currentAutomotiveData.Message = "Defrost " + value;
+                                if (currentAutomotiveData.Defrost == (bool)valueBool)
+                                {
+                                    currentAutomotiveData.Message = $"Defrost already {strValue}";
+                                }
+                                else
+                                {
+                                    currentAutomotiveData.Defrost = (bool)valueBool;
+                                    currentAutomotiveData.Message = $"Ok, turn defroster {strValue}";
+                                }
                                 updated = true;
                             }
                             else if (operation.Equals("seatwarmer"))
                             {
-                                currentAutomotiveData.SeatWarmers = (bool)valueBool;
-                                currentAutomotiveData.Message = "Seat warmer " + value;
+                                if (currentAutomotiveData.SeatWarmers == (bool)valueBool)
+                                {
+                                    currentAutomotiveData.Message = $"Seat warmer already {strValue}";
+                                }
+                                else
+                                {
+                                    currentAutomotiveData.SeatWarmers = (bool)valueBool;
+                                    currentAutomotiveData.Message = $"Ok, turn seat warmer {strValue}";
+                                }
                                 updated = true;
                             }
                         }
@@ -153,7 +170,7 @@ namespace AutomotiveApp
                     Content = new StringContent(JsonConvert.SerializeObject(currentAutomotiveData, Formatting.Indented), Encoding.UTF8, "application/json")
                 };
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 log.LogError(e.Message);
                 return new HttpResponseMessage(HttpStatusCode.BadRequest)

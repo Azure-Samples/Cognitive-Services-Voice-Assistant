@@ -77,10 +77,10 @@ namespace InventoryApp
 
                 var operation = req.Query["operation"].ToString().ToLower();
                 var product = req.Query["product"].ToString().ToLower();
-                var quantity = req.Query["quantity"].ToString().ToLower();
+                int quantity = (!string.IsNullOrEmpty(req.Query["quantity"].ToString())) ? int.Parse(req.Query["quantity"].ToString()) : 0;
                 var updated = false;
 
-                log.LogInformation($"Executing {operation} on {(string.IsNullOrEmpty(product) ? "no product" : product)} for {(string.IsNullOrEmpty(quantity) ? "0" : quantity)}");
+                log.LogInformation($"Executing {operation} on {(string.IsNullOrEmpty(product) ? "no product" : product)} for {quantity}");
 
                 if (!string.IsNullOrEmpty(operation))
                 {
@@ -104,20 +104,41 @@ namespace InventoryApp
                         currInventoryData.Help = false;
                         if (product.Equals("blue"))
                         {
-                            currInventoryData.FirstItem -= int.Parse(quantity);
-                            currInventoryData.Message = "Shipped " + quantity + " small items";
+                            if (currInventoryData.FirstItem < quantity)
+                            {
+                                currInventoryData.Message = $"Can not ship {quantity} blue boxes because there are only {currInventoryData.FirstItem} in stock.";
+                            }
+                            else
+                            {
+                                currInventoryData.FirstItem -= quantity;
+                                currInventoryData.Message = $"Shipped {quantity} blue boxes";
+                            }
                             updated = true;
                         }
                         else if (product.Equals("yellow"))
                         {
-                            currInventoryData.SecondItem -= int.Parse(quantity);
-                            currInventoryData.Message = "Shipped " + quantity + " medium items";
-                            updated = true;                        
+                            if (currInventoryData.SecondItem < quantity)
+                            {
+                                currInventoryData.Message = $"Can not ship {quantity} yellow boxes because there are only {currInventoryData.SecondItem} in stock.";
+                            }
+                            else
+                            {
+                                currInventoryData.SecondItem -= quantity;
+                                currInventoryData.Message = $"Shipped {quantity} yellow boxes";
+                            }
+                            updated = true;
                         }
                         else if (product.Equals("green"))
                         {
-                            currInventoryData.ThirdItem -= int.Parse(quantity);
-                            currInventoryData.Message = "Shipped " + quantity + " large items";
+                            if (currInventoryData.ThirdItem < quantity)
+                            {
+                                currInventoryData.Message = $"Can not ship {quantity} green boxes because there are only {currInventoryData.ThirdItem} in stock.";
+                            }
+                            else
+                            {
+                                currInventoryData.ThirdItem -= quantity;
+                                currInventoryData.Message = $"Shipped {quantity} green boxes";
+                            }
                             updated = true;
                         }
                         else
@@ -131,23 +152,23 @@ namespace InventoryApp
                         currInventoryData.Help = false;
                         if (product.Equals("blue"))
                         {
-                            currInventoryData.Message = "Shipped all " + currInventoryData.FirstItem + " small items";
+                            currInventoryData.Message = $"Shipped all {currInventoryData.FirstItem} blue boxes";
                             currInventoryData.FirstItem = 0;
-                            
+
                             updated = true;
                         }
                         else if (product.Equals("yellow"))
                         {
-                            currInventoryData.Message = "Shipped all " + currInventoryData.SecondItem + " medium items";
+                            currInventoryData.Message = $"Shipped all {currInventoryData.SecondItem} yellow boxes";
                             currInventoryData.SecondItem = 0;
-                            
+
                             updated = true;
                         }
                         else if (product.Equals("green"))
                         {
-                            currInventoryData.Message = "Shipped all " + currInventoryData.ThirdItem + " large items";
+                            currInventoryData.Message = $"Shipped all {currInventoryData.ThirdItem} green boxes";
                             currInventoryData.ThirdItem = 0;
-                            
+
                             updated = true;
                         }
                         else
@@ -164,20 +185,20 @@ namespace InventoryApp
                         currInventoryData.Help = false;
                         if (product.Equals("blue"))
                         {
-                            currInventoryData.FirstItem += int.Parse(quantity);
-                            currInventoryData.Message = "Received " + quantity + " small items";
+                            currInventoryData.FirstItem += quantity;
+                            currInventoryData.Message = $"Received {quantity} blue boxes";
                             updated = true;
                         }
                         else if (product.Equals("yellow"))
                         {
-                            currInventoryData.SecondItem += int.Parse(quantity);
-                            currInventoryData.Message = "Received " + quantity + " medium items";
-                            updated = true;                        
+                            currInventoryData.SecondItem += quantity;
+                            currInventoryData.Message = $"Received {quantity} yellow boxes";
+                            updated = true;
                         }
                         else if (product.Equals("green"))
                         {
-                            currInventoryData.ThirdItem += int.Parse(quantity);
-                            currInventoryData.Message = "Received " + quantity + " large items";
+                            currInventoryData.ThirdItem += quantity;
+                            currInventoryData.Message = $"Received {quantity} green boxes";
                             updated = true;
                         }
                         else
@@ -200,7 +221,7 @@ namespace InventoryApp
                     Content = new StringContent(JsonConvert.SerializeObject(currInventoryData, Formatting.Indented), Encoding.UTF8, "application/json")
                 };
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 log.LogError(e.Message);
                 return new HttpResponseMessage(HttpStatusCode.BadRequest)
