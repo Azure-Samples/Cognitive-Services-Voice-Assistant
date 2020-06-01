@@ -188,7 +188,7 @@ Another useful thing might be to update the Azure SKU's in the azuredeploy.json 
 
 1.[May 26, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/439/commits/83d6606eeea44ec46a4d8eb49ff831a7467fee62):
 * Updated HospitalityDemo.cs to not to turn on TV, lights, air condition that are already on, etc.
-* Updated HospitalityDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.
+* Updated HospitalityDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.\
 2.[May 29, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/450/commits/cd5a08748ac05fa4b4b89782565e2959f1a8c738):
 * Updated AutomotiveDemo.cs to not to turn on defroster, seat warmer that are already on, etc. 
 * Updated InventoryDemo.cs to not allow to ship items if requested quantity is larger than stock quantity.
