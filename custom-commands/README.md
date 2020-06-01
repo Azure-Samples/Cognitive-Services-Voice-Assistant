@@ -183,3 +183,15 @@ The Custom Commands application was created from the json file [../skill/hospita
 Our Powershell deployment script is intended to make getting started easier. For further customization you should edit the Powershell scripts to fit your needs.
 
 Another useful thing might be to update the Azure SKU's in the azuredeploy.json to allow higher usage and other things such as multiple speech resources, and App Service plans in different regions. The script has a region check for the supported regions of the free App Service plan, which will need to be removed if you do this.
+
+## Change log
+
+* [May 26, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/439/commits/83d6606eeea44ec46a4d8eb49ff831a7467fee62):
+    * Updated HospitalityDemo.cs to not to turn on TV, lights, air condition that are already on, etc.
+    * Updated HospitalityDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.
+* [May 29, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/450/commits/cd5a08748ac05fa4b4b89782565e2959f1a8c738):
+    * Updated AutomotiveDemo.cs to not to turn on defroster, seat warmer that are already on, etc. 
+    * Updated InventoryDemo.cs to not allow to ship items if requested quantity is larger than stock quantity.
+    * Updated AutomotiveDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.
+    * Updated InventoryDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.
+    * Updated AutomotiveDemo.json, HospitalityDemo.json, and InventoryDemo.json to remove entityResolver, recognizer, speechOutput sections to avoid TTS malfunction.
