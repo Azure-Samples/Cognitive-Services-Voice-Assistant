@@ -4,7 +4,8 @@
 
 This readme describes how to run the C++ client on a ARM32 Linux OS, it uses Ubuntu 20.04 LTS on a [Raspberry Pi 3 or 4](https://www.raspberrypi.org/).
 
-Note: [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) is not currently supported.
+Note: [Raspberry Pi OS (32 bit)](https://www.raspberrypi.org/downloads/raspbian/) is not currently supported.
+ARM 64 Linux support will be documented, Raspberry Pi OS (64 bit) and Ubuntu ARM 64 will work. 
 
 ## SSH Clients
 
