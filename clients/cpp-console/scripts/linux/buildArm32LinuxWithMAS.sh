@@ -35,7 +35,7 @@ else
 echo "MAS binaries found. Skipping download."
 
 echo "Building Raspberry Pi sample ..."
-if g++ -Wno-psabi \
+g++ -Wno-psabi \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/common/AudioPlayerEntry.cpp \
@@ -54,11 +54,6 @@ src/common/DialogManager.cpp \
 -lstdc++fs \
 -lasound \
 -lMicrosoft.CognitiveServices.Speech.core
-then
-error=0
-else
-error=1
-fi
 
 cp ./scripts/run.sh ./out
 chmod +x ./out/run.sh
@@ -70,5 +65,3 @@ echo Done. To start the demo execute:
 echo cd ../../out
 echo export LD_LIBRARY_PATH="../lib/arm32"
 echo ./sample.exe [path_to_configFile]
-
-exit $error
