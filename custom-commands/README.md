@@ -186,10 +186,11 @@ Another useful thing might be to update the Azure SKU's in the azuredeploy.json 
 
 ## Change log
 
-* [May 26, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/439/commits/83d6606eeea44ec46a4d8eb49ff831a7467fee62):
+* [May 26, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/439/commits/83d6606eeea44ec46a4d8eb49ff831a7467fee62): In the Hospitality demo, when I say “turn on TV”, the response was always “okay turning on TV”, regardless of the TV was already on or off. If the TV was already on, the response should be “TV is already on”, same for lights, air condition, and blinds.
     * Updated HospitalityDemo.cs to not to turn on TV, lights, air condition that are already on, etc.
     * Updated HospitalityDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.
-* [May 29, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/450/commits/cd5a08748ac05fa4b4b89782565e2959f1a8c738):
+* [May 29, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/450/commits/cd5a08748ac05fa4b4b89782565e2959f1a8c738): In the Automotive demo, when I say “turn on defroster”, the response was always “okay turning on defroster”, regardless of the defroster was already on or off. If the defroster was already on, the response should be “defroster is already on”, same for seat warmer.
+In Inventory demo, items are always shipped even if requested quantity is larger than stock quantity. If stock quantity is less than requested quantity, the response should be something like “Can not ship 5 green boxes because there are only 4 in stock”.
     * Updated AutomotiveDemo.cs to not to turn on defroster, seat warmer that are already on, etc. 
     * Updated InventoryDemo.cs to not allow to ship items if requested quantity is larger than stock quantity.
     * Updated AutomotiveDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.
