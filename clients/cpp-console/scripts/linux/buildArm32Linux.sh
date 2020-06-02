@@ -35,7 +35,6 @@ src/common/DialogManager.cpp \
 -o ./out/sample.exe \
 -std=c++14 \
 -D LINUX \
--D MAS \
 -L./lib/arm32 \
 -I./include/cxx_api \
 -I./include/c_api \
