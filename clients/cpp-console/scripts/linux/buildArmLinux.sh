@@ -54,7 +54,6 @@ src/common/DialogManager.cpp \
 -o ./out/sample.exe \
 -std=c++14 \
 -D LINUX \
--D MAS \
 -L./lib/lib \
 -I./include/cxx_api \
 -I./include/c_api \
