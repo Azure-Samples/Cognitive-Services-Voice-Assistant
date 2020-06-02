@@ -4,7 +4,8 @@
 
 This readme describes how to run the C++ client on a ARM32 Linux OS, it uses Ubuntu 20.04 LTS on a [Raspberry Pi 3 or 4](https://www.raspberrypi.org/).
 
-Note: [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) is not currently supported.
+Note: [Raspberry Pi OS (32 bit)](https://www.raspberrypi.org/downloads/raspbian/) is not currently supported.
+ARM 64 Linux support will be documented, Raspberry Pi OS (64 bit) and Ubuntu ARM 64 will work. 
 
 ## SSH Clients
 
@@ -33,7 +34,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to use
   git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
   ```
 
-* The speech SDK will be downloaded as part of the build script. For reference it can be found here: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary).
+* The speech SDK will be downloaded as part of the build script if necessary. For reference it can be found here: [Linux Speech SDK](https://aka.ms/csspeech/linuxbinary). To force an update of the binaries delete the contents of the lib folder and the c_api and cxx_api folders in your include directory.
 
 * Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used (.table file), these are in /home/ubuntu/Cognitive-Services-Voice-Assistant/keyword-models
 
