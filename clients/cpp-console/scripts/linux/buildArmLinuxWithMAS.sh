@@ -15,12 +15,14 @@ then
 echo "Running on ARM32 Linux"
     #echo "Running on ARM32 Linux, creating lib/lib link to lib/arm32"
 LIBLINK="arm32"
+LIBFOLDER="Linux-arm"
     #ln -s arm32 lib/lib
 else
     #echo "Running on ARM64 Linux, creating lib/lib link to lib/arm64"
     #ln -s arm64 lib/lib
 echo "Running on ARM64 Linux"
 LIBLINK="arm64"
+LIBFOLDER="Linux-arm64"
 fi
 
 if [ ! -f ./lib/lib/libMicrosoft.CognitiveServices.Speech.core.so ]; then
@@ -39,6 +41,9 @@ cp -Rf ./SDK/SpeechSDK*/include .
 echo "Creating lib/lib link to lib/$LIBLINK"
 ln -s $LIBLINK lib/lib
 
+echo "Creating SDK/arch to SDK/$LIBFOLDER"
+ln -s $LIBFOLDER SDK/arch
+
 else
 echo "Speech SDK lib found. Skipping download."
 fi
@@ -49,7 +54,7 @@ curl -L "https://aka.ms/sdsdk-download-linux-$LIBLINK" --output ./SDK/Linux-arm.
 tar -xzf ./SDK/Linux-arm.tgz -C ./SDK
 
 echo "Copying MAS binaries to lib folder"
-cp -Rf ./SDK/Linux-arm/* ./lib/lib
+cp -Rf ./SDK/arch/* ./lib/lib
 else 
 echo "MAS binaries found. Skipping download."
 fi
