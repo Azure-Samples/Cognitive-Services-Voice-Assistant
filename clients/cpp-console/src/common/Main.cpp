@@ -65,10 +65,10 @@ int main(int argc, char** argv)
         cin >> keystroke;
         HandleKeystrokeOptions(dialogManager, keystroke);
     }
-    else 
+    else
     {
         DialogManager dialogManager(agentConfig);
-    
+
         // Activate keyword listening on start up if keyword model file exists
         if (agentConfig->KeywordRecognitionModel().length() > 0)
         {
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
         {
             dialogManager.SetKeywordActivationState(KeywordActivationState::NotSupported);
         }
-    
+
         DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
 
         DisplayKeystrokeOptions(dialogManager);
@@ -103,6 +103,11 @@ void DisplayKeystrokeOptions(DialogManager& dialogManager)
         fprintf(stdout, "2 [start keyword listening]\n");
         fprintf(stdout, "3 [stop keyword listening]\n");
     }
+    if (DeviceStatusIndicators::Status == DeviceStatus::Listening)
+    {
+        fprintf(stdout, "s [stop listening]\n");
+        fprintf(stdout, "m [mute listening]\n");
+    }
     fprintf(stdout, "x [exit]\n");
 };
 
@@ -123,6 +128,14 @@ void HandleKeystrokeOptions(DialogManager& dialogManager, string keystroke)
         if (keystroke == "3" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
         {
             dialogManager.StopKws();
+        }
+        if (keystroke == "s")
+        {
+            dialogManager.StopListening();
+        }
+        if (keystroke == "m")
+        {
+            dialogManager.MuteListening();
         }
         DisplayKeystrokeOptions(dialogManager);
     }

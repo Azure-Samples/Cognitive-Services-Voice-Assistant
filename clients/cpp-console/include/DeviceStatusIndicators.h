@@ -39,5 +39,6 @@ namespace DeviceStatusNames
 class DeviceStatusIndicators
 {
 public:
+    static DeviceStatus Status;
     static void SetStatus(const DeviceStatus status);
 };
