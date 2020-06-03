@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#define _CRT_SECURE_NO_WARNINGS
 #include "AgentConfiguration.h"
 #include <cstdio>
 #include <fstream>
