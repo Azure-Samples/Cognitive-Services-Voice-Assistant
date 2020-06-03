@@ -98,15 +98,13 @@ void DisplayKeystrokeOptions(DialogManager& dialogManager)
 {
     fprintf(stdout, "Commands:\n");
     fprintf(stdout, "1 [listen once]\n");
+    fprintf(stdout, "2 [stop listening]\n");
+    fprintf(stdout, "3 [mute listening]\n");
+    fprintf(stdout, "4 [unmute listening]\n");
     if (dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
     {
-        fprintf(stdout, "2 [start keyword listening]\n");
-        fprintf(stdout, "3 [stop keyword listening]\n");
-    }
-    if (DeviceStatusIndicators::Status == DeviceStatus::Listening)
-    {
-        fprintf(stdout, "s [stop listening]\n");
-        fprintf(stdout, "m [mute listening]\n");
+        fprintf(stdout, "5 [start keyword listening]\n");
+        fprintf(stdout, "6 [stop keyword listening]\n");
     }
     fprintf(stdout, "x [exit]\n");
 };
@@ -120,22 +118,26 @@ void HandleKeystrokeOptions(DialogManager& dialogManager, string keystroke)
         {
             dialogManager.StartListening();
         }
-        if (keystroke == "2" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+        if (keystroke == "2")
+        {
+            dialogManager.StopListening();
+        }
+        if (keystroke == "3")
+        {
+            dialogManager.MuteListening();
+        }
+        if (keystroke == "4")
+        {
+            dialogManager.UnmuteListening();
+        }
+        if (keystroke == "5" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
         {
             dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
             dialogManager.StartKws();
         }
-        if (keystroke == "3" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
+        if (keystroke == "6" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
         {
             dialogManager.StopKws();
-        }
-        if (keystroke == "s")
-        {
-            dialogManager.StopListening();
-        }
-        if (keystroke == "m")
-        {
-            dialogManager.MuteListening();
         }
         DisplayKeystrokeOptions(dialogManager);
     }

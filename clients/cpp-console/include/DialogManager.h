@@ -49,6 +49,7 @@ public:
     void StartListening();
     void StopListening();
     void MuteListening();
+    void UnmuteListening();
     void ContinueListening();
     void StopKws();
     void ListenFromFile();

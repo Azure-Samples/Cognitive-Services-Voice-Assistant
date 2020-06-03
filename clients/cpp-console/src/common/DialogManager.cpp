@@ -275,6 +275,11 @@ void DialogManager::MuteListening()
 
 }
 
+void DialogManager::UnmuteListening()
+{
+
+}
+
 void DialogManager::ContinueListening()
 {
     log_t("Now listening...");
