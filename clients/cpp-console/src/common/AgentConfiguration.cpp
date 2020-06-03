@@ -12,6 +12,7 @@
 #pragma warning (disable : 26444)
 #pragma warning (disable : 28020)
 #pragma warning (disable : 26495)
+#pragma warning(disable : 4996)
 #include "json.hpp"
 #pragma warning(pop)
 
