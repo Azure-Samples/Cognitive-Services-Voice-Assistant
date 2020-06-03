@@ -72,8 +72,15 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
 
     if (config->_keywordRecognitionModel.length() > 0)
     {
+        if (config->_keywordRecognitionModel.find("~") != string::npos)
+        {
+            string home = getenv("HOME");
+            config->_keywordRecognitionModel.replace(0, 1, home);
+        }
+
         if (!std::experimental::filesystem::exists(config->_keywordRecognitionModel))
         {
+            printf("%s is not a valid file path\n", config->_keywordRecognitionModel.c_str());
             config->_loadResult = AgentConfigurationLoadResult::KWFileNotFound;
             return config;
         }
