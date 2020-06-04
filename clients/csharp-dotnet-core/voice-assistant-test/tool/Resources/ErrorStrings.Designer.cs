@@ -259,7 +259,7 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedResponseLatency..
+        ///   Looks up a localized string similar to When ExpectedResponses is missing or an empty array (&quot;bootstraping mode&quot;), you should not specify ExpectedUserPerceivedLatency..
         /// </summary>
         public static string LATENCY_STRING_PRESENT {
             get {

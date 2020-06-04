@@ -18,14 +18,6 @@ pr:
     include:
     - master
 
-# Use this for Microsoft-hosted build agents (released versions of Windows only):    
-#pool:
-#  vmImage: 'windows-latest'
-
-# Use this for self-hosted build agents, when you need to build on a pre-release version of Windows: 
-pool: 'Voice Assistant Agent Pool'
-
-
 variables:
 
   # Common Build configurations
@@ -53,8 +45,8 @@ variables:
   sample3Name: VoiceAssistantCPPClient
   sample3Folder: 'clients\cpp-console'
   sample3Solution: '$(sample3Folder)\src\windows\cppSample.sln'
-  sample3PublishedArtifactPath: '$(sample3Folder)\out'
-  sample3PublishedArtifactName: 'CppSample-$(Build.BuildNumber)'
+  sample3PublishedArtifactPath: '$(sample3Folder)\src\windows\$(buildPlatformNative)\$(buildConfiguration)'
+  sample3PublishedArtifactName: '$(sample3Name)-$(Build.BuildNumber)'
  
   # Sample 4: UWP Voice Assistant Sample (\clients\csharp-uwp)
   sample4Name: UWPVoiceAssistantSample
@@ -103,115 +95,152 @@ variables:
        }
     ]
     
-steps:
+jobs:
+- job: Windows_Builds
+  pool: 'Voice Assistant Agent Pool'
+  steps:
 
-- task: NuGetToolInstaller@1
+  - task: NuGetToolInstaller@1
 
-# Build Windows Voice Assistant Client (C#, WPF)
+  # Build Windows Voice Assistant Client (C#, WPF)
 
-- task: NuGetCommand@2
-  displayName: '$(sample1Name) - NuGetCommand'
-  inputs:
-    restoreSolution: '$(sample1Solution)'
+  - task: NuGetCommand@2
+    displayName: '$(sample1Name) - NuGetCommand'
+    inputs:
+      restoreSolution: '$(sample1Solution)'
 
-- task: VSBuild@1
-  displayName: '$(sample1Name) - VSBuild'
-  inputs:
-    solution: '$(sample1Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
+  - task: VSBuild@1
+    displayName: '$(sample1Name) - VSBuild'
+    inputs:
+      solution: '$(sample1Solution)'
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+      platform: '$(buildPlatformNative)'
+      configuration: '$(buildConfiguration)'
 
-- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-  displayName: '$(sample1Name) - EsrpCodeSigning'
-  inputs:
-    ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing' 
-    signConfigType: inlineSignParams
-    inlineOperation: '$(signParams)'
-    FolderPath: '$(sample1PublishedArtifactPath)'
-    Pattern: 'VoiceAssistantClient.exe'
-    SessionTimeout: '60'
+  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+    displayName: '$(sample1Name) - EsrpCodeSigning'
+    inputs:
+      ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing' 
+      signConfigType: inlineSignParams
+      inlineOperation: '$(signParams)'
+      FolderPath: '$(sample1PublishedArtifactPath)'
+      Pattern: 'VoiceAssistantClient.exe'
+      SessionTimeout: '60'
 
-- task: PublishPipelineArtifact@1
-  displayName: '$(sample1Name) - PublishPipelineArtifact'
-  inputs:
-    path: $(sample1PublishedArtifactPath)
-    artifact: $(sample1PublishedArtifactName)
+  - task: PublishPipelineArtifact@1
+    displayName: '$(sample1Name) - PublishPipelineArtifact'
+    inputs:
+      path: $(sample1PublishedArtifactPath)
+      artifact: $(sample1PublishedArtifactName)
 
-# Build Voice Assistant Test (C# .NET Core)
+  # Build Voice Assistant Test (C# .NET Core)
 
-- task: DotNetCoreCLI@2
-  displayName: '$(sample2Name) - DotNetCoreCLI'
-  inputs:
-    Command: 'publish'
-    Projects: $(sample2Solution)
-    publishWebProjects: false
-    Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(sample2PublishedArtifactPath)  /p:PublishSingleFile=true'
-    zipAfterPublish: false
-    modifyOutputPath: true    
+  - task: DotNetCoreCLI@2
+    displayName: '$(sample2Name) - DotNetCoreCLI'
+    inputs:
+      Command: 'publish'
+      Projects: $(sample2Solution)
+      publishWebProjects: false
+      Arguments: '-r $(dotNetCoreRuntimeIdentifier) -c $(buildConfiguration) -o $(sample2PublishedArtifactPath)  /p:PublishSingleFile=true'
+      zipAfterPublish: false
+      modifyOutputPath: true    
 
-- task: PublishPipelineArtifact@1
-  displayName: '$(sample2Name) - PublishPipelineArtifact'
-  inputs:
-    path: $(sample2PublishedArtifactPath)
-    artifact: $(sample2PublishedArtifactName)
+  - task: PublishPipelineArtifact@1
+    displayName: '$(sample2Name) - PublishPipelineArtifact'
+    inputs:
+      path: $(sample2PublishedArtifactPath)
+      artifact: $(sample2PublishedArtifactName)
+      
+  # Build C++ console application
+
+  - task: NuGetCommand@2
+    displayName: '$(sample3Name) - NuGetCommand'
+    inputs:
+      restoreSolution: '$(sample3Solution)'
+      
+  - task: VSBuild@1
+    displayName: '$(sample3Name) - VSBuild'
+    inputs:
+      solution: '$(sample3Solution)'
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+      platform: '$(buildPlatformNative)'
+      configuration: '$(buildConfiguration)'
+
+  - task: DeleteFiles@1
+    inputs:
+      sourceFolder: $(sample3PublishedArtifactPath)
+      contents: |
+        *.txt
+        *.sarif
+        *.obj
+        *.xml
+        *.ilk
+        *.tlog
+        *.iobj
+        *.ipdb
+
+  - task: PublishPipelineArtifact@1
+    displayName: '$(sample3Name) - PublishPipelineArtifact'
+    inputs:
+      path: $(sample3PublishedArtifactPath)
+      artifact: $(sample3PublishedArtifactName)
+
+  # Build UWP Voice Assistant Sample (C# UWP)
+
+  - task: NuGetCommand@2
+    displayName: '$(sample4Name) - NuGetCommand'
+    inputs:
+      restoreSolution: '$(sample4Solution)'
+
+  - task: VSBuild@1
+    displayName: '$(sample4Name) - VSBuild'
+    inputs:
+      solution: '$(sample4Solution)'
+      msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatformNative)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+      platform: '$(buildPlatformNative)'
+      configuration: '$(buildConfiguration)'
+
+  - task: PublishPipelineArtifact@1
+    displayName: '$(sample4Name) - PublishPipelineArtifact'
+    inputs:
+      path: $(sample4PublishedArtifactPath)
+      artifact: $(sample4PublishedArtifactName)
+
+  #- task: VSTest@2
+  #  inputs:
+  #    platform: '$(buildPlatformNative)'
+  #    configuration: '$(buildConfiguration)'
+
+  - task: ComponentGovernanceComponentDetection@0
+    inputs:
+      scanType: 'Register'
+      verbosity: 'Verbose'
+      alertWarningLevel: 'High'
+
+  - task: PoliCheck@1
+    inputs:
+      inputType: 'Basic'
+      targetType: 'F'
+      targetArgument: '$(Build.SourcesDirectory)'
+      result: 'PoliCheck.xml'
+
+  # This does not work on self-hosted agent for some reason
+  - task: notice@0
+    inputs:
+      outputformat: 'text'
+      
+- job: Linux_Builds
+  pool: 
+    name: Azure Pipelines
+    vmImage: 'ubuntu-latest'
     
-# Build C++ console application
-
-- task: NuGetCommand@2
-  displayName: '$(sample3Name) - NuGetCommand'
-  inputs:
-    restoreSolution: '$(sample3Solution)'
-    
-- task: VSBuild@1
-  displayName: '$(sample3Name) - VSBuild'
-  inputs:
-    solution: '$(sample3Solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
-
-# Build UWP Voice Assistant Sample (C# UWP)
-
-- task: NuGetCommand@2
-  displayName: '$(sample4Name) - NuGetCommand'
-  inputs:
-    restoreSolution: '$(sample4Solution)'
-
-- task: VSBuild@1
-  displayName: '$(sample4Name) - VSBuild'
-  inputs:
-    solution: '$(sample4Solution)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatformNative)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
-    platform: '$(buildPlatformNative)'
-    configuration: '$(buildConfiguration)'
-
-- task: PublishPipelineArtifact@1
-  displayName: '$(sample4Name) - PublishPipelineArtifact'
-  inputs:
-    path: $(sample4PublishedArtifactPath)
-    artifact: $(sample4PublishedArtifactName)
-
-#- task: VSTest@2
-#  inputs:
-#    platform: '$(buildPlatformNative)'
-#    configuration: '$(buildConfiguration)'
-
-- task: ComponentGovernanceComponentDetection@0
-  inputs:
-    scanType: 'Register'
-    verbosity: 'Verbose'
-    alertWarningLevel: 'High'
-
-- task: PoliCheck@1
-  inputs:
-    inputType: 'Basic'
-    targetType: 'F'
-    targetArgument: '$(Build.SourcesDirectory)'
-    result: 'PoliCheck.xml'
-
-# This does not work on self-hosted agent for some reason
-- task: notice@0
-  inputs:
-    outputformat: 'text'
-
+  steps:
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: sudo apt-get install libasound2-dev
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: ./buildx64Linux.sh
+      workingDirectory: ./clients/cpp-console/scripts/linux/

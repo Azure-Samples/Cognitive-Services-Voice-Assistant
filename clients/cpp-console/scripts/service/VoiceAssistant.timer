@@ -1,0 +1,8 @@
+[Unit]
+Description=Timer for the Voice Assistant
+
+[Timer]
+OnStartupSec=45
+
+[Install]
+WantedBy=default.target

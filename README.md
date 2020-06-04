@@ -44,7 +44,14 @@ This repository includes everything needed to build a sample [Voice Assistant](h
 </a>
 </p>
 <p>&nbsp;</p>
-Or browse individual components per the repository content below.
+Or browse individual components per the repository content below. You may also find the following 12-minute overview video useful:
+
+<p align="center">
+<a href="https://www.youtube.com/watch?v=1zr0umHGFyc">
+<img src="docs/images/channel9-video-link.png" width="316"/>
+</a>
+</p>
+
 
 <!--
 The repo has sample clients in C++, C# and Java, samples of [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) clients for different platforms. It also includes a client tool for end-to-end regression testing of a Voice Assistant system.
@@ -57,6 +64,7 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 
 | Folder | Description | Language/Platform |
 |-------------|-------------|-------------------|
+| [clients](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients) | Landing page for sample clients |
 | [clients\csharp-uwp](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-uwp) |  UWP voice assistant client sample. An example UWP app that uses Window's new voice activation APIs, together with the Voice Assistant platform, to connect to your bot or Custom Commands application. | C#, Universal Windows Platform (UWP) |
 | [clients\csharp-wpf](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf) |  Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application | C#, Windows Presentation Foundation (WPF) |
 | [clients\cpp-console](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) | Console client sample for Smart Speaker devices, configured via a json file to connect to your bot or Custom Commands application. It supports microphone input and audio playback. Build scripts for [Raspberry Pi](https://www.raspberrypi.org/), [GGEC Speaker](http://www.ggec.com/) and Windows are provided | C++, Windows, Linux |
@@ -66,7 +74,8 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 
 | Folder | Description |
 |-------------|-------------|
-| [custom-commands\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/hospitality)| Sample voice commands to control your room (lights, TV and temperature), including visualization of the results |
+| [custom-commands](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands)| Landing page for Custom Command demos, including deployment instructions |
+| [custom-commands\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/hospitality)| Sample voice commands to control your room (lights, blinds, TV and temperature), including visualization of the results |
 | [custom-commands\inventory](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/inventory) | Sample voice commands to control warehouse inventory (adding or removing different color crates), including visualization of the results |
 | [custom-commands\automotive](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/automotive) | Sample voice commands to the environment in your car (temperature, .... ), including visualization of the results |
 

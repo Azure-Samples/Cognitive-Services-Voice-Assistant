@@ -40,11 +40,11 @@ namespace VoiceAssistantTest
         private int turnID;
         private int indexActivityWithAudio = 0;
         private int ttsStreamDownloadCount = 0;
-        private int elapsedTime = 0;
         private List<Activity> ignoreActivitiesList;
         private Stopwatch stopWatch;
         private bool keyword;
         private KeywordRecognitionModel kwsTable;
+        private int speechDuration = 0;
 
         /// <summary>
         /// Gets or sets recognized text of the speech input.
@@ -76,20 +76,20 @@ namespace VoiceAssistantTest
                 // - The Custom commands application ID
                 // - Cognitive services speech subscription key.
                 // - The Azure region of the subscription key(e.g. "westus").
-                config = CustomCommandsConfig.FromSubscription(this.appsettings.CustomCommandsAppId, this.appsettings.SubscriptionKey, this.appsettings.Region);
+                config = CustomCommandsConfig.FromSubscription(this.appsettings.CustomCommandsAppId, this.appsettings.SpeechSubscriptionKey, this.appsettings.SpeechRegion);
             }
             else
             {
                 // Set the bot framework configuration object based on two items:
                 // - Cognitive services speech subscription key. It is needed for billing and is tied to the bot registration.
                 // - The Azure region of the subscription key(e.g. "westus").
-                config = BotFrameworkConfig.FromSubscription(this.appsettings.SubscriptionKey, this.appsettings.Region);
+                config = BotFrameworkConfig.FromSubscription(this.appsettings.SpeechSubscriptionKey, this.appsettings.SpeechRegion);
             }
 
             if (this.appsettings.SpeechSDKLogEnabled)
             {
                 // Speech SDK has verbose logging to local file, which may be useful when reporting issues.
-                config.SetProperty(PropertyId.Speech_LogFilename, $"{this.appsettings.OutputFolder}SpeechSDKLog-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.CurrentCulture)}.txt");
+                config.SetProperty(PropertyId.Speech_LogFilename, $"{this.appsettings.OutputFolder}SpeechSDKLog-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.CurrentCulture)}.log");
             }
 
             if (!string.IsNullOrWhiteSpace(this.appsettings.SRLanguage))
@@ -148,6 +148,12 @@ namespace VoiceAssistantTest
                 }
             }
 
+            if (this.appsettings.RealTimeAudio)
+            {
+                config.SetProperty("SPEECH-AudioThrottleAsPercentageOfRealTime", "100");
+                config.SetProperty("SPEECH-TransmitLengthBeforeThrottleMs", "0");
+            }
+
             if (this.connector != null)
             {
                 // Then dispose the object
@@ -161,7 +167,7 @@ namespace VoiceAssistantTest
             if (this.appsettings.BotGreeting)
             {
                 // Starting the timer to calculate latency for Bot Greeting.
-                this.stopWatch.Start();
+                this.stopWatch.Restart();
             }
 
             this.AttachHandlers();
@@ -279,7 +285,7 @@ namespace VoiceAssistantTest
         public async Task<BotConnector> SendActivity(string activity)
         {
             this.stopWatch.Restart();
-            this.elapsedTime = 0;
+            this.speechDuration = 0;
 
             lock (this.BotReplyList)
             {
@@ -529,11 +535,9 @@ namespace VoiceAssistantTest
             if (e.Result.Reason == ResultReason.RecognizedSpeech)
             {
                 this.RecognizedText = e.Result.Text;
+                this.speechDuration = (int)e.Result.Duration.TotalMilliseconds;
 
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
-
-                this.stopWatch.Restart();
-                this.elapsedTime = 0;
+                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}, Speech duration = {this.speechDuration}, Recognized text = {this.RecognizedText}");
             }
             else if (e.Result.Reason == ResultReason.RecognizedKeyword)
             {
@@ -558,16 +562,25 @@ namespace VoiceAssistantTest
             var json = e.Activity;
             var activity = JsonConvert.DeserializeObject<Activity>(json);
 
-            this.stopWatch.Stop();
+            // TODO: When there is TTS audio, get the elapsed time only after first TTS buffer was received
+            int elapsedTime = (int)this.stopWatch.ElapsedMilliseconds;
 
-            this.elapsedTime += (int)this.stopWatch.ElapsedMilliseconds;
+            if (this.appsettings.RealTimeAudio)
+            {
+                // For WAV file input, the timer starts on SessionStart event. If we consume the audio from the input stream at real-time, then by subtracting
+                // the speech duration here, its as if we started the timer at the point that speech stopped. This is what we want to accurately measure UPL.
+                // For any other input (text or Activity), the speechDuration value is not relevant and should be zero at this point.
+                elapsedTime -= this.speechDuration;
+            }
+
+            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Activity received, elapsedTime = {elapsedTime}, speechDuration = {this.speechDuration}");
 
             int activityIndex = 0;
             int ttsDuration = 0;
 
             lock (this.BotReplyList)
             {
-                this.BotReplyList.Add(new BotReply(activity, this.elapsedTime, false));
+                this.BotReplyList.Add(new BotReply(activity, elapsedTime, false));
                 activityIndex = this.BotReplyList.Count - 1;
             }
 
@@ -582,8 +595,6 @@ namespace VoiceAssistantTest
                     this.BotReplyList[activityIndex].TTSAudioDuration = ttsDuration;
                 }
             }
-
-            this.stopWatch.Restart();
         }
 
         private void SpeechBotConnector_Canceled(object sender, SpeechRecognitionCanceledEventArgs e)
@@ -600,6 +611,7 @@ namespace VoiceAssistantTest
 
         private void SpeechBotConnector_SessionStarted(object sender, SessionEventArgs e)
         {
+            this.stopWatch.Restart();
             Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Session Started event received. SessionId = {e.SessionId}");
         }
 

@@ -116,6 +116,8 @@ namespace UWPVoiceAssistantSample
 
                 this.IsPlaying = false;
             }
+
+            this.log.Log(LogMessageLevel.AudioLogs, $"Stopping Audio Playback");
         }
 
         /// <summary>
@@ -164,7 +166,7 @@ namespace UWPVoiceAssistantSample
                         // to the same device.
                         if (device.Id == args.Id && args.Id != this.lastOutputDeviceId)
                         {
-                            this.log.Log($"New audio output device: {device.Name}");
+                            this.log.Log(LogMessageLevel.AudioLogs, $"New audio output device: {device.Name}");
                             await this.RegenerateAudioGraphAsync();
                         }
                     }

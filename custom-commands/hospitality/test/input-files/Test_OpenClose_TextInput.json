@@ -15,7 +15,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -35,7 +35,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -55,7 +55,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2800],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   },
@@ -75,7 +75,7 @@
           }
         ],
         "ExpectedTTSAudioResponseDurations": [2700],
-        "ExpectedResponseLatency": 1500
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   }

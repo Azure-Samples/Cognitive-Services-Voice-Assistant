@@ -5,7 +5,6 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Diagnostics.Contracts;
     using System.IO;
     using System.Text;
@@ -40,6 +39,15 @@ namespace UWPVoiceAssistantSample
         private bool dataAvailableInitialized = false;
         private int bytesToSkip;
         private int bytesAlreadySkipped;
+        private ILogProvider logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AgentAudioInputProvider"/> class.
+        /// </summary>
+        public AgentAudioInputProvider()
+        {
+            this.logger = LogRouter.GetClassLogger();
+        }
 
         /// <summary>
         /// Raised when new audio data is available from the producer.
@@ -125,6 +133,7 @@ namespace UWPVoiceAssistantSample
             }
 
             this.inputGraph.Start();
+            this.logger.Log(LogMessageLevel.AudioLogs, "Audio Graph Started");
             this.graphRunning = true;
         }
 
@@ -146,6 +155,7 @@ namespace UWPVoiceAssistantSample
 
                 this.inputGraph.Stop();
 
+                this.logger.Log(LogMessageLevel.AudioLogs, "Audio Graph Stopped");
                 this.graphRunning = false;
                 this.inputGraph.QuantumStarted -= this.OnQuantumStarted;
             }
@@ -252,14 +262,16 @@ namespace UWPVoiceAssistantSample
 
             this.inputGraph = graphResult.Graph;
 
+            this.logger.Log(LogMessageLevel.AudioLogs, $"Audio graph created: {graphResult.Status}");
+
             if (this.agentSession != null)
             {
-                Debug.WriteLine($"{Environment.TickCount} Initializing audio from session");
+                this.logger.Log(LogMessageLevel.AudioLogs, $"{Environment.TickCount} Initializing audio from session");
                 this.inputNode = await this.agentSession.CreateAudioDeviceInputNodeAsync(this.inputGraph);
             }
             else
             {
-                Debug.WriteLine($"{Environment.TickCount} Initializing audio from real-time input");
+                this.logger.Log(LogMessageLevel.AudioLogs, $"{Environment.TickCount} Initializing audio from real-time input");
                 var nodeResult = await this.inputGraph.CreateDeviceInputNodeAsync(MediaCategory.Speech);
                 if (nodeResult.Status != AudioDeviceNodeCreationStatus.Success)
                 {
@@ -360,6 +372,7 @@ namespace UWPVoiceAssistantSample
         /// <param name="stream">In-Memory Audio Stream.</param>
         private void WriteDebugWavHeader(Stream stream)
         {
+            this.logger.Log(LogMessageLevel.AudioLogs, "Beginning writing of wav file header");
             Contract.Requires(stream != null);
 
             ushort channels = (ushort)this.outputEncoding.ChannelCount;
@@ -409,6 +422,8 @@ namespace UWPVoiceAssistantSample
 
             // Sub-chunk 2 size.
             stream.Write(BitConverter.GetBytes((int)(stream.Length - 44)), 0, 4);
+
+            this.logger.Log(LogMessageLevel.AudioLogs, "Wav file header written");
         }
 
         private async Task FinishDebugAudioDumpIfNeededAsync()
@@ -421,7 +436,7 @@ namespace UWPVoiceAssistantSample
                     const int bytesPerMillisecond = 32;
                     var dataLength = this.debugAudioOutputFileStream.Length - 44;
                     var dataDuration = 1.0 * dataLength / bytesPerMillisecond;
-                    Debug.WriteLine($"Completing write of microphone audio file. Length: {(int)dataDuration}ms");
+                    this.logger.Log(LogMessageLevel.AudioLogs, $"Completing write of microphone audio file. Length: {(int)dataDuration}ms");
                     this.WriteDebugWavHeader(this.debugAudioOutputFileStream);
                     this.debugAudioOutputFileStream.Flush();
                     this.debugAudioOutputFileStream.Close();

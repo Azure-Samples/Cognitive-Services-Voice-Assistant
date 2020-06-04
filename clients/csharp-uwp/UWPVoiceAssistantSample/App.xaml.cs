@@ -5,17 +5,14 @@ namespace UWPVoiceAssistantSample
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioOutput;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.ApplicationModel;
     using Windows.ApplicationModel.Activation;
     using Windows.ApplicationModel.Background;
-    using Windows.ApplicationModel.ConversationalAgent;
     using Windows.ApplicationModel.Core;
-    using Windows.Storage;
     using Windows.UI.ViewManagement;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -41,7 +38,7 @@ namespace UWPVoiceAssistantSample
         {
             LogRouter.Initialize();
             this.logger = LogRouter.GetClassLogger();
-            this.logger.Log("Constructor: app launched");
+            this.logger.Log(LogMessageLevel.Information, "Constructor: app launched");
 
             Task.Run(async () => await LocalSettingsHelper.InitializeAsync()).Wait();
 
@@ -68,11 +65,11 @@ namespace UWPVoiceAssistantSample
 
             CoreApplication.Exiting += async (object sender, object args) =>
             {
-                this.logger.Log($"Exiting!");
+                this.logger.Log(LogMessageLevel.Information, $"Exiting!");
                 await this.dialogManager.FinishConversationAsync();
                 var session = await this.agentSessionManager.GetSessionAsync();
                 session?.Dispose();
-                this.logger.Log("Exited");
+                this.logger.Log(LogMessageLevel.Information, "Exited");
             };
 
             this.InitializeSignalDetection();
@@ -189,7 +186,8 @@ namespace UWPVoiceAssistantSample
 
             if (args?.TaskInstance.Task.Name == MVARegistrationHelpers.BackgroundTriggerName)
             {
-                this.logger.Log($"OnBackgroundActivated: 1st-stage keyword activation");
+                KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks / 10000);
+                this.logger.Log(LogMessageLevel.ConversationalAgentSignal, $"OnBackgroundActivated: 1st-stage keyword activation");
                 this.dialogManager.HandleSignalDetection();
 
                 // NOTE: this will be restored in a future OS update.
@@ -214,6 +212,7 @@ namespace UWPVoiceAssistantSample
 
         private void InitializeSignalDetection()
         {
+            KwsPerformanceLogger.KwsStartTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
             this.dialogManager.SignalConfirmed += this.OnSignalConfirmed;
             this.dialogManager.SignalRejected += this.OnSignalRejected;
         }
@@ -239,14 +238,14 @@ namespace UWPVoiceAssistantSample
         {
             var deadline = e.SuspendingOperation.Deadline;
             var timeUntilDeadline = deadline.Subtract(DateTime.Now);
-            this.logger.Log($"Suspending! {timeUntilDeadline.ToString()}");
+            this.logger.Log(LogMessageLevel.ConversationalAgentSignal, $"Suspending! {timeUntilDeadline.ToString()}");
 
             Task.Run(async () =>
             {
                 await this.dialogManager.FinishConversationAsync();
                 var session = await this.agentSessionManager.GetSessionAsync();
                 session?.Dispose();
-                this.logger.Log("Suspended");
+                this.logger.Log(LogMessageLevel.ConversationalAgentSignal, "Suspended");
             });
 
             e.SuspendingOperation.GetDeferral().Complete();
@@ -268,7 +267,7 @@ namespace UWPVoiceAssistantSample
         {
             if (!this.HasReachedForeground)
             {
-                this.logger.Log($"Exiting application forcibly.");
+                this.logger.Log(LogMessageLevel.ConversationalAgentSignal, $"Exiting application forcibly.");
                 WindowService.CloseWindow();
             }
         }

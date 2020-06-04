@@ -1,9 +1,11 @@
 {
   "SpeechSubscriptionKey": "89t7s45tyu2i7y9j908w345u57962eb2",
-  "AzureRegion": "westus",
-  "CustomSpeechId": "",
-  "CustomVoiceIds": "",
+  "SpeechRegion": "westus",
+  "SRLanguage": "en-US",
+  "CustomSREndpointId ": "",
+  "CustomVoiceDeploymentIds": "",
   "CustomCommandsAppId": "",
+  "SpeechSDKLogEnabled": false,
   "BotId": "",
   "KeywordActivationModel": {
     "DisplayName": "Contoso",
@@ -12,5 +14,5 @@
     "ModelId": "1033",
     "ModelDataFormat": "MICROSOFT_KWSGRAPH_V1"
   },
-  "KeywordModel": "ms-appx:///Assets/ConfirmationKeywords/contoso.table"
+  "KeywordRecognitionModel": "ms-appx:///Assets/ConfirmationKeywords/contoso.table"
 }

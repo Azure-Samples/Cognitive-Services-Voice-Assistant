@@ -132,8 +132,8 @@
           2304,
           8197
         ],
-        "ExpectedResponseLatency": "3000",
-        "ActualResponseLatency": 520,
+        "ExpectedUserPerceivedLatency": "3000",
+        "ActualUserPerceivedLatency": 520,
         "ResponseMatch": true,
         "UtteranceMatch": true,
         "TTSAudioResponseDurationMatch": true,
@@ -186,8 +186,8 @@
         "ActualTTSAudioResponseDuration": [
           9221
         ],
-        "ExpectedResponseLatency": "1000",
-        "ActualResponseLatency": 197,
+        "ExpectedUserPerceivedLatency": "1000",
+        "ActualUserPerceivedLatency": 197,
         "ResponseMatch": true,
         "UtteranceMatch": true,
         "TTSAudioResponseDurationMatch": true,
@@ -272,8 +272,8 @@
           5123,
           2177
         ],
-        "ExpectedResponseLatency": "1000",
-        "ActualResponseLatency": 203,
+        "ExpectedUserPerceivedLatency": "1000",
+        "ActualUserPerceivedLatency": 203,
         "ResponseMatch": true,
         "UtteranceMatch": true,
         "TTSAudioResponseDurationMatch": true,

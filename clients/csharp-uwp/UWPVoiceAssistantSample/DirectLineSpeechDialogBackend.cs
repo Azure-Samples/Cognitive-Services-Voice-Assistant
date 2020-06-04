@@ -12,6 +12,7 @@ namespace UWPVoiceAssistantSample
     using Microsoft.CognitiveServices.Speech.Audio;
     using Microsoft.CognitiveServices.Speech.Dialog;
     using Newtonsoft.Json.Linq;
+    using UWPVoiceAssistantSample.KwsPerformance;
     using Windows.Storage;
 
     /// <summary>
@@ -26,15 +27,20 @@ namespace UWPVoiceAssistantSample
         private PushAudioInputStream connectorInputStream;
         private bool alreadyDisposed = false;
         private ILogProvider logger;
+        private KwsPerformanceLogger kwsPerformanceLogger;
         private string speechKey;
         private string speechRegion;
-        private string customSpeechId;
-        private string customVoiceIds;
+        private string srLanguage;
+        private string customSREndpointId;
+        private string customVoiceDeploymentIds;
         private string customCommandsAppId;
+        private Uri urlOverride;
         private string botId;
-        private bool enableSdkLogging;
+        private bool enableKwsLogging;
+        private bool speechSdkLogEnabled;
         private string keywordFilePath;
         private bool startEventReceived;
+        private bool secondStageConfirmed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
@@ -42,6 +48,7 @@ namespace UWPVoiceAssistantSample
         public DirectLineSpeechDialogBackend()
         {
             this.logger = LogRouter.GetClassLogger();
+            this.kwsPerformanceLogger = new KwsPerformanceLogger();
         }
 
         /// <summary>
@@ -118,6 +125,17 @@ namespace UWPVoiceAssistantSample
 
             var refreshConnector = configRefreshRequired || (this.keywordFilePath != keywordFile.Path);
 
+            if (LocalSettingsHelper.SetProperty != null)
+            {
+                this.enableKwsLogging = true;
+            }
+
+            if (this.enableKwsLogging)
+            {
+                refreshConnector = true;
+                this.enableKwsLogging = false;
+            }
+
             if (refreshConnector)
             {
                 var newConnectorConfiguration = this.CreateConfiguration();
@@ -139,11 +157,12 @@ namespace UWPVoiceAssistantSample
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizingKeyword:
-                            this.logger.Log($"Local model recognized keyword \"{e.Result.Text}\"");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Local model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognizing?.Invoke(e.Result.Text);
+                            this.secondStageConfirmed = true;
                             break;
                         case ResultReason.RecognizingSpeech:
-                            this.logger.Log($"Recognized speech in progress: \"{e.Result.Text}\"");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Recognized speech in progress: \"{e.Result.Text}\"");
                             this.SpeechRecognizing?.Invoke(e.Result.Text);
                             break;
                         default:
@@ -152,20 +171,33 @@ namespace UWPVoiceAssistantSample
                 };
                 this.connector.Recognized += (s, e) =>
                 {
+                    KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
                     switch (e.Result.Reason)
                     {
                         case ResultReason.RecognizedKeyword:
-                            this.logger.Log($"Cloud model recognized keyword \"{e.Result.Text}\"");
+                            var thirdStageStartTime = KwsPerformanceLogger.KwsStartTime.Ticks;
+                            thirdStageStartTime = DateTime.Now.Ticks;
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Cloud model recognized keyword \"{e.Result.Text}\"");
                             this.KeywordRecognized?.Invoke(e.Result.Text);
+                            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTime, DateTime.Now.Ticks);
+                            this.secondStageConfirmed = false;
                             break;
                         case ResultReason.RecognizedSpeech:
-                            this.logger.Log($"Recognized final speech: \"{e.Result.Text}\"");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Recognized final speech: \"{e.Result.Text}\"");
                             this.SpeechRecognized?.Invoke(e.Result.Text);
                             break;
                         case ResultReason.NoMatch:
                             // If a KeywordRecognized handler is available, this is a final stage
                             // keyword verification rejection.
-                            this.logger.Log($"Cloud model rejected keyword");
+                            this.logger.Log(LogMessageLevel.SignalDetection, $"Cloud model rejected keyword");
+                            if (this.secondStageConfirmed)
+                            {
+                                var thirdStageStartTimeRejected = KwsPerformanceLogger.KwsStartTime.Ticks;
+                                thirdStageStartTimeRejected = DateTime.Now.Ticks;
+                                this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
+                                this.secondStageConfirmed = false;
+                            }
+
                             this.KeywordRecognized?.Invoke(null);
                             break;
                         default:
@@ -324,6 +356,14 @@ namespace UWPVoiceAssistantSample
                 config = BotFrameworkConfig.FromSubscription(
                     this.speechKey,
                     this.speechRegion);
+
+                if (LocalSettingsHelper.SetProperty != null)
+                {
+                    foreach (KeyValuePair<string, JToken> setPropertyId in LocalSettingsHelper.SetProperty)
+                    {
+                        config.SetProperty(setPropertyId.Key, setPropertyId.Value.ToString());
+                    }
+                }
             }
 
             // Disable throttling of input audio (send it as fast as we can!)
@@ -333,22 +373,22 @@ namespace UWPVoiceAssistantSample
             var outputLabel = LocalSettingsHelper.OutputFormat.Label.ToLower(CultureInfo.CurrentCulture);
             config.SetProperty(PropertyId.SpeechServiceConnection_SynthOutputFormat, outputLabel);
 
-            if (!string.IsNullOrEmpty(this.customSpeechId))
+            if (!string.IsNullOrEmpty(this.customSREndpointId))
             {
-                config.SetServiceProperty("cid", this.customSpeechId, ServicePropertyChannel.UriQueryParameter);
+                config.SetServiceProperty("cid", this.customSREndpointId, ServicePropertyChannel.UriQueryParameter);
 
                 // Custom Speech does not support Keyword Verification - Remove line below when supported.
                 config.SetProperty("KeywordConfig_EnableKeywordVerification", "false");
             }
 
-            if (!string.IsNullOrEmpty(this.customVoiceIds))
+            if (!string.IsNullOrEmpty(this.customVoiceDeploymentIds))
             {
-                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.customVoiceIds);
+                config.SetProperty(PropertyId.Conversation_Custom_Voice_Deployment_Ids, this.customVoiceDeploymentIds);
             }
 
-            if (this.enableSdkLogging)
+            if (this.speechSdkLogEnabled)
             {
-                var logPath = $"{ApplicationData.Current.LocalFolder.Path}\\sdklog.txt";
+                var logPath = $"{ApplicationData.Current.LocalFolder.Path}\\SpeechSDK.log";
                 config.SetProperty(PropertyId.Speech_LogFilename, logPath);
             }
 
@@ -358,31 +398,40 @@ namespace UWPVoiceAssistantSample
         private bool TryRefreshConfigValues()
         {
             var speechKey = LocalSettingsHelper.SpeechSubscriptionKey;
-            var speechRegion = LocalSettingsHelper.AzureRegion;
-            var customSpeechId = LocalSettingsHelper.CustomSpeechId;
-            var customVoiceIds = LocalSettingsHelper.CustomVoiceIds;
+            var speechRegion = LocalSettingsHelper.SpeechRegion;
+            var srLanguage = LocalSettingsHelper.SRLanguage;
+            var customSREndpointId = LocalSettingsHelper.CustomSREndpointId;
+            var customVoiceDeploymentIds = LocalSettingsHelper.CustomVoiceDeploymentIds;
             var customCommandsAppId = LocalSettingsHelper.CustomCommandsAppId;
+            var urlOverride = LocalSettingsHelper.UrlOverride;
             var botId = LocalSettingsHelper.BotId;
-            var enableSdkLogging = LocalSettingsHelper.EnableSdkLogging;
+            var speechSdkLogEnabled = LocalSettingsHelper.SpeechSDKLogEnabled;
+            var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging;
 
             if (this.speechKey == speechKey
                 && this.speechRegion == speechRegion
-                && this.customSpeechId == customSpeechId
-                && this.customVoiceIds == customVoiceIds
+                && this.srLanguage == srLanguage
+                && this.customSREndpointId == customSREndpointId
+                && this.customVoiceDeploymentIds == customVoiceDeploymentIds
                 && this.customCommandsAppId == customCommandsAppId
+                && this.urlOverride == urlOverride
                 && this.botId == botId
-                && this.enableSdkLogging == enableSdkLogging)
+                && this.speechSdkLogEnabled == speechSdkLogEnabled
+                && this.enableKwsLogging == enableKwsLogging)
             {
                 return false;
             }
 
             this.speechKey = speechKey;
             this.speechRegion = speechRegion;
-            this.customSpeechId = customSpeechId;
-            this.customVoiceIds = customVoiceIds;
+            this.srLanguage = srLanguage;
+            this.customSREndpointId = customSREndpointId;
+            this.customVoiceDeploymentIds = customVoiceDeploymentIds;
             this.customCommandsAppId = customCommandsAppId;
+            this.urlOverride = urlOverride;
             this.botId = botId;
-            this.enableSdkLogging = enableSdkLogging;
+            this.speechSdkLogEnabled = speechSdkLogEnabled;
+            this.enableKwsLogging = enableKwsLogging;
 
             return true;
         }

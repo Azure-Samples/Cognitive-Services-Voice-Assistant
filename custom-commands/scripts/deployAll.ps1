@@ -1,8 +1,13 @@
 #Requires -Version 6
 
 Param(
-    [Parameter(Mandatory)][ValidateSet('automotive', 'hospitality', 'inventory', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")][string] $appName = $(Read-Host -prompt "appName"),
+    [Parameter(Mandatory, HelpMessage = "Please enter a supported app. automotive, hospitality, or inventory")]
+    [ValidateSet('automotive', 'hospitality', 'inventory', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")]
+    [string] $appName = $(Read-Host -prompt "appName"),
+    [Parameter (Mandatory, HelpMessage = "Please enter a name for your resource. It must be < 19 characters and  Alphanumeric only")]
+    [ValidatePattern("^\w+$", ErrorMessage = "resourceName must be alphanumeric")]
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
+    [Parameter (Mandatory, HelpMessage = "Please enter a region. Supported regions are westus, northeurope")]
     [string] $region = $(Read-Host -prompt "region"),
     [string] $randomID
 )
@@ -10,7 +15,7 @@ Param(
 [Console]::ResetColor()
 $ErrorActionPreference = "Stop"
 
-if ( $resourceName.Length -gt 19 ) {
+if ($resourceName.Length -gt 19) {
     Write-Output "Resource Name cannot be longer than 19 characters. This is a requirement because we add up to 4 digits of a random number to try to keep the names unique and the storage resource has a limit of 23 characters. Please enter a shorter name."
     exit
 }
@@ -35,12 +40,11 @@ if ($randomID) {
 else {
     $randomNumber = Get-Random -maximum 9999
     Write-Host "Using random ID = $randomNumber"
-    Write-Host "pass this ID back into the command if you need to retry -randomID $randomNumber"
 }
 
 # get the current default subscription ID
 $userName = (az ad signed-in-user show | ConvertFrom-Json).userPrincipalName
-Write-Host -ForegroundColor Yellow "The login Azure account ($userName) has following subscription(s):"
+Write-Host -ForegroundColor Yellow "`nThe logged in Azure account ($userName) has following subscription(s):"
 az account list --all --output json | ConvertFrom-Json | Select-Object -Property isDefault, state, name, id | Out-Default
 $defaultSubscription = az account list --all --output json | ConvertFrom-Json | Where-Object { $_.isDefault -eq "true" }
 $subscriptionName = $defaultSubscription.name

@@ -294,6 +294,7 @@ int LinuxAudioPlayer::Stop()
 
     //tell alsa to drop any frames in buffer
     snd_pcm_drop(m_playback_handle);
+    snd_pcm_close(m_playback_handle);
     m_state = AudioPlayerState::PAUSED;
 
     //clear the audio queue safely

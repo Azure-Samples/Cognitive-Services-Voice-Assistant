@@ -7,6 +7,7 @@
 
 using namespace std;
 using namespace Microsoft::CognitiveServices::Speech;
+using namespace Microsoft::CognitiveServices::Speech::Audio;
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
 using namespace AudioPlayer;
 
@@ -14,39 +15,47 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 {
     _agentConfig = agentConfig;
 
-    InitializeDialogServiceConnector();
+    InitializeDialogServiceConnectorFromMicrophone();
     InitializePlayer();
     AttachHandlers();
+    InitializeConnection();
 }
 
-void DialogManager::InitializeDialogServiceConnector()
+DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath)
+{
+    _agentConfig = agentConfig;
+    _audioFilePath = audioFilePath;
+
+    InitializeDialogServiceConnectorFromFile();
+    InitializePlayer();
+    AttachHandlers();
+    InitializeConnection();
+}
+
+void DialogManager::InitializeDialogServiceConnectorFromMicrophone()
 {
     log_t("Configuration loaded. Creating connector...");
+
+    // MAS stands for Microsoft Audio Stack
+#ifdef MAS
+    auto config = _agentConfig->AsDialogServiceConfig();
+    auto audioConfig = AudioConfig::FromMicrophoneInput(_agentConfig->_linuxCaptureDeviceName);
+    config->SetProperty("MicArrayGeometryConfigFile", _agentConfig->_customMicConfigPath);
+    _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
+#endif
+#ifndef MAS
     _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
+#endif
     log_t("Connector created");
-    auto future = _dialogServiceConnector->ConnectAsync();
-
-    log_t("Creating prime activity");
-    nlohmann::json keywordPrimingActivity =
-    {
-        { "type", "event" },
-        { "name", "KeywordPrefix" },
-        { "value", _agentConfig->KeywordDisplayName() }
-    };
-    auto keywordPrimingActivityText = keywordPrimingActivity.dump();
-    log_t("Sending inform-of-keyword activity: ", keywordPrimingActivityText);
-    auto stringFuture = _dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
-
-    log_t("Connector successfully initialized!");
 }
 
 void DialogManager::InitializePlayer()
 {
-    if(_agentConfig->_barge_in_supported == "true")
+    if (_agentConfig->_barge_in_supported == "true")
     {
         _bargeInSupported = true;
     }
-    
+
     if (_agentConfig->_volume > 0)
     {
         _volumeOn = true;
@@ -143,7 +152,7 @@ void DialogManager::AttachHandlers()
         {
             log_t("Activity has audio, playing asynchronously.");
 
-            if(!_bargeInSupported)
+            if (!_bargeInSupported)
             {
                 log_t("Pausing KWS during TTS playback");
                 PauseKws();
@@ -151,29 +160,30 @@ void DialogManager::AttachHandlers()
 
             auto audio = event.GetAudio();
             int play_result = 0;
-    
+
             uint32_t total_bytes_read = 0;
-            if(_volumeOn && _player != nullptr)
+            if (_volumeOn && _player != nullptr)
             {
-                
+
                 // If we are expecting more input and have audio to play, we will want to wait till all audio is done playing before
                 // before listening again. We can read from the stream here to accomplish this.
-                 if(continue_multiturn)
-                 {
+                if (continue_multiturn)
+                {
                     uint32_t playBufferSize = 1024;
                     unsigned int bytesRead = 0;
-                    std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
-                    do{
+                    std::unique_ptr<unsigned char[]> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+                    do
+                    {
                         bytesRead = audio->Read(playBuffer.get(), playBufferSize);
                         _player->Play(playBuffer.get(), bytesRead);
                         total_bytes_read += bytesRead;
-                    }while(bytesRead > 0);
-                    
+                    } while (bytesRead > 0);
+
                     DeviceStatusIndicators::SetStatus(DeviceStatus::Speaking);
-                    
+
                     // We don't want to timeout while tts is playing so start 1 second before it is done
                     int secondsOfAudio = total_bytes_read / 32000;
-                    std::this_thread::sleep_for(std::chrono::milliseconds((secondsOfAudio-1)*1000));
+                    std::this_thread::sleep_for(std::chrono::milliseconds((secondsOfAudio - 1) * 1000));
                 }
                 else
                 {
@@ -185,9 +195,9 @@ void DialogManager::AttachHandlers()
             {
                 DeviceStatusIndicators::SetStatus(DeviceStatus::Idle);
             }
-            
+
         }
-        
+
         if (continue_multiturn)
         {
             log_t("Activity requested a continuation (ExpectingInput) -- listening again");
@@ -196,7 +206,7 @@ void DialogManager::AttachHandlers()
         }
         else
         {
-            if(!_bargeInSupported)
+            if (!_bargeInSupported)
             {
                 StartKws();
             }
@@ -224,7 +234,7 @@ void DialogManager::StartKws()
 
     if (_keywordActivationState == KeywordActivationState::Paused)
     {
-        auto modelPath = _agentConfig->KeywordModel();
+        auto modelPath = _agentConfig->KeywordRecognitionModel();
         log_t("Initializing keyword recognition with: ", modelPath);
         auto model = KeywordRecognitionModel::FromFile(modelPath);
         auto _ = _dialogServiceConnector->StartKeywordRecognitionAsync(model);
@@ -238,12 +248,35 @@ void DialogManager::StartKws()
 void DialogManager::StartListening()
 {
     log_t("Now listening...");
-    if(_bargeInSupported)
+    if (_bargeInSupported)
     {
         _player->Stop();
     }
     DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
     auto future = _dialogServiceConnector->ListenOnceAsync();
+}
+
+void DialogManager::Stop()
+{
+    log_t("Now stopping...");
+
+    if (_player != nullptr)
+    {
+        _player->Stop();
+    }
+    auto future = _dialogServiceConnector->DisconnectAsync();
+    InitializeConnection();
+    if (_keywordActivationState != KeywordActivationState::NotSupported)
+    {
+        SetKeywordActivationState(KeywordActivationState::Paused);
+        StartKws();
+    }
+    DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
+}
+
+void DialogManager::MuteUnMute()
+{
+
 }
 
 void DialogManager::ContinueListening()
@@ -270,4 +303,108 @@ void DialogManager::StopKws()
     }
 
     log_t("Exit StopKws (state = ", uint32_t(_keywordActivationState), ")");
+}
+
+fstream DialogManager::OpenFile(const string& audioFilePath)
+{
+    if (audioFilePath.empty())
+    {
+        throw invalid_argument("Audio filename is empty");
+    }
+
+    fstream fs;
+    fs.open(audioFilePath, ios_base::binary | ios_base::in);
+    if (!fs.good())
+    {
+        throw invalid_argument("Failed to open the specified audio file.");
+    }
+
+    return fs;
+}
+
+int DialogManager::ReadBuffer(fstream& fs, uint8_t* dataBuffer, uint32_t size)
+{
+    if (fs.eof())
+    {
+        // returns 0 to indicate that the stream reaches end.
+        return 0;
+    }
+
+    fs.read((char*)dataBuffer, size);
+
+    if (!fs.eof() && !fs.good())
+    {
+        // returns 0 to close the stream on read error.
+        return 0;
+    }
+    else
+    {
+        // returns the number of bytes that have been read.
+        return (int)fs.gcount();
+    }
+}
+
+void DialogManager::PushData(const string& audioFilePath)
+{
+    fstream fs;
+    try
+    {
+        fs = OpenFile(audioFilePath);
+        //skip the wave header
+        fs.seekg(44);
+    }
+    catch (const exception& e)
+    {
+        cerr << "Error: exception in pushData, %s." << e.what() << endl;
+        cerr << "  can't open " << audioFilePath << endl;
+        throw e;
+        return;
+    }
+
+    std::array<uint8_t, 1000> buffer;
+    while (1)
+    {
+        auto readSamples = ReadBuffer(fs, buffer.data(), (uint32_t)buffer.size());
+        if (readSamples == 0)
+        {
+            break;
+        }
+        _pushStream.get()->Write(buffer.data(), readSamples);
+    }
+    fs.close();
+    _pushStream.get()->Close();
+}
+
+void DialogManager::ListenFromFile()
+{
+    PushData(_audioFilePath);
+    _dialogServiceConnector->ListenOnceAsync();
+}
+
+void DialogManager::InitializeDialogServiceConnectorFromFile()
+{
+    log_t("Configuration loaded. Creating connector...");
+    shared_ptr<DialogServiceConfig> config = _agentConfig->CreateDialogServiceConfig();
+    _pushStream = AudioInputStream::CreatePushStream();
+    auto audioConfig = AudioConfig::FromStreamInput(_pushStream);
+
+    _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
+    log_t("Connector created");
+}
+
+void DialogManager::InitializeConnection()
+{
+    auto future = _dialogServiceConnector->ConnectAsync();
+    log_t("Creating prime activity");
+    nlohmann::json keywordPrimingActivity =
+    {
+        { "type", "event" },
+        { "name", "KeywordPrefix" },
+        { "value", _agentConfig->KeywordDisplayName() }
+    };
+    auto keywordPrimingActivityText = keywordPrimingActivity.dump();
+    log_t("Sending inform-of-keyword activity: ", keywordPrimingActivityText);
+    auto stringFuture = _dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
+
+    log_t("Connector successfully initialized!");
 }

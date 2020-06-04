@@ -237,7 +237,7 @@ namespace UWPVoiceAssistantSample
                 if (sourceBytesRead < buffer.Length)
                 {
                     this.ReachedEndOfStream = true;
-                    this.log.Log($"End of stream, total of {this.bufferStream.Length} bytes");
+                    this.log.Log(LogMessageLevel.AudioLogs, $"End of stream, total of {this.bufferStream.Length} bytes");
                 }
 
                 this.ReachedEndOfStream = sourceBytesRead < buffer.Length;
