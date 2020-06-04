@@ -61,11 +61,15 @@ int main(int argc, char** argv)
     // Wavfile path to send to Speech Service
     if (wavFilePath != "")
     {
+        log_t("Initialized with audio WAV file. Enter 'x' to exit.");
+
         dialogManager = make_shared<DialogManager>(agentConfig, wavFilePath);
         dialogManager->ListenFromFile();
     }
     else
     {
+        log_t("Initialized with live mic. Enter 'x' to exit.");
+
         dialogManager = make_shared<DialogManager>(agentConfig);
 
         // Activate keyword listening on start up if keyword model file exists
@@ -84,7 +88,6 @@ int main(int argc, char** argv)
         DisplayKeystrokeOptions(*dialogManager);
     }
 
-    log_t("Initialized with audio file. Enter 'x' to exit.");
     cin >> keystroke;
     HandleKeystrokeOptions(*dialogManager, keystroke);
 
