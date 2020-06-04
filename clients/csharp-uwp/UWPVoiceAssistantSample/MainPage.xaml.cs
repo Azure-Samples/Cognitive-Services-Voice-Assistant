@@ -181,8 +181,15 @@ namespace UWPVoiceAssistantSample
             var session = await this.agentSessionManager.GetSessionAsync();
             if (session != null)
             {
-                session.SystemStateChanged += async (s, e)
-                    => await this.UpdateUIForSharedStateAsync();
+                session.SystemStateChanged += async (s, e) =>
+                {
+                    if (e.SystemStateChangeType == ConversationalAgentSystemStateChangeType.UserAuthentication)
+                    {
+                        this.app.HasReachedForeground = false;
+                    }
+
+                    await this.UpdateUIForSharedStateAsync();
+                };
             }
 
             PowerManager.EnergySaverStatusChanged += async (s, e)
