@@ -2,7 +2,7 @@
 
 ## Overview
 
-This readme describes how to run the C++ client on a ARM32 Linux OS, it uses Ubuntu 20.04 LTS on a [Raspberry Pi 3 or 4](https://www.raspberrypi.org/).
+This readme describes how to run the C++ client on a ARM32 and ARM64 Linux OS, it uses Ubuntu 20.04 LTS on a [Raspberry Pi 3 or 4](https://www.raspberrypi.org/).
 
 Note: [Raspberry Pi OS (32 bit)](https://www.raspberrypi.org/downloads/raspbian/) is not currently supported.
 ARM 64 Linux support will be documented, Raspberry Pi OS (64 bit) and Ubuntu ARM 64 will work. 
@@ -18,7 +18,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to use
 ## Setting up the device
 
 * Install Ubuntu on a Raspberry Pi, connecting it to the internet and using it remotely.
-  * Follow the [install instructions](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi) and choose Ubuntu 20.04 LTS, 32 bit server OS. There is no need to install a desktop.
+  * Follow the [install instructions](https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi) and choose Ubuntu 20.04 LTS, both 32 bit and 64 bit server OS are supported. There is no need to install a desktop.
 
 * Make sure you have speakers and a microphone attached
 
@@ -38,7 +38,7 @@ There are many ways to do development on a Raspberry pi. It may be useful to use
 
 * Replace the text in the configs/config.json file with your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The keyword_model should point to the Custom Keyword being used (.table file), these are in /home/ubuntu/Cognitive-Services-Voice-Assistant/keyword-models
 
-## Build directly on Linux arm32
+## Build directly on Linux
 
 * You will need to install some packages.
 
@@ -51,10 +51,10 @@ There are many ways to do development on a Raspberry pi. It may be useful to use
   ```sh
   cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux
   chmod a+x *.sh
-  ./buildArm32Linux.sh
+  ./buildArmLinux.sh
   ```
   
-## Build directly on Linux arm32 with Microsoft Audio Stack
+## Build directly on Linux with Microsoft Audio Stack
 
 Microsoft Audio Stack (MAS) can be used to enhance the experience.
 
@@ -73,11 +73,11 @@ The custom_mic_config_path points to your microphone configuration file. The lin
 
 Examples of a single microphone and a 4 mic linear array are included in the configs folder of this repo. For more information on how to configure your device's mic array see [here](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-devices-microphone-array-configuration).
 
-To build it simply run buildArm32LinusWithMAS.sh. This will download all necessary binaries and build the project with MAS.
+To build it simply run buildArmLinuxWithMAS.sh. This will download all necessary binaries and build the project with MAS.
 
 ```sh
 cd /home/ubuntu/Cognitive-Services-Voice-Assistant/clients/cpp-console/scripts/linux
-./buildArm32LinuxWithMAS.sh
+./buildArmLinuxWithMAS.sh
 ```
 
 

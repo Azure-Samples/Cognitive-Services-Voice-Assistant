@@ -15,12 +15,14 @@ then
 echo "Running on ARM32 Linux"
     #echo "Running on ARM32 Linux, creating lib/lib link to lib/arm32"
 LIBLINK="arm32"
+LIBFOLDER="Linux-arm"
     #ln -s arm32 lib/lib
 else
     #echo "Running on ARM64 Linux, creating lib/lib link to lib/arm64"
     #ln -s arm64 lib/lib
 echo "Running on ARM64 Linux"
 LIBLINK="arm64"
+LIBFOLDER="Linux-arm64"
 fi
 
 if [ ! -f ./lib/lib/libMicrosoft.CognitiveServices.Speech.core.so ]; then
@@ -39,11 +41,25 @@ cp -Rf ./SDK/SpeechSDK*/include .
 echo "Creating lib/lib link to lib/$LIBLINK"
 ln -s $LIBLINK lib/lib
 
+echo "Creating SDK/arch to SDK/$LIBFOLDER"
+ln -s $LIBFOLDER SDK/arch
+
 else
 echo "Speech SDK lib found. Skipping download."
 fi
 
-echo "Building Linux Arm sample ..."
+if [ ! -f ./lib/lib/libpma.so ]; then
+echo "Downloading Microsoft Audio Stack (MAS) binaries"
+curl -L "https://aka.ms/sdsdk-download-linux-$LIBLINK" --output ./SDK/Linux-arm.tgz
+tar -xzf ./SDK/Linux-arm.tgz -C ./SDK
+
+echo "Copying MAS binaries to lib folder"
+cp -Rf ./SDK/arch/* ./lib/lib
+else 
+echo "MAS binaries found. Skipping download."
+fi
+
+echo "Building Raspberry Pi sample ..."
 if g++ -Wno-psabi \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
@@ -54,6 +70,7 @@ src/common/DialogManager.cpp \
 -o ./out/sample.exe \
 -std=c++14 \
 -D LINUX \
+-D MAS \
 -L./lib/lib \
 -I./include/cxx_api \
 -I./include/c_api \
@@ -61,7 +78,7 @@ src/common/DialogManager.cpp \
 -pthread \
 -lstdc++fs \
 -lasound \
--lMicrosoft.CognitiveServices.Speech.core; 
+-lMicrosoft.CognitiveServices.Speech.core;
 then
 error=0;
 else
@@ -76,7 +93,7 @@ rm -R ./SDK
 
 echo Done. To start the demo execute:
 echo cd ../../out
-echo export LD_LIBRARY_PATH="../lib/$LIBLINK"
+echo export LD_LIBRARY_PATH="../lib/${LIBLINK}"
 echo ./sample.exe [path_to_configFile]
 
 exit $error
