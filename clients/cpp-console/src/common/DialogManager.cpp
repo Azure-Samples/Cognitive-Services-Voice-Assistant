@@ -35,27 +35,27 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig, string 
 void DialogManager::InitializeDialogServiceConnectorFromMicrophone()
 {
     log_t("Configuration loaded. Creating connector...");
-    
+
     // MAS stands for Microsoft Audio Stack
-    #ifdef MAS
-        auto config = _agentConfig->AsDialogServiceConfig();
-        auto audioConfig = AudioConfig::FromMicrophoneInput(_agentConfig->_linuxCaptureDeviceName);
-        config->SetProperty("MicArrayGeometryConfigFile", _agentConfig->_customMicConfigPath);
-        _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
-    #endif
-    #ifndef MAS
-        _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
-    #endif
+#ifdef MAS
+    auto config = _agentConfig->AsDialogServiceConfig();
+    auto audioConfig = AudioConfig::FromMicrophoneInput(_agentConfig->_linuxCaptureDeviceName);
+    config->SetProperty("MicArrayGeometryConfigFile", _agentConfig->_customMicConfigPath);
+    _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
+#endif
+#ifndef MAS
+    _dialogServiceConnector = DialogServiceConnector::FromConfig(_agentConfig->AsDialogServiceConfig());
+#endif
     log_t("Connector created");
 }
 
 void DialogManager::InitializePlayer()
 {
-    if(_agentConfig->_barge_in_supported == "true")
+    if (_agentConfig->_barge_in_supported == "true")
     {
         _bargeInSupported = true;
     }
-    
+
     if (_agentConfig->_volume > 0)
     {
         _volumeOn = true;
@@ -152,7 +152,7 @@ void DialogManager::AttachHandlers()
         {
             log_t("Activity has audio, playing asynchronously.");
 
-            if(!_bargeInSupported)
+            if (!_bargeInSupported)
             {
                 log_t("Pausing KWS during TTS playback");
                 PauseKws();
@@ -160,29 +160,30 @@ void DialogManager::AttachHandlers()
 
             auto audio = event.GetAudio();
             int play_result = 0;
-    
+
             uint32_t total_bytes_read = 0;
-            if(_volumeOn && _player != nullptr)
+            if (_volumeOn && _player != nullptr)
             {
-                
+
                 // If we are expecting more input and have audio to play, we will want to wait till all audio is done playing before
                 // before listening again. We can read from the stream here to accomplish this.
-                 if(continue_multiturn)
-                 {
+                if (continue_multiturn)
+                {
                     uint32_t playBufferSize = 1024;
                     unsigned int bytesRead = 0;
-                    std::unique_ptr<unsigned char []> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
-                    do{
+                    std::unique_ptr<unsigned char[]> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
+                    do
+                    {
                         bytesRead = audio->Read(playBuffer.get(), playBufferSize);
                         _player->Play(playBuffer.get(), bytesRead);
                         total_bytes_read += bytesRead;
-                    }while(bytesRead > 0);
-                    
+                    } while (bytesRead > 0);
+
                     DeviceStatusIndicators::SetStatus(DeviceStatus::Speaking);
-                    
+
                     // We don't want to timeout while tts is playing so start 1 second before it is done
                     int secondsOfAudio = total_bytes_read / 32000;
-                    std::this_thread::sleep_for(std::chrono::milliseconds((secondsOfAudio-1)*1000));
+                    std::this_thread::sleep_for(std::chrono::milliseconds((secondsOfAudio - 1) * 1000));
                 }
                 else
                 {
@@ -194,9 +195,9 @@ void DialogManager::AttachHandlers()
             {
                 DeviceStatusIndicators::SetStatus(DeviceStatus::Idle);
             }
-            
+
         }
-        
+
         if (continue_multiturn)
         {
             log_t("Activity requested a continuation (ExpectingInput) -- listening again");
@@ -205,7 +206,7 @@ void DialogManager::AttachHandlers()
         }
         else
         {
-            if(!_bargeInSupported)
+            if (!_bargeInSupported)
             {
                 StartKws();
             }
@@ -247,12 +248,35 @@ void DialogManager::StartKws()
 void DialogManager::StartListening()
 {
     log_t("Now listening...");
-    if(_bargeInSupported)
+    if (_bargeInSupported)
     {
         _player->Stop();
     }
     DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
     auto future = _dialogServiceConnector->ListenOnceAsync();
+}
+
+void DialogManager::Stop()
+{
+    log_t("Now stopping...");
+
+    if (_player != nullptr)
+    {
+        _player->Stop();
+    }
+    auto future = _dialogServiceConnector->DisconnectAsync();
+    InitializeConnection();
+    if (_keywordActivationState != KeywordActivationState::NotSupported)
+    {
+        SetKeywordActivationState(KeywordActivationState::Paused);
+        StartKws();
+    }
+    DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
+}
+
+void DialogManager::MuteUnMute()
+{
+
 }
 
 void DialogManager::ContinueListening()
@@ -363,7 +387,7 @@ void DialogManager::InitializeDialogServiceConnectorFromFile()
     shared_ptr<DialogServiceConfig> config = _agentConfig->CreateDialogServiceConfig();
     _pushStream = AudioInputStream::CreatePushStream();
     auto audioConfig = AudioConfig::FromStreamInput(_pushStream);
-        
+
     _dialogServiceConnector = DialogServiceConnector::FromConfig(config, audioConfig);
     log_t("Connector created");
 }
