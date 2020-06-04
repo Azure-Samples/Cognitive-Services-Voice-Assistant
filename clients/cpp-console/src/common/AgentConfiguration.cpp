@@ -2,8 +2,8 @@
 // Licensed under the MIT License.
 
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
-#define _CRT_SECURE_NO_WARNINGS
 #include "AgentConfiguration.h"
+#include <stdlib.h>
 #include <cstdio>
 #include <fstream>
 #include <experimental/filesystem>
@@ -13,7 +13,6 @@
 #pragma warning (disable : 26444)
 #pragma warning (disable : 28020)
 #pragma warning (disable : 26495)
-#pragma warning(disable : 4996)
 #include "json.hpp"
 #pragma warning(pop)
 
@@ -76,8 +75,24 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
     {
         if (config->_keywordRecognitionModel.find("~") != string::npos)
         {
-            string home = getenv("HOME");
+            // ifdef is used because functions with _s suffixes are not supported in GNU C Library
+            // Microsoft implements an approximation to the C11 standard hence _dupenv_s is used for _WIN32_
+            // and secure_getenv is used __linux__
+            // both _dupenv_s and secure_getenv are 'safe' versions of getenv
+            #ifdef _WIN32
+
+            char* pValue = nullptr;
+            size_t len = 0;
+            errno_t err = _dupenv_s(&pValue, &len, "HOME");
+            config->_keywordRecognitionModel.replace(0, 1, pValue);
+            free(pValue);
+
+            #elif __linux__
+
+            string home = secure_getenv("HOME");
             config->_keywordRecognitionModel.replace(0, 1, home);
+            
+            #endif
         }
 
         if (!std::experimental::filesystem::exists(config->_keywordRecognitionModel))
