@@ -47,9 +47,8 @@ public:
     void PauseKws();
     void StartKws();
     void StartListening();
-    void StopListening();
-    void MuteListening();
-    void UnmuteListening();
+    void Stop();
+    void MuteUnMute();
     void ContinueListening();
     void StopKws();
     void ListenFromFile();

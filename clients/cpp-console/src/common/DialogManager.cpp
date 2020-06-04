@@ -256,10 +256,14 @@ void DialogManager::StartListening()
     auto future = _dialogServiceConnector->ListenOnceAsync();
 }
 
-void DialogManager::StopListening()
+void DialogManager::Stop()
 {
-    log_t("Now stop listening...");
+    log_t("Now stopping...");
 
+    if (_player != nullptr)
+    {
+        _player->Stop();
+    }
     auto future = _dialogServiceConnector->DisconnectAsync();
     InitializeConnection();
     if (_keywordActivationState != KeywordActivationState::NotSupported)
@@ -270,12 +274,7 @@ void DialogManager::StopListening()
     DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
 }
 
-void DialogManager::MuteListening()
-{
-
-}
-
-void DialogManager::UnmuteListening()
+void DialogManager::MuteUnMute()
 {
 
 }
