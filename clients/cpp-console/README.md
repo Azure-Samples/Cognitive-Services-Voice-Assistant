@@ -35,7 +35,8 @@ Check out the [Windows.md](docs/Windows.md) for detailed instructions.
 
 ## Quickstart
 
-1. Follow the instructions listed above to setup the building and running environment. Besides, get subscription key and key region at hand, along with app id if you are using a Custom Commands application.
+1. Follow the instructions listed above to setup the building and running environment. Besides, get subscription key and key region ready at hand, along with app id if you are using a Custom Commands application.
+
 2. Build the executable from source code:
 * First clone the repository:
 ```cmd
@@ -46,6 +47,7 @@ git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistants.g
 cd Cognitive-Services-Voice-Assistants\clients\cpp-console\src\windows
 ```
 * Launch Visual Studio 2017 or newer by opening the solution cppSample.sln. Build the solution (the default build flavor is Debug x64).
+
 3.Config and run the executable.
 * For Debug x64 build, go to the directory:
 ```cmd
