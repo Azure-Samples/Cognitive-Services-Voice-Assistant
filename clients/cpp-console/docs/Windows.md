@@ -38,7 +38,7 @@ Copy the example configuration file **clients\configs\config.json** into your pr
   "CustomVoiceDeploymentIds": "",
   "SpeechSDKLogFile": "",
   "TTSBargeInSupported": "",
-  "CustomMicConfigPath" :"",
+  "CustomMicConfigPath": "",
   "LinuxCaptureDeviceName": ""
 }
 ```
