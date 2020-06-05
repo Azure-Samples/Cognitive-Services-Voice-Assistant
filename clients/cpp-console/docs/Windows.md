@@ -49,16 +49,3 @@ To run, type
 ```cmd
 cppSample.exe config.json
 ```
-
-![Console](Console.png)
-
-Currently, the CPP console application supports 6 user inputs:
-1. listen once – Enter 1 to start listening. The listening session will stop when detecting starts.
-2. stop – Enter 2 to stop speaking.
-3. mute/unmute – Enter 3 to mute/unmute when listening. This functionality is not implemented yet.
-4. start keyword listening – Though keyword recognition starts automatically if a valid keyword is specified, enter 4 to start keyword listening if it is stopped later on.
-5. stop keyword listening – Enter 5 to stop keyword listening.
-6. exit – Enter x to exit this console application.
-
-
-
