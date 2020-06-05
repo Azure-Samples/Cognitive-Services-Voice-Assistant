@@ -48,7 +48,7 @@ cd Cognitive-Services-Voice-Assistants\clients\cpp-console\src\windows
 ```
 * Launch Visual Studio 2017 or newer by opening the solution cppSample.sln. Build the solution (the default build flavor is Debug x64).
 
-3.Config and run the executable.
+3. Config and run the executable.
 * For Debug x64 build, go to the directory:
 ```cmd
 cd Cognitive-Services-Voice-Assistants\clients\cpp-console\src\windows\ x64\Debug
