@@ -15,10 +15,25 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 {
     _agentConfig = agentConfig;
 
+    SetDeviceStatus(DeviceStatus::Initializing);
+
     InitializeDialogServiceConnectorFromMicrophone();
     InitializePlayer();
     AttachHandlers();
     InitializeConnection();
+
+    // Activate keyword listening on start up if keyword model file exists
+    if (_agentConfig->KeywordRecognitionModel().length() > 0)
+    {
+        SetKeywordActivationState(KeywordActivationState::Paused);
+        StartKws();
+    }
+    else
+    {
+        SetKeywordActivationState(KeywordActivationState::NotSupported);
+    }
+
+    SetDeviceStatus(DeviceStatus::Ready);
 }
 
 DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath)
@@ -26,10 +41,14 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig, string 
     _agentConfig = agentConfig;
     _audioFilePath = audioFilePath;
 
+    SetDeviceStatus(DeviceStatus::Initializing);
+
     InitializeDialogServiceConnectorFromFile();
     InitializePlayer();
     AttachHandlers();
     InitializeConnection();
+
+    SetDeviceStatus(DeviceStatus::Ready);
 }
 
 void DialogManager::InitializeDialogServiceConnectorFromMicrophone()
@@ -90,7 +109,7 @@ void DialogManager::AttachHandlers()
     _dialogServiceConnector->Recognizing += [&](const SpeechRecognitionEventArgs& event)
     {
         printf("INTERMEDIATE: %s ...\n", event.Result->Text.c_str());
-        DeviceStatusIndicators::SetStatus(DeviceStatus::Detecting);
+        SetDeviceStatus(DeviceStatus::Detecting);
     };
 
     // Signal for events containing speech recognition results.
@@ -115,7 +134,7 @@ void DialogManager::AttachHandlers()
         }
 
         //update the device status
-        DeviceStatusIndicators::SetStatus(newStatus);
+        SetDeviceStatus(newStatus);
     };
 
     // Signal for events relating to the cancellation of an interaction. The event indicates if the reason is a direct cancellation or an error.
@@ -123,7 +142,7 @@ void DialogManager::AttachHandlers()
     {
 
         printf("CANCELED: Reason=%d\n", (int)event.Reason);
-        DeviceStatusIndicators::SetStatus(DeviceStatus::Idle);
+        SetDeviceStatus(DeviceStatus::Idle);
         if (event.Reason == CancellationReason::Error)
         {
             printf("CANCELED: ErrorDetails=%s\n", event.ErrorDetails.c_str());
@@ -179,7 +198,7 @@ void DialogManager::AttachHandlers()
                         total_bytes_read += bytesRead;
                     } while (bytesRead > 0);
 
-                    DeviceStatusIndicators::SetStatus(DeviceStatus::Speaking);
+                    SetDeviceStatus(DeviceStatus::Speaking);
 
                     // We don't want to timeout while tts is playing so start 1 second before it is done
                     int secondsOfAudio = total_bytes_read / 32000;
@@ -193,7 +212,7 @@ void DialogManager::AttachHandlers()
 
             if (!continue_multiturn)
             {
-                DeviceStatusIndicators::SetStatus(DeviceStatus::Idle);
+                SetDeviceStatus(DeviceStatus::Idle);
             }
 
         }
@@ -252,7 +271,7 @@ void DialogManager::StartListening()
     {
         _player->Stop();
     }
-    DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
+    SetDeviceStatus(DeviceStatus::Listening);
     auto future = _dialogServiceConnector->ListenOnceAsync();
 }
 
@@ -271,7 +290,7 @@ void DialogManager::Stop()
         SetKeywordActivationState(KeywordActivationState::Paused);
         StartKws();
     }
-    DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
+    SetDeviceStatus(DeviceStatus::Ready);
 }
 
 void DialogManager::MuteUnMute()
@@ -282,7 +301,7 @@ void DialogManager::MuteUnMute()
 void DialogManager::ContinueListening()
 {
     log_t("Now listening...");
-    DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
+    SetDeviceStatus(DeviceStatus::Listening);
     auto future = _dialogServiceConnector->ListenOnceAsync();
 };
 
@@ -407,4 +426,14 @@ void DialogManager::InitializeConnection()
     auto stringFuture = _dialogServiceConnector->SendActivityAsync(keywordPrimingActivityText);
 
     log_t("Connector successfully initialized!");
+}
+
+// Individual devices will have differing capabilities and interfaces for sharing
+// interaction state in a headless environment. This one implementation under a
+// general abstraction.
+void DialogManager::SetDeviceStatus(const DeviceStatus status)
+{
+    const std::string name_map[]{ "Idle", "Initializing", "Ready", "Detecting", "Listening", "Thinking", "Speaking" };
+
+    std::cout << "New status : " << name_map[(int)status] << std::endl;
 }
