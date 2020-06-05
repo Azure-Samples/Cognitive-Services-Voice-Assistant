@@ -32,3 +32,18 @@ Check out how to [compile this C++ console sample for Linux on a Windows machine
 ## Building for Windows
 
 Check out the [Windows.md](docs/Windows.md) for detailed instructions.
+
+## Features
+
+* Fully configurable to support bot registered with the Direct Line Speech channel or Custom Commands application
+* Accepts recorded audio wav file or speech captured by a microphone as inputs
+* Supports playback of audio response
+* Supports use of [custom wake-words](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws)
+* Currently, the CPP console application supports 6 user inputs:
+![Console](docs/Console.png)
+1. listen once – Enter 1 to start listening. The listening session will stop when detecting starts.
+2. stop – Enter 2 to stop speaking.
+3. mute/unmute – Enter 3 to mute/unmute when listening. This functionality is not implemented yet.
+4. start keyword listening – Though keyword recognition starts automatically if a valid keyword is specified, enter 4 to start keyword listening if it is stopped later on.
+5. stop keyword listening – Enter 5 to stop keyword listening.
+6. exit – Enter x to exit this console application.
