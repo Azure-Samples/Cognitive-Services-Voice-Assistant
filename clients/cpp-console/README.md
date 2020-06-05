@@ -51,7 +51,7 @@ cd Cognitive-Services-Voice-Assistants\clients\cpp-console\src\windows
 3. Config and run the executable.
 * For Debug x64 build, go to the directory:
 ```cmd
-cd Cognitive-Services-Voice-Assistants\clients\cpp-console\src\windows\ x64\Debug
+cd Cognitive-Services-Voice-Assistants\clients\cpp-console\src\windows\x64\Debug
 ```
 * Open config.json (if it is not there, copy and paste from Cognitive-Services-Voice-Assistant\clients\cpp-console\configs), replace YOUR_SUBSCRIPTION_KEY, YOUR_SUBSCRIPTION_REGION, and YOUR_CUSTOM_COMMANDS_APP_ID with actual values. The KeywordRecognitionModel, Keyword, Volume, TTSBargeInSupported, CustomMicConfigPath, LinuxCaptureDeviceName below show you how these values could be.
 ```json
