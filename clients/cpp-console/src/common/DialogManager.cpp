@@ -15,10 +15,25 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 {
     _agentConfig = agentConfig;
 
+    DeviceStatusIndicators::SetStatus(DeviceStatus::Initializing);
+
     InitializeDialogServiceConnectorFromMicrophone();
     InitializePlayer();
     AttachHandlers();
     InitializeConnection();
+
+    // Activate keyword listening on start up if keyword model file exists
+    if (_agentConfig->KeywordRecognitionModel().length() > 0)
+    {
+        SetKeywordActivationState(KeywordActivationState::Paused);
+        StartKws();
+    }
+    else
+    {
+        SetKeywordActivationState(KeywordActivationState::NotSupported);
+    }
+
+    DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
 }
 
 DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath)
@@ -26,10 +41,14 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig, string 
     _agentConfig = agentConfig;
     _audioFilePath = audioFilePath;
 
+    DeviceStatusIndicators::SetStatus(DeviceStatus::Initializing);
+
     InitializeDialogServiceConnectorFromFile();
     InitializePlayer();
     AttachHandlers();
     InitializeConnection();
+
+    DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
 }
 
 void DialogManager::InitializeDialogServiceConnectorFromMicrophone()
@@ -70,6 +89,12 @@ void DialogManager::InitializePlayer()
         _player->SetVolume(_agentConfig->_volume);
     }
 
+}
+
+void DialogManager::SetDeviceStatus(const DeviceStatus status)
+{
+    _deviceStatus = status;
+    DeviceStatusIndicators::SetStatus(_deviceStatus);
 }
 
 void DialogManager::AttachHandlers()

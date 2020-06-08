@@ -42,6 +42,7 @@ class DialogManager
 public:
     DialogManager(shared_ptr<AgentConfiguration> agentConfig);
     DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath);
+    const DeviceStatus GetDeviceStatus() { return _deviceStatus; };
     const KeywordActivationState GetKeywordActivationState() { return _keywordActivationState; }
     void SetKeywordActivationState(const KeywordActivationState& state) { _keywordActivationState = state; }
     void PauseKws();
@@ -57,6 +58,7 @@ private:
     bool _volumeOn = false;
     bool _bargeInSupported = false;
     string _audioFilePath = "";
+    DeviceStatus _deviceStatus = DeviceStatus::Initializing;
     KeywordActivationState _keywordActivationState = KeywordActivationState::Undefined;
     IAudioPlayer* _player;
     shared_ptr<AgentConfiguration> _agentConfig;
@@ -67,6 +69,7 @@ private:
     void InitializePlayer();
     void AttachHandlers();
     void InitializeConnection();
+    void SetDeviceStatus(const DeviceStatus status);
     fstream OpenFile(const string& audioFilePath);
     int ReadBuffer(fstream& fs, uint8_t* dataBuffer, uint32_t size);
     void PushData(const string& audioFilePath);
