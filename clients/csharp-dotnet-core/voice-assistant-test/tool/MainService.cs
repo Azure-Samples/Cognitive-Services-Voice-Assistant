@@ -9,8 +9,10 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.CognitiveServices.Speech.Audio;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
     using Activity = Microsoft.Bot.Schema.Activity;
@@ -246,6 +248,9 @@ namespace VoiceAssistantTest
 
                     isFirstDialog = false;
 
+                    bool sendAudio = true;
+                    bool sendUtterance = true;
+
                     foreach (Turn turn in dialog.Turns)
                     {
                         // Application crashes in a multi-turn dialog with Keyword in each Turn
@@ -257,6 +262,20 @@ namespace VoiceAssistantTest
                         if (turn.Keyword)
                         {
                             await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(dialog.InputType))
+                        {
+                            if (dialog.InputType.Equals("Utterance", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(turn.Utterance))
+                            {
+                                sendUtterance = true;
+                                sendAudio = false;
+                            }
+                            else if (dialog.InputType.Equals("Audio", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(turn.WAVFile))
+                            {
+                                sendAudio = true;
+                                sendUtterance = false;
+                            }
                         }
 
                         Trace.IndentLevel = 2;
@@ -281,13 +300,13 @@ namespace VoiceAssistantTest
                         botConnector.SetInputValues(testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.Keyword);
 
                         // Send up WAV File if present
-                        if (!string.IsNullOrEmpty(turn.WAVFile))
+                        if (!string.IsNullOrEmpty(turn.WAVFile) && sendAudio)
                         {
                             botConnector.SendAudio(turn.WAVFile);
                         }
 
                         // Send up Utterance if present
-                        else if (!string.IsNullOrEmpty(turn.Utterance))
+                        else if (!string.IsNullOrEmpty(turn.Utterance) && sendUtterance)
                         {
                             botConnector = await botConnector.Send(turn.Utterance).ConfigureAwait(false);
                         }

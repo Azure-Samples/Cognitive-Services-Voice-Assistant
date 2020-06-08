@@ -32,5 +32,7 @@ namespace VoiceAssistantTest
         /// Gets or sets a value indicating whether to skip this dailog in the test run.
         /// </summary>
         public bool Skip { get; set; } = false;
+
+        public string InputType { get; set; }
     }
 }

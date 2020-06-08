@@ -2,7 +2,8 @@
   {
     "DialogID": "0",
     "Skip": false,
-    "Description": "Testing 'turn it {OnOff}'",
+    "InputType": true,
+    "Description": "Testing",
     "Turns": [
       {
         "TurnID": 0,
@@ -39,6 +40,7 @@
   {
     "DialogID": "1",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing 'turn the {SubjectDevice} {OnOff}'",
     "Turns": [
       {
@@ -61,6 +63,7 @@
   {
     "DialogID": "2",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing 'turn the {SubjectContext} {SubjectDevice} {OnOff}'",
     "Turns": [
       {
@@ -83,6 +86,7 @@
   {
     "DialogID": "3",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing 'turn {OnOff} the {SubjectDevice}'",
     "Turns": [
       {
@@ -105,6 +109,7 @@
   {
     "DialogID": "4",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing 'turn {OnOff} the {SubjectContext} {SubjectDevice}'",
     "Turns": [
       {
@@ -127,6 +132,7 @@
   {
     "DialogID": "5",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing '{SubjectDevice} {OnOff}'",
     "Turns": [
       {
@@ -149,6 +155,7 @@
   {
     "DialogID": "6",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing 'I want the {SubjectDevice} {OnOff}'",
     "Turns": [
       {
@@ -171,6 +178,7 @@
   {
     "DialogID": "7",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing 'control a device'",
     "Turns": [
       {
@@ -223,6 +231,7 @@
   {
     "DialogID": "8",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing 'I want to control a device'",
     "Turns": [
       {
@@ -275,6 +284,7 @@
   {
     "DialogID": "9",
     "Skip": false,
+    "InputType": true,
     "Description": "Testing 'turn {OnOff}'",
     "Turns": [
       {
