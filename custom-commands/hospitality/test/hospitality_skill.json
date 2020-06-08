@@ -9,6 +9,46 @@
       "FileName": "input-files\\Test_TurnOnOff_VoiceInput.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false
+    },
+    {
+      "FileName": "input-files\\Test_Help_TextInput.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
+    },
+    {
+      "FileName": "input-files\\Test_Help_VoiceInput.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
+    },
+    {
+      "FileName": "input-files\\Test_Greeting_TextInput.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
+    },
+    {
+      "FileName": "input-files\\Test_Greeting_VoiceInput.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
+    },
+    {
+      "FileName": "input-files\\Test_AdjustTemperature_TextInput.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
+    },
+    {
+      "FileName": "input-files\\Test_AdjustTemperature_VoiceInput.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
+    },
+    {
+      "FileName": "input-files\\Test_OpenClose_TextInput.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
+    },
+    {
+      "FileName": "input-files\\Test_OpenClose_VoiceInput.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
     }
   ],
   "SpeechSubscriptionKey": "809b90a4ee2a43ccbe19e0693630d44a",
