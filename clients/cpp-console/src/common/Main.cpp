@@ -44,8 +44,6 @@ int main(int argc, char** argv)
         wavFilePath = argv[2];
     }
 
-    DeviceStatusIndicators::SetStatus(DeviceStatus::Initializing);
-
     log_t("Loading configuration from file: ", configFilePath);
 
     shared_ptr<AgentConfiguration> agentConfig = AgentConfiguration::LoadFromFile(configFilePath);
@@ -71,19 +69,6 @@ int main(int argc, char** argv)
         log_t("Initialized with live mic. Enter 'x' to exit.");
 
         dialogManager = make_shared<DialogManager>(agentConfig);
-
-        // Activate keyword listening on start up if keyword model file exists
-        if (agentConfig->KeywordRecognitionModel().length() > 0)
-        {
-            dialogManager->SetKeywordActivationState(KeywordActivationState::Paused);
-            dialogManager->StartKws();
-        }
-        else
-        {
-            dialogManager->SetKeywordActivationState(KeywordActivationState::NotSupported);
-        }
-
-        DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
 
         DisplayKeystrokeOptions(*dialogManager);
     }
