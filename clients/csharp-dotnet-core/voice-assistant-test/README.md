@@ -150,6 +150,10 @@ Here is the full list:
 >#### Description
 >`string | optional | null | "Dialog for reserving airline ticket"`. Free-form text description of what this dialog does, to help you remember. Does not have to be unique.
 
+>#### InputType
+>`string | optional | null | "Audio" or "Utterance"`.
+This field allows selection of which (WavFile or Utterance) to send to the bot. Set InputType to Audio for sending WavFile and Utterance for sending Utterance. 
+
 >#### Turns
 >`JSON string | required`. An array of JSON objects, each defines a single turn in the dialog to execute. Each of these JSON objects includes:
 >

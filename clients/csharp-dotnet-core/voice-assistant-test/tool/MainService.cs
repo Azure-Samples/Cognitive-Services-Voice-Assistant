@@ -276,6 +276,10 @@ namespace VoiceAssistantTest
                                 sendAudio = true;
                                 sendUtterance = false;
                             }
+                            else
+                            {
+                                throw new Exception(ErrorStrings.INPUTTYPE_INCORRECT);
+                            }
                         }
 
                         Trace.IndentLevel = 2;
