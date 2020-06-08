@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 #include "AgentConfiguration.h"
+#include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
 #include <fstream>
 
@@ -17,24 +18,6 @@
 using namespace std;
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
 using namespace Microsoft::CognitiveServices::Speech::Audio;
-
-enum class DeviceStatus
-{
-    // The device is in an inactive or passively listening (keyword-only) mode
-    Idle,
-    // The device is currently working to become ready to accept input
-    Initializing,
-    // The device is now ready to accept input
-    Ready,
-    // The device is in the process of detecting a keyword
-    Detecting,
-    // The device is actively capturing and transmitting all captured audio
-    Listening,
-    // The device has finished active capture and is now waiting for an action
-    Thinking,
-    // The device is speaking
-    Speaking
-};
 
 enum class KeywordActivationState
 {
@@ -60,7 +43,6 @@ public:
     DialogManager(shared_ptr<AgentConfiguration> agentConfig);
     DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath);
     const KeywordActivationState GetKeywordActivationState() { return _keywordActivationState; }
-    void SetDeviceStatus(const DeviceStatus status);
     void SetKeywordActivationState(const KeywordActivationState& state) { _keywordActivationState = state; }
     void PauseKws();
     void StartKws();
