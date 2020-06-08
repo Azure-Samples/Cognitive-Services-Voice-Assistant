@@ -9,10 +9,8 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.CognitiveServices.Speech.Audio;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
     using Activity = Microsoft.Bot.Schema.Activity;
