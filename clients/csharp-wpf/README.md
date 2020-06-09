@@ -19,7 +19,6 @@ Following the introduction of [Custom Commands](https://docs.microsoft.com/en-us
 ## Getting Started
 
 ### Prerequisites
-
 Let's review the hardware, software, and subscriptions that you'll need to use this client application.
 
 - Windows 10 PC
@@ -47,17 +46,18 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
    ```
     -  Launch Visual Studio 2017 or newer by opening the solution `VoiceAssistantClient.sln`. Build the solution (the default build flavor is Debug x64)
     - Run the executable. For example, for Debug x64 build, this will be the executable: `VoiceAssistantClient\bin\x64\Debug\VoiceAssistantClient.exe`.
-1. When you first run the application, the **Setting** page will open. The first two fields are required (all others are optional):
-    - Enter _Subscription key_. This is your Azure [Speech Services Key](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started)
-    - Enter _Subscription key region_. This is the Azure region of your key in the format specified by the "Speech SDK Parameter" column [in this table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#speech-to-text-text-to-speech-and-translation) (for example "westus")
-    - Leave the field _Custom commands app Id_ empty (unless you plan to use [Custom Commands](#use-custom-commands))
+1. When you first run the application, the **Settings** page will open. If this is not the first time you run the application, click on the gears icon on the top right to access the settings page. The first three fields are required (all others are optional). 
+    - Enter _Connection Profile_. A name of your choice to identify this connection. The tool remembers multiple connection profiles so you can easily switch between them.
+    - Enter _Subscription key_. This is your Azure [Speech Services Key](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started).
+    - Enter _Subscription key region_. This is the Azure region of your key in the format specified by the "Speech SDK Parameter" column [in this table](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#speech-to-text-text-to-speech-and-translation) (for example "westus").
+    - Leave the field _Custom commands app Id_ empty (unless you plan to use [Custom Commands](#use-custom-commands)).
     - The default input language is "en-us" (US English). Update the _Language_ field as needed to select a different [language code from the "Speech-to-text" list](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support).
-    - Press _Ok_ when you're done.
-    - Your entries will be saved and populated automatically when you launch the app again.
+    - Press _Save and Apply Profile_ when you're done.
+    - Your entries will be saved under this profile name and will be available when you launch the app again.
 ![Setting page](docs/media/SettingsPage.png)  
-1. Press **Reconnect**. The application will try to connect to your bot via Direct Line Speech channel.
+1. Press **Reconnect**. The application will try to connect to your bot via Direct Line Speech channel, and your connection profile name will
+be shown at the top. The message **New conversation started -- type or press the microphone button** will appear below the text bar if the connection succeeded.
 ![Main Page](docs/media/MainPage.png)
-The message **New conversation started -- type or press the microphone button** will appear below the text bar if the connection succeeded.
 1. You'll be prompted to allow microphone access. If you want to use the microphone, allow access.
 1. Press the microphone icon to begin recording. While speaking, intermediate recognition results will be shown in the application. The microphone icon will turn red while recording is in progress. It will automatically detect end of speech and stop recording.
 1. If everything works, you should see your bot's response on the screen and hear it speak the response. You can click on lines in the **Activity Log** window to see the full activity payload from the bot in JSON.
