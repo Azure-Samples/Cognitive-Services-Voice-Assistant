@@ -219,7 +219,6 @@ void DialogManager::AttachHandlers()
             {
                 DeviceStatusIndicators::SetStatus(DeviceStatus::Idle);
             }
-
         }
 
         if (continue_multiturn)
@@ -262,14 +261,20 @@ void DialogManager::ResumeKws()
 
 void DialogManager::StartListening()
 {
-    log_t("Now listening...");
     if (_bargeInSupported)
     {
         _player->Stop();
     }
+    
+    ContinueListening();
+}
+
+void DialogManager::ContinueListening()
+{
+    log_t("Now listening...");
     DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
     auto future = _dialogServiceConnector->ListenOnceAsync();
-}
+};
 
 void DialogManager::Stop()
 {
@@ -292,13 +297,6 @@ void DialogManager::MuteUnMute()
 {
 
 }
-
-void DialogManager::ContinueListening()
-{
-    log_t("Now listening...");
-    DeviceStatusIndicators::SetStatus(DeviceStatus::Listening);
-    auto future = _dialogServiceConnector->ListenOnceAsync();
-};
 
 void DialogManager::StopKws()
 {
