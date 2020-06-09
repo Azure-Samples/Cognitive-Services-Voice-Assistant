@@ -232,15 +232,6 @@ namespace VoiceAssistantTest.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to InputType must be either Audio or Utterance..
-        /// </summary>
-        public static string INPUTTYPE_INCORRECT {
-            get {
-                return ResourceManager.GetString("INPUTTYPE_INCORRECT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to TurnID sequence is invalid..
         /// </summary>
         public static string INVALID_TURNID_SEQUENCE {

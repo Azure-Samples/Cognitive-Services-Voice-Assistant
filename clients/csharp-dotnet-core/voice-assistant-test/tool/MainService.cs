@@ -205,11 +205,10 @@ namespace VoiceAssistantTest
 
                 if (tests.WavAndUtterancePairs)
                 {
-
                     for (int i = 0; i < 2; i++)
                     {
-                        string outputFileName = "";
-                        string outputPath = "";
+                        string outputFileName = string.Empty;
+                        string outputPath = string.Empty;
                         if (i == 0)
                         {
                             testName = Path.GetFileNameWithoutExtension(inputFileName);
@@ -218,9 +217,8 @@ namespace VoiceAssistantTest
 
                             outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output-Wav.json");
 
-                            testPass = await ProcessDialog(fileContents, botConnector, appSettings,
-                                isFirstDialog, tests, connectionEstablished,
-                                testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
+                            testPass = await ProcessDialog(fileContents, botConnector, appSettings, isFirstDialog, tests, connectionEstablished, testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
+
                             await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
                             i++;
                         }
@@ -235,9 +233,7 @@ namespace VoiceAssistantTest
                             outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output-Text.json");
                             testName = Path.GetFileNameWithoutExtension(outputPath);
 
-                            testPass = await ProcessDialog(fileContents, botConnector, appSettings,
-                                isFirstDialog, tests, connectionEstablished,
-                                testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
+                            testPass = await ProcessDialog(fileContents, botConnector, appSettings, isFirstDialog, tests, connectionEstablished, testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
 
                             await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
                         }
@@ -258,9 +254,7 @@ namespace VoiceAssistantTest
                     string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.json");
                     testName = Path.Combine(Path.GetFileNameWithoutExtension(outputPath));
 
-                    testPass = await ProcessDialog(fileContents, botConnector, appSettings,
-                                isFirstDialog, tests, connectionEstablished,
-                                testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
+                    testPass = await ProcessDialog(fileContents, botConnector, appSettings, isFirstDialog, tests, connectionEstablished, testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
 
                     await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
                 }
@@ -302,9 +296,7 @@ namespace VoiceAssistantTest
         }
 
         private static async Task<bool> ProcessDialog(
-            List<Dialog> fileContents, BotConnector botConnector, AppSettings appSettings,
-            bool isFirstDialog, TestSettings tests, bool connectionEstablished,
-            string testName, List<DialogReport> dialogReports, bool testPass, List<DialogResult> dialogResults, bool sendFirst)
+            List<Dialog> fileContents, BotConnector botConnector, AppSettings appSettings, bool isFirstDialog, TestSettings tests, bool connectionEstablished, string testName, List<DialogReport> dialogReports, bool testPass, List<DialogResult> dialogResults, bool sendFirst)
         {
             foreach (Dialog dialog in fileContents)
             {
@@ -461,8 +453,6 @@ namespace VoiceAssistantTest
                         AriaLogger.Log(AriaLogger.EventNameDialogFailed, dialog.DialogID, dialog.Description);
 #endif
                 }
-
-                //await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
             } // End of dialog loop
 
             return testPass;

@@ -134,6 +134,9 @@ Here is the full list:
 >>
 >>#### Skip
 >>`bool | optional | false | true`. If true, the test file will be skipped while executing tests. This is useful when the application configuration file specifies multiple test files, but you only want to run one (or a few) of them. Use Skip to temporary disable tests.
+>>
+>>#### WavAndUtterancePairs
+>>`bool | optional | false | true`. If true, each test file will run twice, once for the WavFile and once for the Utterance. 
 
 ### Test configuration file
 
@@ -148,11 +151,7 @@ Here is the full list:
 >`string | required | "0"`. A unique value within the test file that identifies this dialog. You can identify a dialog by giving each one a random GUID value, an integer counter, or anything else. Intended to be short.
 
 >#### Description
->`string | optional | null | "Dialog for reserving airline ticket"`. Free-form text description of what this dialog does, to help you remember. Does not have to be unique.
-
->#### InputType
->`string | optional | null | "Audio" or "Utterance"`.
-This field allows selection of which (WavFile or Utterance) to send to the bot. Set InputType to Audio for sending WavFile and Utterance for sending Utterance. 
+>`string | optional | null | "Dialog for reserving airline ticket"`. Free-form text description of what this dialog does, to help you remember. Does not have to be unique. 
 
 >#### Turns
 >`JSON string | required`. An array of JSON objects, each defines a single turn in the dialog to execute. Each of these JSON objects includes:

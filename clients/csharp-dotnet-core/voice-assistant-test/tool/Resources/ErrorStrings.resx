@@ -171,9 +171,6 @@
   <data name="FOLDER_NOT_FOUND" xml:space="preserve">
     <value>Folder not found. </value>
   </data>
-  <data name="INPUTTYPE_INCORRECT" xml:space="preserve">
-    <value>InputType must be either Audio or Utterance.</value>
-  </data>
   <data name="INPUT_FILE_MISSING" xml:space="preserve">
     <value>No Input test files were specified.</value>
   </data>
