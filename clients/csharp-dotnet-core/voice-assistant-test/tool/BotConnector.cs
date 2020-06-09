@@ -631,7 +631,7 @@ namespace VoiceAssistantTest
         private int WriteAudioToWAVfile(PullAudioOutputStream audio, string baseFileName, string dialogID, int turnID, int indexActivityWithAudio)
         {
             FileStream fs = null;
-            string testFileOutputFolder = Path.Combine(this.appsettings.OutputFolder, baseFileName + "Output");
+            string testFileOutputFolder = Path.Combine(this.appsettings.OutputFolder, baseFileName);
             string wAVFolderPath = Path.Combine(testFileOutputFolder, ProgramConstants.WAVFileFolderName);
             int durationInMS = 0;
 

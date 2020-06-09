@@ -36,6 +36,6 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets the InputType to send, "Audio" or "Utterance".
         /// </summary>
-        public string InputType { get; set; }
+        public bool InputType { get; set; } = false;
     }
 }

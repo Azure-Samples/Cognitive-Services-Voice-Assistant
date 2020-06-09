@@ -30,5 +30,7 @@ namespace VoiceAssistantTest
         /// Gets or sets the List of Activities to ignore specified for each Input File.
         /// </summary>
         public List<Activity> IgnoreActivities { get; set; }
+
+        public bool ReRun { get; set; }
     }
 }
