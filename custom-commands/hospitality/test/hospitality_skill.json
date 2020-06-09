@@ -1,6 +1,11 @@
 {
   "Tests": [
     {
+      "FileName": "input-files\\Test_FallbackCommand.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false
+    },
+    {
       "FileName": "input-files\\Test_TurnOnOff.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false
