@@ -203,50 +203,51 @@ namespace VoiceAssistantTest
 
                 bool sendFirst = true;
 
-                if (tests.ReRun && fileContents.Count > 1)
+                if (tests.WavAndUtterancePairs)
                 {
-                    foreach (Dialog dialog in fileContents)
+
+                    for (int i = 0; i < 2; i++)
                     {
                         string outputFileName = "";
-                        for (int i = 0; i < 2; i++)
+                        string outputPath = "";
+                        if (i == 0)
                         {
-                            if (i == 0)
-                            {
-                                string outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output-Wav");
-                                DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
+                            testName = Path.GetFileNameWithoutExtension(inputFileName);
+                            outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output-Wav");
+                            DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
 
-                                outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output-Wav.json");
+                            outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output-Wav.json");
 
-                                testName = Path.GetFileNameWithoutExtension(outputPath);
-                                testPass = await ProcessDialog(fileContents, botConnector, appSettings,
-                                    isFirstDialog, tests, connectionEstablished,
-                                    testName, dialogReports, testPass, dialogResults, sendFirst, inputFileName, allInputFilesTestReport, outputFileName).ConfigureAwait(false);
-                            }
+                            testPass = await ProcessDialog(fileContents, botConnector, appSettings,
+                                isFirstDialog, tests, connectionEstablished,
+                                testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
+                            await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
+                            i++;
+                        }
 
-                            if (i == 1)
-                            {
-                                sendFirst = false;
+                        if (i == 1)
+                        {
+                            sendFirst = false;
+                            testName = Path.Combine(Path.GetFileNameWithoutExtension(inputFileName));
+                            outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output-Text");
+                            DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
 
-                                string outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output-Text");
-                                DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
+                            outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output-Text.json");
+                            testName = Path.GetFileNameWithoutExtension(outputPath);
 
-                                outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output-Text.json");
-                                testName = Path.GetFileNameWithoutExtension(outputPath);
+                            testPass = await ProcessDialog(fileContents, botConnector, appSettings,
+                                isFirstDialog, tests, connectionEstablished,
+                                testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
 
-                                testPass = await ProcessDialog(fileContents, botConnector, appSettings,
-                                    isFirstDialog, tests, connectionEstablished,
-                                    testName, dialogReports, testPass, dialogResults, sendFirst, inputFileName, allInputFilesTestReport, outputFileName).ConfigureAwait(false);
-
-                                await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
-                            }
+                            await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
+                        }
 #if USE_ARIA_LOGGING
             AriaLogger.Stop();
 #endif
-                            return testPass;
-                        }
-                        }
+                    }
                 }
 
+                // ReRun is false.
                 else
                 {
                     sendFirst = false;
@@ -257,12 +258,14 @@ namespace VoiceAssistantTest
                     string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.json");
                     testName = Path.Combine(Path.GetFileNameWithoutExtension(outputPath));
 
-                    await ProcessDialog(fileContents, botConnector, appSettings,
+                    testPass = await ProcessDialog(fileContents, botConnector, appSettings,
                                 isFirstDialog, tests, connectionEstablished,
-                                testName, dialogReports, testPass, dialogResults, sendFirst, inputFileName, allInputFilesTestReport, outputFileName).ConfigureAwait(false);
+                                testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
 
+                    await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
                 }
-            } // End of inputFiles loop
+            }
+
             return testPass;
         }
 
@@ -300,8 +303,8 @@ namespace VoiceAssistantTest
 
         private static async Task<bool> ProcessDialog(
             List<Dialog> fileContents, BotConnector botConnector, AppSettings appSettings,
-            bool isFirstDialog, TestSettings tests, bool connectionEstablished, 
-            string testName, List<DialogReport> dialogReports, bool testPass, List<DialogResult> dialogResults, bool sendFirst, string inputFileName, List<TestReport> allInputFilesTestReport, string outputFileName)
+            bool isFirstDialog, TestSettings tests, bool connectionEstablished,
+            string testName, List<DialogReport> dialogReports, bool testPass, List<DialogResult> dialogResults, bool sendFirst)
         {
             foreach (Dialog dialog in fileContents)
             {
@@ -377,16 +380,35 @@ namespace VoiceAssistantTest
 
                     botConnector.SetInputValues(testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.Keyword);
 
-                    // Send up WAV File if present
-                    if (!string.IsNullOrEmpty(turn.WAVFile) && sendFirst)
+                    if (tests.WavAndUtterancePairs && !string.IsNullOrWhiteSpace(turn.WAVFile) && !string.IsNullOrWhiteSpace(turn.Utterance))
                     {
-                        botConnector.SendAudio(turn.WAVFile);
+                        // Send up WAV File if present
+                        if (!string.IsNullOrEmpty(turn.WAVFile) && sendFirst)
+                        {
+                            botConnector.SendAudio(turn.WAVFile);
+                        }
+
+                        // Send up Utterance if present
+                        else if (!string.IsNullOrEmpty(turn.Utterance) && !sendFirst)
+                        {
+                            botConnector = await botConnector.Send(turn.Utterance).ConfigureAwait(false);
+                        }
                     }
 
-                    // Send up Utterance if present
-                    else if (!string.IsNullOrEmpty(turn.Utterance) && !sendFirst)
+                    // ReRun is set to false so send either wavfile or utterance if present.
+                    else if (!tests.WavAndUtterancePairs)
                     {
-                        botConnector = await botConnector.Send(turn.Utterance).ConfigureAwait(false);
+                        // Send up WAV File if present
+                        if (!string.IsNullOrEmpty(turn.WAVFile))
+                        {
+                            botConnector.SendAudio(turn.WAVFile);
+                        }
+
+                        // Send up Utterance if present
+                        else if (!string.IsNullOrEmpty(turn.Utterance))
+                        {
+                            botConnector = await botConnector.Send(turn.Utterance).ConfigureAwait(false);
+                        }
                     }
 
                     // Send up activity if configured
@@ -439,7 +461,8 @@ namespace VoiceAssistantTest
                         AriaLogger.Log(AriaLogger.EventNameDialogFailed, dialog.DialogID, dialog.Description);
 #endif
                 }
-                await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
+
+                //await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
             } // End of dialog loop
 
             return testPass;

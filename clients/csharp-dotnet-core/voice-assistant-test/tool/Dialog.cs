@@ -32,10 +32,5 @@ namespace VoiceAssistantTest
         /// Gets or sets a value indicating whether to skip this dailog in the test run.
         /// </summary>
         public bool Skip { get; set; } = false;
-
-        /// <summary>
-        /// Gets or sets the InputType to send, "Audio" or "Utterance".
-        /// </summary>
-        public bool InputType { get; set; } = false;
     }
 }

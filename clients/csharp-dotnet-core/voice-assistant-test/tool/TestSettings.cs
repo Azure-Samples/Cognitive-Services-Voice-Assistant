@@ -31,6 +31,6 @@ namespace VoiceAssistantTest
         /// </summary>
         public List<Activity> IgnoreActivities { get; set; }
 
-        public bool ReRun { get; set; }
+        public bool WavAndUtterancePairs { get; set; }
     }
 }
