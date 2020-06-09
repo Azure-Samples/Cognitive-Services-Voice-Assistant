@@ -243,7 +243,7 @@ namespace VoiceAssistantTest
                     }
                 }
 
-                // ReRun is false.
+                // WavAndUtterancePair is false.
                 else
                 {
                     sendFirst = false;
@@ -387,7 +387,7 @@ namespace VoiceAssistantTest
                         }
                     }
 
-                    // ReRun is set to false so send either wavfile or utterance if present.
+                    // WavAndUtterancePair is false send either wavfile or utterance if present.
                     else if (!tests.WavAndUtterancePairs)
                     {
                         // Send up WAV File if present
