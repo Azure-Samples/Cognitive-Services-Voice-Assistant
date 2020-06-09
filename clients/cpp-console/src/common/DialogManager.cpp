@@ -261,11 +261,8 @@ void DialogManager::ResumeKws()
 
 void DialogManager::StartListening()
 {
-    if (_bargeInSupported)
-    {
-        _player->Stop();
-    }
-    
+    _player->Stop();
+
     ContinueListening();
 }
 

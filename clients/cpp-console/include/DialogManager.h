@@ -44,17 +44,17 @@ public:
     DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath);
     const DeviceStatus GetDeviceStatus() { return _deviceStatus; };
     const KeywordActivationState GetKeywordActivationState() { return _keywordActivationState; }
-    //Start a listening session that will terminate after the first utterance. Audio player will be stopped if barge in is supported.
+    // Start a listening session that will terminate after the first utterance.
     void StartListening();
-    //Stop audio player, re-initialize back end connection, and restart kws if it is supported.
+    // Stop audio player, re-initialize back end connection, and restart Keyword spotting if it is supported.
     void Stop();
-    //Mute and unmute default microphone.
+    // Mute and unmute default microphone.
     void MuteUnMute();
-    //Initiate keyword recognition.
+    // Initiate keyword recognition.
     void StartKws();
-    //Stop keyword recognition.
+    // Stop keyword recognition.
     void StopKws();
-    //Start a listening session that read audio stream from a wav file.
+    // Start a listening session that read audio stream from a wav file.
     void ListenFromFile();
 
 private:
