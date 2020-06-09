@@ -136,7 +136,7 @@ Here is the full list:
 >>`bool | optional | false | true`. If true, the test file will be skipped while executing tests. This is useful when the application configuration file specifies multiple test files, but you only want to run one (or a few) of them. Use Skip to temporary disable tests.
 >>
 >>#### WavAndUtterancePairs
->>`bool | optional | false | true`. If true, each test file will run twice, once for the WavFile and once for the Utterance. 
+>>`bool | optional | false | true`. "If true, and a dialog has both [WavFile](#wavfile) and [Utternace](#utterance) fields populated, the dialog will be [run twice](#Running-tests-twice-once-with-text-input-and-once-with-audio), first with wav input, and then with text input. If false, a dialog will only be run once, either with wav input or text input.
 
 ### Test configuration file
 
@@ -151,7 +151,7 @@ Here is the full list:
 >`string | required | "0"`. A unique value within the test file that identifies this dialog. You can identify a dialog by giving each one a random GUID value, an integer counter, or anything else. Intended to be short.
 
 >#### Description
->`string | optional | null | "Dialog for reserving airline ticket"`. Free-form text description of what this dialog does, to help you remember. Does not have to be unique. 
+>`string | optional | null | "Dialog for reserving airline ticket"`. Free-form text description of what this dialog does, to help you remember. Does not have to be unique.
 
 >#### Turns
 >`JSON string | required`. An array of JSON objects, each defines a single turn in the dialog to execute. Each of these JSON objects includes:
@@ -309,6 +309,8 @@ In summary, to accurately measure UPL do these three things:
 
 Note: This has not been tested when keyword activation is used. At this time we do not recommend measuring UPL using the above method when [Keyword](#Keyword) is set to true.
 
+### Running tests twice once with text input and once with audio
+The [WavAndUtterancePairs](#WavAndUtterancePairs) flag, if set to true will run the same test twice once with audio and again with text. A turn with audio input may fail with due to incrorect speech recognition result but may pass with text input. 
 
 ### Running tests in an Azure DevOps pipeline
 

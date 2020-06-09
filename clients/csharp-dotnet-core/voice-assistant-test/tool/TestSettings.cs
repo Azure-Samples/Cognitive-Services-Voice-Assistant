@@ -34,6 +34,6 @@ namespace VoiceAssistantTest
         /// <summary>
         /// Gets or sets a value indicating whether to run the Dialog twice, once for WavFile and once for Utterance.
         /// </summary>
-        public bool WavAndUtterancePairs { get; set; }
+        public bool WavAndUtterancePairs { get; set; } = false;
     }
 }

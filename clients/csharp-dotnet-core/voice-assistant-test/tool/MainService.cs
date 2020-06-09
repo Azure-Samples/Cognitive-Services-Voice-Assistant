@@ -189,6 +189,9 @@ namespace VoiceAssistantTest
                     appSettings.OutputFolder = Directory.GetCurrentDirectory();
                 }
 
+                string outputPath = string.Empty;
+                string outputFileName = string.Empty;
+
                 StreamReader file = new StreamReader(inputFileName, Encoding.UTF8);
                 string txt = file.ReadToEnd();
                 file.Close();
@@ -202,65 +205,44 @@ namespace VoiceAssistantTest
                 List<DialogReport> dialogReports = new List<DialogReport>();
 
                 bool sendFirst = true;
-
+                string outputType = string.Empty;
                 if (tests.WavAndUtterancePairs)
                 {
-                    for (int i = 0; i < 2; i++)
-                    {
-                        string outputFileName = string.Empty;
-                        string outputPath = string.Empty;
-                        if (i == 0)
-                        {
-                            testName = Path.GetFileNameWithoutExtension(inputFileName);
-                            outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output-Wav");
-                            DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
+                    outputType = "Output-Wav";
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, sendFirst, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
 
-                            outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output-Wav.json");
+                    sendFirst = false;
+                    outputType = "Output-Text";
 
-                            testPass = await ProcessDialog(fileContents, botConnector, appSettings, isFirstDialog, tests, connectionEstablished, testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, sendFirst, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
 
-                            await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
-                            i++;
-                        }
-
-                        if (i == 1)
-                        {
-                            sendFirst = false;
-                            testName = Path.Combine(Path.GetFileNameWithoutExtension(inputFileName));
-                            outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output-Text");
-                            DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
-
-                            outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output-Text.json");
-                            testName = Path.GetFileNameWithoutExtension(outputPath);
-
-                            testPass = await ProcessDialog(fileContents, botConnector, appSettings, isFirstDialog, tests, connectionEstablished, testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
-
-                            await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
-                        }
 #if USE_ARIA_LOGGING
-            AriaLogger.Stop();
+                    AriaLogger.Stop();
 #endif
-                    }
                 }
 
                 // WavAndUtterancePair is false.
                 else
                 {
                     sendFirst = false;
+                    outputType = "Output";
 
-                    string outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output");
-                    DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
-
-                    string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.json");
-                    testName = Path.Combine(Path.GetFileNameWithoutExtension(outputPath));
-
-                    testPass = await ProcessDialog(fileContents, botConnector, appSettings, isFirstDialog, tests, connectionEstablished, testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
-
-                    await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, sendFirst, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
                 }
             }
 
             return testPass;
+        }
+
+        private static async Task ProcessDialogAndGenerateReport(string outputType, string outputPath, bool testPass, BotConnector botConnector, List<DialogReport> dialogReports, bool connectionEstablished, List<DialogResult> dialogResults, List<Dialog> fileContents, bool isFirstDialog, TestSettings tests, string testName, bool sendFirst, string inputFileName, List<TestReport> allInputFilesTestReport, string outputFileName, AppSettings appSettings)
+        {
+            outputPath = Path.Combine(appSettings.OutputFolder, testName + outputType);
+            testName = Path.GetFileNameWithoutExtension(outputPath);
+            DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
+            outputFileName = Path.Combine(outputDirectory.FullName, testName + ".json");
+            testPass = await ProcessDialog(fileContents, botConnector, appSettings, isFirstDialog, tests, connectionEstablished, testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
+
+            await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
         }
 
         private static async Task ProcessTestReport(string inputFileName, List<DialogReport> dialogReports, List<TestReport> allInputFilesTestReport, BotConnector botConnector, bool testPass, List<DialogResult> dialogResults, string outputFileName, bool connectionEstablished, AppSettings appSettings)
