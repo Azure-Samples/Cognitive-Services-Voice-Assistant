@@ -114,7 +114,6 @@ void HandleKeystrokeOptions(DialogManager& dialogManager, string keystroke)
         }
         if (keystroke == "4" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)
         {
-            dialogManager.SetKeywordActivationState(KeywordActivationState::Paused);
             dialogManager.StartKws();
         }
         if (keystroke == "5" && dialogManager.GetKeywordActivationState() != KeywordActivationState::NotSupported)

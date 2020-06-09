@@ -25,7 +25,6 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
     // Activate keyword listening on start up if keyword model file exists
     if (_agentConfig->KeywordRecognitionModel().length() > 0)
     {
-        SetKeywordActivationState(KeywordActivationState::Paused);
         StartKws();
     }
     else
@@ -153,7 +152,7 @@ void DialogManager::AttachHandlers()
         {
             printf("CANCELED: ErrorDetails=%s\n", event.ErrorDetails.c_str());
             printf("CANCELED: Did you update the subscription info?\n");
-            StartKws();
+            ResumeKws();
         }
     };
 
@@ -233,41 +232,32 @@ void DialogManager::AttachHandlers()
         {
             if (!_bargeInSupported)
             {
-                StartKws();
+                ResumeKws();
             }
         }
     };
-}
-
-void DialogManager::PauseKws()
-{
-    log_t("Enter PauseKws (state = ", uint32_t(_keywordActivationState), ")");
-
-    if (_keywordActivationState == KeywordActivationState::Listening)
-    {
-        log_t("Stopping keyword recognition");
-        auto future = _dialogServiceConnector->StopKeywordRecognitionAsync();
-        _keywordActivationState = KeywordActivationState::Paused;
-    }
-
-    log_t("Exit PauseKws (state = ", uint32_t(_keywordActivationState), ")");
 }
 
 void DialogManager::StartKws()
 {
     log_t("Enter StartKws (state = ", uint32_t(_keywordActivationState), ")");
 
-    if (_keywordActivationState == KeywordActivationState::Paused)
-    {
-        auto modelPath = _agentConfig->KeywordRecognitionModel();
-        log_t("Initializing keyword recognition with: ", modelPath);
-        auto model = KeywordRecognitionModel::FromFile(modelPath);
-        auto _ = _dialogServiceConnector->StartKeywordRecognitionAsync(model);
-        _keywordActivationState = KeywordActivationState::Listening;
-        log_t("KWS initialized");
-    }
+    auto modelPath = _agentConfig->KeywordRecognitionModel();
+    log_t("Initializing keyword recognition with: ", modelPath);
+    auto model = KeywordRecognitionModel::FromFile(modelPath);
+    auto _ = _dialogServiceConnector->StartKeywordRecognitionAsync(model);
+    _keywordActivationState = KeywordActivationState::Listening;
+    log_t("KWS initialized");
 
     log_t("Exit StartKws (state = ", uint32_t(_keywordActivationState), ")");
+}
+
+void DialogManager::ResumeKws()
+{
+    if (_keywordActivationState == KeywordActivationState::Paused)
+    {
+        StartKws();
+    }
 }
 
 void DialogManager::StartListening()
@@ -293,7 +283,6 @@ void DialogManager::Stop()
     InitializeConnection();
     if (_keywordActivationState != KeywordActivationState::NotSupported)
     {
-        SetKeywordActivationState(KeywordActivationState::Paused);
         StartKws();
     }
     DeviceStatusIndicators::SetStatus(DeviceStatus::Ready);
@@ -328,6 +317,20 @@ void DialogManager::StopKws()
     }
 
     log_t("Exit StopKws (state = ", uint32_t(_keywordActivationState), ")");
+}
+
+void DialogManager::PauseKws()
+{
+    log_t("Enter PauseKws (state = ", uint32_t(_keywordActivationState), ")");
+
+    if (_keywordActivationState == KeywordActivationState::Listening)
+    {
+        log_t("Stopping keyword recognition");
+        auto future = _dialogServiceConnector->StopKeywordRecognitionAsync();
+        _keywordActivationState = KeywordActivationState::Paused;
+    }
+
+    log_t("Exit PauseKws (state = ", uint32_t(_keywordActivationState), ")");
 }
 
 fstream DialogManager::OpenFile(const string& audioFilePath)

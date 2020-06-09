@@ -44,13 +44,11 @@ public:
     DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath);
     const DeviceStatus GetDeviceStatus() { return _deviceStatus; };
     const KeywordActivationState GetKeywordActivationState() { return _keywordActivationState; }
-    void SetKeywordActivationState(const KeywordActivationState& state) { _keywordActivationState = state; }
-    void PauseKws();
-    void StartKws();
     void StartListening();
     void Stop();
     void MuteUnMute();
     void ContinueListening();
+    void StartKws();
     void StopKws();
     void ListenFromFile();
 
@@ -70,6 +68,9 @@ private:
     void AttachHandlers();
     void InitializeConnection();
     void SetDeviceStatus(const DeviceStatus status);
+    void SetKeywordActivationState(const KeywordActivationState& state) { _keywordActivationState = state; }
+    void ResumeKws();
+    void PauseKws();
     fstream OpenFile(const string& audioFilePath);
     int ReadBuffer(fstream& fs, uint8_t* dataBuffer, uint32_t size);
     void PushData(const string& audioFilePath);
