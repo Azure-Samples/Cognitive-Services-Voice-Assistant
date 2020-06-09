@@ -216,7 +216,7 @@ namespace VoiceAssistantTest
                     }
                     else
                     {
-                        Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Running DialogId {dialog.DialogID}, description \"{dialog.Description}\"");
+                        Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Running DialogId {dialog.DialogID}, description \"{dialog.Description}\"");
                     }
 
                     // Capture and compute the output for this dialog in this variable.
@@ -260,7 +260,7 @@ namespace VoiceAssistantTest
                         }
 
                         Trace.IndentLevel = 2;
-                        Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Running Turn {turn.TurnID}");
+                        Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Running Turn {turn.TurnID}");
                         Trace.IndentLevel = 3;
 
                         if (turn.Sleep > 0)

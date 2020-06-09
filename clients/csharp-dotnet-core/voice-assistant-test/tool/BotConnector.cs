@@ -269,7 +269,7 @@ namespace VoiceAssistantTest
 
             if (!this.keyword)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Start listening");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Start listening");
 
                 // Don't wait for this task to finish. It may take a while, even after the "Recognized" event is received. This is a known
                 // issue in Speech SDK and should be fixed in a future versions.
@@ -294,7 +294,7 @@ namespace VoiceAssistantTest
             }
 
             string result = await this.connector.SendActivityAsync(activity).ConfigureAwait(false);
-            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Activity sent to channel. InteractionID {result}");
+            Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Activity sent to channel. InteractionID {result}");
             return this;
         }
 
@@ -353,12 +353,12 @@ namespace VoiceAssistantTest
             }
             else if (!bootstrapMode)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {filteredactivities} activities (configured to wait for {this.responseCount}):");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Timed out waiting for expected replies. Received {filteredactivities} activities (configured to wait for {this.responseCount}):");
                 source.Cancel();
             }
             else
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Received {filteredactivities} activities.");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Received {filteredactivities} activities.");
                 source.Cancel();
             }
 
@@ -537,23 +537,23 @@ namespace VoiceAssistantTest
                 this.RecognizedText = e.Result.Text;
                 this.speechDuration = (int)e.Result.Duration.TotalMilliseconds;
 
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}, Speech duration = {this.speechDuration}, Recognized text = {this.RecognizedText}");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}, Speech duration = {this.speechDuration}, Recognized text = {this.RecognizedText}");
             }
             else if (e.Result.Reason == ResultReason.RecognizedKeyword)
             {
                 this.RecognizedKeyword = e.Result.Text;
 
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Recognized event received. SessionId = {e.SessionId}");
                 Trace.TraceInformation($"Keyword Recognition Verified : {e.Result.Text}");
             }
             else if (e.Result.Reason == ResultReason.NoMatch)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. Speech could not be recognized. SessionId = {e.SessionId}");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Recognized event received. Speech could not be recognized. SessionId = {e.SessionId}");
                 Trace.TraceInformation($"No match details = {NoMatchDetails.FromResult(e.Result)}");
             }
             else
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Recognized event received. e.Result.Reason = {e.Result.Reason}. SessionId = {e.SessionId}");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Recognized event received. e.Result.Reason = {e.Result.Reason}. SessionId = {e.SessionId}");
             }
         }
 
@@ -573,7 +573,7 @@ namespace VoiceAssistantTest
                 elapsedTime -= this.speechDuration;
             }
 
-            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Activity received, elapsedTime = {elapsedTime}, speechDuration = {this.speechDuration}");
+            Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Activity received, elapsedTime = {elapsedTime}, speechDuration = {this.speechDuration}");
 
             int activityIndex = 0;
             int ttsDuration = 0;
@@ -601,23 +601,23 @@ namespace VoiceAssistantTest
         {
             if (e.Reason == CancellationReason.Error)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Canceled event received due to an error. {e.ErrorCode} - {e.ErrorDetails}.");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Canceled event received due to an error. {e.ErrorCode} - {e.ErrorDetails}.");
             }
             else if (e.Reason == CancellationReason.EndOfStream)
             {
-                Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Canceled event received due to end of stream.");
+                Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Canceled event received due to end of stream.");
             }
         }
 
         private void SpeechBotConnector_SessionStarted(object sender, SessionEventArgs e)
         {
             this.stopWatch.Restart();
-            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Session Started event received. SessionId = {e.SessionId}");
+            Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Session Started event received. SessionId = {e.SessionId}");
         }
 
         private void SpeechBotConnector_SessionStopped(object sender, SessionEventArgs e)
         {
-            Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Session Stopped event received. SessionId = {e.SessionId}");
+            Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Session Stopped event received. SessionId = {e.SessionId}");
         }
 
         /// <summary>
