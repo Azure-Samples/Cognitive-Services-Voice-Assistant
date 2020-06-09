@@ -44,14 +44,17 @@ public:
     DialogManager(shared_ptr<AgentConfiguration> agentConfig, string audioFilePath);
     const DeviceStatus GetDeviceStatus() { return _deviceStatus; };
     const KeywordActivationState GetKeywordActivationState() { return _keywordActivationState; }
-    void SetKeywordActivationState(const KeywordActivationState& state) { _keywordActivationState = state; }
-    void PauseKws();
-    void StartKws();
+    // Start a listening session that will terminate after the first utterance.
     void StartListening();
+    // Stop audio player, re-initialize back end connection, and restart Keyword spotting if it is supported.
     void Stop();
+    // Mute and unmute default microphone.
     void MuteUnMute();
-    void ContinueListening();
+    // Initiate keyword recognition.
+    void StartKws();
+    // Stop keyword recognition.
     void StopKws();
+    // Start a listening session that read audio stream from a wav file.
     void ListenFromFile();
 
 private:
@@ -70,6 +73,10 @@ private:
     void AttachHandlers();
     void InitializeConnection();
     void SetDeviceStatus(const DeviceStatus status);
+    void SetKeywordActivationState(const KeywordActivationState& state) { _keywordActivationState = state; }
+    void ContinueListening();
+    void ResumeKws();
+    void PauseKws();
     fstream OpenFile(const string& audioFilePath);
     int ReadBuffer(fstream& fs, uint8_t* dataBuffer, uint32_t size);
     void PushData(const string& audioFilePath);
