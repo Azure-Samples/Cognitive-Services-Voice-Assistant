@@ -55,9 +55,9 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
     - Press _Save and Apply Profile_ when you're done.
     - Your entries will be saved under this profile name and will be available when you launch the app again.
 ![Setting page](docs/media/SettingsPage.png)  
+1. Press **Reconnect**. The application will try to connect to your bot via Direct Line Speech channel, and your connection profile name will
+be shown at the top. The message **New conversation started -- type or press the microphone button** will appear below the text bar if the connection succeeded.
 ![Main Page](docs/media/MainPage.png)
-1. Press **Reconnect**. The application will try to connect to your bot via Direct Line Speech channel.
-The message **New conversation started -- type or press the microphone button** will appear below the text bar if the connection succeeded.
 1. You'll be prompted to allow microphone access. If you want to use the microphone, allow access.
 1. Press the microphone icon to begin recording. While speaking, intermediate recognition results will be shown in the application. The microphone icon will turn red while recording is in progress. It will automatically detect end of speech and stop recording.
 1. If everything works, you should see your bot's response on the screen and hear it speak the response. You can click on lines in the **Activity Log** window to see the full activity payload from the bot in JSON.
