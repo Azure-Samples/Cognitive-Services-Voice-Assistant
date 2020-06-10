@@ -715,7 +715,11 @@ namespace VoiceAssistantClient
             if (entry != null)
             {
                 System.Diagnostics.Debug.WriteLine($"START playing {entry.Id}");
-                this.player.Init(entry.Reader);
+                lock (this.player)
+                {
+                    this.player.Init(entry.Reader);
+                }
+
                 this.player.Play();
                 return true;
             }
