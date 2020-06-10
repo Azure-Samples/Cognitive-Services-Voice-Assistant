@@ -189,10 +189,8 @@ namespace VoiceAssistantTest
                     appSettings.OutputFolder = Directory.GetCurrentDirectory();
                 }
 
-                string outputPath = Path.Combine(appSettings.OutputFolder, testName + "Output");
-                DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
-
-                string outputFileName = Path.Combine(outputDirectory.FullName, testName + "Output.json");
+                string outputPath = string.Empty;
+                string outputFileName = string.Empty;
 
                 StreamReader file = new StreamReader(inputFileName, Encoding.UTF8);
                 string txt = file.ReadToEnd();
@@ -206,161 +204,60 @@ namespace VoiceAssistantTest
                 // Keep track of high-level (summary) results for all dialogs in a single input test file. This list will be serialized to JSON as part of the overall single test report.
                 List<DialogReport> dialogReports = new List<DialogReport>();
 
-                foreach (Dialog dialog in fileContents)
+                string outputType = string.Empty;
+                if (tests.WavAndUtterancePairs)
                 {
-                    Trace.IndentLevel = 1;
-                    if (dialog.Skip)
-                    {
-                        Trace.TraceInformation($"Skipping DialogID {dialog.DialogID}");
-                        continue;
-                    }
-                    else
-                    {
-                        Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Running DialogId {dialog.DialogID}, description \"{dialog.Description}\"");
-                    }
+                    outputType = "Output-Wav";
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, true, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
 
-                    // Capture and compute the output for this dialog in this variable.
-                    DialogResult dialogResult = new DialogResult(appSettings, dialog.DialogID, dialog.Description);
+                    outputType = "Output-Text";
 
-                    // Capture outputs of all turns in this dialog in this list.
-                    List<TurnResult> turnResults = new List<TurnResult>();
-
-                    // Keep track of turn pass/fail : per turn.
-                    List<bool> turnPassResults = new List<bool>();
-
-                    if (isFirstDialog || tests.SingleConnection == false)
-                    {
-                        // Always establish a connection with the bot for the first dialog in the test file.
-                        // If SingleConnection is false, it also means we need to re-establish the connection before each of the dialogs in the test file.
-                        if (botConnector != null)
-                        {
-                            await botConnector.Disconnect().ConfigureAwait(false);
-                            botConnector.Dispose();
-                        }
-
-                        connectionEstablished = true;
-                        botConnector = new BotConnector();
-                        botConnector.InitConnector(appSettings);
-                        await botConnector.Connect().ConfigureAwait(false);
-                    }
-
-                    isFirstDialog = false;
-
-                    foreach (Turn turn in dialog.Turns)
-                    {
-                        // Application crashes in a multi-turn dialog with Keyword in each Turn
-                        // Crash occurs when calling StartKeywordRecognitionAsync after calling StopKeywordRecognitionAsync in the previous Turn.
-                        // In order to avoid this crash, only have Keyword in Turn 0 of a multi-turn Keyword containing Dialog.
-                        // This is being investigated.
-                        // MS-Internal bug number: 2300634.
-                        // https://msasg.visualstudio.com/Skyman/_workitems/edit/2300634/
-                        if (turn.Keyword)
-                        {
-                            await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
-                        }
-
-                        Trace.IndentLevel = 2;
-                        Trace.TraceInformation($"[{DateTime.Now.ToString("h:mm:ss tt", CultureInfo.CurrentCulture)}] Running Turn {turn.TurnID}");
-                        Trace.IndentLevel = 3;
-
-                        if (turn.Sleep > 0)
-                        {
-                            Trace.TraceInformation($"Sleeping for {turn.Sleep} msec");
-                            System.Threading.Thread.Sleep(turn.Sleep);
-                        }
-
-                        int responseCount = 0;
-                        bool bootstrapMode = true;
-
-                        if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0)
-                        {
-                            responseCount = turn.ExpectedResponses.Count;
-                            bootstrapMode = false;
-                        }
-
-                        botConnector.SetInputValues(testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.Keyword);
-
-                        // Send up WAV File if present
-                        if (!string.IsNullOrEmpty(turn.WAVFile))
-                        {
-                            botConnector.SendAudio(turn.WAVFile);
-                        }
-
-                        // Send up Utterance if present
-                        else if (!string.IsNullOrEmpty(turn.Utterance))
-                        {
-                            botConnector = await botConnector.Send(turn.Utterance).ConfigureAwait(false);
-                        }
-
-                        // Send up activity if configured
-                        else if (!string.IsNullOrEmpty(turn.Activity))
-                        {
-                            botConnector = await botConnector.SendActivity(turn.Activity).ConfigureAwait(false);
-                        }
-
-                        // All bot reply activities are captured in this variable.
-                        dialogResult.BotResponses = botConnector.WaitAndProcessBotReplies(bootstrapMode);
-
-                        // Capture the result of this turn in this variable and validate the turn.
-                        TurnResult turnResult = dialogResult.BuildOutput(turn, bootstrapMode, botConnector.RecognizedText, botConnector.RecognizedKeyword);
-                        if (!dialogResult.ValidateTurn(turnResult, bootstrapMode))
-                        {
-                            testPass = false;
-                        }
-
-                        // Add the turn result to the list of turn results.
-                        turnResults.Add(turnResult);
-
-                        // Add the turn completion status to the list of turn completions.
-                        turnPassResults.Add(turnResult.Pass);
-
-                        if (turn.Keyword)
-                        {
-                            await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);
-                        }
-                    } // End of turns loop
-
-                    dialogResult.Turns = turnResults;
-                    dialogResults.Add(dialogResult);
-
-                    DialogReport dialogReport = new DialogReport(dialogResult.DialogID, dialog.Description, turnPassResults);
-                    dialogReports.Add(dialogReport);
-                    turnPassResults = new List<bool>();
-
-                    Trace.IndentLevel = 1;
-                    if (dialogReport.DialogPass)
-                    {
-                        Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
-#if USE_ARIA_LOGGING
-                        AriaLogger.Log(AriaLogger.EventNameDialogSucceeded, dialog.DialogID, dialog.Description);
-#endif
-                    }
-                    else
-                    {
-                        Trace.TraceInformation($"DialogId {dialog.DialogID} failed");
-#if USE_ARIA_LOGGING
-                        AriaLogger.Log(AriaLogger.EventNameDialogFailed, dialog.DialogID, dialog.Description);
-#endif
-                    }
-                } // End of dialog loop
-
-                TestReport fileTestReport = new TestReport
-                {
-                    FileName = inputFileName,
-                    DialogReports = dialogReports,
-                    DialogCount = dialogReports.Count,
-                };
-                fileTestReport.ComputeDialogPassRate();
-                allInputFilesTestReport.Add(fileTestReport);
-
-                File.WriteAllText(outputFileName, JsonConvert.SerializeObject(dialogResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
-
-                if (connectionEstablished)
-                {
-                    await botConnector.Disconnect().ConfigureAwait(false);
-                    botConnector.Dispose();
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, false, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
                 }
-            } // End of inputFiles loop
+
+                // WavAndUtterancePair is false.
+                else
+                {
+                    outputType = "Output";
+
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, false, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
+                }
+            }
+#if USE_ARIA_LOGGING
+                    AriaLogger.Stop();
+#endif
+            return testPass;
+        }
+
+        private static async Task ProcessDialogAndGenerateReport(string outputType, string outputPath, bool testPass, BotConnector botConnector, List<DialogReport> dialogReports, bool connectionEstablished, List<DialogResult> dialogResults, List<Dialog> fileContents, bool isFirstDialog, TestSettings tests, string testName, bool sendFirst, string inputFileName, List<TestReport> allInputFilesTestReport, string outputFileName, AppSettings appSettings)
+        {
+            outputPath = Path.Combine(appSettings.OutputFolder, testName + outputType);
+            testName = Path.GetFileNameWithoutExtension(outputPath);
+            DirectoryInfo outputDirectory = Directory.CreateDirectory(outputPath);
+            outputFileName = Path.Combine(outputDirectory.FullName, testName + ".json");
+            testPass = await ProcessDialog(fileContents, botConnector, appSettings, isFirstDialog, tests, connectionEstablished, testName, dialogReports, testPass, dialogResults, sendFirst).ConfigureAwait(false);
+
+            await ProcessTestReport(inputFileName, dialogReports, allInputFilesTestReport, botConnector, testPass, dialogResults, outputFileName, connectionEstablished, appSettings).ConfigureAwait(false);
+        }
+
+        private static async Task ProcessTestReport(string inputFileName, List<DialogReport> dialogReports, List<TestReport> allInputFilesTestReport, BotConnector botConnector, bool testPass, List<DialogResult> dialogResults, string outputFileName, bool connectionEstablished, AppSettings appSettings)
+        {
+            TestReport fileTestReport = new TestReport
+            {
+                FileName = inputFileName,
+                DialogReports = dialogReports,
+                DialogCount = dialogReports.Count,
+            };
+            fileTestReport.ComputeDialogPassRate();
+            allInputFilesTestReport.Add(fileTestReport);
+
+            File.WriteAllText(outputFileName, JsonConvert.SerializeObject(dialogResults, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+
+            if (connectionEstablished)
+            {
+                await botConnector.Disconnect().ConfigureAwait(false);
+                botConnector.Dispose();
+            }
 
             File.WriteAllText(Path.Combine(appSettings.OutputFolder, ProgramConstants.TestReportFileName), JsonConvert.SerializeObject(allInputFilesTestReport, Formatting.Indented));
 
@@ -373,9 +270,168 @@ namespace VoiceAssistantTest
             {
                 Trace.TraceInformation("********** TEST FAILED **********");
             }
+        }
+
+        private static async Task<bool> ProcessDialog(
+            List<Dialog> fileContents, BotConnector botConnector, AppSettings appSettings, bool isFirstDialog, TestSettings tests, bool connectionEstablished, string testName, List<DialogReport> dialogReports, bool testPass, List<DialogResult> dialogResults, bool sendFirst)
+        {
+            foreach (Dialog dialog in fileContents)
+            {
+                Trace.IndentLevel = 1;
+                if (dialog.Skip)
+                {
+                    Trace.TraceInformation($"Skipping DialogID {dialog.DialogID}");
+                    continue;
+                }
+                else
+                {
+                    Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Running DialogId {dialog.DialogID}, description \"{dialog.Description}\"");
+                }
+
+                // Capture and compute the output for this dialog in this variable.
+                DialogResult dialogResult = new DialogResult(appSettings, dialog.DialogID, dialog.Description);
+
+                // Capture outputs of all turns in this dialog in this list.
+                List<TurnResult> turnResults = new List<TurnResult>();
+
+                // Keep track of turn pass/fail : per turn.
+                List<bool> turnPassResults = new List<bool>();
+
+                if (isFirstDialog || tests.SingleConnection == false)
+                {
+                    // Always establish a connection with the bot for the first dialog in the test file.
+                    // If SingleConnection is false, it also means we need to re-establish the connection before each of the dialogs in the test file.
+                    if (botConnector != null)
+                    {
+                        await botConnector.Disconnect().ConfigureAwait(false);
+                        botConnector.Dispose();
+                    }
+
+                    connectionEstablished = true;
+                    botConnector = new BotConnector();
+                    botConnector.InitConnector(appSettings);
+                    await botConnector.Connect().ConfigureAwait(false);
+                }
+
+                isFirstDialog = false;
+
+                foreach (Turn turn in dialog.Turns)
+                {
+                    // Application crashes in a multi-turn dialog with Keyword in each Turn
+                    // Crash occurs when calling StartKeywordRecognitionAsync after calling StopKeywordRecognitionAsync in the previous Turn.
+                    // In order to avoid this crash, only have Keyword in Turn 0 of a multi-turn Keyword containing Dialog.
+                    // This is being investigated.
+                    // MS-Internal bug number: 2300634.
+                    // https://msasg.visualstudio.com/Skyman/_workitems/edit/2300634/
+                    if (turn.Keyword)
+                    {
+                        await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
+                    }
+
+                    Trace.IndentLevel = 2;
+                    Trace.TraceInformation($"[{DateTime.Now.ToString("hh:mm:ss.fff", CultureInfo.CurrentCulture)}] Running Turn {turn.TurnID}");
+                    Trace.IndentLevel = 3;
+
+                    if (turn.Sleep > 0)
+                    {
+                        Trace.TraceInformation($"Sleeping for {turn.Sleep} msec");
+                        System.Threading.Thread.Sleep(turn.Sleep);
+                    }
+
+                    int responseCount = 0;
+                    bool bootstrapMode = true;
+
+                    if (turn.ExpectedResponses != null && turn.ExpectedResponses.Count != 0)
+                    {
+                        responseCount = turn.ExpectedResponses.Count;
+                        bootstrapMode = false;
+                    }
+
+                    botConnector.SetInputValues(testName, dialog.DialogID, turn.TurnID, responseCount, tests.IgnoreActivities, turn.Keyword);
+
+                    if (tests.WavAndUtterancePairs && !string.IsNullOrWhiteSpace(turn.WAVFile) && !string.IsNullOrWhiteSpace(turn.Utterance))
+                    {
+                        // Send up WAV File if present
+                        if (!string.IsNullOrEmpty(turn.WAVFile) && sendFirst)
+                        {
+                            botConnector.SendAudio(turn.WAVFile);
+                        }
+
+                        // Send up Utterance if present
+                        else if (!string.IsNullOrEmpty(turn.Utterance) && !sendFirst)
+                        {
+                            botConnector = await botConnector.Send(turn.Utterance).ConfigureAwait(false);
+                        }
+                    }
+
+                    // WavAndUtterancePair is false send either wavfile or utterance if present.
+                    else if (!tests.WavAndUtterancePairs)
+                    {
+                        // Send up WAV File if present
+                        if (!string.IsNullOrEmpty(turn.WAVFile))
+                        {
+                            botConnector.SendAudio(turn.WAVFile);
+                        }
+
+                        // Send up Utterance if present
+                        else if (!string.IsNullOrEmpty(turn.Utterance))
+                        {
+                            botConnector = await botConnector.Send(turn.Utterance).ConfigureAwait(false);
+                        }
+                    }
+
+                    // Send up activity if configured
+                    else if (!string.IsNullOrEmpty(turn.Activity))
+                    {
+                        botConnector = await botConnector.SendActivity(turn.Activity).ConfigureAwait(false);
+                    }
+
+                    // All bot reply activities are captured in this variable.
+                    dialogResult.BotResponses = botConnector.WaitAndProcessBotReplies(bootstrapMode);
+
+                    // Capture the result of this turn in this variable and validate the turn.
+                    TurnResult turnResult = dialogResult.BuildOutput(turn, bootstrapMode, botConnector.RecognizedText, botConnector.RecognizedKeyword);
+                    if (!dialogResult.ValidateTurn(turnResult, bootstrapMode))
+                    {
+                        testPass = false;
+                    }
+
+                    // Add the turn result to the list of turn results.
+                    turnResults.Add(turnResult);
+
+                    // Add the turn completion status to the list of turn completions.
+                    turnPassResults.Add(turnResult.Pass);
+
+                    if (turn.Keyword)
+                    {
+                        await botConnector.StopKeywordRecognitionAsync().ConfigureAwait(false);
+                    }
+                } // End of turns loop
+
+                dialogResult.Turns = turnResults;
+                dialogResults.Add(dialogResult);
+
+                DialogReport dialogReport = new DialogReport(dialogResult.DialogID, dialog.Description, turnPassResults);
+                dialogReports.Add(dialogReport);
+                turnPassResults = new List<bool>();
+
+                Trace.IndentLevel = 1;
+                if (dialogReport.DialogPass)
+                {
+                    Trace.TraceInformation($"DialogId {dialog.DialogID} passed");
 #if USE_ARIA_LOGGING
-            AriaLogger.Stop();
+                        AriaLogger.Log(AriaLogger.EventNameDialogSucceeded, dialog.DialogID, dialog.Description);
 #endif
+                }
+                else
+                {
+                    Trace.TraceInformation($"DialogId {dialog.DialogID} failed");
+#if USE_ARIA_LOGGING
+                        AriaLogger.Log(AriaLogger.EventNameDialogFailed, dialog.DialogID, dialog.Description);
+#endif
+                }
+            } // End of dialog loop
+
             return testPass;
         }
 

@@ -30,5 +30,10 @@ namespace VoiceAssistantTest
         /// Gets or sets the List of Activities to ignore specified for each Input File.
         /// </summary>
         public List<Activity> IgnoreActivities { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to run the Dialog twice, once for WavFile and once for Utterance.
+        /// </summary>
+        public bool WavAndUtterancePairs { get; set; } = false;
     }
 }

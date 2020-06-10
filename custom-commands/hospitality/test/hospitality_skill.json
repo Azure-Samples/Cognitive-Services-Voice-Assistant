@@ -1,64 +1,40 @@
 {
   "Tests": [
     {
-      "FileName": "input-files\\Test_FallbackCommand_TextInput.json",
+      "FileName": "input-files\\Test_FallbackCommand.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
-      "FileName": "input-files\\Test_FallbackCommand_VoiceInput.json",
+      "FileName": "input-files\\Test_TurnOnOff.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
-      "FileName": "input-files\\Test_TurnOnOff_TextInput.json",
+      "FileName": "input-files\\Test_Help.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
-      "FileName": "input-files\\Test_TurnOnOff_VoiceInput.json",
+      "FileName": "input-files\\Test_Greeting.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
-      "FileName": "input-files\\Test_Help_TextInput.json",
+      "FileName": "input-files\\Test_AdjustTemperature.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
-      "FileName": "input-files\\Test_Help_VoiceInput.json",
+      "FileName": "input-files\\Test_OpenClose.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
-    },
-    {
-      "FileName": "input-files\\Test_Greeting_TextInput.json",
-      "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
-    },
-    {
-      "FileName": "input-files\\Test_Greeting_VoiceInput.json",
-      "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
-    },
-    {
-      "FileName": "input-files\\Test_AdjustTemperature_TextInput.json",
-      "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
-    },
-    {
-      "FileName": "input-files\\Test_AdjustTemperature_VoiceInput.json",
-      "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
-    },
-    {
-      "FileName": "input-files\\Test_OpenClose_TextInput.json",
-      "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
-    },
-    {
-      "FileName": "input-files\\Test_OpenClose_VoiceInput.json",
-      "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     }
   ],
   "SpeechSubscriptionKey": "0123456789abcdef0123456789abcdef",
