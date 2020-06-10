@@ -3,37 +3,43 @@
     {
       "FileName": "input-files\\Test_FallbackCommand.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
       "FileName": "input-files\\Test_TurnOnOff.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
       "FileName": "input-files\\Test_Help.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
       "FileName": "input-files\\Test_Greeting.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
       "FileName": "input-files\\Test_AdjustTemperature.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     },
     {
       "FileName": "input-files\\Test_OpenClose.json",
       "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false
+      "Skip": false,
+      "WavAndUtterancePairs": true
     }
   ],
-  "SpeechSubscriptionKey": "0123456789abcdef0123456789abcdef",
-  "SpeechRegion": "westus2",
-  "CustomCommandsAppId": "abcdef0123456789abcdef0123456789",
+  "SpeechSubscriptionKey": "809b90a4ee2a43ccbe19e0693630d44a",
+  "SpeechRegion": "westus",
+  "CustomCommandsAppId": "9f706dbd-e1b6-4c9e-8567-2ff1e7901d9d",
   "RealTimeAudio": false,
   "Timeout": 5000
 }

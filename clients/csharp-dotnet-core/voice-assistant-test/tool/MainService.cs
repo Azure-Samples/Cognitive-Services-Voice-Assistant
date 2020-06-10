@@ -204,33 +204,28 @@ namespace VoiceAssistantTest
                 // Keep track of high-level (summary) results for all dialogs in a single input test file. This list will be serialized to JSON as part of the overall single test report.
                 List<DialogReport> dialogReports = new List<DialogReport>();
 
-                bool sendFirst = true;
                 string outputType = string.Empty;
                 if (tests.WavAndUtterancePairs)
                 {
                     outputType = "Output-Wav";
-                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, sendFirst, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, true, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
 
-                    sendFirst = false;
                     outputType = "Output-Text";
 
-                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, sendFirst, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
-
-#if USE_ARIA_LOGGING
-                    AriaLogger.Stop();
-#endif
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, false, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
                 }
 
                 // WavAndUtterancePair is false.
                 else
                 {
-                    sendFirst = false;
                     outputType = "Output";
 
-                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, sendFirst, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
+                    await ProcessDialogAndGenerateReport(outputType, outputPath, testPass, botConnector, dialogReports, connectionEstablished, dialogResults, fileContents, isFirstDialog, tests, testName, false, inputFileName, allInputFilesTestReport, outputFileName, appSettings).ConfigureAwait(false);
                 }
             }
-
+#if USE_ARIA_LOGGING
+                    AriaLogger.Stop();
+#endif
             return testPass;
         }
 
