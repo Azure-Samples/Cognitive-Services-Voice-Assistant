@@ -310,14 +310,8 @@ In summary, to accurately measure UPL do these three things:
 Note: This has not been tested when keyword activation is used. At this time we do not recommend measuring UPL using the above method when [Keyword](#Keyword) is set to true.
 
 ### Running tests twice once with text input and once with audio
-The [WavAndUtterancePairs](#WavAndUtterancePairs) flag, if set to true will run the same test twice once with audio and again with text. A turn with audio input may fail due to incorrect speech recognition result but may pass with text input. In order to run the test twice, the WavFile and Utterance must be present for the respective turn. 
-```json
-  "TurnID": 0,
-  "Utterance": "Raise the temperature by 30 degrees",
-  "WavFile": "wav\\raise_temperature_30_degrees.wav",
-```
 
-
+The [WavAndUtterancePairs](#WavAndUtterancePairs) flag, if set to true will run the same test twice once with audio and again with text. A turn with audio input may fail due to incorrect speech recognition result but may pass with text input indicating an audio or SR issue. The test tool's UtteranceMatch compares the SR result with the Utterance. In order to run the test twice, the WavFile and Utterance must be present for the respective turn. Some reasons why a WavFile could return incorrect SR could be because there is not ending silence for proper segmentation, WavFile audio is not long enough, or incorrect format. We recommend setting this flag to true that an audio input to make sure the test is also run with text input.
 
 ### Running tests in an Azure DevOps pipeline
 

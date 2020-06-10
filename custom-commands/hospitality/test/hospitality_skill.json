@@ -37,9 +37,9 @@
       "WavAndUtterancePairs": true
     }
   ],
-  "SpeechSubscriptionKey": "809b90a4ee2a43ccbe19e0693630d44a",
-  "SpeechRegion": "westus",
-  "CustomCommandsAppId": "9f706dbd-e1b6-4c9e-8567-2ff1e7901d9d",
+  "SpeechSubscriptionKey": "0123456789abcdef0123456789abcdef",
+  "SpeechRegion": "westus2",
+  "CustomCommandsAppId": "abcdef0123456789abcdef0123456789",
   "RealTimeAudio": false,
   "Timeout": 5000
 }
