@@ -375,6 +375,7 @@ namespace VoiceAssistantClient
                 if (!string.IsNullOrWhiteSpace(e.Result.Text) && e.Result.Reason == ResultReason.RecognizedSpeech)
                 {
                     this.Messages.Add(new MessageDisplay(e.Result.Text, Sender.User));
+                    this.ConversationView.ConversationHistory.ScrollIntoView(this.ConversationView.ConversationHistory.Items[this.ConversationView.ConversationHistory.Items.Count - 1]);
                 }
             });
         }
@@ -457,6 +458,7 @@ namespace VoiceAssistantClient
                             return rendered?.FrameworkElement;
                         });
                     this.Messages.Add(new MessageDisplay(activity.Text, Sender.Bot, renderedCards));
+                    this.ConversationView.ConversationHistory.ScrollIntoView(this.ConversationView.ConversationHistory.Items[this.ConversationView.ConversationHistory.Items.Count - 1]);
                 }
             });
         }
@@ -616,6 +618,7 @@ namespace VoiceAssistantClient
             this.Activities.Add(new ActivityDisplay(jsonConnectorActivity, bfActivity, Sender.User));
             string id = this.connector.SendActivityAsync(jsonConnectorActivity).Result;
             Debug.WriteLine($"SendActivityAsync called, id = {id}");
+            this.ConversationView.ConversationHistory.ScrollIntoView(this.ConversationView.ConversationHistory.Items[this.ConversationView.ConversationHistory.Items.Count - 1]);
         }
 
         private void ExportActivityLog_Click(object sender, RoutedEventArgs e)
@@ -684,7 +687,11 @@ namespace VoiceAssistantClient
         {
             if (Thread.CurrentThread != this.statusOverlay.Dispatcher.Thread)
             {
-                this.RunOnUiThread(() => this.UpdateStatus(msg, tentative));
+                this.RunOnUiThread(() =>
+                {
+                    this.UpdateStatus(msg, tentative);
+                    this.ConversationView.ConversationHistory.ScrollIntoView(this.ConversationView.ConversationHistory.Items[this.ConversationView.ConversationHistory.Items.Count - 1]);
+                });
                 return;
             }
 
