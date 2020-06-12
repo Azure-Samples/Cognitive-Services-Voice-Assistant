@@ -163,22 +163,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\AgentConfiguration.h" />
-    <ClInclude Include="..\..\include\AudioPlayer.h" />
-    <ClInclude Include="..\..\include\AudioPlayerEntry.h" />
-    <ClInclude Include="..\..\include\DeviceStatusIndicators.h" />
-    <ClInclude Include="..\..\include\DialogManager.h" />
-    <ClInclude Include="..\..\include\log.h" />
-    <ClInclude Include="..\..\include\json.hpp" />
-    <ClInclude Include="..\..\include\WindowsAudioPlayer.h" />
+    <ClCompile Include="..\common\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\common\AgentConfiguration.cpp" />
-    <ClCompile Include="..\common\AudioPlayerEntry.cpp" />
-    <ClCompile Include="..\common\DeviceStatusIndicators.cpp" />
-    <ClCompile Include="..\common\DialogManager.cpp" />
-    <ClCompile Include="..\common\Main.cpp" />
-    <ClCompile Include="WindowsAudioPlayer.cpp" />
+    <ProjectReference Include="..\cppCore\cppCore.vcxproj">
+      <Project>{aff0bdfa-6589-4aec-bf7a-c29d9b2b8148}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
