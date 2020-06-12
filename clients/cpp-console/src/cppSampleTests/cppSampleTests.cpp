@@ -13,9 +13,10 @@ namespace cppSampleTests
 	public:
 		
 		TEST_METHOD(TestMethod1)
-		{
+		{		
 			AudioPlayer::WindowsAudioPlayer player;
-			player.Initialize();
+			HRESULT hr = player.Initialize();
+			Assert::AreEqual(S_OK, hr);
 		}
 	};
 }
