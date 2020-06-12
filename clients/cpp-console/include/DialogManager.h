@@ -8,6 +8,7 @@
 
 #ifdef LINUX
 #include "LinuxAudioPlayer.h"
+#include "LinuxMicMuter.h"
 #endif
 
 #ifdef WINDOWS
@@ -58,7 +59,7 @@ public:
     // Start a listening session that read audio stream from a wav file.
     void ListenFromFile();
     // Get mute state of the default microphone.
-    bool IsMuted() { return (_muter) ? _muter->IsMuted() : false; };
+    bool IsMuted() { return _muter ? _muter->IsMuted() : false; };
 
 private:
     bool _volumeOn = false;

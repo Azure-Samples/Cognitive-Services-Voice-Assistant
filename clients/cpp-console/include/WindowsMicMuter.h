@@ -12,13 +12,9 @@
 #include <wrl\implements.h>
 #include "MicMuter.h"
 
-//using namespace Microsoft::WRL;
-//using namespace Windows::Media::Devices;
-//using namespace Windows::Storage::Streams;
-
-#define SAFE_RELEASE(punk)  \
-              if ((punk) != NULL)  \
-                { (punk)->Release(); (punk) = NULL; }
+#define SAFE_RELEASE(ptr)  \
+              if ((ptr) != NULL)  \
+                { (ptr)->Release(); (ptr) = NULL; }
 
 namespace MicMuter
 {

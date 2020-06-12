@@ -21,7 +21,7 @@ public:
     /// settings. If called without parameters it should assume some appropriate
     /// defaults.
     /// </summary>
-    /// <returns>A return code with S_OK as success and any other int as an error</returns>
+    /// <returns>A return code with a value of 0 is success, and another other value is failure</returns>
     /// <remarks>
     /// </remarks>
     virtual int Initialize() = 0;
@@ -29,7 +29,7 @@ public:
     /// <summary>
     /// This method is used to actually mute and unmute the default microphone.
     /// </summary>
-    /// <returns>A return code with S_OK as success and any other int as an error</returns>
+    /// <returns>A return code with a value of 0 is success, and another other value is failure</returns>
     /// <remarks>
     /// </remarks>
     virtual int MuteUnmute() = 0;

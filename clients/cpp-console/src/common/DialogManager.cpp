@@ -101,7 +101,7 @@ void DialogManager::InitializeMuter()
     _muter = make_shared<WindowsMicMuter>();
 #endif
 
-    string result = (_muter->Initialize() == S_OK) ? "succeeded." : "failed.";
+    string result = (_muter->Initialize() == 0) ? "succeeded." : "failed.";
     log_t("Initializing Microphone Muter " + result);
 }
 
@@ -307,7 +307,7 @@ void DialogManager::Stop()
 
 void DialogManager::MuteUnMute()
 {
-    if (_muter->MuteUnmute() == S_OK)
+    if (_muter->MuteUnmute() == 0)
     {
         string result = _muter->IsMuted() ? "muted." : "unmuted.";
         log_t("Microphone is " + result);

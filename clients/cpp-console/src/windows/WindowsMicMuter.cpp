@@ -6,15 +6,15 @@
 #include <thread>
 #include "WindowsMicMuter.h"
 
-//#include <mutex>
-//#include <avrt.h>
-
 using namespace MicMuter;
 
 WindowsMicMuter::~WindowsMicMuter()
 {
-    m_endpointVolume->SetMute(_originalMuteState, NULL);
-    SAFE_RELEASE(m_endpointVolume);
+    if (m_endpointVolume)
+    {
+        m_endpointVolume->SetMute(_originalMuteState, NULL);
+        SAFE_RELEASE(m_endpointVolume);
+    }
 }
 
 int WindowsMicMuter::Initialize()
@@ -23,31 +23,35 @@ int WindowsMicMuter::Initialize()
     CComPtr<IMMDeviceEnumerator> pEnumerator;
     CComPtr<IMMDevice> pDevice;
 
-    // begin Audio Device Setup
+    // Begin audio device setup
     CComCritSecLock<CComAutoCriticalSection> lock(m_cs);
 
-    // get a device enumator from the OS
+    // Get a device enumator from the OS
     hr = CoCreateInstance(
         __uuidof(MMDeviceEnumerator), NULL,
         CLSCTX_ALL, __uuidof(IMMDeviceEnumerator),
         (void**)&pEnumerator);
     if (hr != S_OK)
     {
+        fprintf(stderr, "Error. Failed to get a device enumator from the OS. Error: 0x%08x\n", hr);
         goto exit;
     }
 
-    // use the enumerator to get the default device
+    // Use the enumerator to get the default capture device
     hr = pEnumerator->GetDefaultAudioEndpoint(
         eCapture, eConsole, &pDevice);
     if (hr != S_OK)
     {
+        fprintf(stderr, "Error. Failed to use the enumerator to get the default capture device. Error: 0x%08x\n", hr);
         goto exit;
     }
 
+    // Activate the default capture device.
     hr = pDevice->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_INPROC_SERVER, NULL,
         reinterpret_cast<void**>(&m_endpointVolume));
     if (hr != S_OK)
     {
+        fprintf(stderr, "Error. Failed to activate the default capture device. Error: 0x%08x\n", hr);
         goto exit;
     }
     m_endpointVolume->GetMute(&_originalMuteState);
@@ -74,6 +78,10 @@ int WindowsMicMuter::MuteUnmute()
     if (hr == S_OK)
     {
         _muted = !_muted;
+    }
+    else
+    {
+        fprintf(stderr, "Error. Failed to mute/unmute the default capture device. Error: 0x%08x\n", hr);
     }
 
     return hr;
