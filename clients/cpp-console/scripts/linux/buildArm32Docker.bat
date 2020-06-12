@@ -25,6 +25,7 @@ REM set lib=-l:libcutils.so.0 %lib%
 set commonTargets=-std=c++14 %inc% %incDir% %lib%
 
 set src=src/linux/LinuxAudioPlayer.cpp %src%
+set src=src/linux/LinuxMicMuter.cpp %src%
 set src=src/common/DeviceStatusIndicators.cpp %src%
 set src=src/common/AudioPlayerEntry.cpp %src%
 set src=src/common/Main.cpp %src%

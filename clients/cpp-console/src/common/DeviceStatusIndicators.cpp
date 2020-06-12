@@ -3,9 +3,17 @@
 
 #include "DeviceStatusIndicators.h"
 
-void DeviceStatusIndicators::SetStatus(const DeviceStatus status)
+void DeviceStatusIndicators::SetStatus(const DeviceStatus status, const bool muted)
 {
-    std::cout << "New status : " << DeviceStatusNames::to_string(status) << std::endl;
+    if (muted)
+    {
+        std::cout << ansi::foreground_yellow << "New status : " << DeviceStatusNames::to_string(status) << ansi::foreground_red << "         (Microphone is muted)" << ansi::reset << std::endl;
+    }
+    else
+    {
+        std::cout << ansi::foreground_yellow << "New status : " << DeviceStatusNames::to_string(status) << ansi::reset << std::endl;
+    }
+
     switch (status)
     {
     case DeviceStatus::Idle:

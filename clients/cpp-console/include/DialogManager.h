@@ -8,11 +8,13 @@
 
 #ifdef LINUX
 #include "LinuxAudioPlayer.h"
+#include "LinuxMicMuter.h"
 #endif
 
 #ifdef WINDOWS
 #include <Windows.h>
 #include "WindowsAudioPlayer.h"
+#include "WindowsMicMuter.h"
 #endif
 
 using namespace std;
@@ -56,6 +58,8 @@ public:
     void StopKws();
     // Start a listening session that read audio stream from a wav file.
     void ListenFromFile();
+    // Get mute state of the default microphone.
+    bool IsMuted() { return _muter ? _muter->IsMuted() : false; };
 
 private:
     bool _volumeOn = false;
@@ -64,12 +68,14 @@ private:
     DeviceStatus _deviceStatus = DeviceStatus::Initializing;
     KeywordActivationState _keywordActivationState = KeywordActivationState::Undefined;
     IAudioPlayer* _player;
+    shared_ptr <IMicMuter> _muter;
     shared_ptr<AgentConfiguration> _agentConfig;
     shared_ptr<DialogServiceConnector> _dialogServiceConnector;
     shared_ptr<PushAudioInputStream> _pushStream;
     void InitializeDialogServiceConnectorFromMicrophone();
     void InitializeDialogServiceConnectorFromFile();
     void InitializePlayer();
+    void InitializeMuter();
     void AttachHandlers();
     void InitializeConnection();
     void SetDeviceStatus(const DeviceStatus status);
