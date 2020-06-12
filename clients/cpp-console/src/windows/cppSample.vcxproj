@@ -164,12 +164,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\AgentConfiguration.h" />
+    <ClInclude Include="..\..\include\MicMuter.h" />
     <ClInclude Include="..\..\include\AudioPlayer.h" />
     <ClInclude Include="..\..\include\AudioPlayerEntry.h" />
     <ClInclude Include="..\..\include\DeviceStatusIndicators.h" />
     <ClInclude Include="..\..\include\DialogManager.h" />
     <ClInclude Include="..\..\include\log.h" />
     <ClInclude Include="..\..\include\json.hpp" />
+    <ClInclude Include="..\..\include\WindowsMicMuter.h" />
     <ClInclude Include="..\..\include\WindowsAudioPlayer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +180,7 @@
     <ClCompile Include="..\common\DeviceStatusIndicators.cpp" />
     <ClCompile Include="..\common\DialogManager.cpp" />
     <ClCompile Include="..\common\Main.cpp" />
+    <ClCompile Include="WindowsMicMuter.cpp" />
     <ClCompile Include="WindowsAudioPlayer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

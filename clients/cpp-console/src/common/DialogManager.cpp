@@ -10,6 +10,7 @@ using namespace Microsoft::CognitiveServices::Speech;
 using namespace Microsoft::CognitiveServices::Speech::Audio;
 using namespace Microsoft::CognitiveServices::Speech::Dialog;
 using namespace AudioPlayer;
+using namespace MicMuter;
 
 DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 {
@@ -19,6 +20,7 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig)
 
     InitializeDialogServiceConnectorFromMicrophone();
     InitializePlayer();
+    InitializeMuter();
     AttachHandlers();
     InitializeConnection();
 
@@ -44,6 +46,7 @@ DialogManager::DialogManager(shared_ptr<AgentConfiguration> agentConfig, string 
 
     InitializeDialogServiceConnectorFromFile();
     InitializePlayer();
+    InitializeMuter();
     AttachHandlers();
     InitializeConnection();
 
@@ -87,7 +90,19 @@ void DialogManager::InitializePlayer()
         _player->Initialize();
         _player->SetVolume(_agentConfig->_volume);
     }
+}
 
+void DialogManager::InitializeMuter()
+{
+#ifdef LINUX
+    _muter = make_shared<LinuxMicMuter>();
+#endif
+#ifdef WINDOWS
+    _muter = make_shared<WindowsMicMuter>();
+#endif
+
+    string result = (_muter->Initialize() == S_OK) ? "succeeded." : "failed.";
+    log_t("Initializing Microphone Muter " + result);
 }
 
 void DialogManager::SetDeviceStatus(const DeviceStatus status)
@@ -292,7 +307,15 @@ void DialogManager::Stop()
 
 void DialogManager::MuteUnMute()
 {
-
+    if (_muter->MuteUnmute() == S_OK)
+    {
+        string result = _muter->IsMuted() ? "muted." : "unmuted.";
+        log_t("Microphone is " + result);
+    }
+    else
+    {
+        log_t("Mute/UnMute microphone failed.");
+    }
 }
 
 void DialogManager::StopKws()

@@ -13,6 +13,7 @@
 #ifdef WINDOWS
 #include <Windows.h>
 #include "WindowsAudioPlayer.h"
+#include "WindowsMicMuter.h"
 #endif
 
 using namespace std;
@@ -64,12 +65,14 @@ private:
     DeviceStatus _deviceStatus = DeviceStatus::Initializing;
     KeywordActivationState _keywordActivationState = KeywordActivationState::Undefined;
     IAudioPlayer* _player;
+    shared_ptr <IMicMuter> _muter;
     shared_ptr<AgentConfiguration> _agentConfig;
     shared_ptr<DialogServiceConnector> _dialogServiceConnector;
     shared_ptr<PushAudioInputStream> _pushStream;
     void InitializeDialogServiceConnectorFromMicrophone();
     void InitializeDialogServiceConnectorFromFile();
     void InitializePlayer();
+    void InitializeMuter();
     void AttachHandlers();
     void InitializeConnection();
     void SetDeviceStatus(const DeviceStatus status);
