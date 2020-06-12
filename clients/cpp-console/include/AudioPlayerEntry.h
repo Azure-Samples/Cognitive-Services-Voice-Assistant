@@ -9,7 +9,7 @@ namespace AudioPlayer
     enum class PlayerEntryType
     {
         BYTE_ARRAY,
-        PULL_AUDIO_OUTPUT_STREM
+        PULL_AUDIO_OUTPUT_STREAM
     };
 
     class AudioPlayerEntry

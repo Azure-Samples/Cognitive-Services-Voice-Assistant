@@ -21,6 +21,6 @@ AudioPlayerEntry::AudioPlayerEntry(unsigned char* pData, size_t pSize)
 
 AudioPlayerEntry::AudioPlayerEntry(std::shared_ptr<Audio::PullAudioOutputStream> pStream)
 {
-    m_entryType = PlayerEntryType::PULL_AUDIO_OUTPUT_STREM;
+    m_entryType = PlayerEntryType::PULL_AUDIO_OUTPUT_STREAM;
     m_pullStream = pStream;
 };

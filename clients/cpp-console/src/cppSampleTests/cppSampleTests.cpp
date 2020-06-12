@@ -12,11 +12,20 @@ namespace cppSampleTests
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(TestWindowsAudioPlayerInitializeWithDefaultAudioFormat)
 		{		
 			AudioPlayer::WindowsAudioPlayer player;
 			HRESULT hr = player.Initialize();
 			Assert::AreEqual(S_OK, hr);
 		}
+
+		TEST_METHOD(TestWindowsAudioPlayerInitializeWithUnsupportedAudioFormat)
+		{
+			AudioPlayer::WindowsAudioPlayer player;
+			HRESULT hr = player.Initialize("default", IAudioPlayer::AudioPlayerFormat::Stereo48khz16bit);
+			Assert::AreNotEqual(S_OK, hr);
+		}
+
+		
 	};
 }

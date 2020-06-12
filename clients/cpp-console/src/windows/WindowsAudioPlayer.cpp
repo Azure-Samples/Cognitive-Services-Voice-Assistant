@@ -70,7 +70,6 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
     switch (format)
     {
     case AudioPlayerFormat::Mono16khz16bit:
-    default:
         /* Signed 16-bit little-endian format */
         fprintf(stdout, "Format = Mono16khz16bit\n");
         m_pwf.nChannels = 1;
@@ -80,6 +79,10 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
         m_pwf.nAvgBytesPerSec = m_pwf.nSamplesPerSec * m_pwf.nBlockAlign;
         m_pwf.cbSize = 0;
         m_pwf.wFormatTag = WAVE_FORMAT_PCM;
+        break;
+    default:
+        hr = E_FAIL;
+        return hr;
     }
 
     //Begin Audio Device Setup
@@ -172,7 +175,7 @@ void WindowsAudioPlayer::PlayerThreadMain()
             case PlayerEntryType::BYTE_ARRAY:
                 PlayByteBuffer(entry);
                 break;
-            case PlayerEntryType::PULL_AUDIO_OUTPUT_STREM:
+            case PlayerEntryType::PULL_AUDIO_OUTPUT_STREAM:
                 PlayPullAudioOutputStream(entry);
                 break;
             default:
