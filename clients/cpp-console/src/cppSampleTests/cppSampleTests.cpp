@@ -90,12 +90,15 @@ namespace cppSampleTests
 			while (!fs.eof())
 			{
 				fs.read((char*)buffer.data(), (uint32_t)buffer.size());
-				player.Play(buffer.data(), buffer.size());
+				result = player.Play(buffer.data(), buffer.size());
 				bytesRead += 1000;
 			}
 
-			bytesRead -= 600000;
 			fs.close();
+
+			Sleep((bytesRead / 32000) * 1000);
+			
+			bytesRead -= 600000;
 
 			Sleep((bytesRead / 32000) * 1000);
 
