@@ -185,13 +185,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="CognitiveServicesVoiceAssistantIntro.wav">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </Media>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="cppSampleTests.rc" />
+    <Media Include="C:\Users\v-saplum\Downloads\spx-zips\spx-netcore30-win-x64\CognitiveServicesVoiceAssistantIntro.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

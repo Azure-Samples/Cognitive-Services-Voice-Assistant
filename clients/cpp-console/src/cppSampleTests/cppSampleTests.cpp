@@ -2,7 +2,6 @@
 #include "CppUnitTest.h"
 #include "WindowsAudioPlayer.h"
 #include "DialogManager.h"
-#include "resource.h"
 //#include "AudioPlayer.h"
 //#include "AudioPlayerEntry.h"
 
@@ -32,10 +31,11 @@ namespace cppSampleTests
 		{
 			int rc = 0;
 			int bytesRead = 0;
-			const string& wavFile = "Resources\\CognitiveServicesVoiceAssistantIntro.wav";
-			
 			int result = 1;
 			fstream fs;
+
+			const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
+
 			fs.open(wavFile, ios_base::binary | ios_base::in);
 
 			if ((fs.rdstate() & fs.failbit) != 0)
@@ -59,7 +59,7 @@ namespace cppSampleTests
 
 			fs.close();
 
-			SleepDuration(bytesRead);
+			Sleep((bytesRead / 32000) * 1000);
 
 			Assert::AreEqual(rc, result);
 		}
@@ -71,7 +71,7 @@ namespace cppSampleTests
 			int result = 1;
 			fstream fs;
 
-			const string& wavFile = "CognitiveServicesVoiceAssistantIntro.wav";
+			const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
 
 			fs.open(wavFile, ios_base::binary | ios_base::in);
 
@@ -97,7 +97,7 @@ namespace cppSampleTests
 			bytesRead -= 600000;
 			fs.close();
 
-			SleepDuration(bytesRead);
+			Sleep((bytesRead / 32000) * 1000);
 
 			result = player.Stop();
 			Assert::AreEqual(rc, result);
