@@ -183,7 +183,7 @@ void LinuxAudioPlayer::PlayerThreadMain()
             case PlayerEntryType::BYTE_ARRAY:
                 PlayByteBuffer(entry);
                 break;
-            case PlayerEntryType::PULL_AUDIO_OUTPUT_STREM:
+            case PlayerEntryType::PULL_AUDIO_OUTPUT_STREAM:
                 PlayPullAudioOutputStream(entry);
                 break;
             default:

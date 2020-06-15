@@ -59,7 +59,7 @@ namespace cppSampleTests
 
 			fs.close();
 
-			Sleep((bytesRead / 32000) * 1000);
+			SleepDuration(bytesRead);
 
 			Assert::AreEqual(rc, result);
 		}
@@ -96,7 +96,7 @@ namespace cppSampleTests
 
 			fs.close();
 
-			Sleep((bytesRead / 32000) * 1000);
+			SleepDuration(bytesRead);
 			
 			bytesRead -= 600000;
 
