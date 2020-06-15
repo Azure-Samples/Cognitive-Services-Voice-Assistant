@@ -2,11 +2,11 @@
 #include "CppUnitTest.h"
 #include "WindowsAudioPlayer.h"
 #include "DialogManager.h"
+#include "resource.h"
 //#include "AudioPlayer.h"
 //#include "AudioPlayerEntry.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-using namespace Microsoft::CognitiveServices::Speech;
 
 namespace cppSampleTests
 {
@@ -31,33 +31,81 @@ namespace cppSampleTests
 		TEST_METHOD(TestWindowsAudioPlayerPlay) 
 		{
 			int rc = 0;
-
-			const string& wavFile = "C:\\Users\\v-saplum\\Downloads\\spx-zips\\spx-netcore30-win-x64\\CognitiveServicesVoiceAssistantIntro.wav";
-			//const string& wavFile = "this";
+			int bytesRead = 0;
+			const string& wavFile = "Resources\\CognitiveServicesVoiceAssistantIntro.wav";
+			
+			int result = 1;
 			fstream fs;
 			fs.open(wavFile, ios_base::binary | ios_base::in);
+
+			if ((fs.rdstate() & fs.failbit) != 0)
+			{
+				Assert::Fail();
+			}
+
 			fs.seekg(44);
 
 			std::array<uint8_t, 1000> buffer;
-			fs.read((char*)wavFile.data(), (uint32_t)wavFile.size());
-			
-			fs.close();
 
 			AudioPlayer::WindowsAudioPlayer player;
 			player.Initialize();
-			int result = player.Play(buffer.data(), buffer.size());
+
+			while (!fs.eof())
+			{
+				fs.read((char*)buffer.data(), (uint32_t)buffer.size());
+				result = player.Play(buffer.data(), buffer.size());
+				bytesRead += 1000;
+			}
+
+			fs.close();
+
+			SleepDuration(bytesRead);
+
 			Assert::AreEqual(rc, result);
 		}
 
 		TEST_METHOD(TestWindowsAudioPlayerStop) 
 		{
 			int rc = 0;
+			int bytesRead = 0;
+			int result = 1;
+			fstream fs;
+
+			const string& wavFile = "CognitiveServicesVoiceAssistantIntro.wav";
+
+			fs.open(wavFile, ios_base::binary | ios_base::in);
+
+			if ((fs.rdstate() & fs.failbit) != 0)
+			{
+				Assert::Fail();
+			}
+
+			fs.seekg(44);
+
+			std::array<uint8_t, 1000> buffer;
+
 			AudioPlayer::WindowsAudioPlayer player;
 			player.Initialize();
-			TestWindowsAudioPlayerPlay();
 
-			int result = player.Stop();
+			while (!fs.eof())
+			{
+				fs.read((char*)buffer.data(), (uint32_t)buffer.size());
+				player.Play(buffer.data(), buffer.size());
+				bytesRead += 1000;
+			}
+
+			bytesRead -= 600000;
+			fs.close();
+
+			SleepDuration(bytesRead);
+
+			result = player.Stop();
 			Assert::AreEqual(rc, result);
+		}
+
+		void SleepDuration(int numBytes) 
+		{
+			Sleep((numBytes / 32000) * 1000);
 		}
 	};
 }

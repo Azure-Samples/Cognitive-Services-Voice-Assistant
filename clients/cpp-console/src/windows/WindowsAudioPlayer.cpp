@@ -82,11 +82,15 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
         break;
     default:
         hr = E_FAIL;
-        return hr;
     }
 
     //Begin Audio Device Setup
     CComCritSecLock<CComAutoCriticalSection> lock(m_cs);
+    
+    if (hr != S_OK) 
+    {
+        goto exit;
+    }
 
     // get a device enumator from the OS
     hr = CoCreateInstance(
