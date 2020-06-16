@@ -2,8 +2,6 @@
 #include "CppUnitTest.h"
 #include "WindowsAudioPlayer.h"
 #include "DialogManager.h"
-//#include "AudioPlayer.h"
-//#include "AudioPlayerEntry.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

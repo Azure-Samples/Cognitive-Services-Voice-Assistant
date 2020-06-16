@@ -170,5 +170,6 @@
             <Button Name="DeleteProfile" Content="Delete Profile" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="DeleteProfile_Click"/>
             <Button Name="CancelButton" Content="Discard Profile Changes" IsCancel="True" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="CancelButton_Click"/>
         </StackPanel>
+        <TextBlock x:Name="GitHubPageTextBlock" Grid.Row="2"><Hyperlink NavigateUri="https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf" RequestNavigate="GitHubPageHyperlink_RequestNavigate">GitHub Page</Hyperlink></TextBlock>
     </Grid>
 </Window>

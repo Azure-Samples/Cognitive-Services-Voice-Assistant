@@ -93,6 +93,10 @@ void DisplayKeystrokeOptions(DialogManager& dialogManager)
         fprintf(stdout, "5 [stop keyword listening]\n");
     }
     fprintf(stdout, "x [exit]\n");
+    if (dialogManager.IsMuted())
+    {
+        std::cout << ansi::foreground_red << "(Microphone is muted)" << ansi::reset << std::endl;
+    }
 };
 
 void HandleKeystrokeOptions(DialogManager& dialogManager, string keystroke)

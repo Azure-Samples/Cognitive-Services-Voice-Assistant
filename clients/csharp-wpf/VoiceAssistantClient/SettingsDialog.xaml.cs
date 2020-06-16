@@ -575,5 +575,11 @@ namespace VoiceAssistantClient
             this.settings.Profile.WakeWordPath = this.WakeWordPathTextBox.Text;
             this.settings.Profile.WakeWordEnabled = (bool)this.WakeWordEnabledBox.IsChecked;
         }
+
+        private void GitHubPageHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
     }
 }
