@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "WindowsAudioPlayer.h"
-#include "DialogManager.h"
+#include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+using namespace std;
 
 namespace cppSampleTests
 {
@@ -95,10 +96,6 @@ namespace cppSampleTests
 			fs.close();
 
 			SleepDuration(bytesRead);
-			
-			bytesRead -= 600000;
-
-			Sleep((bytesRead / 32000) * 1000);
 
 			result = player.Stop();
 			Assert::AreEqual(rc, result);
