@@ -1,8 +1,8 @@
 {
-  "KeywordRecognitionModel": "D:\\GitHub\\Cognitive-Services-Voice-Assistant\\keyword-models\\computer.table",
+  "KeywordRecognitionModel": "/data/cppSample/computer.table",
   "Keyword": "Computer",
-  "SpeechSubscriptionKey": "11229cf3b34743d7914257bfb7fb23a5",
-  "SpeechRegion": "westus",
+  "SpeechSubscriptionKey": "YOUR_SUBSCRIPTION_KEY",
+  "SpeechRegion": "YOUR_SUBSCRIPTION_REGION",
   "Volume": "25",
   "CustomCommandsAppId": "",
   "CustomVoiceDeploymentIds": "",
