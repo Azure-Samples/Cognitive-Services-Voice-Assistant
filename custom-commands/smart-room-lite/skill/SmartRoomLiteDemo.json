@@ -1,0 +1,372 @@
+{
+  "type": "CommandsDialogModel",
+  "culture": "en-us",
+  "entityResolver": {
+    "searchConfiguration": {
+      "maxEdits": 0
+    },
+    "type": "internal",
+    "isGenerated": true
+  },
+  "httpEndpoints": [
+    {
+      "name": "getDevices",
+      "method": "GET",
+      "url": "https://dscprodsu01sa01.blob.core.windows.net/samples/getDevices.json",
+      "headers": {},
+      "sendFrame": false,
+      "updateFrame": false
+    },
+    {
+      "name": "UpdateDeviceState",
+      "method": "POST",
+      "url": "https://webendpointexample.azurewebsites.net/api/DeviceState",
+      "headers": {
+        "app": "041ffb1f"
+      },
+      "sendFrame": false,
+      "updateFrame": false
+    }
+  ],
+  "lgTemplates": [
+    "# FallbackResponse",
+    "- Add your fallback message here",
+    "# TurnOnOff-OnOff",
+    "- On or off?",
+    "# SetTemperature-02ea8ad0a15c11eaabc57d77114ef68a",
+    "- Ok, setting temperature to {Temperature} degrees",
+    "# TurnOnOff-SubjectDevice",
+    "- Which device do you want to control?",
+    "# SetTemperature-Temperature",
+    "- What temperature would you like?",
+    "# SetTemperature-Temperature-63491e10a16011eaabc57d77114ef68a",
+    "- Sorry, I can only set temperature between 60 and 80 degrees",
+    "# SetAlarm-3a7e4b80a15c11eaabc57d77114ef68a",
+    "- Ok, alarm set for {DateTime}. The alarm tone is {AlarmTone}.",
+    "# SetAlarm-DateTime",
+    "- Ready to set alarm with tone as {AlarmTone}. For what time?",
+    "# SetAlarm-e7457120a16811eab7f28d032b4d6ad7",
+    "- Updating previous alarm time to {DateTime}.",
+    "# TurnOn-ed6f14b0a15a11eaabc57d77114ef68a",
+    "- IF: @{SubjectContext == \"all\" && SubjectDevice == \"lights\"}",
+    "    - Ok, turning all the lights {OnOff}",
+    "- ELSEIF: @{SubjectDevice == \"lights\"}",
+    "    - Ok, turning {OnOff} the {SubjectContext} {SubjectDevice}",
+    "- ELSE:",
+    "    - Ok, turning the {SubjectDevice} {OnOff}",
+    "    - Done, turned {OnOff} the {SubjectDevice}",
+    "# TurnOnOff-UpdateDeviceStateonFailure-167f1de0a17011eab7f28d032b4d6ad7",
+    "- Sorry, {WebEndpointErrorMessage}"
+  ],
+  "globalParameters": [],
+  "commands": [
+    {
+      "name": "FallbackCommand",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "DefaultResponse",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# FallbackResponse"
+              }
+            }
+          ],
+          "postExecutionState": "None"
+        }
+      ],
+      "triggeringExamples": [
+        "> - You can start sentences with '>' to add comments.",
+        "> - You can also use parameters by adding the name of the parameter within curly braces, i.e.",
+        "Help",
+        "Help me",
+        "What can you do?",
+        "How can I start?",
+        "Hello",
+        "Hi"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "TurnOnOff",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "OnOff",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "on": [],
+                "off": []
+              }
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# TurnOnOff-OnOff"
+          }
+        },
+        {
+          "name": "SubjectDevice",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringCatalog",
+              "endpointName": "getDevices"
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# TurnOnOff-SubjectDevice"
+          }
+        },
+        {
+          "name": "SubjectContext",
+          "type": {
+            "name": "String",
+            "defaultValue": "all",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "all": [],
+                "room": [],
+                "bathroom": []
+              }
+            }
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "ConfirmationResponse",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "RequiredParameters",
+              "names": [
+                "OnOff",
+                "SubjectDevice"
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# TurnOn-ed6f14b0a15a11eaabc57d77114ef68a"
+              }
+            },
+            {
+              "type": "CallHttpEndpoint",
+              "name": "UpdateDeviceState",
+              "content": {},
+              "parameters": "item={SubjectDevice}&&value={OnOff}",
+              "onSuccess": {
+                "type": "SendActivity",
+                "activity": {
+                  "type": "event",
+                  "name": "UpdateDeviceState",
+                  "state": "{OnOff}",
+                  "device": "{SubjectDevice}"
+                }
+              },
+              "onFailure": {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# TurnOnOff-UpdateDeviceStateonFailure-167f1de0a17011eab7f28d032b4d6ad7"
+                }
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "triggeringExamples": [
+        "turn {OnOff} the {SubjectDevice}",
+        "{SubjectDevice} {OnOff}",
+        "turn it {OnOff}",
+        "turn something {OnOff}",
+        "turn something"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "SetTemperature",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "Temperature",
+          "type": {
+            "name": "Number"
+          },
+          "validations": [
+            {
+              "type": "NumberInRange",
+              "min": 60,
+              "max": 80,
+              "failureResponse": {
+                "type": "Template",
+                "templateName": "# SetTemperature-Temperature-63491e10a16011eaabc57d77114ef68a"
+              }
+            }
+          ],
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# SetTemperature-Temperature"
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "ConfirmationResponse",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "RequiredParameters",
+              "names": [
+                "Temperature"
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# SetTemperature-02ea8ad0a15c11eaabc57d77114ef68a"
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "triggeringExamples": [
+        "set the temperature to {Temperature} degrees",
+        "change the temperature to {Temperature}",
+        "set the temperature",
+        "change the temperature"
+      ],
+      "multiTurnExamples": []
+    },
+    {
+      "name": "SetAlarm",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "DateTime",
+          "type": {
+            "name": "DateTime",
+            "configuration": {
+              "type": "DateTime",
+              "behavior": [
+                "IfDateMissingUseToday",
+                "IfTimeMissingUseStartOfDay"
+              ]
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# SetAlarm-DateTime"
+          }
+        },
+        {
+          "name": "AlarmTone",
+          "type": {
+            "name": "String",
+            "defaultValue": "Chimes",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "Chimes": [],
+                "Jingle": [],
+                "Echo": []
+              }
+            }
+          }
+        }
+      ],
+      "rules": [
+        {
+          "name": "Update previous alarm",
+          "conditions": [
+            {
+              "type": "UpdateLastCommand"
+            },
+            {
+              "type": "RequiredParameters",
+              "names": [
+                "DateTime"
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# SetAlarm-e7457120a16811eab7f28d032b4d6ad7"
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "completionRules": [
+        {
+          "name": "ConfirmationResponse",
+          "conditions": [
+            {
+              "type": "True"
+            },
+            {
+              "type": "RequiredParameters",
+              "names": [
+                "DateTime"
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# SetAlarm-3a7e4b80a15c11eaabc57d77114ef68a"
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "triggeringExamples": [
+        "set an alarm for {DateTime}",
+        "set alarm {DateTime}",
+        "alarm for {DateTime}"
+      ],
+      "multiTurnExamples": []
+    }
+  ]
+}
