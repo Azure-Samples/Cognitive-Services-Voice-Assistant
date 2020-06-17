@@ -22,19 +22,19 @@ This page will guide you through building a sample [Voice Assistant](https://doc
 ## Step 2 - Select a Custom Command demo
 
 <p align="center">
-<img src="../custom-commands/images/all-scenes.png" width="982"/>
+<img src="../custom-commands/demos/images/all-scenes.png" width="982"/>
 </p>
 
 We have three demos for you to select from. Read about what voice commands they support and see the associated visualization. When you selected the one you would like to deploy, continue to Step 3
-* [Hospitality demo](../custom-commands/hospitality/README.md)
-* [Inventory management demo](../custom-commands/inventory/README.md)
-* [Automotive demo](../custom-commands/automotive/README.md)
+* [Hospitality demo](../custom-commands/demos/hospitality/README.md)
+* [Inventory management demo](../custom-commands/demos/inventory/README.md)
+* [Automotive demo](../custom-commands/demos/automotive/README.md)
 
 ## Step 3 - Run the Azure deployment script
 
 Run a Powershell script to deploy all the Azure resources needed for your selected demo, in your own Azure subscription. The script will also create and provision the selected Custom Command project.
 
-[Follow the instructions here](../custom-commands/README.md).
+[Follow the instructions here](../custom-commands/demos/README.md).
 
 At the end of this step, you will have the following values:
 * Azure Cognitive Services Speech subscription key (e.g. ```b587d36063dd458daea151a1b969720a```)

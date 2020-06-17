@@ -70,14 +70,17 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 | [clients\cpp-console](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) | Console client sample for Smart Speaker devices, configured via a json file to connect to your bot or Custom Commands application. It supports microphone input and audio playback. Build scripts for [Raspberry Pi](https://www.raspberrypi.org/), [GGEC Speaker](http://www.ggec.com/) and Windows are provided | C++, Windows, Linux |
 | [clients\java-android](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/java-android) | An Android application (phone or tablet) configured to connect to your bot or Custom Commands application | Java Android
 
-### Sample Custom Commands
+### Sample Custom Commands and Scripts
 
 | Folder | Description |
 |-------------|-------------|
-| [custom-commands](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands)| Landing page for Custom Command demos, including deployment instructions |
-| [custom-commands\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/hospitality)| Sample voice commands to control your room (lights, blinds, TV and temperature), including visualization of the results |
-| [custom-commands\inventory](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/inventory) | Sample voice commands to control warehouse inventory (adding or removing different color crates), including visualization of the results |
-| [custom-commands\automotive](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/automotive) | Sample voice commands to the environment in your car (temperature, .... ), including visualization of the results |
+| [custom-commands\demos](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos)| Landing page for Custom Command demos, including deployment instructions |
+| [custom-commands\demos\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/hospitality)| Sample voice commands to control your room (lights, blinds, TV and temperature), including visualization of the results |
+| [custom-commands\demos\inventory](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/inventory) | Sample voice commands to control warehouse inventory (adding or removing different color crates), including visualization of the results |
+| [custom-commands\demos\automotive](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/automotive) | Sample voice commands to the environment in your car (temperature, .... ), including visualization of the results |
+| [custom-commands\quick-start](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/quick-start) | JSON Custom Command file for the [official quick-start guide](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands)  |
+| [custom-commands\scripts](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/scripts) | Continuous deployment scripts for Azure DevOps pipeline |
+
 
 ### Sample Keyword Models
 
