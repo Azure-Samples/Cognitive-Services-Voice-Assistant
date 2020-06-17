@@ -200,7 +200,7 @@ void WindowsAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEn
     UINT32 framesToWrite;
     BYTE* pData, * pStreamData;
     unsigned int bytesRead = 0;
-    std::shared_ptr<IWindowsAudioPlayerStream> stream = pEntry->m_AudioPlayerStream;
+    std::shared_ptr<IAudioPlayerStream> stream = pEntry->m_AudioPlayerStream;
 
     hr = m_pAudioClient->GetBufferSize(&maxBufferSizeInFrames);
     if (FAILED(hr))
@@ -343,7 +343,7 @@ int WindowsAudioPlayer::Play(uint8_t* buffer, size_t bufferSize)
     return rc;
 }
 
-int WindowsAudioPlayer::Play(std::shared_ptr<IWindowsAudioPlayerStream> pStream)
+int WindowsAudioPlayer::Play(std::shared_ptr<IAudioPlayerStream> pStream)
 {
     int rc = 0;
 

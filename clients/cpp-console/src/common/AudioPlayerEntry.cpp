@@ -20,7 +20,7 @@ AudioPlayerEntry::AudioPlayerEntry(unsigned char* pData, size_t pSize)
     }
 };
 
-AudioPlayerEntry::AudioPlayerEntry(std::shared_ptr<IWindowsAudioPlayerStream> pStream)
+AudioPlayerEntry::AudioPlayerEntry(std::shared_ptr<IAudioPlayerStream> pStream)
 {
     m_entryType = PlayerEntryType::PULL_AUDIO_OUTPUT_STREAM;
     m_AudioPlayerStream = pStream;

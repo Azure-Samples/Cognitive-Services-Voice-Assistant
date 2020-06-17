@@ -18,10 +18,10 @@ namespace AudioPlayer
     {
     public:
         AudioPlayerEntry(unsigned char* pData, size_t pSize);
-        AudioPlayerEntry(std::shared_ptr<IWindowsAudioPlayerStream> pStream);
+        AudioPlayerEntry(std::shared_ptr<IAudioPlayerStream> pStream);
 
         PlayerEntryType m_entryType;
-        std::shared_ptr<IWindowsAudioPlayerStream> m_AudioPlayerStream;
+        std::shared_ptr<IAudioPlayerStream> m_AudioPlayerStream;
         size_t m_size;
         unsigned char* m_data;
     };

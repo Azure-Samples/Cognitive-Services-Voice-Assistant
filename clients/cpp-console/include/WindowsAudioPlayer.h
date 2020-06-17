@@ -45,7 +45,7 @@ namespace AudioPlayer
 
         virtual int Play(uint8_t* buffer, size_t bufferSize) final;
 
-        virtual int Play(std::shared_ptr<IWindowsAudioPlayerStream> pStream) final;
+        virtual int Play(std::shared_ptr<IAudioPlayerStream> pStream) final;
 
         virtual int Stop() final;
 

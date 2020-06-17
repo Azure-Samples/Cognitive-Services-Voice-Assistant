@@ -226,7 +226,8 @@ void DialogManager::AttachHandlers()
                 }
                 else
                 {
-                    play_result = _player->Play(audio);
+                    std::shared_ptr<IAudioPlayerStream> playerStream = std::make_shared<WindowsAudioPlayerStream>(audio);
+                    play_result = _player->Play(playerStream);
                 }
             }
 

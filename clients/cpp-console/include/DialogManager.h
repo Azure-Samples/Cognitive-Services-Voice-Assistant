@@ -15,6 +15,7 @@
 #include <Windows.h>
 #include "WindowsAudioPlayer.h"
 #include "WindowsMicMuter.h"
+#include "WindowsAudioPlayerStream.h"
 #endif
 
 using namespace std;

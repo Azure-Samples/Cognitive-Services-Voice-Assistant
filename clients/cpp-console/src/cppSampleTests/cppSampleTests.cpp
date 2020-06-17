@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "WindowsAudioPlayer.h"
+#include "WindowsAudioPlayerStream.h"
 #include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -68,50 +69,30 @@ namespace cppSampleTests
 		{
 			std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream;
 
-			auto audio = pStream->CreatePullStream();
+			std::shared_ptr<fstream> fs = std::make_shared<fstream>();
+
+			const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
+
+			fs->open(wavFile, ios_base::binary | ios_base::in);
+
+			if ((fs->rdstate() & fs->failbit) != 0)
+			{
+				Assert::Fail();
+			}
+
+			fs->seekg(44);
 
 			int rc = 0;
-			//int bytesRead = 0;
 			int result = 1;
-			//fstream fs;
-
-			//const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
-
-			//fs.open(wavFile, ios_base::binary | ios_base::in);
-
-			//if ((fs.rdstate() & fs.failbit) != 0)
-			//{
-			//	Assert::Fail();
-			//}
-
-			//fs.seekg(44);
-
-			//std::array<uint8_t, 1000> buffer;
-
-			////uint32_t playBufferSize = 1024;
 			unsigned int bytesRead = 0;
-			////std::unique_ptr<unsigned char[]> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
 
 			AudioPlayer::WindowsAudioPlayer player;
 			player.Initialize();
 
-			//while (!fs.eof())
-			//{
-			//	fs.read((char*)buffer.data(), buffer.size());
-				
-				//audio->Read(buffer.data(), bytesRead);
-			result = player.Play(audio);
-				//bytesRead += 1000;
-				//playBufferSize += 1000;
-			//}
-
-			//audio = buffer;
-
-			//audio->Read(buffer.data(), buffer.size());
-			//fs.close();
+			std::shared_ptr<IAudioPlayerStream> playerStream = std::make_shared<AudioPlayer::WindowsAudioPlayerStream>(fs);
+			result = player.Play(playerStream);
 
 			Assert::AreEqual(rc, result);
-
 		}
 
 		TEST_METHOD(TestWindowsAudioPlayerStop) 
