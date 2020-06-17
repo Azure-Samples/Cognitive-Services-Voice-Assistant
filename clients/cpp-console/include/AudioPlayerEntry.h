@@ -1,10 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-//#include "speechapi_cxx.h"
 #include "AudioPlayerStream.h"
-
-//using namespace Microsoft::CognitiveServices::Speech;
 
 namespace AudioPlayer
 {
