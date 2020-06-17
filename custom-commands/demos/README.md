@@ -31,7 +31,7 @@ If all that sounds good, continue on to deploy the resources to your Azure subsc
 Open a command prompt and clone the repository if you have not done so already. Change directory to the Custom Commands scripts folder:
 ```cmd
     git clone https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant.git
-    cd Cognitive-Services-Voice-Assistant\custom-commands\scripts
+    cd Cognitive-Services-Voice-Assistant\custom-commands\demos\scripts
 ```
 
 Open a Powershell 6.0 or higher administrator prompt. You will need to unrestrict Powershell's script execution policy by running the following in an administrator Powershell:
