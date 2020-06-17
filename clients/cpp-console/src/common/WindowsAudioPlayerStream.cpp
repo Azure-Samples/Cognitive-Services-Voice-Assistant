@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+
 #include "WindowsAudioPlayerStream.h"
 
 using namespace AudioPlayer;
@@ -28,6 +31,5 @@ int WindowsAudioPlayerStream::Read(unsigned char* buffer, size_t bufferSize)
 		m_fStream->read((char*)buffer, (uint32_t)bufferSize);
 		int numberOfBytes = m_fStream->gcount();
 		return numberOfBytes;
-		//break;
 	}
 }
