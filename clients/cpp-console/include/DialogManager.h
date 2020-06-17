@@ -5,6 +5,7 @@
 #include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
 #include <fstream>
+#include "AudioPlayerStreamImpl.h"
 
 #ifdef LINUX
 #include "LinuxAudioPlayer.h"
@@ -15,7 +16,6 @@
 #include <Windows.h>
 #include "WindowsAudioPlayer.h"
 #include "WindowsMicMuter.h"
-#include "AudioPlayerStreamImpl.h"
 #endif
 
 using namespace std;

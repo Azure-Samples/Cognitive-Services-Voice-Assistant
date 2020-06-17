@@ -173,7 +173,7 @@
     <ClCompile Include="..\common\AudioPlayerEntry.cpp" />
     <ClCompile Include="..\common\DeviceStatusIndicators.cpp" />
     <ClCompile Include="..\common\DialogManager.cpp" />
-    <ClCompile Include="..\common\WindowsAudioPlayerStream.cpp" />
+    <ClCompile Include="..\common\AudioPlayerStreamImpl.cpp" />
     <ClCompile Include="..\windows\WindowsAudioPlayer.cpp" />
     <ClCompile Include="..\windows\WindowsMicMuter.cpp" />
     <ClCompile Include="pch.cpp" />

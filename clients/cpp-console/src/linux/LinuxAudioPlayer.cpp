@@ -202,7 +202,7 @@ void LinuxAudioPlayer::PlayAudioPlayerStream(std::shared_ptr<AudioPlayerEntry> p
     std::unique_ptr<unsigned char[]> playBuffer = std::make_unique<unsigned char[]>(playBufferSize);
     do
     {
-        bytesRead = pEntry->m_pullStream->Read(playBuffer.get(), playBufferSize);
+        bytesRead = pEntry->m_AudioPlayerStream->Read(playBuffer.get(), playBufferSize);
         WriteToALSA(playBuffer.get());
     } while (bytesRead > 0 && m_canceled == false);
 }
