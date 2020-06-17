@@ -1,8 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-#include "speechapi_cxx.h"
-using namespace Microsoft::CognitiveServices::Speech;
+//#include "speechapi_cxx.h"
+#include "AudioPlayerStream.h"
+
+//using namespace Microsoft::CognitiveServices::Speech;
 
 namespace AudioPlayer
 {
@@ -16,10 +18,10 @@ namespace AudioPlayer
     {
     public:
         AudioPlayerEntry(unsigned char* pData, size_t pSize);
-        AudioPlayerEntry(std::shared_ptr<Audio::PullAudioOutputStream> pStream);
+        AudioPlayerEntry(std::shared_ptr<IWindowsAudioPlayerStream> pStream);
 
         PlayerEntryType m_entryType;
-        std::shared_ptr<Audio::PullAudioOutputStream> m_pullStream;
+        std::shared_ptr<IWindowsAudioPlayerStream> m_AudioPlayerStream;
         size_t m_size;
         unsigned char* m_data;
     };

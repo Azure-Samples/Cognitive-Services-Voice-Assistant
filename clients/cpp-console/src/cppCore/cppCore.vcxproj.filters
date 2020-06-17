@@ -48,6 +48,12 @@
     <ClInclude Include="..\..\include\MicMuter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\AudioPlayerStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\WindowsAudioPlayerStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\AgentConfiguration.cpp">
@@ -66,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\windows\WindowsMicMuter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\WindowsAudioPlayerStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

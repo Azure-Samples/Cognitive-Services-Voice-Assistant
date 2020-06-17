@@ -200,7 +200,7 @@ void WindowsAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEn
     UINT32 framesToWrite;
     BYTE* pData, * pStreamData;
     unsigned int bytesRead = 0;
-    std::shared_ptr<Audio::PullAudioOutputStream> stream = pEntry->m_pullStream;
+    std::shared_ptr<IWindowsAudioPlayerStream> stream = pEntry->m_AudioPlayerStream;
 
     hr = m_pAudioClient->GetBufferSize(&maxBufferSizeInFrames);
     if (FAILED(hr))
@@ -229,7 +229,7 @@ void WindowsAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEn
         }
 
         pStreamData = (BYTE*)malloc(sizeToWrite);
-        bytesRead = stream->Read(pStreamData, sizeToWrite);
+        bytesRead = stream->Read((unsigned char*)pStreamData, sizeToWrite);
 
         if (sizeToWrite > bytesRead)
         {
@@ -343,7 +343,7 @@ int WindowsAudioPlayer::Play(uint8_t* buffer, size_t bufferSize)
     return rc;
 }
 
-int WindowsAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream)
+int WindowsAudioPlayer::Play(std::shared_ptr<IWindowsAudioPlayerStream> pStream)
 {
     int rc = 0;
 
@@ -413,9 +413,10 @@ int WindowsAudioPlayer::Close()
     m_conditionVariable.notify_one();
     m_playerThread.join();
 
-    CoUninitialize();
+    /*CoUninitialize();*/
     SAFE_CLOSEHANDLE(m_hAudioClientEvent);
     SAFE_RELEASE(m_pRenderClient);
     SAFE_RELEASE(m_pAudioClient);
+    CoUninitialize();
     return 0;
 }
