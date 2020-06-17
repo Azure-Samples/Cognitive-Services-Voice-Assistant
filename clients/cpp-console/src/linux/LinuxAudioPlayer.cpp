@@ -184,7 +184,7 @@ void LinuxAudioPlayer::PlayerThreadMain()
                 PlayByteBuffer(entry);
                 break;
             case PlayerEntryType::PULL_AUDIO_OUTPUT_STREAM:
-                PlayPullAudioOutputStream(entry);
+                PlayAudioPlayerStream(entry);
                 break;
             default:
                 fprintf(stderr, "Unknown Audio Player Entry type\n");
@@ -195,7 +195,7 @@ void LinuxAudioPlayer::PlayerThreadMain()
 
 }
 
-void LinuxAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry)
+void LinuxAudioPlayer::PlayAudioPlayerStream(std::shared_ptr<AudioPlayerEntry> pEntry)
 {
     size_t playBufferSize = GetBufferSize();
     unsigned int bytesRead = 0;

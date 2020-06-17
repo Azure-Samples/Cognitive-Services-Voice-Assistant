@@ -1,23 +1,23 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-#include "WindowsAudioPlayerStream.h"
+#include "AudioPlayerStreamImpl.h"
 
 using namespace AudioPlayer;
 
-WindowsAudioPlayerStream::WindowsAudioPlayerStream(std::shared_ptr<Audio::PullAudioOutputStream> pStream)
+AudioPlayerStreamImpl::AudioPlayerStreamImpl(std::shared_ptr<Audio::PullAudioOutputStream> pStream)
 {
 	m_pullStream = pStream;
 	m_streamType = AudioPlayerStreamType::PULLAUDIOOUTPUTSTREAM;
 }
 
-WindowsAudioPlayerStream::WindowsAudioPlayerStream(std::shared_ptr<fstream> fStream)
+AudioPlayerStreamImpl::AudioPlayerStreamImpl(std::shared_ptr<fstream> fStream)
 {
-	std::shared_ptr<fstream> m_fStream = fStream;
+	m_fStream = fStream;
 	m_streamType = AudioPlayerStreamType::FSTREAM;
 }
 
-int WindowsAudioPlayerStream::Read(unsigned char* buffer, size_t bufferSize)
+int AudioPlayerStreamImpl::Read(unsigned char* buffer, size_t bufferSize)
 {
 	switch (m_streamType)
 	{
@@ -33,3 +33,5 @@ int WindowsAudioPlayerStream::Read(unsigned char* buffer, size_t bufferSize)
 		return numberOfBytes;
 	}
 }
+
+//AudioPlayerStreamImpl -> AudioPlayerStream

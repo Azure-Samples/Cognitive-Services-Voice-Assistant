@@ -10,14 +10,14 @@ using namespace Microsoft::CognitiveServices::Speech;
 
 namespace AudioPlayer
 {
-	class WindowsAudioPlayerStream : public IAudioPlayerStream
+	class AudioPlayerStreamImpl : public IAudioPlayerStream
 	{
 	public:
 
-		//WindowsAudioPlayerStream();
-		WindowsAudioPlayerStream(std::shared_ptr<Audio::PullAudioOutputStream> pStream);
+		//AudioPlayerStreamImpl();
+		AudioPlayerStreamImpl(std::shared_ptr<Audio::PullAudioOutputStream> pStream);
 
-		WindowsAudioPlayerStream(std::shared_ptr<fstream> fStream);
+		AudioPlayerStreamImpl(std::shared_ptr<fstream> fStream);
 
 		virtual int Read(unsigned char* buffer, size_t bufferSize) final;
 
@@ -28,4 +28,3 @@ namespace AudioPlayer
 		AudioPlayerStreamType m_streamType;
 	};
 }
-

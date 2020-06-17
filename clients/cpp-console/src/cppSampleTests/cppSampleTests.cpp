@@ -4,7 +4,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "WindowsAudioPlayer.h"
-#include "WindowsAudioPlayerStream.h"
+#include "AudioPlayerStreamImpl.h"
 #include <fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -70,8 +70,6 @@ namespace cppSampleTests
 
 		TEST_METHOD(TestWindowsAudioPlayerPullAudioOutputStream) 
 		{
-			std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream;
-
 			std::shared_ptr<fstream> fs = std::make_shared<fstream>();
 
 			const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
@@ -92,7 +90,7 @@ namespace cppSampleTests
 			AudioPlayer::WindowsAudioPlayer player;
 			player.Initialize();
 
-			std::shared_ptr<IAudioPlayerStream> playerStream = std::make_shared<AudioPlayer::WindowsAudioPlayerStream>(fs);
+			std::shared_ptr<IAudioPlayerStream> playerStream = std::make_shared<AudioPlayer::AudioPlayerStreamImpl>(fs);
 			result = player.Play(playerStream);
 
 			Assert::AreEqual(rc, result);

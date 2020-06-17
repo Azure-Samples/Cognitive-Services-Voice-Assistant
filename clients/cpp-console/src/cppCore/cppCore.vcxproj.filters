@@ -51,7 +51,7 @@
     <ClInclude Include="..\..\include\AudioPlayerStream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\WindowsAudioPlayerStream.h">
+    <ClInclude Include="..\..\include\AudioPlayerStreamImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

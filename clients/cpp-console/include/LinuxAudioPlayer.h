@@ -74,7 +74,7 @@ namespace AudioPlayer
         std::thread m_playerThread;
         void PlayerThreadMain();
         void PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry);
-        void PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry);
+        void PlayAudioPlayerStream(std::shared_ptr<AudioPlayerEntry> pEntry);
         int WriteToALSA(uint8_t* buffer);
         void SetAlsaMasterVolume(long volume);
         int Close();

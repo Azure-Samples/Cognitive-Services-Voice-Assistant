@@ -180,7 +180,7 @@ void WindowsAudioPlayer::PlayerThreadMain()
                 PlayByteBuffer(entry);
                 break;
             case PlayerEntryType::PULL_AUDIO_OUTPUT_STREAM:
-                PlayPullAudioOutputStream(entry);
+                PlayAudioPlayerStream(entry);
                 break;
             default:
                 fprintf(stderr, "Unknown Audio Player Entry type\n");
@@ -191,7 +191,7 @@ void WindowsAudioPlayer::PlayerThreadMain()
     }
 }
 
-void WindowsAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry)
+void WindowsAudioPlayer::PlayAudioPlayerStream(std::shared_ptr<AudioPlayerEntry> pEntry)
 {
     HRESULT hr = S_OK;
     UINT32 maxBufferSizeInFrames = 0;
