@@ -166,6 +166,7 @@
     <ClInclude Include="..\..\include\AudioPlayerStreamImpl.h" />
     <ClInclude Include="..\..\include\WindowsMicMuter.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\AgentConfiguration.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="..\common\WindowsAudioPlayerStream.cpp" />
     <ClCompile Include="..\windows\WindowsAudioPlayer.cpp" />
     <ClCompile Include="..\windows\WindowsMicMuter.cpp" />
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
