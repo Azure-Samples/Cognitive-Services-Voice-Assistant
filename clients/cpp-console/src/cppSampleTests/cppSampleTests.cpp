@@ -12,131 +12,126 @@ using namespace std;
 
 namespace cppSampleTests
 {
-	TEST_CLASS(cppSampleTests)
-	{
-	public:
-		
-		TEST_METHOD(TestWindowsAudioPlayerInitializeWithDefaultAudioFormat)
-		{		
-			AudioPlayer::WindowsAudioPlayer player;
-			HRESULT hr = player.Initialize();
-			Assert::AreEqual(S_OK, hr);
-		}
+    TEST_CLASS(cppSampleTests)
+    {
+    public:
 
-		//TEST_METHOD(TestWindowsAudioPlayerInitializeWithUnsupportedAudioFormat)
-		//{
-		//	Sleep(3000);
-		//	AudioPlayer::WindowsAudioPlayer player;
-		//	HRESULT hr = player.Initialize("stereo", IAudioPlayer::AudioPlayerFormat::Stereo48khz16bit);
-		//	Assert::AreEqual(E_FAIL, hr);
-		//}
+        TEST_METHOD(TestWindowsAudioPlayerInitializeWithDefaultAudioFormat)
+        {
+            AudioPlayer::WindowsAudioPlayer player;
+            HRESULT hr = player.Initialize();
+            Assert::AreEqual(S_OK, hr);
+        }
 
-		TEST_METHOD(TestWindowsAudioPlayerPlay) 
-		{
-			int rc = 0;
-			int bytesRead = 0;
-			int result = 1;
-			fstream fs;
+        TEST_METHOD(TestWindowsAudioPlayerPlay) 
+        {
+            int rc = 0;
+            int bytesRead = 0;
+            int result = 1;
+            fstream fs;
 
-			const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
+            const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
 
-			fs.open(wavFile, ios_base::binary | ios_base::in);
+            fs.open(wavFile, ios_base::binary | ios_base::in);
 
-			if ((fs.rdstate() & fs.failbit) != 0)
-			{
-				Assert::Fail();
-			}
+            if ((fs.rdstate() & fs.failbit) != 0)
+            {
+                Assert::Fail();
+            }
 
-			fs.seekg(44);
+            fs.seekg(44);
 
-			std::array<uint8_t, 1000> buffer;
+            std::array<uint8_t, 1000> buffer;
 
-			AudioPlayer::WindowsAudioPlayer player;
-			player.Initialize();
+            AudioPlayer::WindowsAudioPlayer player;
+            player.Initialize();
 
-			while (!fs.eof())
-			{
-				fs.read((char*)buffer.data(), (uint32_t)buffer.size());
-				result = player.Play(buffer.data(), buffer.size());
-				bytesRead += 1000;
-			}
+            while (!fs.eof())
+            {
+                fs.read((char*)buffer.data(), (uint32_t)buffer.size());
+                result = player.Play(buffer.data(), buffer.size());
+                bytesRead += 1000;
+            }
 
-			fs.close();
+            fs.close();
 
-			SleepDuration(bytesRead);
+            SleepDuration(bytesRead);
 
-			Assert::AreEqual(rc, result);
-		}
+            Assert::AreEqual(rc, result);
+        }
 
-		TEST_METHOD(TestWindowsAudioPlayerPullAudioOutputStream) 
-		{
-			std::shared_ptr<fstream> fs = std::make_shared<fstream>();
+        TEST_METHOD(TestWindowsAudioPlayerPullAudioOutputStream) 
+        {
+            std::shared_ptr<fstream> fs = std::make_shared<fstream>();
 
-			const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
+            const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
 
-			fs->open(wavFile, ios_base::binary | ios_base::in);
+            fs->open(wavFile, ios_base::binary | ios_base::in);
 
-			if ((fs->rdstate() & fs->failbit) != 0)
-			{
-				Assert::Fail();
-			}
+            if ((fs->rdstate() & fs->failbit) != 0)
+            {
+                Assert::Fail();
+            }
 
-			fs->seekg(44);
+            fs->seekg(44);
 
-			int rc = 0;
-			int result = 1;
-			unsigned int bytesRead = 0;
+            int rc = 0;
+            int result = 1;
+            unsigned int bytesRead = 0;
 
-			AudioPlayer::WindowsAudioPlayer player;
-			player.Initialize();
+            AudioPlayer::WindowsAudioPlayer player;
+            player.Initialize();
 
-			std::shared_ptr<IAudioPlayerStream> playerStream = std::make_shared<AudioPlayer::AudioPlayerStreamImpl>(fs);
-			result = player.Play(playerStream);
+            std::shared_ptr<IAudioPlayerStream> playerStream = std::make_shared<AudioPlayer::AudioPlayerStreamImpl>(fs);
+            result = player.Play(playerStream);
 
-			Assert::AreEqual(rc, result);
-		}
+            Assert::AreEqual(rc, result);
+        }
 
-		TEST_METHOD(TestWindowsAudioPlayerStop) 
-		{
-			int rc = 0;
-			int bytesRead = 0;
-			int result = 1;
-			fstream fs;
+        TEST_METHOD(TestWindowsAudioPlayerStop) 
+        {
+            int rc = 0;
+            int bytesRead = 0;
+            int result = 1;
+            fstream fs;
 
-			const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
+            const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
 
-			fs.open(wavFile, ios_base::binary | ios_base::in);
+            fs.open(wavFile, ios_base::binary | ios_base::in);
 
-			if ((fs.rdstate() & fs.failbit) != 0)
-			{
-				Assert::Fail();
-			}
+            if ((fs.rdstate() & fs.failbit) != 0)
+            {
+                Assert::Fail();
+            }
 
-			fs.seekg(44);
+            fs.seekg(44);
 
-			std::array<uint8_t, 1000> buffer;
+            std::array<uint8_t, 1000> buffer;
 
-			AudioPlayer::WindowsAudioPlayer player;
-			player.Initialize();
+            AudioPlayer::WindowsAudioPlayer player;
+            player.Initialize();
 
-			while (!fs.eof())
-			{
-				fs.read((char*)buffer.data(), (uint32_t)buffer.size());
-				result = player.Play(buffer.data(), buffer.size());
-				bytesRead += 1000;
-			}
+            while (!fs.eof())
+            {
+                fs.read((char*)buffer.data(), (uint32_t)buffer.size());
+                result = player.Play(buffer.data(), buffer.size());
+                bytesRead += 1000;
+            }
 
-			fs.close();
+            fs.close();
 
-			SleepDuration(bytesRead);
+            SleepDuration(bytesRead);
 
-			result = player.Stop();
-			Assert::AreEqual(rc, result);
-		}
+            result = player.Stop();
+            Assert::AreEqual(rc, result);
+        }
 
-		void SleepDuration(int numBytes) 
-		{
-			Sleep((numBytes / 32000) * 1000);
-		}
-	};
+        void SleepDuration(int numBytes) 
+        {
+            Sleep((numBytes / 32000) * 1000);
+        }
+
+    private:
+        fstream fs;
+    };
 }
