@@ -61,6 +61,7 @@ fi
 
 echo "Building Raspberry Pi sample ..."
 if g++ -Wno-psabi \
+src/cppCore/cppCore.cpp \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/linux/LinuxMicMuter.cpp \
@@ -68,6 +69,7 @@ src/common/AudioPlayerEntry.cpp \
 src/common/AgentConfiguration.cpp \
 src/common/DeviceStatusIndicators.cpp \
 src/common/DialogManager.cpp \
+src/common/AudioPlayerStreamImpl.cpp \
 -o ./out/sample.exe \
 -std=c++14 \
 -D LINUX \

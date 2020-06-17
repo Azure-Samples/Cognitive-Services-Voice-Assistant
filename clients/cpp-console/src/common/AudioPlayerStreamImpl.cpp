@@ -32,4 +32,5 @@ int AudioPlayerStreamImpl::Read(unsigned char* buffer, size_t bufferSize)
         int numberOfBytes = m_fStream->gcount();
         return numberOfBytes;
     }
+    return 0;
 }

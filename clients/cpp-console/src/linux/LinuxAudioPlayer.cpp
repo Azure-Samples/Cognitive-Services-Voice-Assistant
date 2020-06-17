@@ -260,7 +260,7 @@ int LinuxAudioPlayer::Play(uint8_t* buffer, size_t bufferSize)
     return rc;
 }
 
-int LinuxAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream)
+int LinuxAudioPlayer::Play(std::shared_ptr<IAudioPlayerStream> pStream)
 {
     int rc = 0;
     if (m_state == AudioPlayerState::UNINITIALIZED)
