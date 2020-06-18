@@ -10,7 +10,7 @@ class IAudioPlayerStream
 public:
     enum class AudioPlayerStreamType
     {
-        PULLAUDIOOUTPUTSTREAM,
+        PULL_AUDIO_OUTPUT_STREAM,
         FSTREAM
     };
 

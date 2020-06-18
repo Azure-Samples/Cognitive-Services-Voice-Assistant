@@ -8,7 +8,7 @@ using namespace AudioPlayer;
 AudioPlayerStreamImpl::AudioPlayerStreamImpl(std::shared_ptr<Audio::PullAudioOutputStream> pStream)
 {
     m_pullStream = pStream;
-    m_streamType = AudioPlayerStreamType::PULLAUDIOOUTPUTSTREAM;
+    m_streamType = AudioPlayerStreamType::PULL_AUDIO_OUTPUT_STREAM;
 }
 
 AudioPlayerStreamImpl::AudioPlayerStreamImpl(std::shared_ptr<fstream> fStream)
@@ -21,7 +21,7 @@ int AudioPlayerStreamImpl::Read(unsigned char* buffer, size_t bufferSize)
 {
     switch (m_streamType)
     {
-    case AudioPlayerStreamType::PULLAUDIOOUTPUTSTREAM:
+    case AudioPlayerStreamType::PULL_AUDIO_OUTPUT_STREAM:
        return m_pullStream->Read(buffer, bufferSize);
     case AudioPlayerStreamType::FSTREAM:
         if (m_fStream->eof())
