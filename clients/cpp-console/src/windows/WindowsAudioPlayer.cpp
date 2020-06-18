@@ -200,7 +200,7 @@ void WindowsAudioPlayer::PlayAudioPlayerStream(std::shared_ptr<AudioPlayerEntry>
     UINT32 framesToWrite;
     BYTE* pData, * pStreamData;
     unsigned int bytesRead = 0;
-    std::shared_ptr<IAudioPlayerStream> stream = pEntry->m_AudioPlayerStream;
+    std::shared_ptr<IAudioPlayerStream> stream = pEntry->m_audioPlayerStream;
 
     hr = m_pAudioClient->GetBufferSize(&maxBufferSizeInFrames);
     if (FAILED(hr))
