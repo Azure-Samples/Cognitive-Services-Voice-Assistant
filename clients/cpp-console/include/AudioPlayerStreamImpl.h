@@ -18,7 +18,7 @@ namespace AudioPlayer
 
         AudioPlayerStreamImpl(std::shared_ptr<fstream> fStream);
 
-        virtual int Read(unsigned char* buffer, size_t bufferSize) final;
+        virtual unsigned int Read(unsigned char* buffer, size_t bufferSize) final;
 
     private:
         std::shared_ptr<Audio::PullAudioOutputStream> m_pullStream;

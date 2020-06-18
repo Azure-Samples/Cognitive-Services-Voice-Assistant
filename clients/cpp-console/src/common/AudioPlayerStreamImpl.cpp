@@ -17,20 +17,20 @@ AudioPlayerStreamImpl::AudioPlayerStreamImpl(std::shared_ptr<fstream> fStream)
     m_streamType = AudioPlayerStreamType::FSTREAM;
 }
 
-int AudioPlayerStreamImpl::Read(unsigned char* buffer, size_t bufferSize)
+unsigned int AudioPlayerStreamImpl::Read(unsigned char* buffer, size_t bufferSize)
 {
     switch (m_streamType)
     {
     case AudioPlayerStreamType::PULL_AUDIO_OUTPUT_STREAM:
-       return m_pullStream->Read(buffer, bufferSize);
+       return m_pullStream->Read(buffer, (uint32_t)bufferSize);
     case AudioPlayerStreamType::FSTREAM:
         if (m_fStream->eof())
         {
             return 0;
         }
         m_fStream->read((char*)buffer, (uint32_t)bufferSize);
-        int numberOfBytes = m_fStream->gcount();
-        return numberOfBytes;
+        std::streamsize numberOfBytes = m_fStream->gcount();
+        return (unsigned int)numberOfBytes;
     }
     return 0;
 }

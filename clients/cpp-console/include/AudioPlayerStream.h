@@ -14,5 +14,5 @@ public:
         FSTREAM
     };
 
-    virtual int Read(unsigned char* buffer, size_t bufferSize) = 0;
+    virtual unsigned int Read(unsigned char* buffer, size_t bufferSize) = 0;
 };

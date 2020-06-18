@@ -30,7 +30,7 @@ namespace MicMuter
     private:
         ATL::CComAutoCriticalSection m_cs;
         IAudioEndpointVolume* m_endpointVolume = NULL;
-        BOOL _originalMuteState;
-        bool _muted;
+        BOOL _originalMuteState = false;
+        bool _muted  = false;
     };
 };

@@ -11,6 +11,7 @@ using namespace std;
 
 namespace cppSampleTests
 {
+    const string testWavFilePath = "..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
     TEST_CLASS(cppSampleTests)
     {
     public:
@@ -41,9 +42,7 @@ namespace cppSampleTests
 
             std::shared_ptr<fstream> fs = std::make_shared<fstream>();
 
-            const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
-
-            fs->open(wavFile, ios_base::binary | ios_base::in);
+            fs->open(testWavFilePath, ios_base::binary | ios_base::in);
 
             if ((fs->rdstate() & fs->failbit) != 0)
             {
@@ -84,9 +83,7 @@ namespace cppSampleTests
             int result = 1;
             fstream fs;
 
-            const string& wavFile = "..\\..\\..\\cppSampleTests\\CognitiveServicesVoiceAssistantIntro.wav";
-
-            fs.open(wavFile, ios_base::binary | ios_base::in);
+            fs.open(testWavFilePath, ios_base::binary | ios_base::in);
 
             if ((fs.rdstate() & fs.failbit) != 0)
             {
