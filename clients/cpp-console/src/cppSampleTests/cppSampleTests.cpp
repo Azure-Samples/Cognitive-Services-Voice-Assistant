@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-#include "pch.h"
 #include "CppUnitTest.h"
 #include "WindowsAudioPlayer.h"
 #include "AudioPlayerStreamImpl.h"
