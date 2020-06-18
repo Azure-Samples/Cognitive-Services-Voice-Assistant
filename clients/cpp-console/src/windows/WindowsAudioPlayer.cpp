@@ -413,7 +413,6 @@ int WindowsAudioPlayer::Close()
     m_conditionVariable.notify_one();
     m_playerThread.join();
 
-    /*CoUninitialize();*/
     SAFE_CLOSEHANDLE(m_hAudioClientEvent);
     SAFE_RELEASE(m_pRenderClient);
     SAFE_RELEASE(m_pAudioClient);

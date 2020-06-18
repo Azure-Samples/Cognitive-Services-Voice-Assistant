@@ -25,7 +25,6 @@ fi
 
 echo "Building Linux x64 sample ..."
 if g++ -Wno-psabi \
-src/cppCore/cppCore.cpp \
 src/common/Main.cpp \
 src/linux/LinuxAudioPlayer.cpp \
 src/linux/LinuxMicMuter.cpp \
