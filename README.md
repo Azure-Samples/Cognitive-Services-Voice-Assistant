@@ -94,6 +94,12 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 |-------------|-------------|-------------------|
 | [clients\csharp-dotnet-core\voice-assistant-test](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-dotnet-core/voice-assistant-test) | Automated, multi-turn, end-to-end regression test for your bot or Custom Commands application. Supports WAV file input, text or Bot-Framework activities | C# .NET Core  |
 
+### Articles
+
+| File | Description |
+|-------------|-------------|
+| [docs\LocalBot.md](docs\LocalBot.md)| Running & debugging your Bot locally while using Direct Line Speech Channel |
+
 ### Root Folder Files
 
 | File | Description | Language/Platform |
