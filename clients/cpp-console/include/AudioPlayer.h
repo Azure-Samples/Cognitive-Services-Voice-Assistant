@@ -1,9 +1,9 @@
-
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
 #include "speechapi_cxx.h"
 #include "AudioPlayerState.h"
+#include "AudioPlayerStream.h"
 
 /// <summary>
 /// Abstract object used to define the interface to an AudioPlayer
@@ -128,7 +128,7 @@ public:
     /// since this will not cause copies of the buffer to be stored at runtime.
     /// In our implementation we assume Initialize is called before playing.
     /// </remarks>
-    virtual int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream) = 0;
+    virtual int Play(std::shared_ptr<IAudioPlayerStream> pStream) = 0;
 
     /// <summary>
     /// This method is used to stop all playback. This will clear any queued audio meaning that any audio yet to play will be lost.

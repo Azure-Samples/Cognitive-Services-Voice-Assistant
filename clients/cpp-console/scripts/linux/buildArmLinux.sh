@@ -52,6 +52,7 @@ src/common/AudioPlayerEntry.cpp \
 src/common/AgentConfiguration.cpp \
 src/common/DeviceStatusIndicators.cpp \
 src/common/DialogManager.cpp \
+src/common/AudioPlayerStreamImpl.cpp \
 -o ./out/sample.exe \
 -std=c++14 \
 -D LINUX \
