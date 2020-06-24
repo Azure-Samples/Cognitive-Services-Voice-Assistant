@@ -98,7 +98,7 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 
 | File | Description |
 |-------------|-------------|
-| [docs\LocalBot.md](docs\LocalBot.md)| Running & debugging your Bot locally while using Direct Line Speech Channel |
+| [docs\LocalBot.md](docs/LocalBot.md)| Running & debugging your Bot locally while using Direct Line Speech Channel |
 
 ### Root Folder Files
 
