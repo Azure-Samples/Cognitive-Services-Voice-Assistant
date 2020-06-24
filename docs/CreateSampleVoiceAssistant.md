@@ -62,7 +62,7 @@ At the end of this step, you will have a .table file if you want keyword activat
 
 If you are developing on windows, we recommend you first use the [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf). Executable of the latest stable version can be downloaded from the [Release tab](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/releases) (no need to compile code). It has nice GUI to configure connection settings.
 
-If you are in the IoT space, you can create a compelling demo by running the [sample C++ code](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) on a Raspberry Pie device. This includes the option to install the Microsoft Audio Stack to enable echo-cancellation and noise suppression, allowing far-field voice interaction and "barge-in" keyword activation (interrupting the Voice Assistant while it's speaking)
+If you are in the IoT space, you can create a compelling demo by running the [sample C++ code](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) on a Raspberry Pi device. This includes the option to install the Microsoft Audio Stack to enable echo-cancellation and noise suppression, allowing far-field voice interaction and "barge-in" keyword activation (interrupting the Voice Assistant while it's speaking)
 
 ## Step 6 - Give us feedback!
 
