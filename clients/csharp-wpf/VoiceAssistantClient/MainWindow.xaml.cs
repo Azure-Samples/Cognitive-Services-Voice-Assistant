@@ -56,7 +56,19 @@ namespace VoiceAssistantClient
             Services.Tracker.Configure(this.settings).Apply();
 
             this.renderer = new AdaptiveCardRenderer();
-            this.renderer.UseXceedElementRenderers();
+
+            /*
+              Xceed Enhanced Input Package
+              This optional package enhances the Adaptive Card input controls beyond what WPF provides out of the box.
+              To enable it:
+              1. Add the NuGet package Extended.Wpf.Toolkit by Xceed to the project
+              2. Add the NuGet package AdaptiveCards.Rendering.Wpf.Xceed by Microsoft to the project
+              3. Uncomment the one line below
+              This option is not included here because of its license terms.
+              For more info: https://docs.microsoft.com/en-us/adaptive-cards/sdk/rendering-cards/net-wpf/getting-started
+            */
+            // this.renderer.UseXceedElementRenderers();
+
             var configFile = Path.Combine(System.Reflection.Assembly.GetExecutingAssembly().Location, "AdaptiveCardsHostConfig.json");
             if (File.Exists(configFile))
             {
