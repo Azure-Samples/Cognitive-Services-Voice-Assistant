@@ -66,7 +66,7 @@ write-host "Created project Id $appId"
 # change the model based on the local json file
 write-host "patching the $speechAppName $appName commands model"
 $newModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
-$newModel.httpEndpoints[0].url = $websiteAddress
+$newModel.webEndpoints[0].url = $websiteAddress
 
 # send the updated model up to the application
 write-host "updating $speechAppName with the new $appName commands model"
