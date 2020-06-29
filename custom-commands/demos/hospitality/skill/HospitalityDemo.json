@@ -1,7 +1,7 @@
 {
   "type": "CommandsDialogModel",
   "culture": "en-us",
-  "httpEndpoints": [
+  "webEndpoints": [
     {
       "name": "RoomControlBackend",
       "method": "GET",
@@ -124,7 +124,7 @@
     "# OpenCloseRoomControlBackendonFailure9bd92d20fc2d11e9bf63b974d90bef6c",
     "- Sorry, unable to connect to the room control service right now"
   ],
-  "registeredWakeWords": [
+  "registeredKeywords": [
     "computer",
     "contohso",
     "jayden",
@@ -999,14 +999,5 @@
         "{OpenCloseSubject} {OpenCloseOperation}"
       ]
     }
-  ],
-  "modelMetadata": {
-    "modelId": "158a9aee-d881-4df6-875f-5544abdf4637",
-    "lastTrainedModelId": "17c871d4-f236-4d35-b801-f4804d7ed8d2",
-    "lastPublishedModelId": "17c871d4-f236-4d35-b801-f4804d7ed8d2",
-    "lastTrainedVersionId": "3TTQM32JEN",
-    "published": false,
-    "publishedForTest": false,
-    "requiresTraining": true
-  }
+  ]
 }

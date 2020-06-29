@@ -63,7 +63,7 @@ do
         echo "Error while completing training: $completeTrainingResult"
         exit 1
     fi
-    if [[ "$completeTrainingResult" == *"Completed"* ]]; 
+    if [[ "$completeTrainingResult" == *"Succeeded"* ]]; 
     then
         echo "App trained successfully"
         
