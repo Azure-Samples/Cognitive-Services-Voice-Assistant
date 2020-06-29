@@ -131,10 +131,7 @@ write-host "...training is completed"
 #
 
 write-host "publishing the model"
-# Direct following code will be interrupted by response status 405.
-# $response = invoke-restmethod -Method POST -Uri "$($OperationLocation.replace('/train/','/publish/'))" -Header $headers
-# Direct following code will not produce error, but response status 405 still is the result, which is same as running train-and-publish.sh. WVAC can not test properly after deployment.
-$response = curl -s -X POST "$($OperationLocation.replace('/train/', '/publish/'))" -H "Ocp-Apim-Subscription-Key: $speechResourceKey" -H "Content-Length: 0"
+$response = invoke-restmethod -Method PUT -Uri "$($OperationLocation.replace('/train/','/publish/'))" -Header $headers
 
 write-host "...model is published"
 
