@@ -67,9 +67,9 @@ do
     then
         echo "App trained successfully"
         
-        curl -s -X POST ${publishUrl} -H "$authHeader" -H "Content-Length: 0" -o PublishResult.json
+        curl -s -X PUT ${publishUrl} -H "$authHeader" -H "Content-Length: 0" -o PublishResult.json
         publishResult=$(cat PublishResult.json)
- 
+
         if [[ "$publishResult" == *"error"* ]]; 
         then
             echo "Error while publishing: $publishResult"
