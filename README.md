@@ -98,6 +98,7 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 
 | File | Description |
 |-------------|-------------|
+| [docs\CloudConnectionLogic.md](docs/CloudConnectionLogic.md)| Discusses options for when to connect to Direct Line Speech channel and how long to keep the connection open  |
 | [docs\LocalBot.md](docs/LocalBot.md)| Running & debugging your Bot locally while using Direct Line Speech Channel |
 
 ### Root Folder Files
