@@ -1,17 +1,20 @@
 
 # Voice Assistants Cloud Connection Logic
 
-This article discusses options for when to connect your client application to [Direct Line Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) (DLS) channel and your bot, and how long to keep that connection open. It also discusses policies for Cognitive Services Speech token refresh, as it is recommended that client applications never handle speech keys.
+This article discusses:
+* Options for when to connect your client application to [Direct Line Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) (DLS) channel and your bot, and how long to keep that connection open
+* The built-in 5-minute websocket disconnect policy
+* The need to use a Cognitive Services Speech token, as it is recommended that client applications never handle speech keys.
 
 The text below assumes you are deploying a bot. However, similar considerations apply if you host your dialog using [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands).
 
-The text below and C# pseudo code assumes your client application uses keyword activation. The considerations with regards to when to open connection and how long to keep it open are similar if your application uses microphone button ("push to talk") activation only.
+The text below and C# pseudo code assumes your client application uses keyword activation. The considerations with regards to connection logic are similar if your application uses microphone button ("push to talk") activation only.
 
 ## Connection options
 
 ### Option 1 - Always connected
 
-A web-socket between the client application, DLS channel and your bot is established when the client application opens. Web-socket connections remains open until the client application closes. 
+A web-socket between the client application, DLS channel and your bot is established when the client application opens. Web-socket connections remains open until the client application closes, which the exception mentioned [in this section](#built-in-5-minute-websocket-disconnect-policy).
 
 Pros
 * Lowest latency - There is no need to create the web-socket connection at the moment the user says the keyword or presses the microphone button.
@@ -113,6 +116,32 @@ A web-socket between the client application, DLS  and your bot is established wh
 
 This is a compromise between Options 1 and 2. If your scenario typically calls for a user to initiate several dialogs with your bot in a short period of time, this may be the best solution.
 
+## Built-in 5-minute websocket disconnect policy
+
+Direct Line Speech (DLS) channel closes the websocket connection with a client application that has not been active for 5 minutes. _Active_ meaning the client has either
+* Sent audio via [ListenOnceAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.listenonceasync?view=azure-dotnet#Microsoft_CognitiveServices_Speech_Dialog_DialogServiceConnector_ListenOnceAsync) or keyword activation ([StartKeywordRecognitionAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.startkeywordrecognitionasync?view=azure-dotnet)), or
+* Sent a Bot-Framework activity ([SendActivityAsync](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.sendactivityasync?view=azure-dotnet))
+
+When the 5-minute disconnection happens, the client application will receive a [Connector canceled event](https://docs.microsoft.com/en-us/dotnet/api/microsoft.cognitiveservices.speech.dialog.dialogserviceconnector.canceled?view=azure-dotnet) with the following arguments:
+* ```Reason``` = CancellationReason.Error
+* ```ErrorCode``` = CancellationErrorCode.ConnectionFailure
+* ```ErrorDetails``` = "Connection was closed by the remote host. Error code: 1000. Error details: Exceeded maximum websocket connection idle duration(> 300000ms) SessionId: ..."
+
+The client application does not need to act on this event. Speech SDK has a built-in reconnect logic. Next time audio or activity is being sent up, connection will be established. This means your event handler method should ignore this cancellation error, by doing the following (C# pseudo code):
+```csharp
+    private void ConnectorCanceled(object sender, SpeechRecognitionCanceledEventArgs e)
+    {
+        if (e.Reason == CancellationReason.Error && e.ErrorCode == CancellationErrorCode.ConnectionFailure
+            && e.ErrorDetails.Contains("1000"))
+        {
+                // Do nothing... perhaps just log the event
+        }
+        else ...
+    }
+```
+
+Since any interaction (audio or activity being sent up) after 5 minutes of idle time requires first reestablishing the websocket connection with DLS, it will slightly affect the overall response latency from the bot.
+
 ## Using speech tokens
 
-TBD
+_[to be written...]_
