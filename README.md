@@ -138,6 +138,12 @@ To build any of the sample client applications or deploy custom commands to your
     cd Cognitive-Services-Voice-Assistant
 ```
 
+## Related Microsoft GitHub Repos
+* https://github.com/Azure-Samples/cognitive-services-speech-sdk
+* https://github.com/Azure-Samples/Cognitive-Services-Speech-Devices-SDK
+* https://github.com/microsoft/botframework-solutions
+* https://github.com/Microsoft/BotBuilder-Samples
+
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
