@@ -1,8 +1,8 @@
 #Requires -Version 6
 
 Param(
-    [Parameter(Mandatory, HelpMessage = "Please enter a supported app. automotive, hospitality, or inventory")]
-    [ValidateSet('automotive', 'hospitality', 'inventory', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")]
+    [Parameter(Mandatory, HelpMessage = "Please enter a supported app. automotive, hospitality, inventory or careroom")]
+    [ValidateSet('automotive', 'hospitality', 'inventory', 'careroom', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")]
     [string] $appName = $(Read-Host -prompt "appName"),
     [Parameter (Mandatory, HelpMessage = "Please enter a name for your resource. It must be < 19 characters and  Alphanumeric only")]
     [ValidatePattern("^\w+$", ErrorMessage = "resourceName must be alphanumeric")]
