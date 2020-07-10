@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Virtual Room</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+
+    <style>
+		.demoFrame {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            height: 100%;
+            max-width: 1440px;
+            max-height: 810px;
+            min-width: 960px;
+            min-height: 540px;
+        }
+
+        .room-image {
+			position: relative;
+            width: 100%;
+            max-width: 1440px;
+            min-width: 960px;
+        }
+
+        .overlays {
+            position: absolute;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            /*margin-left: -100%;
+            width: 100%;
+            height:auto;
+            /*
+            max-width: 1440px;
+            min-width: 960px;*/
+        }
+
+        .thermostat {
+            position: absolute;
+            font-size: 22px;
+            font-weight: bolder;
+            top: 49%;
+            left: 61.4%;
+            z-index: 100;
+        }
+
+        .messages {
+            position: absolute;
+            height: 90px;
+            width: 400px;
+            margin-top: -9.5%;
+            margin-left: 1%;
+            z-index: 100;
+        }
+
+        #message-title {
+            padding-top: 5px;
+            font-size:smaller;
+        }
+
+        #item-ordered {
+            font-weight: bold;
+        }
+
+        .list {
+            background-image: repeating-linear-gradient(180deg, lightyellow, lightyellow 40px, lemonchiffon 40px, lemonchiffon 80px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="collapse bg-dark" id="navbarHeader">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 col-md-12 py-4">
+                        <h4 class="text-white">About</h4>
+                        <p class="text-muted">
+                            This is a sample virtual room to demostrate the IoT capabilities of Custom
+                            Commands.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar navbar-dark bg-dark box-shadow">
+            <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="feather feather-home">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <strong>&nbsp;Virtual Room</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
+                        aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main role="main">
+        <div id="hotel-room" class="demoFrame ">
+            <img id="background" src="Background2.png" class="room-image" style="position:relative" />
+            <img id="blinds" src="WindowShadeClosed.png" class="room-image overlays" />
+            <img id="room-light" src="LampOff.png" class="room-image overlays" />
+            <img id="television-off" src="TVOff.png" class="room-image overlays" />                        
+            <img id="ac-off" src="ACOff.png" class="room-image overlays" />
+            <img id="ac-on" src="ACOn.png" class="room-image overlays" />
+            <div id="thermostat" class="thermostat"><span id="temperature">70</span></div>
+            <div class="col-sm list border rounded messages">
+                <p class="lead">
+                    <span id="message-title">Messages:</span><br/>
+                    <span id="item-ordered"></span>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+
+    <script>
+        
+        $(function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var jsonUrl = "";
+            
+            $.getJSON("ConnectionURLS.json",function(data){
+                jsonUrl = data.AZURE_FUNCTION_URL;
+                                
+                var room = urlParams.get("room");
+                if (urlParams.has("room")) {
+                    jsonUrl = jsonUrl + "?room=" + room;
+                }
+
+                var timesRun = 0;
+                setInterval(function () {
+                    if(timesRun === 10800){
+                        clearInterval(interval);
+                    }
+                    $.getJSON(jsonUrl, function (configuration) {
+                        clear();
+                        apply(configuration);
+                        console.log(configuration);
+                    });
+                    timesRun += 1;
+                }, 1000);
+
+                setTimeout(function(){ alert("Timed out, please refresh!"); }, 10800000);
+
+                function apply(configuration) {
+                    $("#temperature").html(configuration.Temperature);
+
+                    if (configuration.Lights_room) {
+                        $("#room-light").fadeOut('fast')
+                    }
+                    else {
+                        $("#room-light").fadeIn('fast')
+                    }
+                    
+                    if (configuration.Television) {
+                        $("#television-off").fadeOut('fast')
+                    }
+                    else {
+                        $("#television-off").fadeIn('fast')
+                    }
+
+                    if (configuration.Blinds) {
+                        $("#blinds").fadeOut('fast')
+                    }
+                    else {
+                        $("#blinds").fadeIn('fast')
+                    }
+
+                    if(configuration.AC){
+                        $("#ac-on").fadeIn('fast')
+                        $("#ac-off").fadeOut('fast')
+                    } else {
+                        $("#ac-on").fadeOut('fast')
+                        $("#ac-off").fadeIn('fast')
+                    }
+                    
+                    if (configuration.Message != null
+                        && configuration.Message != $("#item-ordered").text()) {
+                        $("#item-ordered").html(configuration.Message);
+                        $("#item-ordered")
+                            .finish()
+                            .fadeIn('fast')
+                            .delay(8000)
+                            .fadeOut('slow');
+                    }
+                }
+
+                function clear() {
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
