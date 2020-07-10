@@ -1,17 +1,16 @@
 # Care Room - A Custom Commands Demo
 
-![scene image](../images/careroom-scene.png)
+![scene image](../images/care-room-scene.png)
 
 ## Domain
 
-In this demo we simulate a hospital room and use voice to control some of the devices in the room - The television, air-conditioning, blinds, bathroom lights and main-room light.
+In this demo we simulate a hospital room or healthcare facility and use voice to control some of the devices in the room - The television, air-conditioning, blinds and wall lamp. The dialog is similar to the one in the hospitality demo, just different visuals 
 
 ## Example sentences
 
 Here are a few examples. Try these or others of your choice:
-* Turn on the lights
-* Turn off the bathroom lights
-* Room lights off
+* Turn on the light
+* Lights off
 * Turn off the AC
 * Set the temperature to 71 degrees
 * Raise the temperature
@@ -20,7 +19,7 @@ Here are a few examples. Try these or others of your choice:
 * TV on
 * Turn it off
 
-If you configured your client application to listen for a keyword, say the keyword first followed by the above (or other) sentences (e.g. "computer, turn on the lights")
+If you configured your client application to listen for a keyword, say the keyword first followed by the above (or other) sentences (e.g. "hi nurse, turn on the lights"). The keyword "hi nurse" was specifically targeted for this scene, but of course any keyword can be used.
 
 ## Links
 
