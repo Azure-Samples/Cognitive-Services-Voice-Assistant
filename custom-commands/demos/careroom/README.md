@@ -4,7 +4,7 @@
 
 ## Domain
 
-In this demo we simulate a hospital room or healthcare facility and use voice to control some of the devices in the room - The television, air-conditioning, blinds and wall lamp. The dialog is similar to the one in the hospitality demo, just different visuals 
+In this demo we simulate a hospital room or healthcare facility and use voice to control some of the devices in the room - The television, air-conditioning, blinds and wall lamp. The dialog is similar to the one in the hospitality demo, just different visual
 
 ## Example sentences
 
@@ -23,5 +23,5 @@ If you configured your client application to listen for a keyword, say the keywo
 
 ## Links
 
-* To deploy this demo, follow the [step-by-step instructions for building a sample Voice Assistant using Custom Commands](../../docs/CreateSampleVoiceAssistant.md)
+* To deploy this demo, follow the [step-by-step instructions for building a sample Voice Assistant using Custom Commands](../../,,/docs/CreateSampleVoiceAssistant.md)
 * View the Custom Commands [JSON file](skill/CareRoomDemo.json) for this demo
