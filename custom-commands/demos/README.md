@@ -45,7 +45,7 @@ Call az login to log your Powershell into Azure. If you have more than one Azure
     az login
 ```
  Run the Powershell script below, with the following arguments:
- * Replace "DemoName" with one of three available values: [hospitality](hospitality/README.md), [inventory](inventory/README.md) or [automotive](automotive/README.md). Click on those links to get a description of the supported dialog and the virtual scene.
+ * Replace "DemoName" with one of three available values: [hospitality](hospitality/README.md), [inventory](inventory/README.md), [automotive](automotive/README.md) or [careroom](careroom/README.md). Click on those links to get a description of the supported dialog and the virtual scene.
  * Replace "MyResourceGroupName" with the an Azure Resource Group name of your choice. This name should be no more than 19 characters, alphanumeric only. Make sure an Azure resource group by this name does not already exist in your subscription. This name will also be used to construct names of all the Azure resources and URL that will be associated with this Custom Commands application and visualization. Some of these names need to be globally unique, so the script will append a random number to the name you selected
  * Replace "AzureRegion" with an Azure region near you, form the list of [Voice Assistant supported regions](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#voice-assistants) (e.g. westus). Read more about Azure Regions [here](https://azure.microsoft.com/en-us/global-infrastructure/regions/). Note that if you are using a free trial Azure subscription, you are limited to Azure regions westus or northeurope
 ```powershell
@@ -100,6 +100,11 @@ For the Inventory demo:
 For the Automotive demo:
 <p align="center">
 <img src="images/automotive-scene.png" width="360"/>
+</p>
+
+For the Care Room demo:
+<p align="center">
+<img src="images/care-room-scene.png" width="360"/>
 </p>
 
 ## See your Custom Command application in Speech Studio
@@ -186,6 +191,7 @@ Another useful thing might be to update the Azure SKU's in the azuredeploy.json 
 
 ## Change log
 
+* July 9, 2020: Add "Care Room" demo
 * [May 26, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/439/commits/83d6606eeea44ec46a4d8eb49ff831a7467fee62): In the Hospitality demo, when I say “turn on TV”, the response was always “okay turning on TV”, regardless of the TV was already on or off. If the TV was already on, the response should be “TV is already on”, same for lights, air condition, and blinds.
     * Updated HospitalityDemo.cs to not to turn on TV, lights, air condition that are already on, etc.
     * Updated HospitalityDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.

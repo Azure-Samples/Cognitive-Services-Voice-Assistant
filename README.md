@@ -75,9 +75,10 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 | Folder | Description |
 |-------------|-------------|
 | [custom-commands\demos](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos)| Landing page for Custom Command demos, including deployment instructions |
-| [custom-commands\demos\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/hospitality)| Sample voice commands to control your room (lights, blinds, TV and temperature), including visualization of the results |
+| [custom-commands\demos\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/hospitality)| Sample voice commands to control your room (lights, blinds, TV and temperature), including visualization of the results in a hotel room settings |
 | [custom-commands\demos\inventory](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/inventory) | Sample voice commands to control warehouse inventory (adding or removing different color crates), including visualization of the results |
 | [custom-commands\demos\automotive](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/automotive) | Sample voice commands to the environment in your car (temperature, .... ), including visualization of the results |
+| [custom-commands\demos\careroom](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/careroom)| Sample voice commands to control your room (lights, blinds, TV and temperature), including visualization of the results in a hospital room or other healthcare facility |
 | [custom-commands\quick-start](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/quick-start) | JSON Custom Command file for the [official quick-start guide](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands)  |
 | [custom-commands\scripts](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/scripts) | Continuous deployment scripts for Azure DevOps pipeline |
 
