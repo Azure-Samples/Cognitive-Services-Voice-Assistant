@@ -191,7 +191,7 @@ Another useful thing might be to update the Azure SKU's in the azuredeploy.json 
 
 ## Change log
 
-* July 9, 2020: Add "Care Room" demo
+* [July 9, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/commit/352c2120ab33b9649a44acc94f5cfe23d55a3802): Add "Care Room" demo
 * [May 26, 2020](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/pull/439/commits/83d6606eeea44ec46a4d8eb49ff831a7467fee62): In the Hospitality demo, when I say “turn on TV”, the response was always “okay turning on TV”, regardless of the TV was already on or off. If the TV was already on, the response should be “TV is already on”, same for lights, air condition, and blinds.
     * Updated HospitalityDemo.cs to not to turn on TV, lights, air condition that are already on, etc.
     * Updated HospitalityDemo.json to use message returned from web endpoint for onSuccess SpeechResponse for CallHttpEndpoint actions, and remove redundant SpeechResponse.
