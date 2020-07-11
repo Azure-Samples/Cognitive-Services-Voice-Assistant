@@ -135,6 +135,8 @@
   <ItemGroup>
     <Compile Include="ActivityWrapper.cs" />
     <Compile Include="AgentSessionWrapper.cs" />
+    <Compile Include="AudioInput\PullAudioDataSource.cs" />
+    <Compile Include="AudioInput\PullAudioInputSink.cs" />
     <Compile Include="KwsPerformance\KeywordDetectionParams.cs" />
     <Compile Include="KwsPerformance\KwsPerformanceLogger.cs" />
     <Compile Include="Settings\AppSettings.cs" />
@@ -226,7 +228,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CognitiveServices.Speech">
-      <Version>1.12.0</Version>
+      <Version>1.13.0-alpha.0.13656440</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>3.1.2</Version>
@@ -237,7 +239,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.0-preview1-26926-04</Version>
+      <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.3.200213001</Version>

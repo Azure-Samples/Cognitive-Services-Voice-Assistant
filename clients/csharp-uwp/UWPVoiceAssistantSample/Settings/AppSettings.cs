@@ -175,6 +175,7 @@ namespace UWPVoiceAssistantSample
             LogIfFalse(IsValidAzureRegion(instance.SpeechRegion), "Failed to validate Azure region");
             LogIfFalse(IsValidResourceId(instance.CustomSREndpointId, optional: true), "Failed to validate custom speech id");
             LogIfFalse(
+                instance.CustomVoiceDeploymentIds == null ||
                 instance.CustomVoiceDeploymentIds.Split(',')
                     .All(customVoiceId => IsValidResourceId(customVoiceId, optional: true)),
                 "Failed to validate custom voice ids");

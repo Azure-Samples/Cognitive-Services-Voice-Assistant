@@ -226,7 +226,7 @@ namespace DialogManagerTests
             session = await this.mockAgentSessionManager.GetSessionAsync();
 
             Assert.IsTrue(this.signalRejectedEventReceived
-                .WaitOne((int)SignalDetectionHelper.SignalConfirmationTimeout.TotalMilliseconds + 200));
+                .WaitOne(3000));
             Assert.AreEqual(ConversationalAgentState.Inactive, session.AgentState);
         }
 
@@ -262,7 +262,7 @@ namespace DialogManagerTests
             this.mockBackend.SimulateKeywordRecognized("Contoso");
             session = await this.mockAgentSessionManager.GetSessionAsync();
 
-            Assert.IsTrue(this.signalConfirmedEventReceived.WaitOne((int)SignalDetectionHelper.SignalConfirmationTimeout.TotalMilliseconds + 200));
+            Assert.IsTrue(this.signalConfirmedEventReceived.WaitOne(3000));
             Assert.IsTrue(this.keywordRecognizedEvents.Count == 1);
             Assert.IsTrue(this.signalConfirmedEvents.Count == 1);
             Assert.AreEqual(ConversationalAgentState.Listening, session.AgentState);
@@ -302,7 +302,7 @@ namespace DialogManagerTests
             this.mockBackend.SimulateKeywordRecognized("Contoso");
 
             Assert.IsTrue(this.signalRejectedEventReceived
-                .WaitOne((int)SignalDetectionHelper.SignalConfirmationTimeout.TotalMilliseconds + 200));
+                .WaitOne(3000));
             Assert.AreEqual(ConversationalAgentState.Inactive, session.AgentState);
         }
 

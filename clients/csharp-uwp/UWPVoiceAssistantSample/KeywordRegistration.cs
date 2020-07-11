@@ -17,21 +17,12 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public class KeywordRegistration : IKeywordRegistration, IDisposable
     {
-        private readonly SemaphoreSlim creatingKeywordConfigSemaphore;
+        private readonly SemaphoreSlim creatingKeywordConfigSemaphore = new SemaphoreSlim(1, 1);
         private ActivationSignalDetectionConfiguration keywordConfiguration;
         private bool disposed;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="KeywordRegistration"/> class.
-        /// </summary>
-        /// <param name="availableActivationKeywordModelVersion">Version of the most recent keyword model that is available.</param>
-        public KeywordRegistration(Version availableActivationKeywordModelVersion)
+        public KeywordRegistration()
         {
-            this.AvailableActivationKeywordModelVersion = availableActivationKeywordModelVersion;
-
-            this.creatingKeywordConfigSemaphore = new SemaphoreSlim(1, 1);
-
-            _ = this.GetOrCreateKeywordConfigurationAsync();
         }
 
         /// <summary>
@@ -64,33 +55,6 @@ namespace UWPVoiceAssistantSample
         /// activation keyword.
         /// </summary>
         public string KeywordActivationModelFilePath { get => LocalSettingsHelper.KeywordActivationModelPath; set => this.KeywordActivationModelFilePath = value; }
-
-        /// <summary>
-        /// Gets the available version of the model data associated with an activation keyword.
-        /// </summary>
-        public Version AvailableActivationKeywordModelVersion { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the last successfully updated model data version associated with the
-        /// activation keyword. This is stored in local settings for later retrieval when the
-        /// data for a keyword may change and need update.
-        /// </summary>
-        public Version LastUpdatedActivationKeywordModelVersion
-        {
-            get
-            {
-                var key = $"lastKwModelVer_{this.KeywordId}:{this.KeywordModelId}";
-                var value = LocalSettingsHelper.ReadValueWithDefault<string>(key, "0.0.0.0");
-                return Version.Parse(value);
-            }
-
-            set
-            {
-                Contract.Requires(value != null);
-                var key = $"lastKwModelVer_{this.KeywordId}:{this.KeywordModelId}";
-                LocalSettingsHelper.WriteValue(key, value.ToString());
-            }
-        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the current active keyword configuration is
@@ -133,7 +97,6 @@ namespace UWPVoiceAssistantSample
             this.KeywordModelId = keywordModelId;
             this.KeywordActivationModelDataFormat = keywordActivationModelDataFormat;
             this.KeywordActivationModelFilePath = keywordActivationModelFilePath;
-            this.AvailableActivationKeywordModelVersion = availableActivationKeywordModelVersion;
             this.ConfirmationKeywordModelPath = confirmationKeywordModelPath;
 
             this.keywordConfiguration = null;
@@ -236,7 +199,6 @@ namespace UWPVoiceAssistantSample
                 this.KeywordModelId = string.Empty;
                 this.KeywordActivationModelDataFormat = string.Empty;
                 this.KeywordActivationModelFilePath = string.Empty;
-                this.AvailableActivationKeywordModelVersion = null;
                 this.ConfirmationKeywordModelPath = string.Empty;
 
                 this.disposed = true;
@@ -293,7 +255,9 @@ namespace UWPVoiceAssistantSample
 
         private async Task SetModelDataIfNeededAsync(ActivationSignalDetectionConfiguration configuration)
         {
-            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0 || !LocalSettingsHelper.SetModelData)
+            var latestModelDataFile = await this.GetActivationKeywordFileAsync();
+
+            if (latestModelDataFile.DateCreated <= LocalSettingsHelper.LastConfirmationModelCreationTime)
             {
                 // Keyword is already up to date according to this data; nothing to do here!
                 return;
@@ -319,14 +283,13 @@ namespace UWPVoiceAssistantSample
                 }
 
                 // await configuration.ClearModelDataAsync();
-                var modelDataFile = await this.GetActivationKeywordFileAsync();
-                using (var modelDataStream = await modelDataFile.OpenSequentialReadAsync())
+                using (var modelDataStream = await latestModelDataFile.OpenSequentialReadAsync())
                 {
                     await configuration.SetModelDataAsync(this.KeywordActivationModelDataFormat, modelDataStream);
                 }
 
                 // Update was successful. Record this so we don't repeat it needlessly!
-                this.LastUpdatedActivationKeywordModelVersion = this.AvailableActivationKeywordModelVersion;
+                LocalSettingsHelper.LastConfirmationModelCreationTime = latestModelDataFile.DateCreated;
 
                 // And now, re-enable the configuration if we previously disabled it.
                 if (configurationWasEnabled)

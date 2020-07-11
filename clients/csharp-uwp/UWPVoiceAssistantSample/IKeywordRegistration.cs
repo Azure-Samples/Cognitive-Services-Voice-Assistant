@@ -45,21 +45,6 @@ namespace UWPVoiceAssistantSample
         string KeywordActivationModelFilePath { get; }
 
         /// <summary>
-        /// Gets the available version of the model data associated with an activation keyword.
-        /// </summary>
-        Version AvailableActivationKeywordModelVersion { get; }
-
-        /// <summary>
-        /// Gets or sets the last successfully updated model data version associated with the
-        /// activation keyword. This is stored in local settings for later retrieval when the
-        /// data for a keyword may change and need update.
-        /// </summary>
-        Version LastUpdatedActivationKeywordModelVersion
-        {
-            get; set;
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the current active keyword configuration is
         /// in an application-enabled state.
         /// </summary>

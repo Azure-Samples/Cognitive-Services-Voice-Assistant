@@ -13,14 +13,12 @@ namespace KeywordRegistrationTests
     [TestClass]
     public class KeywordRegistrationTests
     {
-        private KeywordRegistration keywordRegistration = new KeywordRegistration(new Version(1, 0, 0, 0));
+        private KeywordRegistration keywordRegistration = new KeywordRegistration();
 
 
         [TestMethod]
         public async Task RunKeywordRegistrationTestsSequentially()
         {
-            await LastUpdatedActivationKeywordModelVersionAsyncTest();
-            LastUpdatedActivationKeywordModelVersionGreaterThanCurrentVersionTest();
             await UpdateKeywordAsyncTest();
             await GetOrCreateKeywordConfigurationAsyncTest();
             await GetActivationKeywordFileAsyncTest();
@@ -28,52 +26,6 @@ namespace KeywordRegistrationTests
             await VerifyActiviationKeywordFilePresentAsyncTest();
             await VerifyActivationAndConfirmationPathsAsyncTest();
             await VerifyAppropriateValuesAsyncTest();
-        }
-
-        public async Task LastUpdatedActivationKeywordModelVersionAsyncTest()
-        {
-            var lastKeywordModelVersion = this.keywordRegistration.LastUpdatedActivationKeywordModelVersion;
-            var getOrCreateConfiguration = await keywordRegistration.GetOrCreateKeywordConfigurationAsync();
-
-            if (this.keywordRegistration.KeywordId == getOrCreateConfiguration.SignalId &&
-                lastKeywordModelVersion == this.keywordRegistration.AvailableActivationKeywordModelVersion)
-            {
-                string message = "Keyword is up to date";
-                Assert.AreEqual(this.keywordRegistration.AvailableActivationKeywordModelVersion, lastKeywordModelVersion, message);
-            }
-            else
-            {
-                var updateKeyword = await this.keywordRegistration.UpdateKeyword(
-                    this.keywordRegistration.KeywordDisplayName,
-                    this.keywordRegistration.KeywordId,
-                    this.keywordRegistration.KeywordModelId,
-                    this.keywordRegistration.KeywordActivationModelDataFormat,
-                    this.keywordRegistration.KeywordActivationModelFilePath,
-                    this.keywordRegistration.AvailableActivationKeywordModelVersion,
-                    this.keywordRegistration.ConfirmationKeywordModelPath);
-                Assert.AreEqual(this.keywordRegistration.LastUpdatedActivationKeywordModelVersion, this.keywordRegistration.AvailableActivationKeywordModelVersion);
-                Assert.IsTrue(updateKeyword.IsActive);
-                Assert.AreEqual(this.keywordRegistration.KeywordDisplayName, updateKeyword.DisplayName);
-                Assert.AreEqual(this.keywordRegistration.KeywordModelId, updateKeyword.ModelId);
-                Assert.AreEqual(this.keywordRegistration.KeywordId, updateKeyword.SignalId);
-                Assert.IsTrue(updateKeyword.AvailabilityInfo.HasPermission);
-                Assert.IsTrue(updateKeyword.AvailabilityInfo.HasSystemResourceAccess);
-                Assert.IsTrue(updateKeyword.AvailabilityInfo.IsEnabled);
-            }
-        }
-
-        public void LastUpdatedActivationKeywordModelVersionGreaterThanCurrentVersionTest()
-        {
-            var lastKeywordModelVersion = this.keywordRegistration.LastUpdatedActivationKeywordModelVersion;
-
-            if (lastKeywordModelVersion >= this.keywordRegistration.AvailableActivationKeywordModelVersion)
-            {
-                Assert.IsTrue(lastKeywordModelVersion >= this.keywordRegistration.AvailableActivationKeywordModelVersion);
-            }
-            else
-            {
-                throw new Exception($"LastUpdatedActivationKeywordModelVersion is greater than current version: {this.keywordRegistration.AvailableActivationKeywordModelVersion}");
-            }
         }
 
         public async Task UpdateKeywordAsyncTest()
@@ -84,7 +36,7 @@ namespace KeywordRegistrationTests
                 this.keywordRegistration.KeywordModelId,
                 this.keywordRegistration.KeywordActivationModelDataFormat,
                 this.keywordRegistration.KeywordActivationModelFilePath,
-                this.keywordRegistration.AvailableActivationKeywordModelVersion,
+                new Version("1.0"),
                 this.keywordRegistration.ConfirmationKeywordModelPath);
 
             Assert.IsTrue(result.AvailabilityInfo.HasPermission);
@@ -201,12 +153,7 @@ namespace KeywordRegistrationTests
 
         public async Task VerifyAppropriateValuesAsyncTest()
         {
-            KeywordRegistration keyword = new KeywordRegistration(
-                            new Version(1, 0, 0, 0));
-
-            var lastVersion = keyword.LastUpdatedActivationKeywordModelVersion;
-
-            var newVersion = new Version(lastVersion.Major, lastVersion.Minor, lastVersion.Build, lastVersion.Revision + 1);
+            KeywordRegistration keyword = new KeywordRegistration();
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await keyword.UpdateKeyword(
             keyword.KeywordDisplayName,
@@ -214,7 +161,7 @@ namespace KeywordRegistrationTests
             keyword.KeywordModelId,
             keyword.KeywordActivationModelDataFormat,
             keyword.KeywordActivationModelFilePath,
-            newVersion,
+            new Version("1.0"),
             keyword.ConfirmationKeywordModelPath), "Invalid InputValues");
         }
 

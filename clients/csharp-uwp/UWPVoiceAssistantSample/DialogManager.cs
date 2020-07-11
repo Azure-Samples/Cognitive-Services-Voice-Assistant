@@ -394,7 +394,6 @@ namespace UWPVoiceAssistantSample
             {
                 await this.dialogBackend.CancelSignalVerificationAsync();
                 await this.StopAudioCaptureAsync();
-                this.logger.Log(LogMessageLevel.SignalDetection, $"Failsafe timer expired; rejecting");
                 await this.FinishConversationAsync();
                 this.SignalRejected.Invoke(origin);
             };
