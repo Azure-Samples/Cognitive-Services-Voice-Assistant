@@ -25,10 +25,12 @@ This page will guide you through building a sample [Voice Assistant](https://doc
 <img src="../custom-commands/demos/images/all-scenes.png" width="982"/>
 </p>
 
-We have three demos for you to select from. Read about what voice commands they support and see the associated visualization. When you selected the one you would like to deploy, continue to Step 3
+We have four demos for you to select from. Read about what voice commands they support and see the associated visualization. When you selected the one you would like to deploy, continue to Step 3
 * [Hospitality demo](../custom-commands/demos/hospitality/README.md)
 * [Inventory management demo](../custom-commands/demos/inventory/README.md)
 * [Automotive demo](../custom-commands/demos/automotive/README.md)
+* [Care room demo](../custom-commands/demos/careroom/README.md)
+
 
 ## Step 3 - Run the Azure deployment script
 

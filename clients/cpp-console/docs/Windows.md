@@ -26,7 +26,7 @@ cd Cognitive-Services-Voice-Assistants\clients\cpp-console\src\windows
 
 ## Configure your client
 
-Copy the example configuration file **clients\configs\config.json** into your project output folder and update it as needed. Fill in your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The KeywordRecognitionModel should point to the Custom Keyword (.table file) being used. You can delete fields that are not required for your setup. Only the speech_subscription_key and speech_region are required.
+Copy the example configuration file **clients\configs\config.json** into your project output folder and update it as needed. Fill in your subscription key and key region. If you are using a Custom Commands application or a Custom Voice insert those GUID's as well. The KeywordRecognitionModel should point to the Custom Keyword (.table file) being used. You can delete fields that are not required for your setup. Only the SpeechSubscriptionKey and SpeechRegion are required.
 ```json
 {
   "KeywordRecognitionModel": "",
