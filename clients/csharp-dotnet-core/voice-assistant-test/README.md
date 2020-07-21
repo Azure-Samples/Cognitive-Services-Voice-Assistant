@@ -17,7 +17,7 @@ Voice Assistant Test supports the following:
 
 ## Prerequisites
 
-- A subscription key for the Speech service. See [Try the speech service for free](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started).
+- A subscription key for the Speech service. [Create a new Azure account, and try Cognitive Services for free.](https://azure.microsoft.com/free/cognitive-services/)
 - A bot built using [Microsoft Bot Framework](https://blog.botframework.com/2018/05/07/build-a-microsoft-bot-framework-bot-with-the-bot-builder-sdk-v4/) and hosted on Azure or other cloud service. The bot needs to be voice-enabled and registered with [Direct Line Speech](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) channel to send and receive audio. [See this tutorial](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk) to get your started. Use your own deployed bot to try out this tool, or one of the many [Bot-Framework samples](https://github.com/Microsoft/BotBuilder-Samples). 
 - Alternatively, a [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) web application hosted on Azure on your behalf, instead of a Bot-Framework bot.
 - A Windows PC with Windows 10 or later and [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1)
