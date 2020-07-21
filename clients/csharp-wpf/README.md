@@ -134,7 +134,7 @@ Here is an example of how to send a message back:
   - [What is custom Speech?](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-speech)
   - [Create a custom voice](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-custom-voice-create-voice)
   - [Create a custom wake word by using the Speech service](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-devices-sdk-create-kws)
-  - [Try Speech Services for free](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started)
+  - [Create a new Azure account, and try Cognitive Services for free.](https://azure.microsoft.com/free/cognitive-services/)
   - [Language and region support for the Speech Services](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support)
   - [Speech Service supported regions](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions)
   - [Speech Synthesis Markup Language (SSML)](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup)
