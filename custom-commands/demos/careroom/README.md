@@ -19,7 +19,7 @@ Here are a few examples. Try these or others of your choice:
 * TV on
 * Turn it off
 
-If you configured your client application to listen for a keyword, say the keyword first followed by the above (or other) sentences (e.g. "hi nurse, turn on the lights"). The keyword "hi nurse" was specifically targeted for this scene, but of course any keyword can be used.
+If you configured your client application to listen for a keyword, say the keyword first followed by the above (or other) sentences (e.g. "computer, turn on the lights").
 
 ## Links
 
