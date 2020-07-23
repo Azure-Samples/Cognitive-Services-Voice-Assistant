@@ -26,20 +26,20 @@ namespace UWPVoiceAssistantSample
     public class AgentAudioInputProvider
         : IDialogAudioInputProvider<List<byte>>, IDisposable
     {
-        protected static readonly AudioEncodingProperties DefaultEncoding = AudioEncodingProperties.CreatePcm(16000, 1, 16);
-        protected AudioEncodingProperties outputEncoding;
-        protected IAgentSessionWrapper agentSession;
-        protected AudioGraph inputGraph;
-        protected AudioDeviceInputNode inputNode;
-        protected AudioFrameOutputNode outputNode;
-        protected bool graphRunning;
-        protected bool disposed;
-        protected SemaphoreSlim debugAudioOutputFileSemaphore;
-        protected Stream debugAudioOutputFileStream;
+        private static readonly AudioEncodingProperties DefaultEncoding = AudioEncodingProperties.CreatePcm(16000, 1, 16);
+        private readonly ILogProvider logger;
+        private AudioEncodingProperties outputEncoding;
+        private IAgentSessionWrapper agentSession;
+        private AudioGraph inputGraph;
+        private AudioDeviceInputNode inputNode;
+        private AudioFrameOutputNode outputNode;
+        private bool graphRunning;
+        private bool disposed;
+        private SemaphoreSlim debugAudioOutputFileSemaphore;
+        private Stream debugAudioOutputFileStream;
         private bool dataAvailableInitialized = false;
         private int bytesToSkip;
         private int bytesAlreadySkipped;
-        private ILogProvider logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentAudioInputProvider"/> class.
@@ -65,7 +65,7 @@ namespace UWPVoiceAssistantSample
         /// a keyword in an audio stream. Some amount of silence/audio prior to the keyword is necessary for
         /// normal operation.
         /// </summary>
-        public static TimeSpan InitialKeywordTrimDuration { get; } = new TimeSpan(0, 0, 0, 0, 2000);
+        public static TimeSpan InitialKeywordTrimDuration { get; } = new TimeSpan(0, 0, 0, 0, 2250);
 
         /// <summary>
         /// Gets or sets a value indicating whether debug audio output to local file capture
@@ -154,6 +154,9 @@ namespace UWPVoiceAssistantSample
                 await this.FinishDebugAudioDumpIfNeededAsync();
 
                 this.inputGraph.Stop();
+                this.inputNode.Stop();
+                this.inputNode.Dispose();
+                this.inputGraph.Dispose();
 
                 this.logger.Log(LogMessageLevel.AudioLogs, "Audio Graph Stopped");
                 this.graphRunning = false;

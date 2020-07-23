@@ -23,6 +23,7 @@ namespace UWPVoiceAssistantSample
     public class DirectLineSpeechDialogBackend
         : IDialogBackend<List<byte>>
     {
+        private static readonly TimeSpan KeywordRejectionTimeout = TimeSpan.FromSeconds(3.5);
         private readonly ILogProvider logger;
         private readonly KwsPerformanceLogger kwsPerformanceLogger;
         private readonly PullAudioInputSink audioIntoKeywordSink;
@@ -54,28 +55,29 @@ namespace UWPVoiceAssistantSample
             this.logger = LogRouter.GetClassLogger();
             this.kwsPerformanceLogger = new KwsPerformanceLogger();
 
+            void RejectKeyword(PullAudioInputSink sink, TimeSpan duration)
+            {
+                this.logger.Log($"{sink.Label} rejecting keyword "
+                    + $"after processing {duration.TotalMilliseconds:0}ms of audio");
+                this.KeywordRecognized?.Invoke(null);
+            }
+
             this.audioIntoKeywordSink = new PullAudioInputSink()
             {
                 Label = "Keyword Sink",
                 DataSource = PullAudioDataSource.PushedData,
-                BookmarkPosition = 128000,
+                BookmarkPosition = KeywordRejectionTimeout,
             };
-            this.audioIntoKeywordSink.BookmarkReached += (position) =>
-            {
-                this.logger.Log($"Keyword audio bookmark: {position} bytes");
-                this.KeywordRecognized?.Invoke(null);
-            };
+            this.audioIntoKeywordSink.BookmarkReached += (duration)
+                => RejectKeyword(this.audioIntoKeywordSink, duration);
 
             this.audioIntoConnectorSink = new PullAudioInputSink()
             {
                 Label = "Connector Sink",
-                BookmarkPosition = -1,
+                BookmarkPosition = TimeSpan.Zero,
             };
-            this.audioIntoConnectorSink.BookmarkReached += (position) =>
-            {
-                this.logger.Log($"Connector audio bookmark: {position} bytes");
-                this.KeywordRecognized?.Invoke(null);
-            };
+            this.audioIntoConnectorSink.BookmarkReached += (duration)
+                => RejectKeyword(this.audioIntoConnectorSink, duration);
         }
 
         /// <summary>
@@ -208,7 +210,7 @@ namespace UWPVoiceAssistantSample
             {
                 this.audioIntoKeywordSink.DataSource = null;
                 this.audioIntoConnectorSink.DataSource = PullAudioDataSource.PushedData;
-                this.audioIntoConnectorSink.BookmarkPosition = -1;
+                this.audioIntoConnectorSink.BookmarkPosition = TimeSpan.Zero;
 
                 this.EnsureConnectorReady();
                 _ = this.connector.ListenOnceAsync();
@@ -216,7 +218,7 @@ namespace UWPVoiceAssistantSample
             else
             {
                 this.audioIntoKeywordSink.DataSource = PullAudioDataSource.PushedData;
-                this.audioIntoKeywordSink.BookmarkPosition = 128000;
+                this.audioIntoKeywordSink.BookmarkPosition = KeywordRejectionTimeout;
                 this.audioIntoConnectorSink.DataSource = null;
 
                 var kwsModel = this.ConfirmationModel as KeywordRecognitionModel;
@@ -283,7 +285,7 @@ namespace UWPVoiceAssistantSample
 
         private DialogServiceConfig CreateConnectorConfiguration()
         {
-            DialogServiceConfig config = null;
+            DialogServiceConfig config;
 
             if (string.IsNullOrEmpty(this.speechKey) || string.IsNullOrEmpty(this.speechRegion))
             {
@@ -357,11 +359,11 @@ namespace UWPVoiceAssistantSample
 
             this.keywordRecognizer.Recognized += (_, recoArgs) =>
             {
-                this.logger.Log($"Keyword confirmed on device (@{this.audioIntoKeywordSink.BytesReadSinceReset}): {recoArgs.Result.Text}");
-                this.audioIntoKeywordSink.BookmarkPosition = -1;
+                this.logger.Log($"Keyword confirmed on device (@{this.audioIntoKeywordSink.AudioReadSinceReset.TotalMilliseconds:0}ms): {recoArgs.Result.Text}");
+                this.audioIntoKeywordSink.BookmarkPosition = TimeSpan.Zero;
                 this.KeywordRecognizing?.Invoke(recoArgs.Result.Text);
                 this.audioIntoConnectorSink.DataSource = PullAudioDataSource.FromKeywordResult(recoArgs.Result);
-                this.audioIntoConnectorSink.BookmarkPosition = 128000;
+                this.audioIntoConnectorSink.BookmarkPosition = KeywordRejectionTimeout;
                 this.EnsureConnectorReady();
                 this.logger.Log($"Starting connector");
                 _ = this.connector.StartKeywordRecognitionAsync(this.ConfirmationModel as KeywordRecognitionModel);
@@ -397,7 +399,7 @@ namespace UWPVoiceAssistantSample
             switch (result.Reason)
             {
                 case ResultReason.RecognizingKeyword:
-                    this.audioIntoConnectorSink.BookmarkPosition = -1;
+                    this.audioIntoConnectorSink.BookmarkPosition = TimeSpan.Zero;
                     break;
                 case ResultReason.RecognizingSpeech:
                     this.logger.Log(LogMessageLevel.SignalDetection, $"Recognized speech in progress: \"{result.Text}\"");

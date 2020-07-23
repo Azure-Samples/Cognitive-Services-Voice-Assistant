@@ -28,25 +28,41 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets the display name associated with the keyword.
         /// </summary>
-        public string KeywordDisplayName { get => LocalSettingsHelper.KeywordDisplayName; set => this.KeywordDisplayName = value; }
+        public string KeywordDisplayName
+        {
+            get => LocalSettingsHelper.KeywordDisplayName;
+            set => LocalSettingsHelper.KeywordDisplayName = value;
+        }
 
         /// <summary>
         /// Gets or sets the signal identifier associated with a keyword. This value, together with the
         /// model identifier, uniquely identifies the configuration data for this keyword.
         /// </summary>
-        public string KeywordId { get => LocalSettingsHelper.KeywordId; set => this.KeywordId = value; }
+        public string KeywordId
+        {
+            get => LocalSettingsHelper.KeywordId;
+            set => LocalSettingsHelper.KeywordId = value;
+        }
 
         /// <summary>
         /// Gets or sets the model identifier associated with a keyword. This is typically a locale,
         /// like "1033", and together with the keyword identifier uniquely identifies the
         /// configuration data for this keyword.
         /// </summary>
-        public string KeywordModelId { get => LocalSettingsHelper.KeywordModelId; set => this.KeywordModelId = value; }
+        public string KeywordModelId
+        {
+            get => LocalSettingsHelper.KeywordModelId;
+            set => LocalSettingsHelper.KeywordModelId = value;
+        }
 
         /// <summary>
         /// Gets or sets the model data format associated with the activation keyword.
         /// </summary>
-        public string KeywordActivationModelDataFormat { get => LocalSettingsHelper.KeywordActivationModelDataFormat; set => this.KeywordActivationModelDataFormat = value; }
+        public string KeywordActivationModelDataFormat
+        {
+            get => LocalSettingsHelper.KeywordActivationModelDataFormat;
+            set => LocalSettingsHelper.KeywordActivationModelDataFormat = value;
+        }
 
         /// <summary>
         /// Gets or sets the path to the model data associated with your activation keyword. This may be a
@@ -54,7 +70,11 @@ namespace UWPVoiceAssistantSample
         /// When not provided, no attempt will be made to associate model data with the
         /// activation keyword.
         /// </summary>
-        public string KeywordActivationModelFilePath { get => LocalSettingsHelper.KeywordActivationModelPath; set => this.KeywordActivationModelFilePath = value; }
+        public string KeywordActivationModelFilePath
+        {
+            get => LocalSettingsHelper.KeywordActivationModelPath;
+            set => LocalSettingsHelper.KeywordActivationModelPath = value;
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the current active keyword configuration is
@@ -70,7 +90,11 @@ namespace UWPVoiceAssistantSample
         /// Gets or sets the path to the keyword model used for validation of the activation
         /// keyword's result. This may be a file path or an ms-appx application path.
         /// </summary>
-        public string ConfirmationKeywordModelPath { get => LocalSettingsHelper.KeywordRecognitionModel; set => this.ConfirmationKeywordModelPath = value; }
+        public string ConfirmationKeywordModelPath
+        {
+            get => LocalSettingsHelper.KeywordRecognitionModel;
+            set => LocalSettingsHelper.KeywordRecognitionModel = value;
+        }
 
         /// <summary>
         /// Changes the registered keyword using the new inputs.

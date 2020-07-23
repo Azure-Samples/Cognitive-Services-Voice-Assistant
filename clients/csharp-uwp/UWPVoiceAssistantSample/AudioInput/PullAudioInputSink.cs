@@ -9,6 +9,7 @@ namespace UWPVoiceAssistantSample.AudioInput
     using System.Threading;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
+    using Windows.Media.MediaProperties;
 
     /// <summary>
     /// Helper class that encapsulates state management for a reusable PullAudioInputStream object that may use a variety
@@ -23,18 +24,18 @@ namespace UWPVoiceAssistantSample.AudioInput
         /// <summary>
         /// Raised upon the first read that crosses the current BookmarkPosition, as counted since last reset.
         /// </summary>
-        public event Action<int> BookmarkReached;
+        public event Action<TimeSpan> BookmarkReached;
 
         /// <summary>
-        /// Gets the number of bytes that have been read since this sink was last reset.
+        /// Gets the duration of audio pulled from this sink since its last reset operation.
         /// </summary>
-        public int BytesReadSinceReset { get; private set; } = 0;
+        public TimeSpan AudioReadSinceReset { get; private set; } = TimeSpan.Zero;
 
         /// <summary>
         /// Gets or sets the next position when BookmarkReached will be fired if a read causes BytesReadSinceReset to cross
         /// the position.
         /// </summary>
-        public int BookmarkPosition { get; set; } = -1;
+        public TimeSpan BookmarkPosition { get; set; } = TimeSpan.Zero;
 
         /// <summary>
         /// Gets or sets a friendly label to associate with this input sink.
@@ -89,7 +90,7 @@ namespace UWPVoiceAssistantSample.AudioInput
                 this.pushDataBuffer.Clear();
             }
 
-            this.BytesReadSinceReset = 0;
+            this.AudioReadSinceReset = TimeSpan.Zero;
         }
 
         /// <summary>
@@ -117,14 +118,17 @@ namespace UWPVoiceAssistantSample.AudioInput
                 bytesRead = dataBuffer.Length;
             }
 
-            var newTotalBytesRead = this.BytesReadSinceReset + bytesRead;
-
-            if (this.BytesReadSinceReset < this.BookmarkPosition && newTotalBytesRead >= this.BookmarkPosition)
+            if (this.DataSource?.AudioFormat is AudioEncodingProperties audioFormat)
             {
-                this.BookmarkReached?.Invoke(newTotalBytesRead);
-            }
+                var priorTotalReadDuration = this.AudioReadSinceReset;
+                this.AudioReadSinceReset += TimeSpan.FromSeconds(8.0f * bytesRead / audioFormat.Bitrate);
 
-            this.BytesReadSinceReset = newTotalBytesRead;
+                if (priorTotalReadDuration < this.BookmarkPosition
+                    && this.AudioReadSinceReset >= this.BookmarkPosition)
+                {
+                    this.BookmarkReached?.Invoke(this.AudioReadSinceReset);
+                }
+            }
 
             return bytesRead;
         }

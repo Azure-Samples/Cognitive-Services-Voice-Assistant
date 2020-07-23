@@ -14,12 +14,12 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public class NLogProvider : ILogProvider
     {
+        private static int nextLogIndex = 0;
         /// <summary>
         /// List of log messages.
         /// </summary>
         public static readonly List<string> LogBuffer = new List<string>();
         private Logger logger;
-        private static int nextLogIndex = 0;
 
         /// <summary>
         /// Event to indicate a log was generated.
@@ -78,6 +78,24 @@ namespace UWPVoiceAssistantSample
             NLog.LogManager.Configuration = configuration;
         }
 
+        private static LogLevel ConvertLogLevel(LogMessageLevel level)
+        {
+            switch (level)
+            {
+                case LogMessageLevel.Error:
+                    return LogLevel.Error;
+                case LogMessageLevel.Information:
+                    return LogLevel.Info;
+                case LogMessageLevel.Noise:
+                case LogMessageLevel.ConversationalAgentSignal:
+                    return LogLevel.Info;
+                case LogMessageLevel.SignalDetection:
+                    return LogLevel.Info;
+                default:
+                    return LogLevel.Trace;
+            }
+        }
+
         /// <summary>
         /// Logs an NLog message at the default LogLevel.Info level.
         /// </summary>
@@ -111,24 +129,6 @@ namespace UWPVoiceAssistantSample
         private void OnLogAvailable()
         {
             logAvailable?.Invoke(this, EventArgs.Empty);
-        }
-
-        private static LogLevel ConvertLogLevel(LogMessageLevel level)
-        {
-            switch (level)
-            {
-                case LogMessageLevel.Error:
-                    return LogLevel.Error;
-                case LogMessageLevel.Information:
-                    return LogLevel.Info;
-                case LogMessageLevel.Noise:
-                case LogMessageLevel.ConversationalAgentSignal:
-                    return LogLevel.Info;
-                case LogMessageLevel.SignalDetection:
-                    return LogLevel.Info;
-                default:
-                    return LogLevel.Trace;
-            }
         }
     }
 }

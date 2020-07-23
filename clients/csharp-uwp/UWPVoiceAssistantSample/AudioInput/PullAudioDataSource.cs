@@ -4,6 +4,8 @@
 namespace UWPVoiceAssistantSample.AudioInput
 {
     using Microsoft.CognitiveServices.Speech;
+    using UWPVoiceAssistantSample.AudioCommon;
+    using Windows.Media.MediaProperties;
 
     /// <summary>
     /// Encapsulation of the data source types usable by PullAudioInputSink.
@@ -35,6 +37,11 @@ namespace UWPVoiceAssistantSample.AudioInput
         /// Gets a value indicating whether incomplete reads should be padded with zeroes for this source.
         /// </summary>
         public bool PadWithZeroes { get; private set; } = true;
+
+        /// <summary>
+        /// Gets or sets the encoding information associated with the current base audio source.
+        /// </summary>
+        public AudioEncodingProperties AudioFormat { get; set; } = DirectLineSpeechAudio.DefaultInput.Encoding;
 
         /// <summary>
         /// Creates a PullAudioDataSource from the provided KeywordRecognitionResult that will instruct consumers to

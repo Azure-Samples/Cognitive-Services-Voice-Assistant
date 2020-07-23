@@ -33,7 +33,7 @@ namespace UWPVoiceAssistantSample.AudioCommon
     /// <summary>
     /// An encapsulation of extra data and operations needed to apply a WAVEFORMAT header to an existing stream.
     /// </summary>
-    public class WaveHeader
+    public static class WaveHeader
     {
         /// <summary>
         /// Writes a standard WAVEFORMAT header (RIFF) to the provided stream that matches the provided PCM encoding
