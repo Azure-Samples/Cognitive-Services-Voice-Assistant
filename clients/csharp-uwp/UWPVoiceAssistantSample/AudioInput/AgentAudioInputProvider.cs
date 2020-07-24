@@ -26,17 +26,17 @@ namespace UWPVoiceAssistantSample
     public class AgentAudioInputProvider
         : IDialogAudioInputProvider<List<byte>>, IDisposable
     {
-        private static readonly AudioEncodingProperties DefaultEncoding = AudioEncodingProperties.CreatePcm(16000, 1, 16);
+        protected static readonly AudioEncodingProperties DefaultEncoding = AudioEncodingProperties.CreatePcm(16000, 1, 16);
+        protected AudioEncodingProperties outputEncoding;
+        protected IAgentSessionWrapper agentSession;
+        protected AudioGraph inputGraph;
+        protected AudioFrameOutputNode outputNode;
+        protected bool graphRunning;
+        protected bool disposed;
+        protected SemaphoreSlim debugAudioOutputFileSemaphore;
+        protected Stream debugAudioOutputFileStream;
         private readonly ILogProvider logger;
-        private AudioEncodingProperties outputEncoding;
-        private IAgentSessionWrapper agentSession;
-        private AudioGraph inputGraph;
         private AudioDeviceInputNode inputNode;
-        private AudioFrameOutputNode outputNode;
-        private bool graphRunning;
-        private bool disposed;
-        private SemaphoreSlim debugAudioOutputFileSemaphore;
-        private Stream debugAudioOutputFileStream;
         private bool dataAvailableInitialized = false;
         private int bytesToSkip;
         private int bytesAlreadySkipped;
