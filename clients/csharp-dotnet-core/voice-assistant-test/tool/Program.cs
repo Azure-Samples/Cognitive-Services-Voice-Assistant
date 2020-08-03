@@ -13,14 +13,25 @@ namespace VoiceAssistantTest
     {
         private static int Main(string[] args)
         {
-            return MainMethod(args.Length == 0 ? null : args[0]).GetAwaiter().GetResult();
+            CommandLineArgs commandLineArgs = new CommandLineArgs(args);
+
+            if (commandLineArgs.generationMode)
+            {
+                RunGeneration(commandLineArgs);
+                return 0;
+            }
+            else
+            {
+
+                return RunTests(commandLineArgs).GetAwaiter().GetResult();
+            }
         }
 
-        private static async Task<int> MainMethod(string configFile)
+        private static async Task<int> RunTests(CommandLineArgs commandLineArgs)
         {
             try
             {
-                bool testPass = await MainService.StartUp(configFile).ConfigureAwait(false);
+                bool testPass = await MainService.StartUp(commandLineArgs.configFile).ConfigureAwait(false);
 
                 if (testPass)
                 {
@@ -37,6 +48,14 @@ namespace VoiceAssistantTest
                 Console.Error.WriteLine("Test encountered exception");
                 System.Diagnostics.Trace.TraceError(e.ToString());
                 return 1;
+            }
+        }
+
+        private static void RunGeneration(CommandLineArgs commandLineArgs)
+        {
+            if(commandLineArgs.tsvFile != null)
+            {
+                TestFileGenerator.GenerateTestFile(commandLineArgs.tsvFile, commandLineArgs.outputFile);
             }
         }
     }
