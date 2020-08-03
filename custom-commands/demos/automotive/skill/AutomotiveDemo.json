@@ -1,7 +1,7 @@
 {
   "type": "CommandsDialogModel",
   "culture": "en-us",
-  "httpEndpoints": [
+  "webEndpoints": [
     {
       "name": "AutomotiveEndpoint",
       "method": "GET",
@@ -124,13 +124,14 @@
     "- I didn't quite understand that.",
     "- That functionality isn't supported yet."
   ],
-  "registeredWakeWords": [
+  "registeredKeywords": [
+    "abigail",
+    "assistant",
     "computer",
     "contohso",
+    "hey front desk",
     "jayden",
-    "ok speaker",
-    "raspberry pie",
-    "exbox"
+    "ok speaker"
   ],
   "globalParameters": [],
   "commands": [

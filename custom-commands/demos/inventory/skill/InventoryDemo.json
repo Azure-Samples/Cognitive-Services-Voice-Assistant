@@ -1,7 +1,7 @@
 {
   "type": "CommandsDialogModel",
   "culture": "en-us",
-  "httpEndpoints": [
+  "webEndpoints": [
     {
       "name": "InventoryEndpoint",
       "method": "GET",
@@ -155,21 +155,14 @@
     "# QueryInventory-InventoryEndpointonFailure-------6c1fd190834811eab7cd072e13afe120",
     "- Connection to the warehouse failed."
   ],
-  "registeredWakeWords": [
+  "registeredKeywords": [
+    "abigail",
+    "assistant",
     "computer",
     "contohso",
+    "hey front desk",
     "jayden",
-    "ok speaker",
-    "raspberry pie",
-    "exbox"
-  ],
-  "registeredWakeWords": [
-    "computer",
-    "contohso",
-    "jayden",
-    "ok speaker",
-    "raspberry pie",
-    "exbox"
+    "ok speaker"
   ],
   "globalParameters": [],
   "commands": [
@@ -1026,16 +1019,5 @@
       ],
       "multiTurnExamples": []
     }
-  ],
-  "modelMetadata": {
-    "modelId": "82c76e19-6397-4c90-8713-7a7e727d022e",
-    "lastTrainedModelId": "82c76e19-6397-4c90-8713-7a7e727d022e",
-    "lastPublishedModelId": "cf6b9fc5-07bf-4a47-9432-ef0cab71f251",
-    "lastPublishedVersionId": "962GYIZDFB",
-    "lastPublishedVersionIdForTest": "C7Q0SM62FC",
-    "lastTrainedVersionId": "C7Q0SM62FC",
-    "published": false,
-    "publishedForTest": true,
-    "requiresTraining": false
-  }
+  ]
 }

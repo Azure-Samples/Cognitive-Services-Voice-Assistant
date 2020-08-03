@@ -41,8 +41,7 @@ $body = @{
 
 $headers = @{
     "Ocp-Apim-Subscription-Key" = $speechResourceKey
-    "accept"                    = "application/json"
-    "Content-Type"              = "application/json-patch+json"
+    "Content-Type"              = "application/json"
 }
 
 try {
@@ -67,12 +66,12 @@ write-host "Created project Id $appId"
 # change the model based on the local json file
 write-host "patching the $speechAppName $appName commands model"
 $newModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
-$newModel.httpEndpoints[0].url = $websiteAddress
+$newModel.webEndpoints[0].url = $websiteAddress
 
 # send the updated model up to the application
 write-host "updating $speechAppName with the new $appName commands model"
 try {
-    $response = invoke-restmethod -Method PUT -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us" -Body ($newModel | ConvertTo-Json  -depth 100) -Header $headers
+    $response = invoke-restmethod -Method PUT -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/en-us/model" -Body ($newModel | ConvertTo-Json  -depth 100) -Header $headers
 }
 catch {
     # dig into the exception to get the Response details.
@@ -89,16 +88,16 @@ write-host "...model update completed"
 #
 
 write-host "starting the training"
-$response = invoke-restmethod -Method POST -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train" -Header $headers
-$versionId = $response.versionId
-write-host -NoNewline "training version $versionId"
+$response = invoke-webrequest -Method POST -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/en-us/train?force=true" -Header $headers
+$OperationLocation = $response.Headers["Operation-Location"]
+write-host -NoNewline "training Operation Location: $OperationLocation"
 
 #
 # wait until the training is complete
 #
 
 try {
-    $response = invoke-restmethod -Method GET -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train/$versionId" -Header $headers
+    $response = invoke-restmethod -Method GET -Uri "$OperationLocation" -Header $headers
 }
 catch {
     # dig into the exception to get the Response details.
@@ -109,11 +108,11 @@ catch {
     exit
 }
 
-while ($response.completed -ne "true") {
+while ($response.status -ne "Succeeded") {
     start-sleep -seconds 1
     write-host -NoNewline "."
     try {
-        $response = invoke-restmethod -Method GET -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/train/$versionId" -Header $headers
+        $response = invoke-restmethod -Method GET -Uri "$OperationLocation" -Header $headers
     }
     catch {
         # dig into the exception to get the Response details.
@@ -132,7 +131,8 @@ write-host "...training is completed"
 #
 
 write-host "publishing the model"
-$response = invoke-restmethod -Method POST -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps/$appId/stages/default/cultures/en-us/publish/$versionId" -Header $headers
+$response = invoke-restmethod -Method PUT -Uri "$($OperationLocation.replace('/train/','/publish/'))" -Header $headers
+
 write-host "...model is published"
 
 #

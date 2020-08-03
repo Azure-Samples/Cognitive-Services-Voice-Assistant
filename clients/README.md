@@ -44,13 +44,13 @@ This is an example config.json file that shows all the common properties. If you
 
 ## What does barge-in mean?
 
-All sample clients have the option to always-listen for an activation keyword of your choice. When barge-in is supported, the sample client will be listening at the same time as it is playing the text-to-speech reply from your Voice Assistant. This is only recommended on devices that have audio processing that includes good acoustic echo cancellation, such as provided by the Microsoft Audio Stack (MAS). otherwise the Voice Assistant voice may accidentally trigger a keyword activation.  
+All sample clients have the option to always-listen for an activation keyword of your choice. When barge-in is supported, the sample client will be listening at the same time as it is playing the text-to-speech reply from your Voice Assistant. This is only recommended on devices that have audio processing that includes good acoustic echo cancellation, such as provided by the Microsoft Audio Stack (MAS). Otherwise the Voice Assistant's voice may accidentally trigger a keyword activation.  
 
 Therefore when barge-in is supported and the device is configured to listen to a keyword:
 * Assume the Voice Assistant is speaking to you, as a respond to a previous request
 * While the Voice Assistant is speaking, the user says the keyword
 * The keyword is identified by Speech SDK (on device processing), then confirmed by the cloud Keyword Verification Service. The client receives an event indicating the keyword as been verified
-* As a result of this event, the client immediately stops playback of the Voice Assistant prompt and waits to the bot to process the new utterance
+* As a result of this event, the client immediately stops playback of the Voice Assistant prompt and waits for the bot to process the new utterance
 
 If barge-in is NOT supported (the default option):
 * Assume the Voice Assistant is speaking to you, as a respond to a previous request

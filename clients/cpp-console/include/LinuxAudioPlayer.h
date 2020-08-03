@@ -34,7 +34,7 @@ namespace AudioPlayer
 
         virtual int Play(uint8_t* buffer, size_t bufferSize) final;
 
-        virtual int Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream) final;
+        virtual int Play(std::shared_ptr<IAudioPlayerStream> pStream) final;
 
         virtual int Stop() final;
 
@@ -74,7 +74,7 @@ namespace AudioPlayer
         std::thread m_playerThread;
         void PlayerThreadMain();
         void PlayByteBuffer(std::shared_ptr<AudioPlayerEntry> pEntry);
-        void PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry);
+        void PlayAudioPlayerStream(std::shared_ptr<AudioPlayerEntry> pEntry);
         int WriteToALSA(uint8_t* buffer);
         void SetAlsaMasterVolume(long volume);
         int Close();

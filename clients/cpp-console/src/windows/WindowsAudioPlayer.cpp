@@ -70,7 +70,6 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
     switch (format)
     {
     case AudioPlayerFormat::Mono16khz16bit:
-    default:
         /* Signed 16-bit little-endian format */
         fprintf(stdout, "Format = Mono16khz16bit\n");
         m_pwf.nChannels = 1;
@@ -80,10 +79,18 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
         m_pwf.nAvgBytesPerSec = m_pwf.nSamplesPerSec * m_pwf.nBlockAlign;
         m_pwf.cbSize = 0;
         m_pwf.wFormatTag = WAVE_FORMAT_PCM;
+        break;
+    default:
+        hr = E_FAIL;
     }
 
     //Begin Audio Device Setup
     CComCritSecLock<CComAutoCriticalSection> lock(m_cs);
+    
+    if (hr != S_OK) 
+    {
+        goto exit;
+    }
 
     // get a device enumator from the OS
     hr = CoCreateInstance(
@@ -172,8 +179,8 @@ void WindowsAudioPlayer::PlayerThreadMain()
             case PlayerEntryType::BYTE_ARRAY:
                 PlayByteBuffer(entry);
                 break;
-            case PlayerEntryType::PULL_AUDIO_OUTPUT_STREM:
-                PlayPullAudioOutputStream(entry);
+            case PlayerEntryType::PULL_AUDIO_OUTPUT_STREAM:
+                PlayAudioPlayerStream(entry);
                 break;
             default:
                 fprintf(stderr, "Unknown Audio Player Entry type\n");
@@ -184,7 +191,7 @@ void WindowsAudioPlayer::PlayerThreadMain()
     }
 }
 
-void WindowsAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEntry> pEntry)
+void WindowsAudioPlayer::PlayAudioPlayerStream(std::shared_ptr<AudioPlayerEntry> pEntry)
 {
     HRESULT hr = S_OK;
     UINT32 maxBufferSizeInFrames = 0;
@@ -193,7 +200,7 @@ void WindowsAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEn
     UINT32 framesToWrite;
     BYTE* pData, * pStreamData;
     unsigned int bytesRead = 0;
-    std::shared_ptr<Audio::PullAudioOutputStream> stream = pEntry->m_pullStream;
+    std::shared_ptr<IAudioPlayerStream> stream = pEntry->m_audioPlayerStream;
 
     hr = m_pAudioClient->GetBufferSize(&maxBufferSizeInFrames);
     if (FAILED(hr))
@@ -222,7 +229,7 @@ void WindowsAudioPlayer::PlayPullAudioOutputStream(std::shared_ptr<AudioPlayerEn
         }
 
         pStreamData = (BYTE*)malloc(sizeToWrite);
-        bytesRead = stream->Read(pStreamData, sizeToWrite);
+        bytesRead = stream->Read((unsigned char*)pStreamData, sizeToWrite);
 
         if (sizeToWrite > bytesRead)
         {
@@ -336,7 +343,7 @@ int WindowsAudioPlayer::Play(uint8_t* buffer, size_t bufferSize)
     return rc;
 }
 
-int WindowsAudioPlayer::Play(std::shared_ptr<Microsoft::CognitiveServices::Speech::Audio::PullAudioOutputStream> pStream)
+int WindowsAudioPlayer::Play(std::shared_ptr<IAudioPlayerStream> pStream)
 {
     int rc = 0;
 
@@ -406,9 +413,9 @@ int WindowsAudioPlayer::Close()
     m_conditionVariable.notify_one();
     m_playerThread.join();
 
-    CoUninitialize();
     SAFE_CLOSEHANDLE(m_hAudioClientEvent);
     SAFE_RELEASE(m_pRenderClient);
     SAFE_RELEASE(m_pAudioClient);
+    CoUninitialize();
     return 0;
 }

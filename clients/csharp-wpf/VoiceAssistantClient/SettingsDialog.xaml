@@ -164,12 +164,12 @@
                 <TextBox Grid.Row="3" Grid.Column="1" Name="ProxyPort" Text="{Binding ProxyPortNumber}"/>
             </Grid>
         </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Width="410">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock Name="SaveButtonInfoBlock" Text="" Foreground="Red" Margin="0,0,10,0"/>
             <Button Name="SaveButton"     Content="Save and Apply Profile" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="SaveButton_Click"/>
             <Button Name="DeleteProfile" Content="Delete Profile" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="DeleteProfile_Click"/>
             <Button Name="CancelButton" Content="Discard Profile Changes" IsCancel="True" Width="auto" Padding="8,0,8,0" Margin="5,0" Click="CancelButton_Click"/>
         </StackPanel>
-        <TextBlock x:Name="GitHubPageTextBlock" Grid.Row="1" Margin="0,0,470,0"><Hyperlink NavigateUri="https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf" RequestNavigate="GitHubPageHyperlink_RequestNavigate">GitHub Page</Hyperlink></TextBlock>
+        <TextBlock x:Name="GitHubPageTextBlock" Grid.Row="2" HorizontalAlignment="Left" Width="70"><Hyperlink NavigateUri="https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf" RequestNavigate="GitHubPageHyperlink_RequestNavigate">GitHub Page</Hyperlink></TextBlock>
     </Grid>
 </Window>

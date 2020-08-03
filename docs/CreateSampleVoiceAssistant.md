@@ -25,10 +25,12 @@ This page will guide you through building a sample [Voice Assistant](https://doc
 <img src="../custom-commands/demos/images/all-scenes.png" width="982"/>
 </p>
 
-We have three demos for you to select from. Read about what voice commands they support and see the associated visualization. When you selected the one you would like to deploy, continue to Step 3
+We have four demos for you to select from. Read about what voice commands they support and see the associated visualization. When you selected the one you would like to deploy, continue to Step 3
 * [Hospitality demo](../custom-commands/demos/hospitality/README.md)
 * [Inventory management demo](../custom-commands/demos/inventory/README.md)
 * [Automotive demo](../custom-commands/demos/automotive/README.md)
+* [Care room demo](../custom-commands/demos/careroom/README.md)
+
 
 ## Step 3 - Run the Azure deployment script
 
@@ -62,7 +64,7 @@ At the end of this step, you will have a .table file if you want keyword activat
 
 If you are developing on windows, we recommend you first use the [Windows Voice Assistant Client](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf). Executable of the latest stable version can be downloaded from the [Release tab](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/releases) (no need to compile code). It has nice GUI to configure connection settings.
 
-If you are in the IoT space, you can create a compelling demo by running the [sample C++ code](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) on a Raspberry Pie device. This includes the option to install the Microsoft Audio Stack to enable echo-cancellation and noise suppression, allowing far-field voice interaction and "barge-in" keyword activation (interrupting the Voice Assistant while it's speaking)
+If you are in the IoT space, you can create a compelling demo by running the [sample C++ code](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) on a Raspberry Pi device. This includes the option to install the Microsoft Audio Stack to enable echo-cancellation and noise suppression, allowing far-field voice interaction and "barge-in" keyword activation (interrupting the Voice Assistant while it's speaking)
 
 ## Step 6 - Give us feedback!
 

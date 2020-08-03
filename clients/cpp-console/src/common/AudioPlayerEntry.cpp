@@ -4,9 +4,10 @@
 #include <cstring>
 #include <memory>
 #include "AudioPlayerEntry.h"
+#include "AudioPlayerStream.h"
 
 using namespace AudioPlayer;
-using namespace Microsoft::CognitiveServices::Speech;
+//using namespace Microsoft::CognitiveServices::Speech;
 
 AudioPlayerEntry::AudioPlayerEntry(unsigned char* pData, size_t pSize)
 {
@@ -19,8 +20,8 @@ AudioPlayerEntry::AudioPlayerEntry(unsigned char* pData, size_t pSize)
     }
 };
 
-AudioPlayerEntry::AudioPlayerEntry(std::shared_ptr<Audio::PullAudioOutputStream> pStream)
+AudioPlayerEntry::AudioPlayerEntry(std::shared_ptr<IAudioPlayerStream> pStream)
 {
-    m_entryType = PlayerEntryType::PULL_AUDIO_OUTPUT_STREM;
-    m_pullStream = pStream;
+    m_entryType = PlayerEntryType::PULL_AUDIO_OUTPUT_STREAM;
+    m_audioPlayerStream = pStream;
 };

@@ -5,6 +5,7 @@
 #include "DeviceStatusIndicators.h"
 #include "speechapi_cxx.h"
 #include <fstream>
+#include "AudioPlayerStreamImpl.h"
 
 #ifdef LINUX
 #include "LinuxAudioPlayer.h"
