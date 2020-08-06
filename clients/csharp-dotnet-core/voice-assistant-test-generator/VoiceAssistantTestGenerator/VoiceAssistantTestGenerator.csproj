@@ -6,6 +6,10 @@
     <Company>Microsoft</Company>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>E:\git\Cognitive-Services-Voice-Assistant\clients\csharp-dotnet-core\voice-assistant-test-generator\VoiceAssistantTestGenerator\VoiceAssistantTestGenerator.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
