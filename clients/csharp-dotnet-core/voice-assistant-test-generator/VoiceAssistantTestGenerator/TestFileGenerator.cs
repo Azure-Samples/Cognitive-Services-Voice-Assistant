@@ -99,6 +99,8 @@ namespace VoiceAssistantTestGenerator
                         streamWriter.WriteLine();
                         indentation--;
                         WriteIndents(streamWriter, indentation);
+                        streamWriter.WriteLine(header.Trim().Trim('}'));
+                        WriteIndents(streamWriter, indentation);
                         streamWriter.WriteLine("}");
                         continue;
                     }
