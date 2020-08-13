@@ -4,10 +4,7 @@
 namespace VoiceAssistantTestGenerator
 {
     using System;
-    using System.Globalization;
     using System.IO;
-    using System.Reflection;
-    using System.Resources;
 
     /// <summary>
     /// Class that handles generating the json test files for the VoiceAssistantTest program.
@@ -35,8 +32,6 @@ namespace VoiceAssistantTestGenerator
             StreamReader streamReader = new StreamReader(tsvFile);
             StreamWriter streamWriter = new StreamWriter(outputFile);
 
-            ResourceManager stringManager = new ResourceManager("en-US", Assembly.GetExecutingAssembly());
-
             var columnHeaders = ReadColumnHeaders(streamReader);
 
             // begin the list of dialogs in the test file.
@@ -63,47 +58,36 @@ namespace VoiceAssistantTestGenerator
                 string[] columns = line.Split('\t');
 
                 // write beginning of dialog
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("{", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "{");
                 indentation++;
 
                 WriteIndentationLine(streamWriter, indentation, "\"DialogID\": " + testCount + ",");
                 WriteIndentationLine(streamWriter, indentation, "\"Description\": \"Dialog - " + testCount + "\",");
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("\"Skip\": false,", CultureInfo.CurrentCulture));
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("\"Turns\": [", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "\"Skip\": false,");
+                WriteIndentationLine(streamWriter, indentation, "\"Turns\": [");
                 indentation++;
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("{", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "{");
                 indentation++;
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("\"TurnID\": 0,", CultureInfo.CurrentCulture));
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("\"Sleep\": 10,", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "\"TurnID\": 0,");
+                WriteIndentationLine(streamWriter, indentation, "\"Sleep\": 10,");
                 WriteIndentationLine(streamWriter, indentation, "\"Utterance\": \"" + columns[0] + "\",");
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("\"Activity\": \"\",", CultureInfo.CurrentCulture));
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("\"WavFile\": \"\",", CultureInfo.CurrentCulture));
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("\"Keyword\": false,", CultureInfo.CurrentCulture));
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("\"ExpectedResponses\": [", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "\"Activity\": \"\",");
+                WriteIndentationLine(streamWriter, indentation, "\"WavFile\": \"\",");
+                WriteIndentationLine(streamWriter, indentation, "\"Keyword\": false,");
+                WriteIndentationLine(streamWriter, indentation, "\"ExpectedResponses\": [");
                 indentation++;
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("{", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "{");
                 indentation++;
 
                 if (columns.Length > columnHeaders.Length)
                 {
-                    Console.WriteLine(stringManager.GetString("ERROR: line found with more columns than headers. Ignoring columns without headers.", CultureInfo.CurrentCulture));
+                    Console.WriteLine("ERROR: line found with more columns than headers. Ignoring columns without headers.");
                 }
 
                 bool needComma = false;
                 for (int i = 1; i < columnHeaders.Length; i++)
                 {
                     string header = columnHeaders[i];
-
-                    if (header.Trim().EndsWith('}'))
-                    {
-                        streamWriter.WriteLine();
-                        indentation--;
-                        WriteIndents(streamWriter, indentation);
-                        streamWriter.WriteLine(header.Trim().Trim('}'));
-                        WriteIndents(streamWriter, indentation);
-                        streamWriter.WriteLine("}");
-                        continue;
-                    }
 
                     // handle commas between objects
                     if (needComma)
@@ -113,6 +97,16 @@ namespace VoiceAssistantTestGenerator
                     else
                     {
                         needComma = true;
+                    }
+
+                    if (header.Trim().EndsWith('}'))
+                    {
+                        WriteIndents(streamWriter, indentation);
+                        streamWriter.WriteLine("\"" + header.Trim().Trim('}') + "\": \"" + columns[i] + "\"");
+                        indentation--;
+                        WriteIndents(streamWriter, indentation);
+                        streamWriter.WriteLine("}");
+                        continue;
                     }
 
                     if (header.Trim().EndsWith('{'))
@@ -132,13 +126,13 @@ namespace VoiceAssistantTestGenerator
                 }
 
                 indentation--;
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("}", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "}");
                 indentation--;
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("]", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "]");
                 indentation--;
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("}", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "}");
                 indentation--;
-                WriteIndentationLine(streamWriter, indentation, stringManager.GetString("]", CultureInfo.CurrentCulture));
+                WriteIndentationLine(streamWriter, indentation, "]");
                 indentation--;
                 WriteIndents(streamWriter, indentation);
                 streamWriter.Write("}");

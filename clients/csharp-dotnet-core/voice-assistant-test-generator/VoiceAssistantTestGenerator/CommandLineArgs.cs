@@ -46,6 +46,15 @@ namespace VoiceAssistantTestGenerator
             this.Parse();
         }
 
+        /// <summary>
+        /// Prints out the usage statement.
+        /// </summary>
+        public void PrintUsage()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine(this.args[0] + " -i inputTabSeparatedFile [-o outputFile]");
+        }
+
         private void Parse()
         {
             foreach (string arg in this.args)
