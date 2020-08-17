@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>VoiceAssistantTestGenerator</name>
+    </assembly>
+    <members>
+        <member name="T:VoiceAssistantTestGenerator.CommandLineArgs">
+            <summary>
+            Class that handles parsing the command line args and stores the values for use.
+            </summary>
+        </member>
+        <member name="M:VoiceAssistantTestGenerator.CommandLineArgs.#ctor(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:VoiceAssistantTestGenerator.CommandLineArgs"/> class.
+            </summary>
+            <param name="args"> the command line args.</param>
+        </member>
+        <member name="P:VoiceAssistantTestGenerator.CommandLineArgs.TSVFile">
+            <summary>
+            Gets or sets the tab separated filepath to be used as input for the test generator.
+            </summary>
+        </member>
+        <member name="P:VoiceAssistantTestGenerator.CommandLineArgs.OutputFile">
+            <summary>
+            Gets or sets the filepath to output the generated tests.
+            </summary>
+        </member>
+        <member name="M:VoiceAssistantTestGenerator.CommandLineArgs.Parse(System.String[])">
+            <summary>
+            Public method to that parses the command line args.
+            </summary>
+            <param name="args"> the command line args.</param>
+        </member>
+        <member name="M:VoiceAssistantTestGenerator.CommandLineArgs.PrintUsage">
+            <summary>
+            Prints out the usage statement.
+            </summary>
+        </member>
+        <member name="T:VoiceAssistantTestGenerator.Program">
+            <summary>
+            Main Program class that contains the entry point.
+            </summary>
+        </member>
+        <member name="T:VoiceAssistantTestGenerator.TestFileGenerator">
+            <summary>
+            Class that handles generating the json test files for the VoiceAssistantTest program.
+            </summary>
+        </member>
+        <member name="M:VoiceAssistantTestGenerator.TestFileGenerator.GenerateTestFile(System.String,System.String)">
+            <summary>
+            Calls all functions necessary to generate the test.json file.
+            </summary>
+            <param name="tsvFilePath"> the path to the tab separated input file.</param>
+            /// <param name="outputFilePath"> the path to the output test.json file.</param>
+        </member>
+    </members>
+</doc>

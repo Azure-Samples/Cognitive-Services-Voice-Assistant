@@ -2,7 +2,7 @@
 
 The Voice Assistant Test Generator (VATG) is a tool used to generate test files for the [Voice Assistant Test tool](../voice-assistant-test) (VAT).
 
-Currently the VAT uses a json format that can be hard to edit en masse. This tool makes editing and creating the tests much easier. The input to this application will be a tab separated text file and the output will be a properly formatted test file used as input to the VAT.
+Currently the VAT uses a json format that can be hard to edit en masse. This tool makes editing and creating the tests much easier. The input to this application will be a tab separated text file and the output will be a properly formatted test file used as input to the VAT. Currently this only supports text inputs to be sent as a message activity and does not support specifying wav files or custom activities. Only single turn tests are supported.
 
 ## Building the code
 
@@ -40,7 +40,7 @@ VoiceAssistantTestGenerator.exe -inputFile myTestFile.txt -outputFile myOutput.j
 
 ## The Test File
 
-The input test file will need to be a tab separate file where the first row is the headers of the columsn. The first header must be "Utterance" and the first column will be the text sent as a message activity. This is useful for when you assume the speech recognition has recognized a specific text. Wav files are currently not supported in this format.
+The input test file will need to be a tab separate file where the first row is the headers of the columns. The first header must be "Utterance" and the first column will be the text sent as a message activity. This is useful for when you assume the speech recognition has recognized a specific text. Wav files are currently not supported in this format.
 
 After the first row each row is used to specify a test case. The important values are after the first column. This is where you will specifiy the activity you expect to receive from the service. Currently only one activity is supported.
 
