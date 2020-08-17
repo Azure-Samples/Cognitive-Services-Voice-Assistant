@@ -39,4 +39,5 @@ namespace VoiceAssistantTest
                 return 1;
             }
         }
+    }
 }
