@@ -97,7 +97,8 @@ variables:
     
 jobs:
 - job: Windows_Builds
-  pool: 'Voice Assistant Agent Pool'
+  pool:
+    vmImage: 'windows-latest'
   steps:
 
   - task: NuGetToolInstaller@1

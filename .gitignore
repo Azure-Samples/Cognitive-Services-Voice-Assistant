@@ -337,3 +337,4 @@ clients/cpp-console/include/c_api/
 clients/cpp-console/include/cxx_api/
 clients/cpp-console/cpp-console.code-workspace
 clients/cpp-console/docker/qemu-arm-static.tar.gz
+clients/csharp-dotnet-core/voice-assistant-test-generator/VoiceAssistantTestGenerator.xml
