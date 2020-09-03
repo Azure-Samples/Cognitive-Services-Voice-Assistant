@@ -182,7 +182,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets additional properties to set on a dialog configuration.
         /// </summary>
-        public static JObject AdditionalDialogProperties { get; set; }
+        public static JObject AdditionalDialogProperties { get; set;  }
 
         /// <summary>
         /// Gets or sets a value indicating whether kws logging is enabled or disabled.

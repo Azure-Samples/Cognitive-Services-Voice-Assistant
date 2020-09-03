@@ -33,7 +33,7 @@ namespace UWPVoiceAssistantSample
         private AudioConfig keywordAudioConfig;
         private DialogServiceConnector connector;
         private AudioConfig connectorAudioConfig;
-        private bool alreadyDisposed = false;
+        private bool alreadyDisposed;
         private string speechKey;
         private string speechRegion;
         private string srLanguage;
@@ -46,6 +46,7 @@ namespace UWPVoiceAssistantSample
         private bool speechSdkLogEnabled;
         private bool startEventReceived;
         private bool secondStageConfirmed;
+        private bool waitingForKeywordVerification;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectLineSpeechDialogBackend"/> class.
@@ -65,6 +66,7 @@ namespace UWPVoiceAssistantSample
             this.audioIntoKeywordSink = new PullAudioInputSink()
             {
                 Label = "Keyword Sink",
+                DebugAudioFilesEnabled = LocalSettingsHelper.EnableAudioCaptureFiles,
                 DataSource = PullAudioDataSource.PushedData,
                 BookmarkPosition = KeywordRejectionTimeout,
             };
@@ -74,6 +76,7 @@ namespace UWPVoiceAssistantSample
             this.audioIntoConnectorSink = new PullAudioInputSink()
             {
                 Label = "Connector Sink",
+                DebugAudioFilesEnabled = LocalSettingsHelper.EnableAudioCaptureFiles,
                 BookmarkPosition = TimeSpan.Zero,
             };
             this.audioIntoConnectorSink.BookmarkReached += (duration)
@@ -386,7 +389,11 @@ namespace UWPVoiceAssistantSample
                 this.CreateConnectorConfiguration(),
                 this.connectorAudioConfig);
 
-            this.connector.SessionStarted += (_, e) => this.SessionStarted?.Invoke(e.SessionId);
+            this.connector.SessionStarted += (_, e) =>
+            {
+                this.waitingForKeywordVerification = false;
+                this.SessionStarted?.Invoke(e.SessionId);
+            };
             this.connector.SessionStopped += (_, e) => this.SessionStopped?.Invoke(e.SessionId);
             this.connector.Recognizing += (_, e) => this.OnConnectorRecognizing(e.Result);
             this.connector.Recognized += async (s, e) => await this.OnConnectorRecognizedAsync(e.Result);
@@ -400,6 +407,7 @@ namespace UWPVoiceAssistantSample
             {
                 case ResultReason.RecognizingKeyword:
                     this.audioIntoConnectorSink.BookmarkPosition = TimeSpan.Zero;
+                    this.waitingForKeywordVerification = true;
                     break;
                 case ResultReason.RecognizingSpeech:
                     this.logger.Log(LogMessageLevel.SignalDetection, $"Recognized speech in progress: \"{result.Text}\"");
@@ -416,6 +424,7 @@ namespace UWPVoiceAssistantSample
             switch (result.Reason)
             {
                 case ResultReason.RecognizedKeyword:
+                    this.waitingForKeywordVerification = false;
                     var thirdStageStartTime = KwsPerformanceLogger.KwsStartTime.Ticks;
                     thirdStageStartTime = DateTime.Now.Ticks;
                     this.logger.Log(LogMessageLevel.SignalDetection, $"Cloud model recognized keyword \"{result.Text}\"");
@@ -431,17 +440,25 @@ namespace UWPVoiceAssistantSample
                 case ResultReason.NoMatch:
                     // If a KeywordRecognized handler is available, this is a final stage
                     // keyword verification rejection.
-                    this.logger.Log(LogMessageLevel.SignalDetection, $"Cloud model rejected keyword");
-                    if (this.secondStageConfirmed)
+                    if (this.waitingForKeywordVerification)
                     {
-                        var thirdStageStartTimeRejected = KwsPerformanceLogger.KwsStartTime.Ticks;
-                        thirdStageStartTimeRejected = DateTime.Now.Ticks;
-                        this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
-                        this.secondStageConfirmed = false;
+                        this.logger.Log(LogMessageLevel.SignalDetection, $"Cloud model rejected keyword");
+                        if (this.secondStageConfirmed)
+                        {
+                            var thirdStageStartTimeRejected = KwsPerformanceLogger.KwsStartTime.Ticks;
+                            thirdStageStartTimeRejected = DateTime.Now.Ticks;
+                            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "3", KwsPerformanceLogger.KwsEventFireTime.Ticks, thirdStageStartTimeRejected, DateTime.Now.Ticks);
+                            this.secondStageConfirmed = false;
+                        }
+
+                        this.KeywordRecognized?.Invoke(null);
+                        await this.StopAudioFlowAsync();
+                    }
+                    else
+                    {
+                        this.SpeechRecognized?.Invoke(string.Empty);
                     }
 
-                    this.KeywordRecognized?.Invoke(null);
-                    await this.StopAudioFlowAsync();
                     break;
                 default:
                     throw new InvalidOperationException();

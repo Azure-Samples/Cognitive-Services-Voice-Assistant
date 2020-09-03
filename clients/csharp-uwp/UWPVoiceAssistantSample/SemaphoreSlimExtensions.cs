@@ -59,7 +59,7 @@ namespace UWPVoiceAssistantSample
             : IDisposable
         {
             private readonly SemaphoreSlim semaphore;
-            private bool alreadyDisposed = false;
+            private bool alreadyDisposed;
 
             public ReleaseableSemaphoreSlimWrapper(SemaphoreSlim semaphore)
                 => this.semaphore = semaphore;

@@ -25,7 +25,7 @@ namespace UWPVoiceAssistantSample.AudioInput
         private readonly ManualResetEventSlim enumerationCompletedEvent;
         private bool firstEnumerationCompleted = false;
         private MediaCapture deviceMediaCapture;
-        private bool alreadyDisposed = false;
+        private bool alreadyDisposed;
         private Timer audioPollTimer;
 
         private AudioCaptureControl()

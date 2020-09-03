@@ -19,7 +19,7 @@ namespace UWPVoiceAssistantSample.AudioOutput
         private readonly MediaPlayer mediaPlayer;
         private DialogAudioOutputMediaSource mediaSource;
         private MediaPlaybackState lastPlaybackState;
-        private bool alreadyDisposed = false;
+        private bool alreadyDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MediaPlayerDialogAudioOutputAdapter"/> class.

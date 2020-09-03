@@ -4,7 +4,6 @@
 namespace UWPVoiceAssistantSample
 {
     using Newtonsoft.Json.Linq;
-    using System.Globalization;
 
     /// <summary>
     /// Class determines the activity received from the Bot and deserializes the response.

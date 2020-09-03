@@ -28,7 +28,7 @@ namespace UWPVoiceAssistantSample
         private readonly IKeywordRegistration keywordRegistration;
         private readonly IAgentSessionManager agentSessionManager;
         private BackgroundTaskDeferral deferral;
-        private bool alreadyDisposed = false;
+        private bool alreadyDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="App"/> class.

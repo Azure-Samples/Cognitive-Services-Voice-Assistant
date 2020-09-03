@@ -3,7 +3,6 @@
 
 namespace UWPVoiceAssistantSample
 {
-    using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -11,6 +10,7 @@ namespace UWPVoiceAssistantSample
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
@@ -30,10 +30,6 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        /// <summary>
-        /// Collection of utterances from user and bot.
-        /// </summary>
-        public ObservableCollection<Conversation> Conversations;
         private readonly ServiceProvider services;
         private readonly ILogProvider logger;
         private readonly IDialogManager dialogManager;
@@ -107,6 +103,11 @@ namespace UWPVoiceAssistantSample
             this.ChatHistoryListView.ContainerContentChanging += this.OnChatHistoryListViewContainerChanging;
         }
 
+        /// <summary>
+        /// Gets the collection of utterances from user and bot.
+        /// </summary>
+        public ObservableCollection<Conversation> Conversations { get; }
+
         private bool BackgroundTaskRegistered
         {
             get => MVARegistrationHelpers.IsBackgroundTaskRegistered;
@@ -139,7 +140,7 @@ namespace UWPVoiceAssistantSample
                 this.RefreshStatus();
             };
             this.ClearLogsButton.Click += async (_, __)
-                => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     this.ChangeLogStackPanel.Children.Clear();
                 });
@@ -259,7 +260,7 @@ namespace UWPVoiceAssistantSample
                 var agentIdle = session == null || session.AgentState == ConversationalAgentState.Inactive;
                 var micReady = micStatus == AppCapabilityAccessStatus.Allowed && audioControl.HasAudioInputAvailable;
 
-                var keywordConfig = await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+                var keywordConfig = await this.keywordRegistration?.GetOrCreateKeywordConfigurationAsync();
 
                 this.AppVoiceActivationEnabledToggle.IsEnabled = keywordConfig != null;
                 this.AppVoiceActivationEnabledToggle.OffContent = keywordConfig != null
@@ -1134,7 +1135,7 @@ namespace UWPVoiceAssistantSample
             await Launcher.LaunchFolderAsync(localFolder, launchOption);
         }
 
-        private async void TriggerLogAvailable(object sender, RoutedEventArgs e)
+        private void TriggerLogAvailable(object sender, RoutedEventArgs e)
         {
             this.FilterLogs();
         }

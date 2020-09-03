@@ -127,7 +127,7 @@ namespace UWPVoiceAssistantSample
             var signalName = (detectionOrigin == DetectionOrigin.FromPushToTalk)
                 ? "Push to talk" : session.SignalName;
 
-            this.logger.Log(LogMessageLevel.SignalDetection, $"Signal ({detectionOrigin}) detected: {session.SignalName}");
+            this.logger.Log(LogMessageLevel.SignalDetection, $"Signal ({detectionOrigin}) detected: {signalName}");
 
             var canSkipVerification =
                 detectionOrigin == DetectionOrigin.FromPushToTalk
@@ -197,7 +197,7 @@ namespace UWPVoiceAssistantSample
         private void OnSessionSignalRejected(DetectionOrigin origin)
         {
             this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "2", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
-            this.logger.Log(LogMessageLevel.SignalDetection, $"Session singal rejected, Signal Origin: {origin}");
+            this.logger.Log(LogMessageLevel.SignalDetection, $"Session signal rejected, Signal Origin: {origin}");
             this.SignalRejected?.Invoke(origin);
         }
     }

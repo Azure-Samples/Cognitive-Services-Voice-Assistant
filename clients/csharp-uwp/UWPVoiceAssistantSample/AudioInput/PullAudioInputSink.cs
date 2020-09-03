@@ -6,6 +6,7 @@ namespace UWPVoiceAssistantSample.AudioInput
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.Contracts;
+    using System.IO;
     using System.Threading;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
@@ -20,6 +21,15 @@ namespace UWPVoiceAssistantSample.AudioInput
         private readonly List<byte> pushDataBuffer = new List<byte>();
         private readonly object dataSourceLock = new object();
         private PullAudioDataSource dataSource;
+        private DebugAudioCapture debugAudioCapture;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PullAudioInputSink"/> class.
+        /// </summary>
+        public PullAudioInputSink()
+        {
+            this.Reset();
+        }
 
         /// <summary>
         /// Raised upon the first read that crosses the current BookmarkPosition, as counted since last reset.
@@ -41,6 +51,12 @@ namespace UWPVoiceAssistantSample.AudioInput
         /// Gets or sets a friendly label to associate with this input sink.
         /// </summary>
         public string Label { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether debug audio output (dumps of audio being
+        /// pulled) should be emitted.
+        /// </summary>
+        public bool DebugAudioFilesEnabled { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the active data source to be used for subsequent reads from this input sink.
@@ -90,6 +106,12 @@ namespace UWPVoiceAssistantSample.AudioInput
                 this.pushDataBuffer.Clear();
             }
 
+            this.debugAudioCapture?.Dispose();
+            if (this.DebugAudioFilesEnabled)
+            {
+                this.debugAudioCapture = new DebugAudioCapture(this.Label);
+            }
+
             this.AudioReadSinceReset = TimeSpan.Zero;
         }
 
@@ -129,6 +151,8 @@ namespace UWPVoiceAssistantSample.AudioInput
                     this.BookmarkReached?.Invoke(this.AudioReadSinceReset);
                 }
             }
+
+            this.debugAudioCapture?.Write(dataBuffer);
 
             return bytesRead;
         }

@@ -14,30 +14,12 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public class NLogProvider : ILogProvider
     {
-        private static int nextLogIndex = 0;
         /// <summary>
         /// List of log messages.
         /// </summary>
-        public static readonly List<string> LogBuffer = new List<string>();
+        public static readonly List<string> LogMessageBuffer = new List<string>();
+        private static int nextLogIndex = 0;
         private Logger logger;
-
-        /// <summary>
-        /// Event to indicate a log was generated.
-        /// </summary>
-        public static event EventHandler logAvailable;
-
-        public event EventHandler LogAvailable
-        {
-            add
-            {
-                logAvailable += value;
-            }
-
-            remove
-            {
-                logAvailable -= value;
-            }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogProvider"/> class.
@@ -49,9 +31,30 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
+        /// Raised when a new log entry is available from the provider.
+        /// </summary>
+        public event EventHandler LogAvailable
+        {
+            add
+            {
+                LogAvailableEvent += value;
+            }
+
+            remove
+            {
+                LogAvailableEvent -= value;
+            }
+        }
+
+        /// <summary>
+        /// Event to indicate a log was generated.
+        /// </summary>
+        private static event EventHandler LogAvailableEvent;
+
+        /// <summary>
         /// Gets LogBuffer.
         /// </summary>
-        List<string> ILogProvider.LogBuffer { get => LogBuffer; }
+        public List<string> LogBuffer { get => LogMessageBuffer; }
 
         /// <summary>
         /// Initializes the app-global state needed for NLog to emit to its output locations via
@@ -78,6 +81,36 @@ namespace UWPVoiceAssistantSample
             NLog.LogManager.Configuration = configuration;
         }
 
+        /// <summary>
+        /// Logs an NLog message at the default LogLevel.Info level.
+        /// </summary>
+        /// <param name="message"> The message to log via NLog. </param>
+        public void Log(string message) => this.Log(LogMessageLevel.Information, message);
+
+        /// <summary>
+        /// Logs an NLog message at the equivalent LogLevel for the abstracted LogMessageLevel.
+        /// </summary>
+        /// <param name="level"> The LogMessageLevel to convert and use for the log message. </param>
+        /// <param name="message"> The message to log via NLog. </param>
+        public void Log(LogMessageLevel level, string message)
+        {
+            LogMessageBuffer.Add($"{level + message}");
+
+            Task.Run(() =>
+            {
+                var indexToRead = nextLogIndex;
+                nextLogIndex += 1;
+                this.logger.Log(ConvertLogLevel(level), LogMessageBuffer[indexToRead]);
+                this.OnLogAvailable();
+            });
+        }
+
+        /// <summary>
+        /// Logs an NLog message at the LogLevel.Error level.
+        /// </summary>
+        /// <param name="message"> The message to log via NLog. </param>
+        public void Error(string message) => this.logger.Error(message);
+
         private static LogLevel ConvertLogLevel(LogMessageLevel level)
         {
             switch (level)
@@ -96,39 +129,9 @@ namespace UWPVoiceAssistantSample
             }
         }
 
-        /// <summary>
-        /// Logs an NLog message at the default LogLevel.Info level.
-        /// </summary>
-        /// <param name="message"> The message to log via NLog. </param>
-        public void Log(string message) => this.Log(LogMessageLevel.Information, message);
-
-        /// <summary>
-        /// Logs an NLog message at the equivalent LogLevel for the abstracted LogMessageLevel.
-        /// </summary>
-        /// <param name="level"> The LogMessageLevel to convert and use for the log message. </param>
-        /// <param name="message"> The message to log via NLog. </param>
-        public void Log(LogMessageLevel level, string message)
-        {
-            LogBuffer.Add($"{level + message}");
-
-            Task.Run(() =>
-            {
-                var indexToRead = nextLogIndex;
-                nextLogIndex += 1;
-                this.logger.Log(ConvertLogLevel(level), LogBuffer[indexToRead]);
-                this.OnLogAvailable();
-            });
-        }
-
-        /// <summary>
-        /// Logs an NLog message at the LogLevel.Error level.
-        /// </summary>
-        /// <param name="message"> The message to log via NLog. </param>
-        public void Error(string message) => this.logger.Error(message);
-
         private void OnLogAvailable()
         {
-            logAvailable?.Invoke(this, EventArgs.Empty);
+            LogAvailableEvent?.Invoke(this, EventArgs.Empty);
         }
     }
 }

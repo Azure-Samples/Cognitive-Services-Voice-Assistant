@@ -21,6 +21,9 @@ namespace UWPVoiceAssistantSample
         private ActivationSignalDetectionConfiguration keywordConfiguration;
         private bool disposed;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeywordRegistration"/> class.
+        /// </summary>
         public KeywordRegistration()
         {
         }
