@@ -14,6 +14,7 @@ using namespace AudioPlayer;
 
 LinuxAudioPlayer::LinuxAudioPlayer()
 {
+    m_shuttingDown = false;
     m_state = AudioPlayerState::UNINITIALIZED;
     m_playerThread = std::thread(&LinuxAudioPlayer::PlayerThreadMain, this);
 }
@@ -160,7 +161,7 @@ void LinuxAudioPlayer::PlayerThreadMain()
         lk.unlock();
         if (m_state == AudioPlayerState::PAUSED)
         {
-            Initialize();
+            snd_pcm_prepare(m_playback_handle);
         }
 
         while (m_audioQueue.size() > 0)
@@ -294,7 +295,6 @@ int LinuxAudioPlayer::Stop()
 
     //tell alsa to drop any frames in buffer
     snd_pcm_drop(m_playback_handle);
-    snd_pcm_close(m_playback_handle);
     m_state = AudioPlayerState::PAUSED;
 
     //clear the audio queue safely
