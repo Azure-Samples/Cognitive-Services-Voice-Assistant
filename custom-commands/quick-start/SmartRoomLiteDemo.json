@@ -8,7 +8,7 @@
     "type": "internal",
     "isGenerated": true
   },
-  "httpEndpoints": [
+  "webEndpoints": [
     {
       "name": "getDevices",
       "method": "GET",
