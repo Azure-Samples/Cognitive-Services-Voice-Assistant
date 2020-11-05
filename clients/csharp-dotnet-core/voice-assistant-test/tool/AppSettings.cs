@@ -120,6 +120,11 @@ namespace VoiceAssistantTest
         public string KeywordRecognitionModel { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to enable keyword verification in the SDK.
+        /// </summary>
+        public bool UseKeywordVerification { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the SetPropertyID.
         /// This will result in SetPropery method call on DialogServiceConfig that takes a PropertyId argument.
         /// </summary>

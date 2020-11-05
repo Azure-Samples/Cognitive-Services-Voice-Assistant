@@ -30,6 +30,7 @@
   "SpeechSDKLogEnabled": false,
   "Timeout":  5000,
   "KeywordRecognitionModel" : "",
+  "UseKeywordVerification": true,
   "SetPropertyId": {},
   "SetPropertyString": {},
   "SetServiceProperty":{}
