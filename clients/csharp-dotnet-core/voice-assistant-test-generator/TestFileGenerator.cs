@@ -71,8 +71,19 @@ namespace VoiceAssistantTestGenerator
                 WriteIndentationLine(streamWriter, indentation, "\"TurnID\": 0,");
                 WriteIndentationLine(streamWriter, indentation, "\"Sleep\": 10,");
                 WriteIndentationLine(streamWriter, indentation, "\"Utterance\": \"" + columns[0] + "\",");
+
+                if (columnHeaders[1] == "WavFile")
+                {
+                    // If WavFile is specified, we use the WAV file input and Utterance should specify
+                    // the expected recognition result.
+                    WriteIndentationLine(streamWriter, indentation, "\"WavFile\": \"" + columns[1] + "\",");
+                }
+                else
+                {
+                    WriteIndentationLine(streamWriter, indentation, "\"WavFile\": \"\",");
+                }
+
                 WriteIndentationLine(streamWriter, indentation, "\"Activity\": \"\",");
-                WriteIndentationLine(streamWriter, indentation, "\"WavFile\": \"\",");
                 WriteIndentationLine(streamWriter, indentation, "\"Keyword\": false,");
                 WriteIndentationLine(streamWriter, indentation, "\"ExpectedResponses\": [");
                 indentation++;
