@@ -1,13 +1,14 @@
 {
-  "KeywordRecognitionModel": "/data/cppSample/computer.table",
-  "Keyword": "Computer",
-  "SpeechSubscriptionKey": "YOUR_SUBSCRIPTION_KEY",
-  "SpeechRegion": "YOUR_SUBSCRIPTION_REGION",
-  "Volume": "25",
-  "CustomCommandsAppId": "",
-  "CustomVoiceDeploymentIds": "",
-  "SpeechSDKLogFile": "",
-  "TTSBargeInSupported": "true",
-  "CustomMicConfigPath" :"/home/ubuntu/cpp-console/configs/micConfig.json",
-  "LinuxCaptureDeviceName": "hw:1,0"
+    "KeywordRecognitionModel": "/data/cppSample/computer.table",
+    "Keyword": "Computer",
+    "SpeechSubscriptionKey": "YOUR_SUBSCRIPTION_KEY",
+    "SpeechRegion": "YOUR_SUBSCRIPTION_REGION",
+    "SRLanguage": "en-us",
+    "Volume": "25",
+    "CustomCommandsAppId": "",
+    "CustomVoiceDeploymentIds": "",
+    "SpeechSDKLogFile": "",
+    "TTSBargeInSupported": "true",
+    "CustomMicConfigPath": "/home/ubuntu/cpp-console/configs/micConfig.json",
+    "LinuxCaptureDeviceName": "hw:1,0"
 }

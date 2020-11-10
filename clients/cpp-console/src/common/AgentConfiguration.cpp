@@ -24,6 +24,7 @@ namespace FieldNames
 {
     constexpr auto KeywordRecognitionModel = "KeywordRecognitionModel";
     constexpr auto CustomCommandsAppId = "CustomCommandsAppId";
+    constexpr auto SRLanguage = "SRLanguage";
     constexpr auto SpeechSubscriptionKey = "SpeechSubscriptionKey";
     constexpr auto SpeechRegion = "SpeechRegion";
     constexpr auto CustomVoiceDeploymentIds = "CustomVoiceDeploymentIds";
@@ -59,6 +60,7 @@ shared_ptr<AgentConfiguration> AgentConfiguration::LoadFromFile(const string& pa
 
     config->_customCommandsAppId = j.value(FieldNames::CustomCommandsAppId, "");
     config->_speechKey = j.value(FieldNames::SpeechSubscriptionKey, "");
+    config->_srLanguage = j.value(FieldNames::SRLanguage, "");
     config->_speechRegion = j.value(FieldNames::SpeechRegion, "");
     config->_urlOverride = j.value(FieldNames::UrlOverride, "");
     config->_customVoiceIds = j.value(FieldNames::CustomVoiceDeploymentIds, "");
@@ -180,6 +182,11 @@ shared_ptr<DialogServiceConfig> AgentConfiguration::CreateDialogServiceConfig()
         ? dynamic_pointer_cast<DialogServiceConfig>(CustomCommandsConfig::FromSubscription(_customCommandsAppId, _speechKey, _speechRegion))
         : dynamic_pointer_cast<DialogServiceConfig>(BotFrameworkConfig::FromSubscription(_speechKey, _speechRegion, ""));
 
+    if (_srLanguage.length() > 0)
+    {
+        // Set the speech recognition language. If not set, the default is "en-us".
+        config->SetLanguage(_srLanguage);
+    }
     if (_urlOverride.length() > 0)
     {
         config->SetProperty(PropertyId::SpeechServiceConnection_Endpoint, _urlOverride);

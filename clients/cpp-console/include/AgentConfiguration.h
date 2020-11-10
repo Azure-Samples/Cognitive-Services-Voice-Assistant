@@ -43,6 +43,7 @@ public:
     std::string _customCommandsAppId;
     std::string _speechKey;
     std::string _speechRegion;
+    std::string _srLanguage;
     std::string _customVoiceIds;
     std::string _customSREndpointId;
     std::string _urlOverride;

@@ -21,7 +21,8 @@ This is an example config.json file that shows all the common properties. If you
 {
   "SpeechSubscriptionKey": "b587d36063dd458daea151a1b969720a",
   "SpeechRegion": "westus",
-  "SRLanguage": "en-US",  "CustomCommandsAppId": "32d06e92-1bd0-4f3f-2c3b-8cf036d0518f",
+  "SRLanguage": "en-US",  
+  "CustomCommandsAppId": "32d06e92-1bd0-4f3f-2c3b-8cf036d0518f",
   "CustomSREndpointId": "c31ad51b-efef-7ec6-b262-a4be7cd251f2",
   "CustomVoiceDeploymentIds": "53bcf7be-80a2-47dc-2bd3-ba6f62eccfe3",
   "UrlOverride": "",
