@@ -4,7 +4,9 @@
 namespace VoiceAssistantTestGenerator
 {
     using System;
+    using System.Globalization;
     using System.IO;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Class that handles generating the json test files for the VoiceAssistantTest program.
@@ -12,6 +14,10 @@ namespace VoiceAssistantTestGenerator
     public static class TestFileGenerator
     {
         private const string TABSPACES = "    ";
+        private const string HEADERWAVFILE = "WavFile";
+        private const string HEADERUTTERANCE = "Utterance";
+        private const string HEADERKEYWORD = "Keyword";
+        private const string HEADERSLEEP = "Sleep";
 
         /// <summary>
         /// Calls all functions necessary to generate the test.json file.
@@ -60,8 +66,45 @@ namespace VoiceAssistantTestGenerator
                 // write beginning of dialog
                 WriteIndentationLine(streamWriter, indentation, "{");
                 indentation++;
-
                 WriteIndentationLine(streamWriter, indentation, "\"DialogID\": " + testCount + ",");
+
+                int columnIndex = 0;
+                bool knownColumnHeaders = true;
+                var currentDialog = new DialogData();
+                while (knownColumnHeaders)
+                {
+                    switch (columnHeaders[columnIndex])
+                    {
+                        case HEADERUTTERANCE:
+                            currentDialog.Utterance = columns[columnIndex];
+                            break;
+                        case HEADERWAVFILE:
+                            // If WavFile is specified, we use the WAV file input
+                            bool isWindows = System.Runtime.InteropServices.RuntimeInformation
+                                                       .IsOSPlatform(OSPlatform.Windows);
+                            var wavFilePath = columns[columnIndex];
+                            if (isWindows)
+                            {
+                                currentDialog.WavFile = wavFilePath.Replace("\\", "\\\\", System.StringComparison.Ordinal);
+                            }
+
+                            break;
+                        case HEADERKEYWORD:
+                            currentDialog.Keyword = bool.Parse(columns[columnIndex]);
+                            break;
+                        case HEADERSLEEP:
+#pragma warning disable CA1305 // Specify IFormatProvider
+                            currentDialog.Sleep = int.Parse(columns[columnIndex]);
+#pragma warning restore CA1305 // Specify IFormatProvider
+                            break;
+                        default:
+                            knownColumnHeaders = false;
+                            break;
+                    }
+
+                    columnIndex++;
+                }
+
                 WriteIndentationLine(streamWriter, indentation, "\"Description\": \"Dialog - " + testCount + "\",");
                 WriteIndentationLine(streamWriter, indentation, "\"Skip\": false,");
                 WriteIndentationLine(streamWriter, indentation, "\"Turns\": [");
@@ -69,22 +112,12 @@ namespace VoiceAssistantTestGenerator
                 WriteIndentationLine(streamWriter, indentation, "{");
                 indentation++;
                 WriteIndentationLine(streamWriter, indentation, "\"TurnID\": 0,");
-                WriteIndentationLine(streamWriter, indentation, "\"Sleep\": 10,");
-                WriteIndentationLine(streamWriter, indentation, "\"Utterance\": \"" + columns[0] + "\",");
-
-                if (columnHeaders[1] == "WavFile")
-                {
-                    // If WavFile is specified, we use the WAV file input and Utterance should specify
-                    // the expected recognition result.
-                    WriteIndentationLine(streamWriter, indentation, "\"WavFile\": \"" + columns[1] + "\",");
-                }
-                else
-                {
-                    WriteIndentationLine(streamWriter, indentation, "\"WavFile\": \"\",");
-                }
-
+                WriteIndentationLine(streamWriter, indentation, $"\"Sleep\": {currentDialog.Sleep},");
                 WriteIndentationLine(streamWriter, indentation, "\"Activity\": \"\",");
-                WriteIndentationLine(streamWriter, indentation, "\"Keyword\": false,");
+                WriteIndentationLine(streamWriter, indentation, $"\"Keyword\": {currentDialog.Keyword.ToString().ToLower(CultureInfo.CurrentCulture)},");
+                WriteIndentationLine(streamWriter, indentation, "\"Utterance\": \"" + currentDialog.Utterance + "\",");
+                WriteIndentationLine(streamWriter, indentation, "\"WavFile\": \"" + currentDialog.WavFile + "\",");
+
                 WriteIndentationLine(streamWriter, indentation, "\"ExpectedResponses\": [");
                 indentation++;
                 WriteIndentationLine(streamWriter, indentation, "{");
@@ -96,7 +129,7 @@ namespace VoiceAssistantTestGenerator
                 }
 
                 bool needComma = false;
-                for (int i = 1; i < columnHeaders.Length; i++)
+                for (int i = columnIndex; i < columnHeaders.Length; i++)
                 {
                     string header = columnHeaders[i];
 
