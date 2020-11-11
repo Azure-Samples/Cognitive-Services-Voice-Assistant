@@ -4,11 +4,14 @@ Param(
     [Parameter(Mandatory, HelpMessage = "Please enter a supported app. automotive, hospitality, inventory or careroom")]
     [ValidateSet('automotive', 'hospitality', 'inventory', 'careroom', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")]
     [string] $appName = $(Read-Host -prompt "appName"),
+
+    [Parameter (Mandatory, HelpMessage = "Please enter a langauge (calture) code. The only value support now is en-us")]
+    [string] $language = $(Read-Host -prompt "language"),
+
     [Parameter (Mandatory, HelpMessage = "Please enter a name for your resource. It must be < 19 characters and  Alphanumeric only")]
     [ValidatePattern("^\w+$", ErrorMessage = "resourceName must be alphanumeric")]
-    [string] $language = $(Read-Host -prompt "language")
-    [Parameter (Mandatory, HelpMessage = "Please enter a langauge (calture) code. The only value support now is en-us")]
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
+    
     [Parameter (Mandatory, HelpMessage = "Please enter a region. Supported regions are westus, northeurope")]
     [string] $region = $(Read-Host -prompt "region"),
     [string] $randomID

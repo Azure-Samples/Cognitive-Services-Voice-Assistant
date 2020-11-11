@@ -52,6 +52,10 @@ Call az login to log your Powershell into Azure. If you have more than one Azure
 ```powershell
     ./deployAll.ps1 -appName DemoName -language Language -resourceName MyResourceGroupName -region AzureRegion
 ```
+For example:
+```powershell
+    ./deployAll.ps1 -appName hospitality -language en-us -resourceName HospitalityDemo -region westus
+```
 When you run the above, it will first display information derived from the above parameters, and will ask you to enter 'y' to proceed, or any other character to quit.
 
 The script may take a few minutes to run.
