@@ -40,11 +40,13 @@ Open a Powershell 6.0 or higher administrator prompt. You will need to unrestric
 ```
 This will reset the policy once this Powershell session has ended.
 
-Call az login to log your Powershell into Azure. If you have more than one Azure login credentials, you will be prompted to selected one or them:
+Run the following command to log your Powershell into Azure. If you have more than one Azure login credentials, you will be prompted to selected one of them:
 ```powershell
     az login
 ```
- Run the Powershell script below, with the following arguments:
+If you have more than one Azure subscription associated with this Azure account, the default one will be used. You can view your subscriptions and [Change the active subscription](https://docs.microsoft.com/en-us/cli/azure/manage-azure-subscriptions-azure-cli#change-the-active-subscription) at this point if you like, before continuing on.
+
+Run the Powershell script below, with the following arguments:
  * Replace "DemoName" with one of three available values: [hospitality](hospitality/README.md), [inventory](inventory/README.md), [automotive](automotive/README.md) or [careroom](careroom/README.md). Click on those links to get a description of the supported dialog and the virtual scene.
  * Replace "Language" with one of the supported languages (culture) codes of the selected demo. The only value supported at the moment is en-us.
  * Replace "MyResourceGroupName" with the an Azure Resource Group name of your choice. This name should be no more than 19 characters, alphanumeric only. Make sure an Azure resource group by this name does not already exist in your subscription. This name will also be used to construct names of all the Azure resources and URL that will be associated with this Custom Commands application and visualization. Some of these names need to be globally unique, so the script will append a random number to the name you selected

@@ -6,6 +6,7 @@ Param(
     [string] $appName = $(Read-Host -prompt "appName"),
 
     [Parameter (Mandatory, HelpMessage = "Please enter a langauge (calture) code. The only value support now is en-us")]
+    [ValidateSet('en-us', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")]
     [string] $language = $(Read-Host -prompt "language"),
 
     [Parameter (Mandatory, HelpMessage = "Please enter a name for your resource. It must be < 19 characters and  Alphanumeric only")]
@@ -118,7 +119,7 @@ $speechResourceKey = $speechResourceKey.key1
 $luisAuthoringKey = az cognitiveservices account keys list -g $resourceName -n $luisKeyName | ConvertFrom-Json
 $luisAuthoringKey = $luisAuthoringKey.key1
 
-$command = "./deployCustomCommands.ps1 -appName $appName -speechResourceKey $speechResourceKey -resourceName $resourceName -azureSubscriptionId $azureSubscriptionID -resourceGroup $resourceGroup -luisKeyName $luisKeyName -luisAuthoringKey $luisAuthoringKey -luisAuthoringRegion $luisAuthoringRegion -CustomCommandsRegion $CustomCommandsRegion -websiteAddress $websiteAddress"
+$command = "./deployCustomCommands.ps1 -appName $appName -language $language -speechResourceKey $speechResourceKey -resourceName $resourceName -azureSubscriptionId $azureSubscriptionID -resourceGroup $resourceGroup -luisKeyName $luisKeyName -luisAuthoringKey $luisAuthoringKey -luisAuthoringRegion $luisAuthoringRegion -CustomCommandsRegion $CustomCommandsRegion -websiteAddress $websiteAddress"
 Write-Host -ForegroundColor Yellow "Calling deployCustomCommands"
 Write-Host -ForegroundColor Yellow $command
 Invoke-Expression $command
