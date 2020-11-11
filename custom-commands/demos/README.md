@@ -46,10 +46,11 @@ Call az login to log your Powershell into Azure. If you have more than one Azure
 ```
  Run the Powershell script below, with the following arguments:
  * Replace "DemoName" with one of three available values: [hospitality](hospitality/README.md), [inventory](inventory/README.md), [automotive](automotive/README.md) or [careroom](careroom/README.md). Click on those links to get a description of the supported dialog and the virtual scene.
+ * Replace "Language" with one of the supported languages (culture) codes of the selected demo. The only value supported at the moment is en-us.
  * Replace "MyResourceGroupName" with the an Azure Resource Group name of your choice. This name should be no more than 19 characters, alphanumeric only. Make sure an Azure resource group by this name does not already exist in your subscription. This name will also be used to construct names of all the Azure resources and URL that will be associated with this Custom Commands application and visualization. Some of these names need to be globally unique, so the script will append a random number to the name you selected
  * Replace "AzureRegion" with an Azure region near you, from the list of [Voice Assistant supported regions](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/regions#voice-assistants) (e.g. westus). Read more about Azure Regions [here](https://azure.microsoft.com/en-us/global-infrastructure/regions/). Note that if you are using a free trial Azure subscription, you are limited to Azure regions westus or northeurope
 ```powershell
-    ./deployAll.ps1 -appName DemoName -resourceName MyResourceGroupName -region AzureRegion
+    ./deployAll.ps1 -appName DemoName -language Language -resourceName MyResourceGroupName -region AzureRegion
 ```
 When you run the above, it will first display information derived from the above parameters, and will ask you to enter 'y' to proceed, or any other character to quit.
 
@@ -113,7 +114,7 @@ For the Care Room demo:
 * Click on "Sign in" on the top right if you are not already signed in. Make sure you use the same Azure account you used to login from the Powershell script
 * If you're prompted to select directory (Azure Active Directory for identity and access management), select the "Default Directory"
 * If you're prompted to select a speech resource (*"Speech resources created on Azure are listed below. Choose one to begin a Speech Studio project"*), select the one named MyResourceGroupName-speech, which was created when you run the Powershell script. Then click on "Go to Studio".
-* In the main Speech Studio page, go down to the bottom of the page and click on the "Custom Commands (PREVIEW)" box
+* In the main Speech Studio page, go down to the bottom of the page and click on the "Custom Commands" box
 * You should now see the newly created Custom Command project named MyResourceGroupName-commands, similar to the following:
 ![speech studio](images/speech-studio.png)
 

@@ -6,6 +6,10 @@
 
 In this demo we simulate a hotel room and use voice to control some of the devices in the room - The television, air-conditioning, blinds, bathroom lights and main-room light.
 
+## Supported language
+
+en-us
+
 ## Example sentences
 
 Here are a few examples. Try these or others of your choice:

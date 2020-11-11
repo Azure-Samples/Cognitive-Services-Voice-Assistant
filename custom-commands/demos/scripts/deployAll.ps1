@@ -6,6 +6,8 @@ Param(
     [string] $appName = $(Read-Host -prompt "appName"),
     [Parameter (Mandatory, HelpMessage = "Please enter a name for your resource. It must be < 19 characters and  Alphanumeric only")]
     [ValidatePattern("^\w+$", ErrorMessage = "resourceName must be alphanumeric")]
+    [string] $language = $(Read-Host -prompt "language")
+    [Parameter (Mandatory, HelpMessage = "Please enter a langauge (calture) code. The only value support now is en-us")]
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
     [Parameter (Mandatory, HelpMessage = "Please enter a region. Supported regions are westus, northeurope")]
     [string] $region = $(Read-Host -prompt "region"),
@@ -27,7 +29,8 @@ if ("" -eq $isRegionSupported) {
     exit
 }
 
-$supportedRegions = "westus", "westus2", "northeurope"
+# See region availability here: https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/quickstart-custom-commands-application
+$supportedRegions = "westus", "westus2", "eastus", "eastus2", "northeurope", "westeurope", "westcentralus", "centralindia", "eastasia", "southeastasia"
 $isRegionSupported = $supportedRegions -eq $region
 if ("" -eq $isRegionSupported) {
     Write-Output "Region '$region' is currently not supported for Custom Commands. Please choose a region from the following: $supportedRegions."
@@ -74,6 +77,7 @@ $websiteAddress = "https://$functionName.azurewebsites.net/api/$((Get-Culture).T
 
 Write-Host -ForegroundColor Yellow "The deployment will be using default subscription ($subscriptionName) with following details:"
 Write-Host "App name:             $appName"
+Write-Host "Language:             $language"
 Write-Host "Resource Group:       $resourceGroup"
 Write-Host "Region:               $region"
 Write-Host "LUIS name:            $luisName"
