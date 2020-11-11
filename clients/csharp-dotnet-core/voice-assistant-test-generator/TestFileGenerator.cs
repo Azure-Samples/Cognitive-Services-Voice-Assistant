@@ -99,7 +99,7 @@ namespace VoiceAssistantTestGenerator
                             break;
                         default:
                             knownColumnHeaders = false;
-                            break;
+                            continue;
                     }
 
                     columnIndex++;
