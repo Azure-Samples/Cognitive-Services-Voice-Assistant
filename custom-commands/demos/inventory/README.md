@@ -6,6 +6,10 @@
 
 In this demo we simulate a warehouse with inventory (boxes with different colors and sizes). We use voice to control removing or adding boxes, or query the inventory.
 
+## Supported language
+
+en-us
+
 ## Example sentences
 
 Here are a few examples. Try these or others of your choice:

@@ -6,6 +6,10 @@
 
 In this demo we simulate a car interior, and use voice to adjust the temperature, turn on and off the seat warmers and defroster.
 
+## Supported language
+
+en-us
+
 ## Example sentences
 
 Here are a few examples. Try these or others of your choice:

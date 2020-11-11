@@ -2,6 +2,7 @@
 
 Param(
     [string] $appName = $(Read-Host -prompt "appName"),
+    [string] $language = $(Read-Host -prompt "language"),
     [string] $speechResourceKey = $(Read-Host -prompt "speechResourceKey"),
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
     [string] $azureSubscriptionId = $(Read-Host -prompt "azureSubscriptionId"),
@@ -21,7 +22,7 @@ if (-not $resourceGroup) {
 }
 
 $speechAppName = "$resourceName-commands"
-$skillJson = "../$appName/skill/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo.json"
+$skillJson = "../$appName/skill/$language/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo.json"
 
 #
 # create the custom speech app
