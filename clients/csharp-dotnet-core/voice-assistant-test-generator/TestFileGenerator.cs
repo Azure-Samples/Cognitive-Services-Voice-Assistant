@@ -18,6 +18,7 @@ namespace VoiceAssistantTestGenerator
         private const string HEADERUTTERANCE = "Utterance";
         private const string HEADERKEYWORD = "Keyword";
         private const string HEADERSLEEP = "Sleep";
+        private const string HEADEREXPECTEDRESPONSES = "ExpectedResponses";
 
         /// <summary>
         /// Calls all functions necessary to generate the test.json file.
@@ -97,6 +98,8 @@ namespace VoiceAssistantTestGenerator
                             currentDialog.Sleep = int.Parse(columns[columnIndex]);
 #pragma warning restore CA1305 // Specify IFormatProvider
                             break;
+                        case HEADEREXPECTEDRESPONSES:
+                            break;
                         default:
                             knownColumnHeaders = false;
                             continue;
@@ -132,6 +135,11 @@ namespace VoiceAssistantTestGenerator
                 for (int i = columnIndex; i < columnHeaders.Length; i++)
                 {
                     string header = columnHeaders[i];
+
+                    if (header == HEADEREXPECTEDRESPONSES)
+                    {
+                        continue;
+                    }
 
                     // handle commas between objects
                     if (needComma)
