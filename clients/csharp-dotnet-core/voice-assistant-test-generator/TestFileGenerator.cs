@@ -99,7 +99,6 @@ namespace VoiceAssistantTestGenerator
 #pragma warning restore CA1305 // Specify IFormatProvider
                             break;
                         case HEADEREXPECTEDRESPONSES:
-                            break;
                         default:
                             knownColumnHeaders = false;
                             continue;
