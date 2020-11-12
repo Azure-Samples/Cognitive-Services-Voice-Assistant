@@ -256,6 +256,11 @@ namespace VoiceAssistantTest
                 this.pushAudioInputStream.Write(dataBuffer, readBytes);
             }
 
+            // When done, we forcibly write one second (32000 bytes) of silence
+            // to the stream, forcing the speech recognition service to segment.
+            Array.Clear(dataBuffer, 0, 32000);
+            this.pushAudioInputStream.Write(dataBuffer, 32000);
+
             waveFileReader.Dispose();
         }
 
