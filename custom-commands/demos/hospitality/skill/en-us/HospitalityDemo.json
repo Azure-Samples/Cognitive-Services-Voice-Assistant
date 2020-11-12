@@ -7,7 +7,8 @@
       "method": "GET",
       "url": "https://virtualroommanager.azurewebsites.net/api/HospitalityDemo",
       "headers": {
-        "room": "test1"
+        "room": "test1",
+        "culture": "en-us"
       },
       "sendFrame": false,
       "updateFrame": false
