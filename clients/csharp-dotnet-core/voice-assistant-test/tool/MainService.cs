@@ -10,6 +10,7 @@ namespace VoiceAssistantTest
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
@@ -431,6 +432,15 @@ namespace VoiceAssistantTest
 #endif
                 }
             } // End of dialog loop
+
+            // Always clean up our connector object
+            if (botConnector != null)
+            {
+                await botConnector.Disconnect().ConfigureAwait(false);
+                botConnector.Dispose();
+            }
+
+            Thread.Sleep(1000);
 
             return testPass;
         }
