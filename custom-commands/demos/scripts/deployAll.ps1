@@ -4,9 +4,15 @@ Param(
     [Parameter(Mandatory, HelpMessage = "Please enter a supported app. automotive, hospitality, inventory or careroom")]
     [ValidateSet('automotive', 'hospitality', 'inventory', 'careroom', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")]
     [string] $appName = $(Read-Host -prompt "appName"),
+
+    [Parameter (Mandatory, HelpMessage = "Please enter a langauge (calture) code. The only value support now is en-us")]
+    [ValidateSet('en-us', IgnoreCase = $false, ErrorMessage = "Value '{0}' is invalid. Try one of these in lower case: '{1}'")]
+    [string] $language = $(Read-Host -prompt "language"),
+
     [Parameter (Mandatory, HelpMessage = "Please enter a name for your resource. It must be < 19 characters and  Alphanumeric only")]
     [ValidatePattern("^\w+$", ErrorMessage = "resourceName must be alphanumeric")]
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
+    
     [Parameter (Mandatory, HelpMessage = "Please enter a region. Supported regions are westus, northeurope")]
     [string] $region = $(Read-Host -prompt "region"),
     [string] $randomID
@@ -27,7 +33,8 @@ if ("" -eq $isRegionSupported) {
     exit
 }
 
-$supportedRegions = "westus", "westus2", "northeurope"
+# See region availability here: https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/quickstart-custom-commands-application
+$supportedRegions = "westus", "westus2", "eastus", "eastus2", "northeurope", "westeurope", "westcentralus", "centralindia", "eastasia", "southeastasia"
 $isRegionSupported = $supportedRegions -eq $region
 if ("" -eq $isRegionSupported) {
     Write-Output "Region '$region' is currently not supported for Custom Commands. Please choose a region from the following: $supportedRegions."
@@ -68,18 +75,21 @@ $luisKeyName = "$luisName-authoringkey"
 $storageName = "$resourceName$randomNumber".ToLower()
 $cognitiveservice_speech_name = "$resourceName-speech"
 $luisAuthoringRegion = "westus"
-$CustomCommandsRegion = $region
 $functionURL = "https://$functionName.azurewebsites.net/api/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo"
-$websiteAddress = "https://$functionName.azurewebsites.net/api/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo"
+$customCommandsWebEndpoint = $functionURL
+$customCommandsRegion = $region
+$visualizationEndpoint = "https://$storageName.blob.core.windows.net/www/$appName.html?room=test1"
 
 Write-Host -ForegroundColor Yellow "The deployment will be using default subscription ($subscriptionName) with following details:"
 Write-Host "App name:             $appName"
+Write-Host "Language:             $language"
 Write-Host "Resource Group:       $resourceGroup"
 Write-Host "Region:               $region"
 Write-Host "LUIS name:            $luisName"
 Write-Host "LUIS Key name:        $luisKeyName"
 Write-Host "Storage name:         $storageName"
-Write-Host "Website address:      $websiteAddress"
+Write-Host "Azure function URL:   $functionURL"
+Write-Host "Visualization URL:    $visualizationEndpoint"
 Write-Host ""
 if ($(Write-Host -ForegroundColor Yellow "Please enter 'y' to proceed, or any other character to quit:"; Read-Host) -ne "y") {
     exit
@@ -111,12 +121,10 @@ $speechResourceKey = $speechResourceKey.key1
 $luisAuthoringKey = az cognitiveservices account keys list -g $resourceName -n $luisKeyName | ConvertFrom-Json
 $luisAuthoringKey = $luisAuthoringKey.key1
 
-$command = "./deployCustomCommands.ps1 -appName $appName -speechResourceKey $speechResourceKey -resourceName $resourceName -azureSubscriptionId $azureSubscriptionID -resourceGroup $resourceGroup -luisKeyName $luisKeyName -luisAuthoringKey $luisAuthoringKey -luisAuthoringRegion $luisAuthoringRegion -CustomCommandsRegion $CustomCommandsRegion -websiteAddress $websiteAddress"
+$command = "./deployCustomCommands.ps1 -appName $appName -language $language -speechResourceKey $speechResourceKey -resourceName $resourceName -azureSubscriptionId $azureSubscriptionID -resourceGroup $resourceGroup -luisKeyName $luisKeyName -luisAuthoringKey $luisAuthoringKey -luisAuthoringRegion $luisAuthoringRegion -customCommandsRegion $customCommandsRegion -customCommandsWebEndpoint $customCommandsWebEndpoint"
 Write-Host -ForegroundColor Yellow "Calling deployCustomCommands"
 Write-Host -ForegroundColor Yellow $command
 Invoke-Expression $command
-
-$visualizationEndpoint = "https://$storageName.blob.core.windows.net/www/$appName.html?room=test1"
 
 Write-Host "    Speech Region = $region"
 Write-Host "***********************"

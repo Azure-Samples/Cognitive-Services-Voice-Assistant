@@ -5,9 +5,10 @@
     {
       "name": "RoomControlBackend",
       "method": "GET",
-      "url": "https://virtualroommanager.azurewebsites.net/api/CareRoomDemo",
+      "url": "https://virtualroommanager.azurewebsites.net/api/HospitalityDemo",
       "headers": {
-        "room": "test1"
+        "room": "test1",
+        "culture": "en-us"
       },
       "sendFrame": false,
       "updateFrame": false
@@ -163,6 +164,8 @@
       "triggeringExamples": [
         "> - You can start sentences with '>' to add comments.",
         "> - You can also use parameters by adding the name of the parameter within curly braces, i.e.",
+        ">   Set an alarm to {YourDateParameterName}",
+        ">   Where YourDateParameterName is the name of a parameter defined in the 'Parameters' section.",
         "are the blinds closed",
         "some other sentence"
       ],

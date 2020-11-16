@@ -7,7 +7,8 @@
       "method": "GET",
       "url": "https://inventorydemowidget.azurewebsites.net/api/InventoryDemo",
       "headers": {
-        "room": "test1"
+        "room": "test1",
+        "culture": "en-us"
       },
       "sendFrame": true,
       "updateFrame": false

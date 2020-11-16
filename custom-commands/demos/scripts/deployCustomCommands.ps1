@@ -2,6 +2,7 @@
 
 Param(
     [string] $appName = $(Read-Host -prompt "appName"),
+    [string] $language = $(Read-Host -prompt "language"),
     [string] $speechResourceKey = $(Read-Host -prompt "speechResourceKey"),
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
     [string] $azureSubscriptionId = $(Read-Host -prompt "azureSubscriptionId"),
@@ -9,8 +10,8 @@ Param(
     [string] $luisAuthoringKey = $(Read-Host -prompt "luisAuthoringKey"),
     [string] $luisAuthoringRegion = "westus",
     [string] $luisKeyName = $(Read-Host -prompt "luisKeyName"),
-    [string] $CustomCommandsRegion = "westus2",
-    [string] $websiteAddress = $(Read-Host -prompt "websiteAddress")
+    [string] $customCommandsRegion = "westus2",
+    [string] $customCommandsWebEndpoint = $(Read-Host -prompt "cutomCommandsWebEndpoint")
 )
 
 [Console]::ResetColor()
@@ -21,7 +22,7 @@ if (-not $resourceGroup) {
 }
 
 $speechAppName = "$resourceName-commands"
-$skillJson = "../$appName/skill/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo.json"
+$skillJson = "../$appName/skill/$language/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo.json"
 
 #
 # create the custom speech app
@@ -45,7 +46,7 @@ $headers = @{
 }
 
 try {
-    $response = invoke-restmethod -Method POST -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/apps" -Body (ConvertTo-Json $body) -Header $headers
+    $response = invoke-restmethod -Method POST -Uri "https://$customCommandsRegion.commands.speech.microsoft.com/apps" -Body (ConvertTo-Json $body) -Header $headers
 }
 catch {
     # dig into the exception to get the Response details.
@@ -66,12 +67,12 @@ write-host "Created project Id $appId"
 # change the model based on the local json file
 write-host "patching the $speechAppName $appName commands model"
 $newModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
-$newModel.webEndpoints[0].url = $websiteAddress
+$newModel.webEndpoints[0].url = $customCommandsWebEndpoint
 
 # send the updated model up to the application
 write-host "updating $speechAppName with the new $appName commands model"
 try {
-    $response = invoke-restmethod -Method PUT -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/en-us/model" -Body ($newModel | ConvertTo-Json  -depth 100) -Header $headers
+    $response = invoke-restmethod -Method PUT -Uri "https://$customCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/en-us/model" -Body ($newModel | ConvertTo-Json  -depth 100) -Header $headers
 }
 catch {
     # dig into the exception to get the Response details.
@@ -88,7 +89,7 @@ write-host "...model update completed"
 #
 
 write-host "starting the training"
-$response = invoke-webrequest -Method POST -Uri "https://$CustomCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/en-us/train?force=true" -Header $headers
+$response = invoke-webrequest -Method POST -Uri "https://$customCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/en-us/train?force=true" -Header $headers
 $OperationLocation = $response.Headers["Operation-Location"]
 write-host -NoNewline "training Operation Location: $OperationLocation"
 

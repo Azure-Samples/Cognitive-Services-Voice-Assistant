@@ -6,6 +6,10 @@
 
 In this demo we simulate a hospital room or healthcare facility and use voice to control some of the devices in the room - The television, air-conditioning, blinds and wall lamp. The dialog is similar to the one in the hospitality demo, just different visuals
 
+## Supported language
+
+en-us
+
 ## Example sentences
 
 Here are a few examples. Try these or others of your choice:
