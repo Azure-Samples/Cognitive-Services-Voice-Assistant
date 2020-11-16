@@ -62,7 +62,7 @@ Utterance | ExpectedResponses | complexObject{ | subProperty1 | subObject2{ | su
 Example test file ( '|' represents a tab). This test file defines messages that expect to correctly be interpreted to set a timer for 30 seconds and the service returns an activity with the extracted information as well as an added field about what the alarm should be.
 
 ```
-Utterance                   | Sleep | Keyword | type  | ExpectedResponses | details{ | duration | alarm}
-Set a timer for 30 seconds  | 200   | false   | timer |                   |          | "30"     | "audible"
-Make a timer for 30 seconds | 200   | false   | timer |                   |          | "30"     | "audible"
+Utterance                   | Sleep | Keyword | ExpectedResponses | type  | details{ | duration | alarm}
+Set a timer for 30 seconds  | 200   | false   |                   | timer |                   |          | "30"     | "audible"
+Make a timer for 30 seconds | 200   | false   |                   | timer |                   |          | "30"     | "audible"
 ```
