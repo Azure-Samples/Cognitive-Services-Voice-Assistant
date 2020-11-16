@@ -56,7 +56,7 @@ Each column's header should specify the schema of that property. Currently all v
 It is supported to have in depth objects. Currently if no braces are specified all properties are expected to be in the top level of the received activity. If you wish to specify depth simply add an opening brace to the object that has depth and closing brace to the last element.
 
 ```
-Utterance | type | ExpectedResponses | complexObject{ | subProperty1 | subObject2{ | subSubProperty1} | subProperty3}
+Utterance | ExpectedResponses | complexObject{ | subProperty1 | subObject2{ | subSubProperty1} | subProperty3}
 ```
 
 Example test file ( '|' represents a tab). This test file defines messages that expect to correctly be interpreted to set a timer for 30 seconds and the service returns an activity with the extracted information as well as an added field about what the alarm should be.
