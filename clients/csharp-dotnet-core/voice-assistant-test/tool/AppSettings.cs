@@ -120,9 +120,9 @@ namespace VoiceAssistantTest
         public string KeywordRecognitionModel { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to enable keyword verification in the SDK.
+        /// Gets or sets a value indicating whether or not keyword verification is perfomred by the speech service.
         /// </summary>
-        public bool UseKeywordVerification { get; set; } = true;
+        public bool KeywordVerificationEnabled { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the SetPropertyID.

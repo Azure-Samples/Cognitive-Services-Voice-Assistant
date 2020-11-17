@@ -105,7 +105,7 @@ Here is the full list:
 
 <font color="red">TODO: Make the above relative path to InputFolder?</font>
 
->#### UseKeywordVerification
+>#### KeywordVerificationEnabled
 >`bool | optional | false | true`. A boolean which indicates if your bot or custom command application is configured to use keyword verification. The default value is `true`. Note that if a [CustomSREndpointId](#customsrendpointid) is specified, this value is ignored and keyword verification is automatically disabled.
 
 >#### AriaProjectKey
