@@ -108,6 +108,12 @@ namespace VoiceAssistantTest
                 // from the service and connection will close. Remove line below when supported.
                 config.SetProperty("KeywordConfig_EnableKeywordVerification", "false");
             }
+            else
+            {
+                // If a custom speech endpoint is not specified, keyword verification is set
+                // according to the default or configured settings.
+                config.SetProperty("KeywordConfig_EnableKeywordVerification", this.appsettings.KeywordVerificationEnabled.ToString().ToLower());
+            }
 
             if (!string.IsNullOrWhiteSpace(this.appsettings.CustomVoiceDeploymentIds))
             {
