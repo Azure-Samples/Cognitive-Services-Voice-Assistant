@@ -9,6 +9,7 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -439,8 +440,6 @@ namespace VoiceAssistantTest
                 await botConnector.Disconnect().ConfigureAwait(false);
                 botConnector.Dispose();
             }
-
-            Thread.Sleep(1000);
 
             return testPass;
         }

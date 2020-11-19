@@ -120,6 +120,11 @@ namespace VoiceAssistantTest
         public string KeywordRecognitionModel { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to use a push stream instead of a pull stream.
+        /// </summary>
+        public bool PushStreamEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the SetPropertyID.
         /// This will result in SetPropery method call on DialogServiceConfig that takes a PropertyId argument.
         /// </summary>
