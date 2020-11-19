@@ -33,7 +33,7 @@ namespace VoiceAssistantTest
 
         /// <summary>
         /// Gets or sets a value indicating whether the pullStream should sleep based
-        /// on the number of bytes read to simulate real time audio.
+        /// on the number of bytes read to simulate real time audio. The SDK has a similar feature. This one is not exposed.
         /// </summary>
         public bool RealTime { get => this.realTime; set => this.realTime = value; }
 

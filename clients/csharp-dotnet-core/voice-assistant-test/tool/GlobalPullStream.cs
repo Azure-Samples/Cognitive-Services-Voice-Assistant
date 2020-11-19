@@ -7,7 +7,6 @@ namespace VoiceAssistantTest
     /// </summary>
     public static class GlobalPullStream
     {
-
         private static FilePullStreamCallback filePullStreamCallback = new FilePullStreamCallback();
 
         /// <summary>
