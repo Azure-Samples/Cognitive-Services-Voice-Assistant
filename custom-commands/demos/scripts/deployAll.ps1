@@ -68,6 +68,11 @@ if ($output -eq $true) {
     exit
 }
 
+#
+# TODO:
+# rename luisKeyName to luisAuthoring
+# rename luisName to luisPrediction
+
 $resourceGroup = $resourceName
 $functionName = "$resourceName-$randomNumber"
 $luisName = "$resourceName-$randomNumber"
@@ -110,24 +115,25 @@ Write-Host -ForegroundColor Yellow "Calling deployAzureFunction"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
 
-# get the keys we need for the custom command deployment
-Write-Host "Getting new keys"
-Write-Host "resource name = $resourceName"
-Write-Host "speech name = $cognitiveservice_speech_name"
-Write-Host "luis name = $luisKeyName"
+Write-Host "Getting additional Azure resouces needed to deploy a new Custom Command project"
 $speechResourceKey = az cognitiveservices account keys list -g $resourceName -n $cognitiveservice_speech_name | ConvertFrom-Json
 $speechResourceKey = $speechResourceKey.key1
 
-$luisAuthoringKey = az cognitiveservices account keys list -g $resourceName -n $luisKeyName | ConvertFrom-Json
-$luisAuthoringKey = $luisAuthoringKey.key1
+$luisPredictionResourceId = az cognitiveservices account show -g $resourceName -n $luisName | ConvertFrom-JSon 
+$luisPredictionResourceId = $luisPredictionResourceId.id
 
-$command = "./deployCustomCommands.ps1 -appName $appName -language $language -speechResourceKey $speechResourceKey -resourceName $resourceName -azureSubscriptionId $azureSubscriptionID -resourceGroup $resourceGroup -luisKeyName $luisKeyName -luisAuthoringKey $luisAuthoringKey -luisAuthoringRegion $luisAuthoringRegion -customCommandsRegion $customCommandsRegion -customCommandsWebEndpoint $customCommandsWebEndpoint"
+$luisAuthoringResourceId = az cognitiveservices account show -g $resourceName -n $luisKeyName | ConvertFrom-JSon 
+$luisAuthoringResourceId = $luisAuthoringResourceId.id
+
+$command = "./deployCustomCommands.ps1 -appName $appName -language $language -speechResourceKey $speechResourceKey -resourceName $resourceName -azureSubscriptionId $azureSubscriptionID -resourceGroup $resourceGroup -luisKeyName $luisKeyName -luisAuthoringResourceId $luisAuthoringResourceId -luisAuthoringRegion $luisAuthoringRegion -luisPredictionResourceId $luisPredictionResourceId -customCommandsRegion $customCommandsRegion -customCommandsWebEndpoint $customCommandsWebEndpoint"
 Write-Host -ForegroundColor Yellow "Calling deployCustomCommands"
 Write-Host -ForegroundColor Yellow $command
 Invoke-Expression $command
 
-Write-Host "    Speech Region = $region"
-Write-Host "***********************"
-Write-Host "To view your visualization go to this link."
+Write-Host "    SpeechSubscriptionKey = $speechResourceKey"
+Write-Host "    SpeechRegion          = $region"
+Write-Host
+Write-Host "To view your visualization point your browser to this address:"
 Write-Host "    Visualization Endpoint = $visualizationEndpoint"
-Write-Host "***********************"
+Write-Host
+Write-Host "*******************************************************************"
