@@ -3,46 +3,34 @@
 Param(
     [string] $appName = $(Read-Host -prompt "appName"),
     [string] $language = $(Read-Host -prompt "language"),
+    [string] $region = $(Read-Host -prompt "region"),
     [string] $speechResourceKey = $(Read-Host -prompt "speechResourceKey"),
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
-    [string] $azureSubscriptionId = $(Read-Host -prompt "azureSubscriptionId"),
-    [string] $resourceGroup,
-    [string] $luisKeyName = $(Read-Host -prompt "luisKeyName"),
     [string] $luisAuthoringResourceId = $(Read-Host -prompt "luisAuthoringResourceId"),
-    [string] $luisAuthoringRegion = "westus",
     [string] $luisPredictionResourceId = $(Read-Host -prmpot "luisPredictionResoureceId"), 
-    [string] $customCommandsRegion = "westus2",
     [string] $customCommandsWebEndpoint = $(Read-Host -prompt "cutomCommandsWebEndpoint")
 )
 
 [Console]::ResetColor()
 $ErrorActionPreference = "Stop"
 
-if (-not $resourceGroup) {
-    $resourceGroup = $resourceName
-}
-
 #
 # Create and provision a new Custom Command project
 #
 
-# TODO:
-# - Change speechAppName to CustomCommandAppName
-# - Fix regions - same value for all. Thereofre use a common name
-
-$speechAppName = "$resourceName-commands"
-write-host "Creating the speech custom command project '$speechAppName'"
+$customCommandsAppName = "$resourceName-commands"
+write-host "Creating the speech custom command project '$customCommandsAppName'"
 $skillJson = "../$appName/skill/$language/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo.json"
 
 # Load the CC JSON model file
-write-host "patching the $speechAppName $appName commands model"
+write-host "patching the $customCommandsAppName $appName commands model"
 $dialogModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
 $dialogModel.webEndpoints[0].url = $customCommandsWebEndpoint
 
 # Define the body of the web API call
 $body = @{
     details = @{
-        name = $speechAppName
+        name = $customCommandsAppName
         skillEnabled = "true"
         description  = ""
         baseLanguage =  $language
@@ -53,9 +41,9 @@ $body = @{
                 $language = @{
                     luisResources = @{
                         authoringResourceId = $luisAuthoringResourceId
-                        authoringRegion = $luisAuthoringRegion
+                        authoringRegion = $region
                         predictionResourceId = $luisPredictionResourceId
-                        predictionRegion = $luisAuthoringRegion
+                        predictionRegion = $region
                     }
                     dialogModel = $dialogModel
                 }
@@ -79,7 +67,7 @@ $appId = new-guid
 write-host "Generated a new project Id $appId"
 
 try {
-    $response = invoke-restmethod -Method PUT -Uri "https://$customCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId" -Body (ConvertTo-Json $body -depth 100) -Header $headers
+    $response = invoke-restmethod -Method PUT -Uri "https://$region.commands.speech.microsoft.com/v1.0/apps/$appId" -Body (ConvertTo-Json $body -depth 100) -Header $headers
 }
 catch {
     # dig into the exception to get the Response details.
@@ -95,7 +83,7 @@ catch {
 #
 
 write-host "Starting the model training"
-$response = invoke-webrequest -Method POST -Uri "https://$customCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/$language/train?force=true" -Header $headers
+$response = invoke-webrequest -Method POST -Uri "https://$region.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/$language/train?force=true" -Header $headers
 $OperationLocation = $response.Headers["Operation-Location"]
 write-host -NoNewline "training Operation Location: $OperationLocation"
 

@@ -55,7 +55,6 @@ Write-Host -ForegroundColor Yellow "`nThe logged in Azure account ($userName) ha
 az account list --all --output json | ConvertFrom-Json | Select-Object -Property isDefault, state, name, id | Out-Default
 $defaultSubscription = az account list --all --output json | ConvertFrom-Json | Where-Object { $_.isDefault -eq "true" }
 $subscriptionName = $defaultSubscription.name
-$azureSubscriptionID = $defaultSubscription.id
 
 if ($defaultSubscription.state -ne "Enabled") {
     Write-Output "The subscription $subscriptionName is not Enabled. Please select an enabled subscription to proceed."
@@ -68,39 +67,32 @@ if ($output -eq $true) {
     exit
 }
 
-#
-# TODO:
-# rename luisKeyName to luisAuthoring
-# rename luisName to luisPrediction
-
 $resourceGroup = $resourceName
 $functionName = "$resourceName-$randomNumber"
-$luisName = "$resourceName-$randomNumber"
-$luisKeyName = "$luisName-authoringkey"
+$luisPrediction = "$resourceName-prediction-$randomNumber"
+$luisAuthoring  = "$resourceName-authoring-$randomNumber"
 $storageName = "$resourceName$randomNumber".ToLower()
 $cognitiveservice_speech_name = "$resourceName-speech"
-$luisAuthoringRegion = "westus"
 $functionURL = "https://$functionName.azurewebsites.net/api/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo"
 $customCommandsWebEndpoint = $functionURL
-$customCommandsRegion = $region
 $visualizationEndpoint = "https://$storageName.blob.core.windows.net/www/$appName.html?room=test1"
 
 Write-Host -ForegroundColor Yellow "The deployment will be using default subscription ($subscriptionName) with following details:"
-Write-Host "App name:             $appName"
+Write-Host "Demo name:            $appName"
 Write-Host "Language:             $language"
 Write-Host "Resource Group:       $resourceGroup"
 Write-Host "Region:               $region"
-Write-Host "LUIS name:            $luisName"
-Write-Host "LUIS Key name:        $luisKeyName"
+Write-Host "LUIS prediction:      $luisPrediction"
+Write-Host "LUIS authoring:       $luisAuthoring"
 Write-Host "Storage name:         $storageName"
 Write-Host "Azure function URL:   $functionURL"
 Write-Host "Visualization URL:    $visualizationEndpoint"
-Write-Host ""
+Write-Host 
 if ($(Write-Host -ForegroundColor Yellow "Please enter 'y' to proceed, or any other character to quit:"; Read-Host) -ne "y") {
     exit
 }
 
-$command = ".\deployTemplate.ps1 -resourceName $resourceName -region $region -luisName $luisName -functionName $functionName -storageName $storageName"
+$command = ".\deployTemplate.ps1 -resourceName $resourceName -region $region -luisName $luisPrediction -functionName $functionName -storageName $storageName"
 Write-Host -ForegroundColor Yellow "Calling deployTemplate"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
@@ -119,16 +111,16 @@ Write-Host "Getting additional Azure resouces needed to deploy a new Custom Comm
 $speechResourceKey = az cognitiveservices account keys list -g $resourceName -n $cognitiveservice_speech_name | ConvertFrom-Json
 $speechResourceKey = $speechResourceKey.key1
 
-$luisPredictionResourceId = az cognitiveservices account show -g $resourceName -n $luisName | ConvertFrom-JSon 
+$luisPredictionResourceId = az cognitiveservices account show -g $resourceName -n $luisPrediction | ConvertFrom-JSon 
 $luisPredictionResourceId = $luisPredictionResourceId.id
 
-$luisAuthoringResourceId = az cognitiveservices account show -g $resourceName -n $luisKeyName | ConvertFrom-JSon 
+$luisAuthoringResourceId = az cognitiveservices account show -g $resourceName -n $luisAuthoring | ConvertFrom-JSon 
 $luisAuthoringResourceId = $luisAuthoringResourceId.id
 
-$command = "./deployCustomCommands.ps1 -appName $appName -language $language -speechResourceKey $speechResourceKey -resourceName $resourceName -azureSubscriptionId $azureSubscriptionID -resourceGroup $resourceGroup -luisKeyName $luisKeyName -luisAuthoringResourceId $luisAuthoringResourceId -luisAuthoringRegion $luisAuthoringRegion -luisPredictionResourceId $luisPredictionResourceId -customCommandsRegion $customCommandsRegion -customCommandsWebEndpoint $customCommandsWebEndpoint"
+$command = "./deployCustomCommands.ps1 -appName $appName -language $language -region $region -speechResourceKey $speechResourceKey -resourceName $resourceName -luisAuthoringResourceId $luisAuthoringResourceId -luisPredictionResourceId $luisPredictionResourceId -customCommandsWebEndpoint $customCommandsWebEndpoint"
 Write-Host -ForegroundColor Yellow "Calling deployCustomCommands"
 Write-Host -ForegroundColor Yellow $command
-# Invoke-Expression $command
+Invoke-Expression $command
 
 Write-Host "    SpeechSubscriptionKey = $speechResourceKey"
 Write-Host "    SpeechRegion          = $region"
