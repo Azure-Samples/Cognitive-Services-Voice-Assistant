@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>E:\git\Cognitive-Services-Voice-Assistant\clients\csharp-dotnet-core\voice-assistant-test-generator\VoiceAssistantTestGenerator\VoiceAssistantTestGenerator.xml</DocumentationFile>
+    <DocumentationFile>.\VoiceAssistantTestGenerator\VoiceAssistantTestGenerator.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

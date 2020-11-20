@@ -328,6 +328,8 @@ namespace VoiceAssistantTest
                     if (turn.Keyword)
                     {
                         await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
+                        // This sleep is to allow some time for the keyword recognizer to start up.
+                        Thread.Sleep(100);
                     }
 
                     Trace.IndentLevel = 2;
