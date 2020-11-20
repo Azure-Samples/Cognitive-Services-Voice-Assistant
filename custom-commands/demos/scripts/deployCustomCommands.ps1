@@ -85,7 +85,7 @@ catch {
 write-host "Starting the model training"
 $response = invoke-webrequest -Method POST -Uri "https://$region.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/$language/train?force=true" -Header $headers
 $OperationLocation = $response.Headers["Operation-Location"]
-write-host -NoNewline "training Operation Location: $OperationLocation"
+write-host "training Operation Location: $OperationLocation"
 
 #
 # Wait until the training is complete
@@ -134,8 +134,9 @@ write-host "...model is published"
 
 Write-Host
 Write-Host "*******************************************************************"
-Write-Host "Your Custom Commands demo has been published!"
 Write-Host
-Write-Host "Customized your client app with the following, in order to connect:"
+Write-Host " Your Custom Commands demo has been published!"
+Write-Host
+Write-Host " Customized your client app with the following, in order to connect:"
 Write-Host "    CustomCommandsAppId   = $appId"
 

@@ -5,7 +5,10 @@
         "resourceName": {
             "type": "string"
         },
-        "luisName": {
+        "luisPredictionName": {
+            "type": "string"
+        },
+        "luisAuthoringName": {
             "type": "string"
         },
         "functionName": {
@@ -17,8 +20,8 @@
     },
     "variables": {
         "cognitiveservice_speech_name": "[concat(parameters('resourceName'),'-speech')]",
-        "cognitiveservice_luis_name": "[parameters('luisName')]",
-        "cognitiveservice_luis_authoringkey_name": "[concat(parameters('luisName'),'-authoringkey')]",
+        "cognitiveservice_luis_prediction_name": "[parameters('luisPredictionName')]",
+        "cognitiveservice_luis_authoring_name": "[parameters('luisAuthoringName')]",
         "server_farm_name": "[concat(parameters('resourceName'),'-serverfarm')]",
         "visualdemo_name": "[parameters('functionName')]",
         "storage_name": "[toLower(parameters('storageName'))]"
@@ -27,27 +30,27 @@
         {
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2017-04-18",
-            "name": "[variables('cognitiveservice_luis_name')]",
+            "name": "[variables('cognitiveservice_luis_prediction_name')]",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "S0"
             },
             "kind": "LUIS",
             "properties": {
-                "customSubDomainName": "[variables('cognitiveservice_luis_name')]"
+                "customSubDomainName": "[variables('cognitiveservice_luis_prediction_name')]"
             }
         },
         {
             "type": "Microsoft.CognitiveServices/accounts",
             "apiVersion": "2017-04-18",
-            "name": "[variables('cognitiveservice_luis_authoringkey_name')]",
+            "name": "[variables('cognitiveservice_luis_authoring_name')]",
             "location": "west us",
             "sku": {
                 "name": "F0"
             },
             "kind": "LUIS.Authoring",
             "properties": {
-                "customSubDomainName": "[variables('cognitiveservice_luis_authoringkey_name')]"
+                "customSubDomainName": "[variables('cognitiveservice_luis_authoring_name')]"
             }
         },
         {

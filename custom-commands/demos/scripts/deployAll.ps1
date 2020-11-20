@@ -92,7 +92,7 @@ if ($(Write-Host -ForegroundColor Yellow "Please enter 'y' to proceed, or any ot
     exit
 }
 
-$command = ".\deployTemplate.ps1 -resourceName $resourceName -region $region -luisName $luisPrediction -functionName $functionName -storageName $storageName"
+$command = ".\deployTemplate.ps1 -resourceName $resourceName -region $region -luisPrediction $luisPrediction -luisAuthoring $luisAuthoring -functionName $functionName -storageName $storageName"
 Write-Host -ForegroundColor Yellow "Calling deployTemplate"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
@@ -125,7 +125,7 @@ Invoke-Expression $command
 Write-Host "    SpeechSubscriptionKey = $speechResourceKey"
 Write-Host "    SpeechRegion          = $region"
 Write-Host
-Write-Host "To view your visualization point your browser to this address:"
-Write-Host "    Visualization Endpoint = $visualizationEndpoint"
+Write-Host " To visualize the demo scene, point your browser to this address:"
+Write-Host "    $visualizationEndpoint"
 Write-Host
 Write-Host "*******************************************************************"
