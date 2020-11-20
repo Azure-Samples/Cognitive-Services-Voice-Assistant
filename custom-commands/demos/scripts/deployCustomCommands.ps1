@@ -15,21 +15,6 @@ Param(
     [string] $customCommandsWebEndpoint = $(Read-Host -prompt "cutomCommandsWebEndpoint")
 )
 
-write-host "+++++++++++++++++++++++++++++++++++++++++"
-write-host "appName = $appName"
-write-host "langauge = $language"
-write-host "speechResourceKey = $speechResourceKey"
-write-host "resourceName = $resourceName"
-write-host "azureSubscriptionId = $azureSubscriptionId"
-write-host "resourceGroup = $resourceGroup"
-write-host "luisKeyName = $luisKeyName"
-write-host "luisAuthoringResourceId = $luisAuthoringResourceId"
-write-host "luisAuthoringRegion = $luisAuthoringRegion"
-write-host "luisPredictionResourceId = $luisPredictionResourceId"
-write-host "customCommandsRegion = $customCommandsRegion"
-write-host "customCommandsWebEndpoint = $customCommandsWebEndpoint"
-write-host "+++++++++++++++++++++++++++++++++++++++++"
-
 [Console]::ResetColor()
 $ErrorActionPreference = "Stop"
 
@@ -38,18 +23,23 @@ if (-not $resourceGroup) {
 }
 
 #
+# Create and provision a new Custom Command project
+#
+
 # TODO:
 # - Change speechAppName to CustomCommandAppName
 # - Fix regions - same value for all. Thereofre use a common name
 
 $speechAppName = "$resourceName-commands"
+write-host "Creating the speech custom command project '$speechAppName'"
 $skillJson = "../$appName/skill/$language/$((Get-Culture).TextInfo.ToTitleCase($appName))Demo.json"
 
-#
-# Create the custom speech app
-#
-write-host "Creating the speech custom command project '$speechAppName'"
+# Load the CC JSON model file
+write-host "patching the $speechAppName $appName commands model"
+$dialogModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
+$dialogModel.webEndpoints[0].url = $customCommandsWebEndpoint
 
+# Define the body of the web API call
 $body = @{
     details = @{
         name = $speechAppName
@@ -67,21 +57,18 @@ $body = @{
                         predictionResourceId = $luisPredictionResourceId
                         predictionRegion = $luisAuthoringRegion
                     }
-                    dialogModel = $null
+                    dialogModel = $dialogModel
                 }
             }
         }
     }
 }
 
-$jsonBody = (ConvertTo-Json $body -depth 100)
-
-write-host "JSON Body ="
-write-host $jsonBody
-
+# This ARM token allows the Custom Command service access to your subscription, in order to get the LUIS prediction and authoring keys
 $armToken = az account get-access-token | ConvertFrom-Json
 $armToken = $armToken.accessToken
 
+# Define the HTTP headers of the web API call
 $headers = @{
     "Content-Type"              = "application/json"
     "Ocp-Apim-Subscription-Key" = $speechResourceKey
@@ -89,22 +76,12 @@ $headers = @{
 }
 
 $appId = new-guid
-write-host "Generated new project Id $appId"
-
-write-host "Headers ="
-write-host (ConvertTo-Json $headers)
-
-$uri = "https://$customCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId"
-
-write-host "URI = $uri"
+write-host "Generated a new project Id $appId"
 
 try {
     $response = invoke-restmethod -Method PUT -Uri "https://$customCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId" -Body (ConvertTo-Json $body -depth 100) -Header $headers
 }
 catch {
-    write-host "Response ="
-    write-host (ConvertTo-Json $response)
-
     # dig into the exception to get the Response details.
     # note that value__ is not a typo.
     Write-Host $_.Exception
@@ -114,40 +91,16 @@ catch {
 }
 
 #
-# update the dialog model of the app
+# Start the training for the model
 #
 
-# change the model based on the local json file
-write-host "patching the $speechAppName $appName commands model"
-$newModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
-$newModel.webEndpoints[0].url = $customCommandsWebEndpoint
-
-# send the updated model up to the application
-write-host "updating $speechAppName with the new $appName commands model"
-try {
-    $response = invoke-restmethod -Method PUT -Uri "https://$customCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/$language/model" -Body ($newModel | ConvertTo-Json  -depth 100) -Header $headers
-}
-catch {
-    # dig into the exception to get the Response details.
-    # note that value__ is not a typo.
-    Write-Host $_.Exception.Response
-    Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__ 
-    Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
-    exit
-}
-write-host "...model update completed"
-
-#
-# start the training for the model
-#
-
-write-host "starting the training"
+write-host "Starting the model training"
 $response = invoke-webrequest -Method POST -Uri "https://$customCommandsRegion.commands.speech.microsoft.com/v1.0/apps/$appId/slots/default/languages/$language/train?force=true" -Header $headers
 $OperationLocation = $response.Headers["Operation-Location"]
 write-host -NoNewline "training Operation Location: $OperationLocation"
 
 #
-# wait until the training is complete
+# Wait until the training is complete
 #
 
 try {
@@ -177,18 +130,14 @@ while ($response.status -ne "Succeeded") {
         exit
     }
 }
-write-host
 write-host "...training is completed"
 
 #
-# publish the model
+# Publish the model
 #
 
-write-host "publishing the model"
-write-host $OperationLocation
-write-host $headers
+write-host "Publishing the model"
 $response = invoke-restmethod -Method PUT -Uri "$($OperationLocation.replace('/train/','/publish/'))" -Header $headers
-
 write-host "...model is published"
 
 #

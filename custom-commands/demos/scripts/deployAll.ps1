@@ -128,7 +128,7 @@ $luisAuthoringResourceId = $luisAuthoringResourceId.id
 $command = "./deployCustomCommands.ps1 -appName $appName -language $language -speechResourceKey $speechResourceKey -resourceName $resourceName -azureSubscriptionId $azureSubscriptionID -resourceGroup $resourceGroup -luisKeyName $luisKeyName -luisAuthoringResourceId $luisAuthoringResourceId -luisAuthoringRegion $luisAuthoringRegion -luisPredictionResourceId $luisPredictionResourceId -customCommandsRegion $customCommandsRegion -customCommandsWebEndpoint $customCommandsWebEndpoint"
 Write-Host -ForegroundColor Yellow "Calling deployCustomCommands"
 Write-Host -ForegroundColor Yellow $command
-Invoke-Expression $command
+# Invoke-Expression $command
 
 Write-Host "    SpeechSubscriptionKey = $speechResourceKey"
 Write-Host "    SpeechRegion          = $region"
