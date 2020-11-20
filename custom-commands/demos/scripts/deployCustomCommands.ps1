@@ -15,7 +15,7 @@ Param(
 $ErrorActionPreference = "Stop"
 
 #
-# Create and provision a new Custom Command project
+# Create and provision a new Custom Command application
 #
 
 $customCommandsAppName = "$resourceName-commands"
