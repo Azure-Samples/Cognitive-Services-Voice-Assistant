@@ -1,6 +1,7 @@
 Param(
     [string] $resourceName = $(Read-Host -prompt "resourceName"),
-    [string] $luisName = $(Read-Host -prompt "luisName"),
+    [string] $luisPredictionName = $(Read-Host -prompt "luisPrediction"),
+    [string] $luisAuthoringName = $(Read-Host -prompt "luisAuthoring"),
     [string] $functionName = $(Read-Host -prompt "functionName"),
     [string] $storageName = $(Read-Host -prompt "storageName"),
     [string] $region = $(Read-Host -prompt "region")
@@ -13,7 +14,8 @@ $ErrorActionPreference = "Stop"
 $tempParametersFile = './temp.azuredeploy.parameters.json'
 $newContent = (Get-Content './azuredeploy.parameters.json') | Out-String | ConvertFrom-Json
 $newContent.parameters.resourceName.value = $resourceName
-$newContent.parameters.luisName.value = $luisName
+$newContent.parameters.luisPredictionName.value = $luisPredictionName
+$newContent.parameters.luisAuthoringName.value = $luisAuthoringName
 $newContent.parameters.functionName.value = $functionName
 $newContent.parameters.storageName.value = $storageName
 $newContent | ConvertTo-Json -depth 100 | Set-Content $tempParametersFile

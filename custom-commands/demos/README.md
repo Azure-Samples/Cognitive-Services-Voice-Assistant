@@ -66,16 +66,19 @@ If you see errors while running the script, refer to the [Troubleshooting](#trou
 
 On a successful completion, you should see a message at the end similar to the following, with all the information you need to configure one of the selected [Voice Assistant client samples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant#sample-client-applications), and a URL to visualize the results of your voice commands:
 ```console
-***********************
-Custom commands has been published.
-Update these parameters in your client to use the Custom Commands Application
-    CustomCommandsId = ########-####-####-####-############
+*******************************************************************
+
+ Your Custom Commands demo has been published!
+
+ Customized your client app with the following, in order to connect:
+    CustomCommandsAppId   = ########-####-####-####-############
     SpeechSubscriptionKey = ################################
-    Speech Region = westus
-***********************
-To view your visualization go to this link.
-    Visualization Endpoint = https://#########.blob.core.windows.net/www/demo.html?room=test1
-***********************
+    SpeechRegion          = westus
+
+ To visualize the demo scene, point your browser to this address:
+    https://#########.blob.core.windows.net/www/hospitality.html?room=test1
+
+*******************************************************************
 ```
 Copy the above information and store it for later use (but you can always [retrieve it if needed](#retrieving-client-connection-information-and-visualization-URL))
 
@@ -83,12 +86,12 @@ If you now look at your [Azure Resource groups](https://portal.azure.com/#blade/
 
 | Name  | Type          | Usage
 | ------- | ---------------- | --- |
-| MyResourceGroupName-####  | Cognitive Services | LUIS runtime (API type "Language Understanding (LUIS)")
-| MyResourceGroupName-#### | App Service | Required to host the Azure function
-| MyResourceGroupName-####-authoringkey | Cognitive Services | LUIS authoring (API type Language Understanding Authoring (LUIS))
-| MyResourceGroupName-serverfarm | App Service Plan | Required to host the Azure function
-| MyResourceGroupName-speech | Cognitive Services | Speech resource, where you get the speech subscription key
-| MyResourceGroupName#### | Storage account | Stores HTML and supporting .png files for scene visualization
+| MyResourceGroupName-####             | Function App       | Required to host the Azure function
+| MyResourceGroupName-authoring-####   | Cognitive Services | LUIS authoring. API type "Language Understanding Authoring (LUIS)"
+| MyResourceGroupName-prediction-####  | Cognitive Services | LUIS runtime (aka "prediction"). API type "Language Understanding (LUIS)"
+| MyResourceGroupName-serverfarm       | App Service Plan   | Required to host the Azure function
+| MyResourceGroupName-speech           | Cognitive Services | Speech resource, where you get the speech subscription key
+| MyResourceGroupName####              | Storage account    | Stores HTML and supporting .png files for scene visualization
 
 ## Make sure the visualization works properly
 

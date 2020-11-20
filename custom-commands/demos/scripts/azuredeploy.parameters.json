@@ -3,16 +3,19 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "resourceName": {
-      "value": "AZURE_RESOURCE_NAME"
+      "value": "PLACEHOLDER"
     },
-    "luisName": {
-      "value": "AZURE_RESOURCE_NAME-####"
+    "luisPredictionName": {
+      "value": "PLACEHOLDER"
+    },
+    "luisAuthoringName": {
+      "value": "PLACEHOLDER"
     },
     "functionName": {
-      "value": "AZURE_RESOURCE_NAME-####"
+      "value": "PLACEHOLDER"
     },
     "storageName": {
-      "value": "AZURE_RESOURCE_NAME####"
+      "value": "PLACEHOLDER"
     }
   }
 }
