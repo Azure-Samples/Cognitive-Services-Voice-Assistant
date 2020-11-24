@@ -31,4 +31,4 @@ If you configured your client application to listen for a keyword, say the keywo
 ## Links
 
 * To deploy this demo, follow the [step-by-step instructions for building a sample Voice Assistant using Custom Commands](../../../docs/CreateSampleVoiceAssistant.md)
-* View the Custom Commands [JSON file](skill/InventoryDemo.json) for this demo
+* View the Custom Commands [JSON file](skill/en-us/InventoryDemo.json) for this demo
