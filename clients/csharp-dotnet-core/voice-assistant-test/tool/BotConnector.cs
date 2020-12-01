@@ -45,6 +45,7 @@ namespace VoiceAssistantTest
         private bool keyword;
         private KeywordRecognitionModel kwsTable;
         private int speechDuration = 0;
+        private AudioConfig audioConfig = AudioConfig.FromStreamInput(GlobalPullStream.FilePullStreamCallback);
 
         /// <summary>
         /// Gets or sets recognized text of the speech input.
@@ -167,9 +168,18 @@ namespace VoiceAssistantTest
                 this.connector = null;
             }
 
-            this.pushAudioInputStream = AudioInputStream.CreatePushStream();
-            this.connector = new DialogServiceConnector(config, AudioConfig.FromStreamInput(this.pushAudioInputStream));
+            if (this.appsettings.PushStreamEnabled)
+            {
+                this.pushAudioInputStream = AudioInputStream.CreatePushStream();
+                this.audioConfig = AudioConfig.FromStreamInput(this.pushAudioInputStream);
+            }
+            else
+            {
+                config.SetProperty("KeywordConfig_EnableKeywordVerification", "false");
+                this.audioConfig = AudioConfig.FromStreamInput(GlobalPullStream.FilePullStreamCallback);
+            }
 
+            this.connector = new DialogServiceConnector(config, this.audioConfig);
             if (this.appsettings.BotGreeting)
             {
                 // Starting the timer to calculate latency for Bot Greeting.
@@ -243,31 +253,38 @@ namespace VoiceAssistantTest
         /// <param name="wavFile">WAV File in each turn.</param>
         public void ReadAudio(string wavFile)
         {
-            int readBytes;
-
             lock (this.BotReplyList)
             {
                 this.BotReplyList.Clear();
                 this.indexActivityWithAudio = 0;
             }
 
-            byte[] dataBuffer = new byte[MaxSizeOfTtsAudioInBytes];
-            WaveFileReader waveFileReader = new WaveFileReader(Path.Combine(this.appsettings.InputFolder, wavFile));
-
-            // Reading header bytes
-            int headerBytes = waveFileReader.Read(dataBuffer, 0, WavHeaderSizeInBytes);
-
-            while ((readBytes = waveFileReader.Read(dataBuffer, 0, BytesToRead)) > 0)
+            if (this.appsettings.PushStreamEnabled)
             {
-                this.pushAudioInputStream.Write(dataBuffer, readBytes);
+                int readBytes;
+
+                byte[] dataBuffer = new byte[MaxSizeOfTtsAudioInBytes];
+                WaveFileReader waveFileReader = new WaveFileReader(Path.Combine(this.appsettings.InputFolder, wavFile));
+
+                // Reading header bytes
+                int headerBytes = waveFileReader.Read(dataBuffer, 0, WavHeaderSizeInBytes);
+
+                while ((readBytes = waveFileReader.Read(dataBuffer, 0, BytesToRead)) > 0)
+                {
+                    this.pushAudioInputStream.Write(dataBuffer, readBytes);
+                }
+
+                // When done, we forcibly write one second (32000 bytes) of silence
+                // to the stream, forcing the speech recognition service to segment.
+                Array.Clear(dataBuffer, 0, 32000);
+                this.pushAudioInputStream.Write(dataBuffer, 32000);
+
+                waveFileReader.Dispose();
             }
-
-            // When done, we forcibly write one second (32000 bytes) of silence
-            // to the stream, forcing the speech recognition service to segment.
-            Array.Clear(dataBuffer, 0, 32000);
-            this.pushAudioInputStream.Write(dataBuffer, 32000);
-
-            waveFileReader.Dispose();
+            else
+            {
+                GlobalPullStream.FilePullStreamCallback.ReadFile(Path.Combine(this.appsettings.InputFolder, wavFile));
+            }
         }
 
         /// <summary>
@@ -402,7 +419,11 @@ namespace VoiceAssistantTest
         {
             this.kwsTable?.Dispose();
             this.connector.Dispose();
-            this.pushAudioInputStream.Dispose();
+            this.audioConfig.Dispose();
+            if (this.appsettings.PushStreamEnabled)
+            {
+                this.pushAudioInputStream.Dispose();
+            }
         }
 
         /// <summary>

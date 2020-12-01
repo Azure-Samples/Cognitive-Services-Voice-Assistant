@@ -108,6 +108,9 @@ Here is the full list:
 >#### KeywordVerificationEnabled
 >`bool | optional | false | true`. A boolean which indicates if your bot or custom command application is configured to use keyword verification. The default value is `true`. Note that if a [CustomSREndpointId](#customsrendpointid) is specified, this value is ignored and keyword verification is automatically disabled.
 
+>#### PushStreamEnabled
+>`bool | optional | false | true`. A boolean which indicates if the test should use a "push" stream to interact with the Speech SDK. The default value is `false`. This can be useful in making sure the tests mimic your application.
+
 >#### AriaProjectKey
 >`sring | optional | null | "0123456789abcdef0123456789abcdef-01234567-890a-bcde-f012-34567890abcd-ef01"`. An optional Aria project key. If given, dialog success and failure events will be sent to the Aria cloud. For more information on Aria, see [https://www.aria.ms/](https://www.aria.ms/).
 

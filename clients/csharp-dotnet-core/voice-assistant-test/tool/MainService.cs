@@ -9,7 +9,9 @@ namespace VoiceAssistantTest
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Newtonsoft.Json;
     using VoiceAssistantTest.Resources;
@@ -326,6 +328,8 @@ namespace VoiceAssistantTest
                     if (turn.Keyword)
                     {
                         await botConnector.StartKeywordRecognitionAsync().ConfigureAwait(false);
+                        // This sleep is to allow some time for the keyword recognizer to start up.
+                        Thread.Sleep(100);
                     }
 
                     Trace.IndentLevel = 2;
@@ -431,6 +435,13 @@ namespace VoiceAssistantTest
 #endif
                 }
             } // End of dialog loop
+
+            // Always clean up our connector object
+            if (botConnector != null)
+            {
+                await botConnector.Disconnect().ConfigureAwait(false);
+                botConnector.Dispose();
+            }
 
             return testPass;
         }
