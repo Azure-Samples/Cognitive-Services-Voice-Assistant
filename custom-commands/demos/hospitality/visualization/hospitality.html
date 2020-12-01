@@ -167,8 +167,8 @@
                     }
                     $.getJSON(jsonUrl, function (configuration) {
                         clear();
-                        apply(configuration);
-                        console.log(configuration);
+                        apply(configuration.update);
+                        console.log(configuration.update);
                     });
                     timesRun += 1;
                 }, 1000);
