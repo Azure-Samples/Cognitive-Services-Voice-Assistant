@@ -75,6 +75,9 @@ namespace HospitalityApp
                     currRoomConfig = (VirtualRoomConfig)(await table.ExecuteAsync(getRoom)).Result;
                 }
 
+                // Specify the "before" state to Custom Commands
+                var clientContext = currRoomConfig.GetDeepCopy();
+
                 var operation = req.Query["operation"].ToString().ToLower();
                 var updated = false;
 
@@ -183,19 +186,16 @@ namespace HospitalityApp
                     else if (operation.Equals("settemperature"))
                     {
                         currRoomConfig.Temperature = int.Parse(req.Query["value"]);
-                        currRoomConfig.Message = "set temperature to " + req.Query["value"];
                         updated = true;
                     }
                     else if (operation.Equals("increasetemperature"))
                     {
                         currRoomConfig.Temperature += int.Parse(req.Query["value"]);
-                        currRoomConfig.Message = "raised temperature by " + req.Query["value"] + " degrees";
                         updated = true;
                     }
                     else if (operation.Equals("decreasetemperature"))
                     {
                         currRoomConfig.Temperature -= int.Parse(req.Query["value"]);
-                        currRoomConfig.Message = "decreased temperature by " + req.Query["value"] + " degrees";
                         updated = true;
                     }
                 }
@@ -207,9 +207,10 @@ namespace HospitalityApp
                     log.LogInformation("successfully updated the record");
                 }
 
+                var roomUpdateConfig = new VirtualRoomUpdateConfig(clientContext, currRoomConfig);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(JsonConvert.SerializeObject(currRoomConfig, Formatting.Indented), Encoding.UTF8, "application/json")
+                    Content = new StringContent(JsonConvert.SerializeObject(roomUpdateConfig, Formatting.Indented), Encoding.UTF8, "application/json")
                 };
             }
             catch (Exception e)
@@ -220,6 +221,20 @@ namespace HospitalityApp
                     Content = new StringContent("Failed to process request")
                 };
             }
+        }
+    }
+
+    public class VirtualRoomUpdateConfig
+    {
+        public VirtualRoomUpdateConfig() { }
+
+        public VirtualRoomConfig clientContext { get; set; }
+        public VirtualRoomConfig update { get; set; }
+
+        public VirtualRoomUpdateConfig(VirtualRoomConfig beforeState, VirtualRoomConfig afterState)
+        {
+            clientContext = beforeState;
+            update = afterState;
         }
     }
 
@@ -257,6 +272,20 @@ namespace HospitalityApp
             this.AC = false;
             this.Temperature = 70;
             this.Message = "";
+        }
+
+        public VirtualRoomConfig GetDeepCopy()
+        {
+            var copy = new VirtualRoomConfig(this.PartitionKey, this.RowKey);
+            copy.Lights_room = this.Lights_room;
+            copy.Lights_bathroom = this.Lights_bathroom;
+            copy.Television = this.Television;
+            copy.Blinds = this.Blinds;
+            copy.AC = this.AC;
+            copy.Temperature = this.Temperature;
+            copy.Message = this.Message;
+
+            return copy;
         }
     }
 }
