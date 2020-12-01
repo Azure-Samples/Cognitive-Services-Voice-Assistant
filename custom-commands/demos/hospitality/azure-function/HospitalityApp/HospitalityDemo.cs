@@ -207,10 +207,10 @@ namespace HospitalityApp
                     log.LogInformation("successfully updated the record");
                 }
 
-                var roomUpdateConfig = new VirtualRoomUpdateConfig(clientContext, currRoomConfig);
+                var stateUpdateConfig = new VirtualRoomState(clientContext, currRoomConfig);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(JsonConvert.SerializeObject(roomUpdateConfig, Formatting.Indented), Encoding.UTF8, "application/json")
+                    Content = new StringContent(JsonConvert.SerializeObject(stateUpdateConfig, Formatting.Indented), Encoding.UTF8, "application/json")
                 };
             }
             catch (Exception e)
@@ -224,17 +224,17 @@ namespace HospitalityApp
         }
     }
 
-    public class VirtualRoomUpdateConfig
+    public class VirtualRoomState
     {
-        public VirtualRoomUpdateConfig() { }
+        public VirtualRoomState() { }
 
-        public VirtualRoomConfig clientContext { get; set; }
-        public VirtualRoomConfig update { get; set; }
+        public VirtualRoomConfig PreviousState { get; set; }
+        public VirtualRoomConfig CurrentState { get; set; }
 
-        public VirtualRoomUpdateConfig(VirtualRoomConfig beforeState, VirtualRoomConfig afterState)
+        public VirtualRoomState(VirtualRoomConfig previousState, VirtualRoomConfig currentState)
         {
-            clientContext = beforeState;
-            update = afterState;
+            PreviousState = previousState;
+            CurrentState = currentState;
         }
     }
 
