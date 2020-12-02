@@ -76,7 +76,7 @@ namespace HospitalityApp
                 }
 
                 // Specify the "before" state to Custom Commands
-                var clientContext = currRoomConfig.GetDeepCopy();
+                var previousConfig = currRoomConfig.GetDeepCopy();
 
                 var operation = req.Query["operation"].ToString().ToLower();
                 var updated = false;
@@ -207,7 +207,7 @@ namespace HospitalityApp
                     log.LogInformation("successfully updated the record");
                 }
 
-                var stateUpdateConfig = new VirtualRoomState(clientContext, currRoomConfig);
+                var stateUpdateConfig = new VirtualRoomState(previousConfig, currRoomConfig);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(JsonConvert.SerializeObject(stateUpdateConfig, Formatting.Indented), Encoding.UTF8, "application/json")
