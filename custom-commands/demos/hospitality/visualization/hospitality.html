@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -55,15 +55,6 @@
             font-weight: bolder;
             top: 31.3%;
             left: 70%;
-            z-index: 100;
-        }
-
-        .messages {
-            position: absolute;
-            height: 90px;
-            width: 400px;
-            margin-top: -9.5%;
-            margin-left: 1%;
             z-index: 100;
         }
 
@@ -127,12 +118,6 @@
             <img id="blinds" src="WindowShadeClosed.png" class="room-image overlays" />
             <img id="ac" src="ACOff.png" class="room-image overlays" />
             <div id="thermostat" class="thermostat"><span id="temperature">70</span></div>
-            <div class="col-sm list border rounded messages">
-                <p class="lead">
-                    <span id="message-title">Messages:</span><br/>
-                    <span id="item-ordered"></span>
-                </p>
-            </div>
         </div>
     </main>
 
@@ -167,8 +152,8 @@
                     }
                     $.getJSON(jsonUrl, function (configuration) {
                         clear();
-                        apply(configuration.CurrentState);
-                        console.log(configuration.CurrentState);
+                        apply(configuration);
+                        console.log(configuration);
                     });
                     timesRun += 1;
                 }, 1000);
@@ -213,16 +198,6 @@
                     }
                     else{
                         $("#ac").fadeIn('fast')
-                    }
-
-                    if (configuration.Message != null
-                        && configuration.Message != $("#item-ordered").text()) {
-                        $("#item-ordered").html(configuration.Message);
-                        $("#item-ordered")
-                            .finish()
-                            .fadeIn('fast')
-                            .delay(8000)
-                            .fadeOut('slow');
                     }
                 }
 
