@@ -78,8 +78,20 @@ namespace HospitalityApp
                 var operation = req.Query["operation"].ToString().ToLower();
                 var updated = false;
 
-                if (!string.IsNullOrEmpty(operation))
+                if (string.IsNullOrEmpty(operation))
                 {
+                    // When no operation is specified, return only the current state of the room.
+                    // The Custom Commands client's knowledge of the previous state (clientContext" is unaltered.
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(currRoomConfig, Formatting.Indented), Encoding.UTF8, "application/json")
+                    };
+                }
+                else
+                {
+                    // Store the state of the room before changes are made.
+                    var previousConfig = currRoomConfig.GetDeepCopy();
+
                     if (operation.Equals("reset"))
                     {
                         currRoomConfig.LoadDefaultConfig();
@@ -101,116 +113,68 @@ namespace HospitalityApp
                         {
                             if (instance.Equals("all"))
                             {
-                                if (currRoomConfig.Lights_bathroom == (bool)valueBool && currRoomConfig.Lights_room == (bool)valueBool)
-                                {
-                                    currRoomConfig.Message = $"All lights already {value}";
-                                }
-                                else
-                                {
-                                    currRoomConfig.Lights_bathroom = (bool)valueBool;
-                                    currRoomConfig.Lights_room = (bool)valueBool;
-                                    currRoomConfig.Message = $"Ok, turning all the lights {value}";
-                                }
+                                currRoomConfig.Lights_bathroom = (bool)valueBool;
+                                currRoomConfig.Lights_room = (bool)valueBool;
                                 updated = true;
                             }
                             else if (instance.Equals("room"))
                             {
-                                if (currRoomConfig.Lights_room == (bool)valueBool)
-                                {
-                                    currRoomConfig.Message = $"Room light already {value}";
-                                }
-                                else
-                                {
-                                    currRoomConfig.Lights_room = (bool)valueBool;
-                                    currRoomConfig.Message = $"Ok, turning {value} the room light";
-                                }
+                                currRoomConfig.Lights_room = (bool)valueBool;
                                 updated = true;
                             }
                             else if (instance.Equals("bathroom"))
                             {
-                                if (currRoomConfig.Lights_bathroom == (bool)valueBool)
-                                {
-                                    currRoomConfig.Message = $"Bathroom light already {value}";
-                                }
-                                else
-                                {
-                                    currRoomConfig.Lights_bathroom = (bool)valueBool;
-                                    currRoomConfig.Message = $"Ok, turning {value} the bathroom light";
-                                }
+                                currRoomConfig.Lights_bathroom = (bool)valueBool;
                                 updated = true;
                             }
                         }
                         else if (item.Equals("tv"))
                         {
-                            if (currRoomConfig.Television == (bool)valueBool)
-                            {
-                                currRoomConfig.Message = $"TV already {value}";
-                            }
-                            else
-                            {
-                                currRoomConfig.Television = (bool)valueBool;
-                                currRoomConfig.Message = $"Ok, turning the TV {value}";
-                            }
+                            currRoomConfig.Television = (bool)valueBool;
                             updated = true;
                         }
                         else if (item.Equals("blinds"))
                         {
-                            if (currRoomConfig.Blinds == (bool)valueBool)
-                            {
-                                currRoomConfig.Message = (bool)valueBool ? "Blinds already opened" : "Blinds already closed";
-                            }
-                            else
-                            {
-                                currRoomConfig.Blinds = (bool)valueBool;
-                                currRoomConfig.Message = (bool)valueBool ? "All right, opening the blinds" : "All right, closing the blinds";
-                            }
+                            currRoomConfig.Blinds = (bool)valueBool;
                             updated = true;
                         }
                         else if (item.Equals("ac"))
                         {
-                            if (currRoomConfig.AC == (bool)valueBool)
-                            {
-                                currRoomConfig.Message = $"AC already {value}";
-                            }
-                            else
-                            {
-                                currRoomConfig.AC = (bool)valueBool;
-                                currRoomConfig.Message = $"Ok, turning the AC {value}";
-                            }
+                            currRoomConfig.AC = (bool)valueBool;
                             updated = true;
                         }
                     }
                     else if (operation.Equals("settemperature"))
                     {
                         currRoomConfig.Temperature = int.Parse(req.Query["value"]);
-                        currRoomConfig.Message = "set temperature to " + req.Query["value"];
                         updated = true;
                     }
                     else if (operation.Equals("increasetemperature"))
                     {
                         currRoomConfig.Temperature += int.Parse(req.Query["value"]);
-                        currRoomConfig.Message = "raised temperature by " + req.Query["value"] + " degrees";
                         updated = true;
                     }
                     else if (operation.Equals("decreasetemperature"))
                     {
                         currRoomConfig.Temperature -= int.Parse(req.Query["value"]);
-                        currRoomConfig.Message = "decreased temperature by " + req.Query["value"] + " degrees";
                         updated = true;
                     }
-                }
 
-                if (updated)
-                {
-                    var updateRoom = TableOperation.Replace(currRoomConfig as VirtualRoomConfig);
-                    await table.ExecuteAsync(updateRoom);
-                    log.LogInformation("successfully updated the record");
-                }
+                    if (updated)
+                    {
+                        var updateRoom = TableOperation.Replace(currRoomConfig as VirtualRoomConfig);
+                        await table.ExecuteAsync(updateRoom);
+                        log.LogInformation("successfully updated the record");
+                    }
 
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(JsonConvert.SerializeObject(currRoomConfig, Formatting.Indented), Encoding.UTF8, "application/json")
-                };
+                    // When an opeartion is attempted, return both the initial and final state to the Custom Commands client.
+                    // Initial state is used to update the client's clientContext field.
+                    var stateUpdateConfig = new VirtualRoomCustomCommandsState(previousConfig, currRoomConfig);
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(stateUpdateConfig, Formatting.Indented), Encoding.UTF8, "application/json")
+                    };
+                }
             }
             catch (Exception e)
             {
@@ -220,6 +184,20 @@ namespace HospitalityApp
                     Content = new StringContent("Failed to process request")
                 };
             }
+        }
+    }
+
+    public class VirtualRoomCustomCommandsState
+    {
+        public VirtualRoomCustomCommandsState() { }
+
+        public VirtualRoomConfig clientContext { get; set; }
+        public VirtualRoomConfig currentState { get; set; }
+
+        public VirtualRoomCustomCommandsState(VirtualRoomConfig previousState, VirtualRoomConfig currentState)
+        {
+            clientContext = previousState;
+            this.currentState = currentState;
         }
     }
 
@@ -233,7 +211,6 @@ namespace HospitalityApp
         public bool Blinds { get; set; }
         public bool AC { get; set; }
         public int Temperature { get; set; }
-        public string Message { get; set; }
 
         public VirtualRoomConfig(string partitionKey, string rowKey)
         {
@@ -245,7 +222,6 @@ namespace HospitalityApp
             this.Blinds = true;
             this.AC = false;
             this.Temperature = 70;
-            this.Message = "";
         }
 
         public void LoadDefaultConfig()
@@ -256,7 +232,19 @@ namespace HospitalityApp
             this.Blinds = true;
             this.AC = false;
             this.Temperature = 70;
-            this.Message = "";
+        }
+
+        public VirtualRoomConfig GetDeepCopy()
+        {
+            var copy = new VirtualRoomConfig(this.PartitionKey, this.RowKey);
+            copy.Lights_room = this.Lights_room;
+            copy.Lights_bathroom = this.Lights_bathroom;
+            copy.Television = this.Television;
+            copy.Blinds = this.Blinds;
+            copy.AC = this.AC;
+            copy.Temperature = this.Temperature;
+
+            return copy;
         }
     }
 }
