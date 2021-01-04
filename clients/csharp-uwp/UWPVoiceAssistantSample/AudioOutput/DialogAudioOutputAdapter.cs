@@ -29,7 +29,7 @@ namespace UWPVoiceAssistantSample
         private AudioEncodingProperties frameInputEncoding;
         private AudioDeviceOutputNode deviceOutputNode;
         private string lastOutputDeviceId;
-        private bool alreadyDisposed = false;
+        private bool alreadyDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DialogAudioOutputAdapter"/> class.

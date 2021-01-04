@@ -42,7 +42,7 @@ namespace UWPVoiceAssistantSampleTests
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
             LogRouter.Initialize();
 
-            this.keywordRegistration = new KeywordRegistration(new Version(1, 0, 0, 0));
+            this.keywordRegistration = new KeywordRegistration();
 
             this.agentSessionManager = new AgentSessionManager();
 

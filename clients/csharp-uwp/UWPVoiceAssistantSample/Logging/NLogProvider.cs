@@ -17,27 +17,9 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// List of log messages.
         /// </summary>
-        public static readonly List<string> LogBuffer = new List<string>();
-        private Logger logger;
+        public static readonly List<string> LogMessageBuffer = new List<string>();
         private static int nextLogIndex = 0;
-
-        /// <summary>
-        /// Event to indicate a log was generated.
-        /// </summary>
-        public static event EventHandler logAvailable;
-
-        public event EventHandler LogAvailable
-        {
-            add
-            {
-                logAvailable += value;
-            }
-
-            remove
-            {
-                logAvailable -= value;
-            }
-        }
+        private Logger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogProvider"/> class.
@@ -49,9 +31,30 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
+        /// Raised when a new log entry is available from the provider.
+        /// </summary>
+        public event EventHandler LogAvailable
+        {
+            add
+            {
+                LogAvailableEvent += value;
+            }
+
+            remove
+            {
+                LogAvailableEvent -= value;
+            }
+        }
+
+        /// <summary>
+        /// Event to indicate a log was generated.
+        /// </summary>
+        private static event EventHandler LogAvailableEvent;
+
+        /// <summary>
         /// Gets LogBuffer.
         /// </summary>
-        List<string> ILogProvider.LogBuffer { get => LogBuffer; }
+        public List<string> LogBuffer { get => LogMessageBuffer; }
 
         /// <summary>
         /// Initializes the app-global state needed for NLog to emit to its output locations via
@@ -91,13 +94,13 @@ namespace UWPVoiceAssistantSample
         /// <param name="message"> The message to log via NLog. </param>
         public void Log(LogMessageLevel level, string message)
         {
-            LogBuffer.Add($"{level + message}");
+            LogMessageBuffer.Add($"{level + message}");
 
             Task.Run(() =>
             {
                 var indexToRead = nextLogIndex;
                 nextLogIndex += 1;
-                this.logger.Log(ConvertLogLevel(level), LogBuffer[indexToRead]);
+                this.logger.Log(ConvertLogLevel(level), LogMessageBuffer[indexToRead]);
                 this.OnLogAvailable();
             });
         }
@@ -107,11 +110,6 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         /// <param name="message"> The message to log via NLog. </param>
         public void Error(string message) => this.logger.Error(message);
-
-        private void OnLogAvailable()
-        {
-            logAvailable?.Invoke(this, EventArgs.Empty);
-        }
 
         private static LogLevel ConvertLogLevel(LogMessageLevel level)
         {
@@ -129,6 +127,11 @@ namespace UWPVoiceAssistantSample
                 default:
                     return LogLevel.Trace;
             }
+        }
+
+        private void OnLogAvailable()
+        {
+            LogAvailableEvent?.Invoke(this, EventArgs.Empty);
         }
     }
 }

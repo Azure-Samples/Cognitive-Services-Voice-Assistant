@@ -43,7 +43,6 @@ namespace AgentAudioInputProviderTests
             Assert.IsTrue(result.AgentSession.IsInterruptible);
             Assert.IsTrue(result.AgentSession.IsUserAuthenticated);
             Assert.IsTrue(result.AgentSession.IsVoiceActivationAvailable);
-            Assert.IsFalse(result.Disposed);
             Assert.IsFalse(result.GraphRunning);
             Assert.IsNotNull(result.InputGraph);
             Assert.IsNotNull(result.OutputNode);
@@ -60,7 +59,6 @@ namespace AgentAudioInputProviderTests
 
             Debug.WriteLine(testAgent);
             Assert.IsNull(testAgent.AgentSession);
-            Assert.IsFalse(testAgent.Disposed);
             Assert.IsNotNull(testAgent.InputNode);
             Assert.IsNotNull(testAgent.OutputNode);
             Assert.IsTrue(testAgent.GraphRunning);
@@ -74,7 +72,6 @@ namespace AgentAudioInputProviderTests
             await testAgent.StartWithInitialSkipAsync(TimeSpan.Zero);
 
             Assert.IsNull(testAgent.AgentSession);
-            Assert.IsFalse(testAgent.Disposed);
             Assert.IsNotNull(testAgent.OutputNode);
             Assert.IsNotNull(testAgent.OutputEncoding);
             Assert.IsTrue(testAgent.GraphRunning);
@@ -92,10 +89,6 @@ namespace AgentAudioInputProviderTests
             testAgent.DebugAudioCaptureFilesEnabled = true;
 
             await testAgent.StartWithInitialSkipAsync(TimeSpan.Zero);
-
-            Assert.IsNotNull(testAgent.DebugAudioOutputFileStream);
-            Assert.IsTrue(testAgent.DebugAudioOutputFileStream.Length > 0);
-
             await testAgent.StopAsync();
         }
 

@@ -3,7 +3,6 @@
 
 namespace UWPVoiceAssistantSample
 {
-    using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -11,6 +10,7 @@ namespace UWPVoiceAssistantSample
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioCommon;
     using UWPVoiceAssistantSample.AudioInput;
     using Windows.ApplicationModel.ConversationalAgent;
@@ -30,13 +30,8 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        /// <summary>
-        /// Collection of utterances from user and bot.
-        /// </summary>
-        public ObservableCollection<Conversation> Conversations;
         private readonly ServiceProvider services;
         private readonly ILogProvider logger;
-        private readonly IKeywordRegistration keywordRegistration;
         private readonly IDialogManager dialogManager;
         private readonly IAgentSessionManager agentSessionManager;
         private readonly HashSet<TextBlock> informationLogs;
@@ -46,6 +41,7 @@ namespace UWPVoiceAssistantSample
         private readonly HashSet<TextBlock> conversationAgentLogs;
         private readonly HashSet<TextBlock> audioLogs;
         private readonly App app;
+        private IKeywordRegistration keywordRegistration;
         private bool configModified;
         private bool hypotheizedSpeechToggle;
         private Conversation activeConversation;
@@ -65,7 +61,6 @@ namespace UWPVoiceAssistantSample
 
             this.services = this.app.Services;
             this.dialogManager = this.services.GetRequiredService<IDialogManager>();
-            this.keywordRegistration = this.services.GetRequiredService<IKeywordRegistration>();
             this.agentSessionManager = this.services.GetRequiredService<IAgentSessionManager>();
 
             this.informationLogs = new HashSet<TextBlock>();
@@ -84,10 +79,8 @@ namespace UWPVoiceAssistantSample
             {
                 var control = await AudioCaptureControl.GetInstanceAsync();
                 await control.MicrophoneCapability.RequestAccessAsync();
+                await this.EnsureKeywordSetupAsync();
             });
-
-            // Kick off the registration and/or retrieval of the 1st-stage keyword information
-            _ = this.DoKeywordSetupAsync();
 
             // Populate the drop-down list for TTS audio output formats and select the current choice
             var supportedFormats = DirectLineSpeechAudio.SupportedOutputFormats;
@@ -109,6 +102,11 @@ namespace UWPVoiceAssistantSample
 
             this.ChatHistoryListView.ContainerContentChanging += this.OnChatHistoryListViewContainerChanging;
         }
+
+        /// <summary>
+        /// Gets the collection of utterances from user and bot.
+        /// </summary>
+        public ObservableCollection<Conversation> Conversations { get; }
 
         private bool BackgroundTaskRegistered
         {
@@ -142,7 +140,7 @@ namespace UWPVoiceAssistantSample
                 this.RefreshStatus();
             };
             this.ClearLogsButton.Click += async (_, __)
-                => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                => await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     this.ChangeLogStackPanel.Children.Clear();
                 });
@@ -161,12 +159,17 @@ namespace UWPVoiceAssistantSample
             }
         }
 
-        private async Task DoKeywordSetupAsync()
+        private async Task EnsureKeywordSetupAsync()
         {
-            var keywordConfig = await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
-            keywordConfig.AvailabilityChanged += async (s, e)
-                => await this.UpdateUIForSharedStateAsync();
-            await this.UpdateUIForSharedStateAsync();
+            if (this.keywordRegistration == null
+                && await AudioCaptureControl.GetInstanceAsync() is AudioCaptureControl audio
+                && audio.MicrophoneCapability.CheckAccess() == AppCapabilityAccessStatus.Allowed)
+            {
+                this.keywordRegistration = this.services.GetRequiredService<IKeywordRegistration>();
+                var configuration = await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+                configuration.AvailabilityChanged += async (_, __) => await this.UpdateUIForSharedStateAsync();
+                await this.UpdateUIForSharedStateAsync();
+            }
         }
 
         private async void AddSystemAvailabilityHandlers()
@@ -257,7 +260,7 @@ namespace UWPVoiceAssistantSample
                 var agentIdle = session == null || session.AgentState == ConversationalAgentState.Inactive;
                 var micReady = micStatus == AppCapabilityAccessStatus.Allowed && audioControl.HasAudioInputAvailable;
 
-                var keywordConfig = await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+                var keywordConfig = await this.keywordRegistration?.GetOrCreateKeywordConfigurationAsync();
 
                 this.AppVoiceActivationEnabledToggle.IsEnabled = keywordConfig != null;
                 this.AppVoiceActivationEnabledToggle.OffContent = keywordConfig != null
@@ -710,7 +713,7 @@ namespace UWPVoiceAssistantSample
             var keywordActivationModelDataFormatModified = LocalSettingsHelper.KeywordActivationModelDataFormat != appSettings.KeywordActivationModel.ModelDataFormat;
             var keywordActivationModelPathModified = LocalSettingsHelper.KeywordActivationModelPath != appSettings.KeywordActivationModel.Path;
             var keywordRecognitionModelPathModified = LocalSettingsHelper.KeywordRecognitionModel != appSettings.KeywordRecognitionModel;
-            var setPropertyIdModified = LocalSettingsHelper.SetProperty != appSettings.SetProperty;
+            var setPropertyIdModified = LocalSettingsHelper.AdditionalDialogProperties != appSettings.SetProperty;
             var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging != appSettings.EnableKwsLogging;
             var enabledHardwareDetector = LocalSettingsHelper.EnableHardwareDetector != appSettings.EnableHardwareDetector;
             var enableSetModelData = LocalSettingsHelper.SetModelData != appSettings.SetModelData;
@@ -799,8 +802,8 @@ namespace UWPVoiceAssistantSample
 
                 if (setPropertyIdModified)
                 {
-                    LocalSettingsHelper.SetProperty = appSettings.SetProperty;
-                    this.logger.Log(LogMessageLevel.Information, $"DialogServiceConnector Property: {LocalSettingsHelper.SetProperty}");
+                    LocalSettingsHelper.AdditionalDialogProperties = appSettings.SetProperty;
+                    this.logger.Log(LogMessageLevel.Information, $"DialogServiceConnector Property: {LocalSettingsHelper.AdditionalDialogProperties}");
                 }
 
                 if (enableKwsLogging)
@@ -1132,7 +1135,7 @@ namespace UWPVoiceAssistantSample
             await Launcher.LaunchFolderAsync(localFolder, launchOption);
         }
 
-        private async void TriggerLogAvailable(object sender, RoutedEventArgs e)
+        private void TriggerLogAvailable(object sender, RoutedEventArgs e)
         {
             this.FilterLogs();
         }

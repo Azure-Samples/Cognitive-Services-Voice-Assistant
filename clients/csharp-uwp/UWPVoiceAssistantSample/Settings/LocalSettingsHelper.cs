@@ -117,7 +117,7 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets or sets the bot id associated for the selected speech subscription.
+        /// Gets or sets the bot id associated with the selected speech subscription.
         /// </summary>
         public static string BotId
         {
@@ -180,9 +180,9 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets or sets the property Id for BotFrameworkConfig.
+        /// Gets or sets additional properties to set on a dialog configuration.
         /// </summary>
-        public static JObject SetProperty { get; set; }
+        public static JObject AdditionalDialogProperties { get; set;  }
 
         /// <summary>
         /// Gets or sets a value indicating whether kws logging is enabled or disabled.
@@ -201,6 +201,9 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public static bool SetModelData { get; set; }
 
+        /// <summary>
+        /// Gets or sets the output format to be used for text-to-speech from the dialog system.
+        /// </summary>
         public static DialogAudio OutputFormat
         {
             get
@@ -248,6 +251,15 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
+        /// Gets or sets the timestamp of the last confirmation model file that was successfully registered.
+        /// </summary>
+        public static DateTimeOffset LastConfirmationModelCreationTime
+        {
+            get => ReadValueWithDefault("lastConfirmationModelCreation", DateTimeOffset.MinValue);
+            set => WriteValue("lastConfirmationModelCreation", value);
+        }
+
+        /// <summary>
         /// Loads file-backed initial values for settings, ensuring that a configuration file exists in a writeable
         /// location if it doesn't already.
         /// </summary>
@@ -276,7 +288,7 @@ namespace UWPVoiceAssistantSample
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
                 KeywordRecognitionModel = appSettings.KeywordRecognitionModel;
-                SetProperty = appSettings.SetProperty;
+                AdditionalDialogProperties = appSettings.SetProperty;
                 EnableKwsLogging = appSettings.EnableKwsLogging;
                 EnableHardwareDetector = appSettings.EnableHardwareDetector;
                 SetModelData = appSettings.SetModelData;

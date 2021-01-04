@@ -18,15 +18,15 @@ namespace UWPVoiceAssistantSample
         {
             var activityObj = JObject.Parse(activityJson);
 
-            switch (activityObj["type"]?.ToString().ToLower())
+            switch (activityObj["type"]?.ToString().ToUpperInvariant())
             {
-                case "trace":
+                case "TRACE":
                     this.Type = ActivityType.Trace;
                     break;
-                case "message":
+                case "MESSAGE":
                     this.Type = ActivityType.Message;
                     break;
-                case "event":
+                case "EVENT":
                     this.Type = ActivityType.Event;
                     break;
                 default:
@@ -34,15 +34,15 @@ namespace UWPVoiceAssistantSample
                     break;
             }
 
-            switch (activityObj["inputHint"]?.ToString().ToLower())
+            switch (activityObj["inputHint"]?.ToString().ToUpperInvariant())
             {
-                case "ignoringinput":
+                case "IGNORINGINPUT":
                     this.InputHint = InputHintType.IgnoringInput;
                     break;
-                case "acceptinginput":
+                case "ACCEPTINGINPUT":
                     this.InputHint = InputHintType.AcceptingInput;
                     break;
-                case "expectinginput":
+                case "EXPECTINGINPUT":
                     this.InputHint = InputHintType.ExpectingInput;
                     break;
                 default:

@@ -25,9 +25,10 @@ namespace UWPVoiceAssistantSample
     {
         private readonly ILogProvider logger;
         private readonly IDialogManager dialogManager;
+        private readonly IKeywordRegistration keywordRegistration;
         private readonly IAgentSessionManager agentSessionManager;
         private BackgroundTaskDeferral deferral;
-        private bool alreadyDisposed = false;
+        private bool alreadyDisposed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="App"/> class.
@@ -45,21 +46,18 @@ namespace UWPVoiceAssistantSample
             this.Suspending += this.OnSuspending;
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
 
-            var keywordRegistration = new KeywordRegistration(
-                new Version(1, 0, 0, 0));
-
+            this.keywordRegistration = new KeywordRegistration();
             this.agentSessionManager = new AgentSessionManager();
-
             this.dialogManager = new DialogManager<List<byte>>(
                 new DirectLineSpeechDialogBackend(),
-                keywordRegistration,
+                this.keywordRegistration,
                 new AgentAudioInputProvider(),
                 this.agentSessionManager,
                 new MediaPlayerDialogAudioOutputAdapter());
 
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddSingleton(this.dialogManager);
-            serviceCollection.AddSingleton<IKeywordRegistration>(keywordRegistration);
+            serviceCollection.AddSingleton(this.keywordRegistration);
             serviceCollection.AddSingleton(this.agentSessionManager);
             this.Services = serviceCollection.BuildServiceProvider();
 

@@ -132,7 +132,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets a value indicating whether this object has already processed a Dispose() call.
         /// </summary>
-        protected bool AlreadyDisposed { get; private set; } = false;
+        protected bool AlreadyDisposed { get; private set; }
 
         /// <summary>
         /// Completes async initialization for dialog manager, including initialization of dialog output.
@@ -394,7 +394,6 @@ namespace UWPVoiceAssistantSample
             {
                 await this.dialogBackend.CancelSignalVerificationAsync();
                 await this.StopAudioCaptureAsync();
-                this.logger.Log(LogMessageLevel.SignalDetection, $"Failsafe timer expired; rejecting");
                 await this.FinishConversationAsync();
                 this.SignalRejected.Invoke(origin);
             };

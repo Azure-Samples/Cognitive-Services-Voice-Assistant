@@ -55,7 +55,7 @@ namespace UWPVoiceAssistantSample
         public Uri UrlOverride { get; set; }
 
         /// <summary>
-        /// Gets or sets SpeechSDKLogEnabled.
+        /// Gets or sets a value indicating whether Speech SDK file logging should occur.
         /// </summary>
         public bool SpeechSDKLogEnabled { get; set; }
 
@@ -76,9 +76,9 @@ namespace UWPVoiceAssistantSample
         public string KeywordRecognitionModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the property Id for BotFrameworkConfig.
+        /// Gets the property Id for BotFrameworkConfig.
         /// </summary>
-        public JObject SetProperty { get; set; }
+        public JObject SetProperty { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether kws logging is enabled or disabled.
@@ -175,6 +175,7 @@ namespace UWPVoiceAssistantSample
             LogIfFalse(IsValidAzureRegion(instance.SpeechRegion), "Failed to validate Azure region");
             LogIfFalse(IsValidResourceId(instance.CustomSREndpointId, optional: true), "Failed to validate custom speech id");
             LogIfFalse(
+                instance.CustomVoiceDeploymentIds == null ||
                 instance.CustomVoiceDeploymentIds.Split(',')
                     .All(customVoiceId => IsValidResourceId(customVoiceId, optional: true)),
                 "Failed to validate custom voice ids");

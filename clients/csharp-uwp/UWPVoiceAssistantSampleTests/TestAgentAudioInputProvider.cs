@@ -20,22 +20,43 @@ namespace AgentAudioInputProviderTests
         public static AudioEncodingProperties DefaultEncodingProp { get => DefaultEncoding; }
         public AudioFileInputNode InputNode;
 
-        public AudioGraph InputGraph { get => inputGraph; }
-        public AudioEncodingProperties OutputEncoding { get => outputEncoding; }
-        public IAgentSessionWrapper AgentSession { get => agentSession; }
-        public AudioFrameOutputNode OutputNode { get => outputNode; }
-        public bool GraphRunning { get => graphRunning; }
-        public bool Disposed { get => disposed; }
-        public SemaphoreSlim DebugAudioOutputFileSemaphore { get => debugAudioOutputFileSemaphore; }
-        public Stream DebugAudioOutputFileStream { get => debugAudioOutputFileStream; }
+        public new IAgentSessionWrapper AgentSession
+        {
+            get => base.AgentSession;
+            set => base.AgentSession = value;
+        }
 
-        public static async Task<TestAgentAudioInputProvider> InitializeFromNowAsync()
+        public new AudioGraph InputGraph
+        {
+            get => base.InputGraph;
+            set => base.InputGraph = value;
+        }
+
+        public new bool GraphRunning
+        { 
+            get => base.GraphRunning; 
+            set => base.GraphRunning = value;
+        }
+
+        public new AudioEncodingProperties OutputEncoding
+        {
+            get => base.OutputEncoding;
+            set => base.OutputEncoding = value;
+        }
+
+        public new AudioFrameOutputNode OutputNode
+        {
+            get => base.OutputNode;
+            set => base.OutputNode = value;
+        }
+
+        public static async new Task<TestAgentAudioInputProvider> InitializeFromNowAsync()
         {
             var result = await InitializeFromAgentSessionAsync(null);
             return result;
         }
 
-        public static async Task<TestAgentAudioInputProvider> InitializeFromAgentSessionAsync(IAgentSessionWrapper session)
+        public static async new Task<TestAgentAudioInputProvider> InitializeFromAgentSessionAsync(IAgentSessionWrapper session)
         {
             return await FromAgentSessionAsync(session, DefaultEncoding);
         }
@@ -44,10 +65,9 @@ namespace AgentAudioInputProviderTests
         {
             var result = new TestAgentAudioInputProvider()
             {
-                agentSession = session,
-                outputEncoding = properties,
-                graphRunning = false,
-                debugAudioOutputFileSemaphore = new SemaphoreSlim(1, 1)
+                AgentSession = session,
+                OutputEncoding = properties,
+                GraphRunning = false,
             };
 
             await result.PerformAudioSetupAsync();
@@ -58,7 +78,7 @@ namespace AgentAudioInputProviderTests
         {
             var settings = new AudioGraphSettings(AudioRenderCategory.Speech)
             {
-                EncodingProperties = outputEncoding
+                EncodingProperties = this.OutputEncoding,
             };
 
             var createGraph = await AudioGraph.CreateAsync(settings);
@@ -68,14 +88,14 @@ namespace AgentAudioInputProviderTests
                 throw new InvalidOperationException(message, createGraph.ExtendedError);
             }
 
-            this.inputGraph = createGraph.Graph;
+            this.InputGraph = createGraph.Graph;
 
             await this.CopyFile();
 
             //FileInputNode
             var folder = ApplicationData.Current.LocalFolder;
             IStorageFile item = await folder.GetFileAsync("ContosoTellMeAJoke.wav");
-            var nodeResult = await inputGraph.CreateFileInputNodeAsync(item);
+            var nodeResult = await this.InputGraph.CreateFileInputNodeAsync(item);
 
             if (nodeResult.Status != AudioFileNodeCreationStatus.Success)
             {
@@ -84,19 +104,11 @@ namespace AgentAudioInputProviderTests
             }
 
             this.InputNode = nodeResult.FileInputNode;
-            this.outputNode = inputGraph.CreateFrameOutputNode();
+            this.OutputNode = this.InputGraph.CreateFrameOutputNode();
 
             //FileInputNode
-            this.InputNode.AddOutgoingConnection(this.outputNode);
-            this.inputGraph.QuantumStarted += this.OnQuantumStarted;
-
-            this.DataAvailable += async (bytes) =>
-            {
-                using (await this.debugAudioOutputFileSemaphore.AutoReleaseWaitAsync())
-                {
-                    this.debugAudioOutputFileStream?.Write(bytes.ToArray(), 0, bytes.Count);
-                }
-            };
+            this.InputNode.AddOutgoingConnection(this.OutputNode);
+            this.InputGraph.QuantumStarted += this.OnQuantumStarted;
         }
 
         public void DisposeAgentAudioProducer()

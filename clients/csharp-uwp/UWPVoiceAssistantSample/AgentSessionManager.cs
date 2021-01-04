@@ -37,7 +37,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets a value indicating whether this object has already processed a Dispose() call.
         /// </summary>
-        protected bool AlreadyDisposed { get; private set; } = false;
+        protected bool AlreadyDisposed { get; private set; }
 
         /// <summary>
         /// It's not required, but for optimization purposes it's acceptable to cache the ConversationalAgentSession

@@ -21,6 +21,7 @@ namespace UWPVoiceAssistantSample
         /// Initializes a new instance of the <see cref="DirectLineSpeechAudioOutputStream"/> class.
         /// </summary>
         /// <param name="audioSource"> The PullAudioOutputStream that should be read from. </param>
+        /// <param name="format"> The format information to associate with this audio source. </param>
         public DirectLineSpeechAudioOutputStream(PullAudioOutputStream audioSource, DialogAudio format)
             : base(format)
         {

@@ -59,16 +59,11 @@ namespace UWPVoiceAssistantSample
     /// </summary>
     public class SignalDetectionHelper
     {
-        public static readonly TimeSpan SignalConfirmationTimeout
-            = new TimeSpan(0, 0, 0, 0, 3000);
-
         private static readonly TimeSpan MinimumSignalSeparation
             = new TimeSpan(0, 0, 0, 0, 200);
 
         private readonly object keywordResponseLock;
 
-        private Timer secondStageFailsafeTimer;
-        private Stopwatch secondStageStopwatch;
         private DateTime? lastSignalReceived = null;
         private bool signalNeedsVerification;
         private IAgentSessionManager agentSessionManager;
@@ -78,6 +73,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Initializes a new instance of the <see cref="SignalDetectionHelper"/> class.
         /// </summary>
+        /// <param name="agentSessionManager"> The session manager object to use with this helper. </param>
         public SignalDetectionHelper(IAgentSessionManager agentSessionManager)
         {
             this.agentSessionManager = agentSessionManager;
@@ -131,7 +127,7 @@ namespace UWPVoiceAssistantSample
             var signalName = (detectionOrigin == DetectionOrigin.FromPushToTalk)
                 ? "Push to talk" : session.SignalName;
 
-            this.logger.Log(LogMessageLevel.SignalDetection, $"HandleSignalDetection, '{signalName}', {detectionOrigin.ToString()}");
+            this.logger.Log(LogMessageLevel.SignalDetection, $"Signal ({detectionOrigin}) detected: {signalName}");
 
             var canSkipVerification =
                 detectionOrigin == DetectionOrigin.FromPushToTalk
@@ -143,12 +139,7 @@ namespace UWPVoiceAssistantSample
 
             this.kwsPerformanceLogger.LogSignalReceived(KwsPerformanceLogger.Spotter, "A", "1", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
 
-            if (this.signalNeedsVerification)
-            {
-                KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
-                this.StartFailsafeTimer();
-            }
-            else
+            if (!this.signalNeedsVerification)
             {
                 this.OnSessionSignalConfirmed(session, detectionOrigin);
             }
@@ -167,8 +158,6 @@ namespace UWPVoiceAssistantSample
                 this.logger.Log(LogMessageLevel.SignalDetection, "Abort reaction to keyword, not detecting");
                 return;
             }
-
-            this.StopFailsafeTimer();
 
             if (!isFinal)
             {
@@ -193,7 +182,6 @@ namespace UWPVoiceAssistantSample
         private void OnSessionSignalConfirmed(IAgentSessionWrapper session, DetectionOrigin origin)
         {
             this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "A", "2", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
-            this.StopFailsafeTimer();
 
             this.logger.Log(LogMessageLevel.SignalDetection, $"Confirmed signal received, IsUserAuthenticated={session.IsUserAuthenticated.ToString(null)}");
             if (!session.IsUserAuthenticated)
@@ -209,48 +197,8 @@ namespace UWPVoiceAssistantSample
         private void OnSessionSignalRejected(DetectionOrigin origin)
         {
             this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "2", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
-            this.logger.Log(LogMessageLevel.SignalDetection, $"Session singal rejected, Signal Origin: {origin}");
-            this.StopFailsafeTimer();
+            this.logger.Log(LogMessageLevel.SignalDetection, $"Session signal rejected, Signal Origin: {origin}");
             this.SignalRejected?.Invoke(origin);
-        }
-
-        private void StartFailsafeTimer()
-        {
-            this.secondStageStopwatch = Stopwatch.StartNew();
-            KwsPerformanceLogger.KwsEventFireTime = TimeSpan.FromTicks(DateTime.Now.Ticks);
-            this.secondStageFailsafeTimer = new Timer(
-                _ =>
-                {
-                    lock (this.keywordResponseLock)
-                    {
-                        if (this.secondStageStopwatch != null)
-                        {
-                            this.kwsPerformanceLogger.LogSignalReceived("SWKWS", "R", "2", KwsPerformanceLogger.KwsEventFireTime.Ticks, KwsPerformanceLogger.KwsStartTime.Ticks, DateTime.Now.Ticks);
-                            this.logger.Log(LogMessageLevel.SignalDetection, $"Failsafe timer expired; rejecting");
-                            this.SignalRejected?.Invoke(this.LastDetectedSignalOrigin);
-                        } // else timer was stopped while waiting for the lock
-                    }
-                },
-                null,
-                (int)SignalConfirmationTimeout.TotalMilliseconds,
-                Timeout.Infinite);
-        }
-
-        private void StopFailsafeTimer()
-        {
-            lock (this.keywordResponseLock)
-            {
-                this.secondStageStopwatch?.Stop();
-                if (this.secondStageFailsafeTimer == null)
-                {
-                    return;
-                }
-
-                this.logger.Log(LogMessageLevel.SignalDetection, $"{Environment.TickCount} : Cancelling 2nd-stage failsafe timer. Elapsed: {this.secondStageStopwatch?.ElapsedMilliseconds}ms");
-                this.secondStageFailsafeTimer?.Change(Timeout.Infinite, Timeout.Infinite);
-                this.secondStageFailsafeTimer?.Dispose();
-                this.secondStageFailsafeTimer = null;
-            }
         }
     }
 }
