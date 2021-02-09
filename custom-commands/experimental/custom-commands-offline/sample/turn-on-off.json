@@ -1,0 +1,137 @@
+{
+  "entityResolver": {
+    "searchConfiguration": {
+      "maxEdits": 0
+    },
+    "type": "internal",
+    "isGenerated": true
+  },
+  "minIntentConfidence": 0.4,
+  "highIntentConfidence": 0.8,
+  "lgTemplates": [
+    "# TurnOnOff-OnOff",
+    "- On or off?",
+    "# TurnOnOff-Appliance",
+    "- Which device?",
+    "# TurnOnOff-a48c22906a7411eba70909ad05f9cb76",
+    "- Done. {Appliance} is {OnOff}"
+  ],
+  "lgTemplatesMap": {
+    "# TurnOnOff-OnOff": [
+      "- On or off?"
+    ],
+    "# TurnOnOff-Appliance": [
+      "- Which device?"
+    ],
+    "# TurnOnOff-a48c22906a7411eba70909ad05f9cb76": [
+      "- Done. {Appliance} is {OnOff}"
+    ]
+  },
+  "type": "BaseLanguage",
+  "recognizer": {
+    "type": "entities"
+  },
+  "speechOutput": {
+    "font": "Microsoft Server Speech Text to Speech Voice (en-US, AriaRUS)",
+    "locale": "en-US"
+  },
+  "webEndpoints": [],
+  "globalParameters": [],
+  "commands": [
+    {
+      "name": "TurnOnOff",
+      "completionStrategy": "OnRequiredParameters",
+      "parameters": [
+        {
+          "name": "OnOff",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "on": [],
+                "off": []
+              }
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# TurnOnOff-OnOff"
+          }
+        },
+        {
+          "name": "Appliance",
+          "type": {
+            "name": "String",
+            "configuration": {
+              "type": "StringList",
+              "values": {
+                "tv": [
+                  "telly",
+                  "television"
+                ],
+                "fan": [],
+                "light": [
+                  "lights",
+                  "bulb"
+                ]
+              }
+            }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# TurnOnOff-Appliance"
+          }
+        }
+      ],
+      "rules": [],
+      "completionRules": [
+        {
+          "name": "TurnOnOffDone",
+          "conditions": [
+            {
+              "type": "True"
+            }
+          ],
+          "actions": [
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "BuiltInEarcon",
+                "earconName": "Success"
+              }
+            },
+            {
+              "type": "SendActivity",
+              "activity": {
+                "type": "event",
+                "name": "turnOnOff",
+                "value": {
+                  "status": "{OnOff}",
+                  "appliance": "{Appliance}"
+                }
+              }
+            },
+            {
+              "type": "SpeechResponse",
+              "response": {
+                "type": "Template",
+                "templateName": "# TurnOnOff-a48c22906a7411eba70909ad05f9cb76"
+              }
+            }
+          ],
+          "nextTurnExpectations": [],
+          "postExecutionState": "CompleteCommand"
+        }
+      ],
+      "triggeringExamples": [
+        "turn {OnOff}",
+        "turn the[?] {Appliance} {OnOff}",
+        "turn {OnOff} the[?] {Appliance}",
+        "turn {OnOff} {Appliance}",
+        "i[?] (want|need|require) the[?] {Appliance} {OnOff}"
+      ],
+      "multiTurnExamples": []
+    }
+  ]
+}
