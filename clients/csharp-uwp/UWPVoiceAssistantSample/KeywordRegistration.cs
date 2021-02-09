@@ -159,6 +159,17 @@ namespace UWPVoiceAssistantSample
                 if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
                     is ActivationSignalDetectionConfiguration existingConfiguration)
                 {
+                    if (LocalSettingsHelper.EnableHardwareDetector && !detector.CanCreateConfigurations)
+                    {
+                        if (!existingConfiguration.AvailabilityInfo.IsEnabled)
+                        {
+                            await existingConfiguration.SetEnabledAsync(true);
+                        }
+
+                        KwsPerformanceLogger.Spotter = "HWKWS";
+                        return existingConfiguration;
+                    }
+
                     LocalSettingsHelper.SetModelData = true;
                     await this.SetModelDataIfNeededAsync(existingConfiguration);
                     await existingConfiguration.SetEnabledAsync(true);

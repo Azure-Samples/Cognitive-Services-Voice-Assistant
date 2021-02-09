@@ -187,7 +187,7 @@
                 OnContent="Speech SDK 2nd Stage KWS is ON"
                 OffContent="Speech SDK 2nd Stage KWS is OFF"/>
             <ToggleSwitch x:Name="HypothesizedSpeechToggle"
-                IsOn="{x:Bind hypotheizedSpeechToggle, Mode=TwoWay}"
+                IsOn="{x:Bind mvadls:LocalSettingsHelper.EnableHypotheizedSpeech, Mode=TwoWay}"
                 Margin="5,0,0,0"
                 Grid.Row="7"
                 Grid.Column="0"

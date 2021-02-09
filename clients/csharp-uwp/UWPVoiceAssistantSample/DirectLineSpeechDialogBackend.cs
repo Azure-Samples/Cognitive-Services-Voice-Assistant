@@ -304,7 +304,10 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task that completes when the in-progress turn has been aborted. </returns>
         public async Task CancelSignalVerificationAsync()
         {
-            await this.connector?.StopKeywordRecognitionAsync();
+            if (this.connector != null)
+            {
+                await this.connector.StopKeywordRecognitionAsync();
+            }
         }
 
         /// <summary>

@@ -161,6 +161,7 @@ namespace UWPVoiceAssistantSample
             {
                 this.dialogAudioOutput.OutputEnded += async () =>
                 {
+                    await this.StopAudioPlaybackAsync();
                     var session = await this.agentSessionManager.GetSessionAsync();
                     if (session.AgentState == ConversationalAgentState.Speaking)
                     {
@@ -222,6 +223,7 @@ namespace UWPVoiceAssistantSample
         /// <returns> A task that completes once playback is stopped. </returns>
         public async Task StopAudioPlaybackAsync()
         {
+            await this.dialogAudioOutput?.StopPlaybackAsync();
             await this.dialogResponseQueue.AbortAsync();
         }
 
@@ -250,7 +252,7 @@ namespace UWPVoiceAssistantSample
             var setupSuccessful = await this.SetupConversationAsync(signalOrigin);
             if (!setupSuccessful)
             {
-                this.logger.Log(LogMessageLevel.ConversationalAgentSignal, $"DialogManager2::SetupConversationAsync didn't succeed in setting up a conversation (see earlier errors). Aborting conversation.");
+                this.logger.Log(LogMessageLevel.ConversationalAgentSignal, $"DialogManager2::SetupConversationAsync didn't succeed in setting up a conversation (see earlier logs). Aborting conversation.");
                 return;
             }
 
@@ -314,8 +316,8 @@ namespace UWPVoiceAssistantSample
             await this.dialogBackend.StartAudioTurnAsync(signalVerificationRequired);
 
             var audioToSkip = signalVerificationRequired
-                ? AgentAudioInputProvider.InitialKeywordTrimDuration
-                : TimeSpan.Zero;
+                ? TimeSpan.Zero
+                : AgentAudioInputProvider.InitialKeywordTrimDuration;
             this.dialogAudioInput.DebugAudioCaptureFilesEnabled = LocalSettingsHelper.EnableAudioCaptureFiles;
             await this.dialogAudioInput.StartWithInitialSkipAsync(audioToSkip);
         }
@@ -392,7 +394,7 @@ namespace UWPVoiceAssistantSample
 
             this.signalDetectionHelper.SignalRejected += async (DetectionOrigin origin) =>
             {
-                await this.dialogBackend.CancelSignalVerificationAsync();
+                await this.dialogBackend?.CancelSignalVerificationAsync();
                 await this.StopAudioCaptureAsync();
                 this.logger.Log(LogMessageLevel.SignalDetection, $"Failsafe timer expired; rejecting");
                 await this.FinishConversationAsync();

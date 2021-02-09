@@ -47,7 +47,6 @@ namespace UWPVoiceAssistantSample
         private readonly HashSet<TextBlock> audioLogs;
         private readonly App app;
         private bool configModified;
-        private bool hypotheizedSpeechToggle;
         private Conversation activeConversation;
         private int logBufferIndex;
 
@@ -400,7 +399,7 @@ namespace UWPVoiceAssistantSample
         {
             _ = this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (this.hypotheizedSpeechToggle)
+                if (LocalSettingsHelper.EnableHypotheizedSpeech)
                 {
                     if (this.activeConversation == null)
                     {
