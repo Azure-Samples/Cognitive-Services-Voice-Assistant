@@ -89,7 +89,7 @@ Since, offline Custom Commands is an experimental feature, currently, you will o
     ![image](./media/customcommands-create-new-offline-application.png)
 
 1. Build your application. Please refer to [How-To documentation](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) if you are new to Custom Commands and need help in authoring an application.
-1. TBD: Add an offline sample which can be imported in
+1. Alternatively, you could import [sample application](./sample/turn-on-off.json) provided as part of this documentation.
 1. Train and Test your application.
 
 ### Download offline application
