@@ -154,22 +154,28 @@ namespace UWPVoiceAssistantSample
                     return this.keywordConfiguration;
                 }
 
+                if (LocalSettingsHelper.EnableHardwareDetector)
+                {
+                    var hwdetector = await GetDetectorAsync(this.KeywordActivationModelDataFormat, false);
+
+                    if (await hwdetector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
+                        is ActivationSignalDetectionConfiguration hwexistingConfiguration)
+                    {
+                        if (!hwexistingConfiguration.AvailabilityInfo.IsEnabled)
+                        {
+                            await hwexistingConfiguration.SetEnabledAsync(true);
+                        }
+
+                        KwsPerformanceLogger.Spotter = "HWKWS";
+                        return hwexistingConfiguration;
+                    }
+                }
+
                 var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
 
                 if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
                     is ActivationSignalDetectionConfiguration existingConfiguration)
                 {
-                    if (LocalSettingsHelper.EnableHardwareDetector && !detector.CanCreateConfigurations)
-                    {
-                        if (!existingConfiguration.AvailabilityInfo.IsEnabled)
-                        {
-                            await existingConfiguration.SetEnabledAsync(true);
-                        }
-
-                        KwsPerformanceLogger.Spotter = "HWKWS";
-                        return existingConfiguration;
-                    }
-
                     LocalSettingsHelper.SetModelData = true;
                     await this.SetModelDataIfNeededAsync(existingConfiguration);
                     await existingConfiguration.SetEnabledAsync(true);
