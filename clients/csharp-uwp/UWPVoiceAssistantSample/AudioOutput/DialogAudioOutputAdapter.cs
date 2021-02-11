@@ -111,6 +111,7 @@ namespace UWPVoiceAssistantSample
                 {
                     this.outputEndedEvent.Set();
                     this.OutputEnded?.Invoke();
+                    this.Dispose(true);
                     this.activeOutputStream = null;
                 }
 

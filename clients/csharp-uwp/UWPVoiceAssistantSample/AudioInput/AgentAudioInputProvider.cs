@@ -157,6 +157,7 @@ namespace UWPVoiceAssistantSample
                 this.outputNode?.Stop();
                 this.inputNode?.Stop();
                 this.inputGraph?.Stop();
+                this.Dispose(true);
 
                 this.logger.Log(LogMessageLevel.AudioLogs, "Audio Graph Stopped");
                 this.graphRunning = false;
@@ -173,7 +174,6 @@ namespace UWPVoiceAssistantSample
             {
                 if (disposing)
                 {
-                    await this.StopAsync();
                     this.inputNode?.Dispose();
                     this.outputNode?.Dispose();
                     this.inputGraph?.Dispose();

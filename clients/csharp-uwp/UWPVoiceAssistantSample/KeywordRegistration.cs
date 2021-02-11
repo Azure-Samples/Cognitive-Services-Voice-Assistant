@@ -161,11 +161,6 @@ namespace UWPVoiceAssistantSample
                     if (await hwdetector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
                         is ActivationSignalDetectionConfiguration hwexistingConfiguration)
                     {
-                        if (!hwexistingConfiguration.AvailabilityInfo.IsEnabled)
-                        {
-                            await hwexistingConfiguration.SetEnabledAsync(true);
-                        }
-
                         KwsPerformanceLogger.Spotter = "HWKWS";
                         return hwexistingConfiguration;
                     }
