@@ -156,25 +156,33 @@ namespace UWPVoiceAssistantSample
 
                 if (LocalSettingsHelper.EnableHardwareDetector)
                 {
-                    var hwdetector = await GetDetectorAsync(this.KeywordActivationModelDataFormat, false);
+                    var hwdetector = await GetDetectorAsync(null, false);
 
                     if (await hwdetector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
-                        is ActivationSignalDetectionConfiguration hwexistingConfiguration)
+                        is ActivationSignalDetectionConfiguration existingHardwareConfiguration)
                     {
                         KwsPerformanceLogger.Spotter = "HWKWS";
-                        return hwexistingConfiguration;
+                        this.keywordConfiguration = existingHardwareConfiguration;
+                        return existingHardwareConfiguration;
                     }
                 }
-
-                var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
-
-                if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
-                    is ActivationSignalDetectionConfiguration existingConfiguration)
+                else
                 {
-                    LocalSettingsHelper.SetModelData = true;
-                    await this.SetModelDataIfNeededAsync(existingConfiguration);
-                    await existingConfiguration.SetEnabledAsync(true);
-                    return await this.CreateKeywordConfigurationAsyncInternal();
+                    var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
+
+                    if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
+                        is ActivationSignalDetectionConfiguration existingSoftwareConfiguration)
+                    {
+                        LocalSettingsHelper.SetModelData = true;
+                        await this.SetModelDataIfNeededAsync(existingSoftwareConfiguration);
+                        if (!existingSoftwareConfiguration.AvailabilityInfo.IsEnabled)
+                        {
+                            await existingSoftwareConfiguration.SetEnabledAsync(true);
+                        }
+
+                        this.keywordConfiguration = existingSoftwareConfiguration;
+                        return existingSoftwareConfiguration;
+                    }
                 }
 
                 return await this.CreateKeywordConfigurationAsyncInternal();
@@ -341,7 +349,7 @@ namespace UWPVoiceAssistantSample
                 this.LastUpdatedActivationKeywordModelVersion = this.AvailableActivationKeywordModelVersion;
 
                 // And now, re-enable the configuration if we previously disabled it.
-                if (configurationWasEnabled)
+                if (!configurationWasEnabled)
                 {
                     await configuration.SetEnabledAsync(true);
                 }
@@ -350,6 +358,11 @@ namespace UWPVoiceAssistantSample
 
         private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
         {
+            if (this.keywordConfiguration != null || LocalSettingsHelper.EnableHardwareDetector)
+            {
+                return this.keywordConfiguration;
+            }
+
             var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
 
             // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
@@ -361,44 +374,21 @@ namespace UWPVoiceAssistantSample
                 await configuration.SetEnabledAsync(false);
             }
 
-            if (!LocalSettingsHelper.EnableHardwareDetector)
-            {
-                var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                    detector,
-                    this.KeywordDisplayName,
-                    this.KeywordId,
-                    this.KeywordModelId);
-                await this.SetModelDataIfNeededAsync(targetConfiguration);
-
-                if (!targetConfiguration.IsActive)
-                {
-                    await targetConfiguration.SetEnabledAsync(true);
-                }
-
-                this.keywordConfiguration = targetConfiguration;
-
-                return targetConfiguration;
-            }
-            else
-            {
-                var hwDetector = await GetDetectorAsync(this.KeywordActivationModelDataFormat, false);
-
-                var hardwareConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                hwDetector,
+            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                detector,
                 this.KeywordDisplayName,
                 this.KeywordId,
                 this.KeywordModelId);
+            await this.SetModelDataIfNeededAsync(targetConfiguration);
 
-                await this.SetModelDataIfNeededAsync(hardwareConfiguration);
-
-                await hardwareConfiguration.SetEnabledAsync(true);
-
-                KwsPerformanceLogger.Spotter = "HWKWS";
-
-                this.keywordConfiguration = hardwareConfiguration;
-
-                return hardwareConfiguration;
+            if (!targetConfiguration.IsActive)
+            {
+                await targetConfiguration.SetEnabledAsync(true);
             }
+
+            this.keywordConfiguration = targetConfiguration;
+
+            return targetConfiguration;
         }
 
         private async Task<StorageFile> GetFileFromPathAsync(string path)
