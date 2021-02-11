@@ -111,6 +111,7 @@ namespace UWPVoiceAssistantSample
                 {
                     this.outputEndedEvent.Set();
                     this.OutputEnded?.Invoke();
+                    this.Dispose(true);
                     this.activeOutputStream = null;
                 }
 
@@ -139,9 +140,9 @@ namespace UWPVoiceAssistantSample
             {
                 if (disposing)
                 {
-                    this.graph?.Dispose();
                     this.frameInputNode?.Dispose();
                     this.deviceOutputNode?.Dispose();
+                    this.graph?.Dispose();
                     this.graphSemaphore?.Dispose();
                     this.outputEndedEvent?.Dispose();
                 }

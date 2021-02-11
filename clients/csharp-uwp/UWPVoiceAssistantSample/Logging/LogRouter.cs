@@ -52,10 +52,10 @@ namespace UWPVoiceAssistantSample
 
             var callerFrame = new StackFrame(1);
             var methodBase = callerFrame.GetMethod();
-            var declaringType = methodBase.DeclaringType;
+            var declaringType = methodBase?.DeclaringType;
 
             var constructorTypes = new Type[] { typeof(string) };
-            var constructorValues = new object[] { declaringType.Name };
+            var constructorValues = new object[] { declaringType?.Name ?? "Logger" };
 
             var logger = ChosenLoggerType.GetConstructor(constructorTypes).Invoke(constructorValues);
 

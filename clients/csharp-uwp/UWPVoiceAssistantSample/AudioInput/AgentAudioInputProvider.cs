@@ -153,11 +153,14 @@ namespace UWPVoiceAssistantSample
             {
                 await this.FinishDebugAudioDumpIfNeededAsync();
 
-                this.inputGraph.Stop();
+                this.inputGraph.QuantumStarted -= this.OnQuantumStarted;
+                this.outputNode?.Stop();
+                this.inputNode?.Stop();
+                this.inputGraph?.Stop();
+                this.Dispose(true);
 
                 this.logger.Log(LogMessageLevel.AudioLogs, "Audio Graph Stopped");
                 this.graphRunning = false;
-                this.inputGraph.QuantumStarted -= this.OnQuantumStarted;
             }
         }
 
@@ -171,10 +174,9 @@ namespace UWPVoiceAssistantSample
             {
                 if (disposing)
                 {
-                    await this.StopAsync();
-                    this.inputGraph?.Dispose();
                     this.inputNode?.Dispose();
                     this.outputNode?.Dispose();
+                    this.inputGraph?.Dispose();
                     this.debugAudioOutputFileSemaphore?.Dispose();
                     this.debugAudioOutputFileStream?.Dispose();
                 }
@@ -284,6 +286,7 @@ namespace UWPVoiceAssistantSample
             this.outputNode = this.inputGraph.CreateFrameOutputNode();
             this.inputNode.AddOutgoingConnection(this.outputNode);
             this.inputGraph.QuantumStarted += this.OnQuantumStarted;
+            this.disposed = false;
 
             if (!this.dataAvailableInitialized)
             {

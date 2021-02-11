@@ -43,6 +43,15 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether hypotheized speech is enabled.
+        /// </summary>
+        public static bool EnableHypotheizedSpeech
+        {
+            get => ReadValueWithDefault<bool>("enableHypotheizedSpeech", true);
+            set => WriteValue("enableHypotheizedSpeech", value);
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the chosen dialog backend should emit a log
         /// file to application local state for diagnostic purposes.
         /// </summary>
