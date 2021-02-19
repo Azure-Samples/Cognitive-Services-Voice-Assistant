@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- saved from url=(0066)https://virtualroom.blob.core.windows.net/www/demo.html?room=test1 -->
 <html lang="en">
 <script type="text/javascript">window["_gaUserPrefs"] = { ioo: function () { return true; } }</script>
@@ -232,9 +232,9 @@
 
                 function apply(configuration) {
                     //html - counts
-                    $("#blue-inventory").html(configuration.FirstItem + " blue");
-                    $("#yellow-inventory").html(configuration.SecondItem + " yellow");
-                    $("#green-inventory").html(configuration.ThirdItem + " green");
+                    $("#blue-inventory").html(configuration.BlueItemCount + " blue");
+                    $("#yellow-inventory").html(configuration.YellowItemCount + " yellow");
+                    $("#green-inventory").html(configuration.GreenItemCount + " green");
 
                     if (configuration.Help) {
                         $("#help-content").fadeIn('fast')
@@ -243,42 +243,42 @@
                         $("#help-content").fadeOut('fast')
                     }
 
-                    if (configuration.FirstItem == 0) {
+                    if (configuration.BlueItemCount == 0) {
                         $("#blue-1").fadeOut('fast')
                         $("#blue-2").fadeOut('fast')
                         $("#blue-3").fadeOut('fast')
                         $("#blue-4").fadeOut('fast')
                         $("#blue-5").fadeOut('fast')
                     }
-                    else if (configuration.FirstItem >= 1 && configuration.FirstItem < 6) {
+                    else if (configuration.BlueItemCount >= 1 && configuration.BlueItemCount < 6) {
                         $("#blue-1").fadeIn('fast')
                         $("#blue-2").fadeOut('fast')
                         $("#blue-3").fadeOut('fast')
                         $("#blue-4").fadeOut('fast')
                         $("#blue-5").fadeOut('fast')
                     }
-                    else if (configuration.FirstItem >= 6 && configuration.FirstItem < 11) {
+                    else if (configuration.BlueItemCount >= 6 && configuration.BlueItemCount < 11) {
                         $("#blue-1").fadeOut('fast')
                         $("#blue-2").fadeIn('fast')
                         $("#blue-3").fadeOut('fast')
                         $("#blue-4").fadeOut('fast')
                         $("#blue-5").fadeOut('fast')
                     }
-                    else if (configuration.FirstItem >= 11 && configuration.FirstItem < 16) {
+                    else if (configuration.BlueItemCount >= 11 && configuration.BlueItemCount < 16) {
                         $("#blue-1").fadeOut('fast')
                         $("#blue-2").fadeOut('fast')
                         $("#blue-3").fadeIn('fast')
                         $("#blue-4").fadeOut('fast')
                         $("#blue-5").fadeOut('fast')
                     }
-                    else if (configuration.FirstItem >= 16 && configuration.FirstItem < 21) {
+                    else if (configuration.BlueItemCount >= 16 && configuration.BlueItemCount < 21) {
                         $("#blue-1").fadeOut('fast')
                         $("#blue-2").fadeOut('fast')
                         $("#blue-3").fadeOut('fast')
                         $("#blue-4").fadeIn('fast')
                         $("#blue-5").fadeOut('fast')
                     }
-                    else if (configuration.FirstItem >= 21) {
+                    else if (configuration.BlueItemCount >= 21) {
                         $("#blue-1").fadeOut('fast')
                         $("#blue-2").fadeOut('fast')
                         $("#blue-3").fadeOut('fast')
@@ -286,53 +286,53 @@
                         $("#blue-5").fadeIn('fast')
                     }
 
-                    if (configuration.SecondItem == 0) {
+                    if (configuration.YellowItemCount == 0) {
                         $("#yellow-1").fadeOut('fast')
                         $("#yellow-2").fadeOut('fast')
                         $("#yellow-3").fadeOut('fast')
                         $("#yellow-4").fadeOut('fast')
                     }
-                    else if (configuration.SecondItem >= 1 && configuration.SecondItem < 5) {
+                    else if (configuration.YellowItemCount >= 1 && configuration.YellowItemCount < 5) {
                         $("#yellow-1").fadeIn('fast')
                         $("#yellow-2").fadeOut('fast')
                         $("#yellow-3").fadeOut('fast')
                         $("#yellow-4").fadeOut('fast')
                     }
-                    else if (configuration.SecondItem >= 5 && configuration.SecondItem < 10) {
+                    else if (configuration.YellowItemCount >= 5 && configuration.YellowItemCount < 10) {
                         $("#yellow-1").fadeOut('fast')
                         $("#yellow-2").fadeIn('fast')
                         $("#yellow-3").fadeOut('fast')
                         $("#yellow-4").fadeOut('fast')
                     }
-                    else if (configuration.SecondItem >= 10 && configuration.SecondItem < 15) {
+                    else if (configuration.YellowItemCount >= 10 && configuration.YellowItemCount < 15) {
                         $("#yellow-1").fadeOut('fast')
                         $("#yellow-2").fadeOut('fast')
                         $("#yellow-3").fadeIn('fast')
                         $("#yellow-4").fadeOut('fast')
                     }
-                    else if (configuration.SecondItem >= 15) {
+                    else if (configuration.YellowItemCount >= 15) {
                         $("#yellow-1").fadeOut('fast')
                         $("#yellow-2").fadeOut('fast')
                         $("#yellow-3").fadeOut('fast')
                         $("#yellow-4").fadeIn('fast')
                     }
 
-                    if (configuration.ThirdItem == 0) {
+                    if (configuration.GreenItemCount == 0) {
                         $("#green-1").fadeOut('fast')
                         $("#green-2").fadeOut('fast')
                         $("#green-3").fadeOut('fast')
                     }
-                    else if (configuration.ThirdItem >= 1 && configuration.ThirdItem < 5) {
+                    else if (configuration.GreenItemCount >= 1 && configuration.GreenItemCount < 5) {
                         $("#green-1").fadeIn('fast')
                         $("#green-2").fadeOut('fast')
                         $("#green-3").fadeOut('fast')
                     }
-                    else if (configuration.ThirdItem >= 5 && configuration.ThirdItem < 10) {
+                    else if (configuration.GreenItemCount >= 5 && configuration.GreenItemCount < 10) {
                         $("#green-1").fadeOut('fast')
                         $("#green-2").fadeIn('fast')
                         $("#green-3").fadeOut('fast')
                     }
-                    else if (configuration.ThirdItem >= 10) {
+                    else if (configuration.GreenItemCount >= 10) {
                         $("#green-1").fadeOut('fast')
                         $("#green-2").fadeOut('fast')
                         $("#green-3").fadeIn('fast')

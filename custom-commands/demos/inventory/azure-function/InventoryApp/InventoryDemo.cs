@@ -82,8 +82,19 @@ namespace InventoryApp
 
                 log.LogInformation($"Executing {operation} on {(string.IsNullOrEmpty(product) ? "no product" : product)} for {quantity}");
 
-                if (!string.IsNullOrEmpty(operation))
+                if (string.IsNullOrEmpty(operation))
                 {
+                    // Return the current inventory state. Do not alter client's knowledge of previous state (clientContext).
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(currInventoryData, Formatting.Indented), Encoding.UTF8, "application/json")
+                    };
+                }
+                else
+                {
+                    // Store state before change for Custom Commands clientContext
+                    var clientContext = currInventoryData.GetDeepCopy();
+
                     if (operation.Equals("reset"))
                     {
                         currInventoryData.LoadDefaultData();
@@ -96,48 +107,37 @@ namespace InventoryApp
                     }
                     else if (operation.Equals("query"))
                     {
-                        //This is to ensure the json data object is returned to Custom Commands.
+                        // On query, return only the current inventory state. Do not alter client's knowledge of previous state (clientContext).
                         updated = true;
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent(JsonConvert.SerializeObject(currInventoryData, Formatting.Indented), Encoding.UTF8, "application/json")
+                        };
                     }
                     else if (operation.Equals("remove"))
                     {
                         currInventoryData.Help = false;
                         if (product.Equals("blue"))
                         {
-                            if (currInventoryData.FirstItem < quantity)
+                            if (quantity <= currInventoryData.BlueItemCount)
                             {
-                                currInventoryData.Message = $"Can not ship {quantity} blue boxes because there are only {currInventoryData.FirstItem} in stock.";
-                            }
-                            else
-                            {
-                                currInventoryData.FirstItem -= quantity;
-                                currInventoryData.Message = $"Shipped {quantity} blue boxes";
+                                currInventoryData.BlueItemCount -= quantity;
                             }
                             updated = true;
                         }
                         else if (product.Equals("yellow"))
                         {
-                            if (currInventoryData.SecondItem < quantity)
+                            if (quantity <= currInventoryData.YellowItemCount)
                             {
-                                currInventoryData.Message = $"Can not ship {quantity} yellow boxes because there are only {currInventoryData.SecondItem} in stock.";
-                            }
-                            else
-                            {
-                                currInventoryData.SecondItem -= quantity;
-                                currInventoryData.Message = $"Shipped {quantity} yellow boxes";
+                                currInventoryData.YellowItemCount -= quantity;
                             }
                             updated = true;
                         }
                         else if (product.Equals("green"))
                         {
-                            if (currInventoryData.ThirdItem < quantity)
+                            if (quantity <= currInventoryData.GreenItemCount)
                             {
-                                currInventoryData.Message = $"Can not ship {quantity} green boxes because there are only {currInventoryData.ThirdItem} in stock.";
-                            }
-                            else
-                            {
-                                currInventoryData.ThirdItem -= quantity;
-                                currInventoryData.Message = $"Shipped {quantity} green boxes";
+                                currInventoryData.GreenItemCount -= quantity;
                             }
                             updated = true;
                         }
@@ -152,31 +152,31 @@ namespace InventoryApp
                         currInventoryData.Help = false;
                         if (product.Equals("blue"))
                         {
-                            currInventoryData.Message = $"Shipped all {currInventoryData.FirstItem} blue boxes";
-                            currInventoryData.FirstItem = 0;
+                            //currInventoryData.Message = $"Shipped all {currInventoryData.BlueItemCount} blue boxes";
+                            currInventoryData.BlueItemCount = 0;
 
                             updated = true;
                         }
                         else if (product.Equals("yellow"))
                         {
-                            currInventoryData.Message = $"Shipped all {currInventoryData.SecondItem} yellow boxes";
-                            currInventoryData.SecondItem = 0;
+                            //currInventoryData.Message = $"Shipped all {currInventoryData.YellowItemCount} yellow boxes";
+                            currInventoryData.YellowItemCount = 0;
 
                             updated = true;
                         }
                         else if (product.Equals("green"))
                         {
-                            currInventoryData.Message = $"Shipped all {currInventoryData.ThirdItem} green boxes";
-                            currInventoryData.ThirdItem = 0;
+                            //currInventoryData.Message = $"Shipped all {currInventoryData.GreenItemCount} green boxes";
+                            currInventoryData.GreenItemCount = 0;
 
                             updated = true;
                         }
                         else
                         {
-                            currInventoryData.FirstItem = 0;
-                            currInventoryData.SecondItem = 0;
-                            currInventoryData.ThirdItem = 0;
-                            currInventoryData.Message = "Shipped all items";
+                            currInventoryData.BlueItemCount = 0;
+                            currInventoryData.YellowItemCount = 0;
+                            currInventoryData.GreenItemCount = 0;
+                            //currInventoryData.Message = "Shipped all items";
                             updated = true;
                         }
                     }
@@ -185,20 +185,20 @@ namespace InventoryApp
                         currInventoryData.Help = false;
                         if (product.Equals("blue"))
                         {
-                            currInventoryData.FirstItem += quantity;
-                            currInventoryData.Message = $"Received {quantity} blue boxes";
+                            currInventoryData.BlueItemCount += quantity;
+                            //currInventoryData.Message = $"Received {quantity} blue boxes";
                             updated = true;
                         }
                         else if (product.Equals("yellow"))
                         {
-                            currInventoryData.SecondItem += quantity;
-                            currInventoryData.Message = $"Received {quantity} yellow boxes";
+                            currInventoryData.YellowItemCount += quantity;
+                            //currInventoryData.Message = $"Received {quantity} yellow boxes";
                             updated = true;
                         }
                         else if (product.Equals("green"))
                         {
-                            currInventoryData.ThirdItem += quantity;
-                            currInventoryData.Message = $"Received {quantity} green boxes";
+                            currInventoryData.GreenItemCount += quantity;
+                            //currInventoryData.Message = $"Received {quantity} green boxes";
                             updated = true;
                         }
                         else
@@ -207,19 +207,22 @@ namespace InventoryApp
                             updated = true;
                         }
                     }
-                }
 
-                if (updated)
-                {
-                    var updateRoom = TableOperation.Replace(currInventoryData as InventoryData);
-                    await table.ExecuteAsync(updateRoom);
-                    log.LogInformation("successfully updated the record");
-                }
+                    if (updated)
+                    {
+                        var updateRoom = TableOperation.Replace(currInventoryData as InventoryData);
+                        await table.ExecuteAsync(updateRoom);
+                        log.LogInformation("successfully updated the record");
+                    }
 
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(JsonConvert.SerializeObject(currInventoryData, Formatting.Indented), Encoding.UTF8, "application/json")
-                };
+                    var stateChangeData = new InventoryDataStateChange(clientContext, currInventoryData);
+
+                    // Return results of the (attempted) operation with before and after states.
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(stateChangeData, Formatting.Indented), Encoding.UTF8, "application/json")
+                    };
+                }
             }
             catch (Exception e)
             {
@@ -232,12 +235,24 @@ namespace InventoryApp
         }
     }
 
+    public class InventoryDataStateChange
+    {
+        public InventoryData clientContext;
+        public InventoryData currentState;
+
+        public InventoryDataStateChange(InventoryData clientContext, InventoryData currentState)
+        {
+            this.clientContext = clientContext;
+            this.currentState = currentState;
+        }
+    }
+
     public class InventoryData : TableEntity
     {
         public InventoryData() { }
-        public int FirstItem { get; set; }
-        public int SecondItem { get; set; }
-        public int ThirdItem { get; set; }
+        public int BlueItemCount { get; set; }
+        public int YellowItemCount { get; set; }
+        public int GreenItemCount { get; set; }
         public bool Help { get; set; }
         public string Message { get; set; }
 
@@ -245,20 +260,32 @@ namespace InventoryApp
         {
             this.PartitionKey = partitionKey;
             this.RowKey = rowKey;
-            this.FirstItem = 11;
-            this.SecondItem = 15;
-            this.ThirdItem = 4;
+            this.BlueItemCount = 11;
+            this.YellowItemCount = 15;
+            this.GreenItemCount = 4;
             this.Help = true;
             this.Message = "";
         }
 
         public void LoadDefaultData()
         {
-            this.FirstItem = 11;
-            this.SecondItem = 15;
-            this.ThirdItem = 4;
+            this.BlueItemCount = 11;
+            this.YellowItemCount = 15;
+            this.GreenItemCount = 4;
             this.Help = true;
             this.Message = "";
+        }
+
+        public InventoryData GetDeepCopy()
+        {
+            var copy = new InventoryData(this.PartitionKey, this.RowKey);
+            copy.BlueItemCount = this.BlueItemCount;
+            copy.YellowItemCount = this.YellowItemCount;
+            copy.GreenItemCount = this.GreenItemCount;
+            copy.Help = this.Help;
+            copy.Message = this.Message;
+
+            return copy;
         }
     }
 }

@@ -1,3 +1,3 @@
 {
-  "AZURE_STORAGE_URL": ""
+  "AZURE_STORAGE_URL": "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=inventorydemo9425;AccountKey=sZaoRPPYZ8eYTsLlY1YfiwJ7RuCnSERbchUrnejRnFQissOzaQ+AHunpKwg2AggiqzYMUWHu43V+v7k2fBmsGA=="
 }
