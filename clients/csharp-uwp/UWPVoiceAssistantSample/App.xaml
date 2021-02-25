@@ -2,7 +2,8 @@
     x:Class="UWPVoiceAssistantSample.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:UWPVoiceAssistantSample">
+    xmlns:local="using:UWPVoiceAssistantSample"
+    RequestedTheme="Light">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
