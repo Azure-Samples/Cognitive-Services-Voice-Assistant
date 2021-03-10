@@ -5,7 +5,7 @@
 * Powershell 6.0 or greater. [Download Powershell here](https://github.com/PowerShell/PowerShell/releases). 
     * On Windows, download and run an .msi file (e.g. "PowerShell-7.0.0-win-x64.msi")
 * Azure CLI. [Insall Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) version 2.4.0 or higher.
-* .NET Core SDK 2.1 or higher. [Install SDK here](https://docs.microsoft.com/en-us/dotnet/core/install/sdk?pivots=os-windows).
+* .NET Core SDK 2.1 [Install SDK here](https://docs.microsoft.com/en-us/dotnet/core/install/sdk?pivots=os-windows).
 
 ## What are you deploying?
 
