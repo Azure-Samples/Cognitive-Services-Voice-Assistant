@@ -1,19 +1,13 @@
 {
-  "type": "CommandsDialogModel",
-  "culture": "en-us",
-  "webEndpoints": [
-    {
-      "name": "AutomotiveEndpoint",
-      "method": "GET",
-      "url": "https://automotivedemowidget.azurewebsites.net/api/AutomotiveDemo",
-      "headers": {
-        "room": "test1",
-        "culture": "en-us"
-      },
-      "sendFrame": false,
-      "updateFrame": false
-    }
-  ],
+  "entityResolver": {
+    "searchConfiguration": {
+      "maxEdits": 0
+    },
+    "type": "internal",
+    "isGenerated": true
+  },
+  "minIntentConfidence": 0.4,
+  "highIntentConfidence": 0.8,
   "lgTemplates": [
     "# TurnOnOffSubjectDevice",
     "> You can start sentences with '>' to add comments.",
@@ -38,17 +32,10 @@
     "- Type your response(s) here.",
     "# AdjustTemperatureAutomotiveEndpointonFailure09d9fb0028df11ea83cf95b9c7d5480f",
     "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperature5fef7c9028df11ea83cf95b9c7d5480f",
-    "- You can only adjust the temperature by a max of 15 degrees",
     "# AdjustTemperatureAutomotiveEndpointonSuccesscaf2819028df11ea83cf95b9c7d5480f",
     "- Type your response(s) here.",
     "# AdjustTemperatureAutomotiveEndpointonFailurecaf2819028df11ea83cf95b9c7d5480f",
     "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperature8a3cb0c028e011ea83cf95b9c7d5480f",
-    "- You can only adjust the temperature by a max of 15 degrees. How much do you want to adjust it?",
-    "# AdjustTemperatureTemperature",
-    "- How much do you want to change the temperature by?",
-    "- By how many degrees?",
     "# AdjustTemperatureAutomotiveEndpointonSuccess64368a3028e111eaaf158b43807e75e2",
     "- Type your response(s) here.",
     "# AdjustTemperatureAutomotiveEndpointonFailure64368a3028e111eaaf158b43807e75e2",
@@ -61,10 +48,6 @@
     "- Type your response(s) here.",
     "# AdjustTemperatureAutomotiveEndpointonFailured002848028e111eaaf158b43807e75e2",
     "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperature2c2602f028e211eaaf158b43807e75e2",
-    "- Do you want to make it warmer or cooler?",
-    "# AdjustTemperature571bc8a028e211eaaf158b43807e75e2",
-    "- What temperature do you want to set it to?",
     "# AdjustTemperatureAutomotiveEndpointonSuccess287895e028e311ea8db34fd5c8a135ab",
     "- {AutomotiveEndpoint.Message}",
     "# AdjustTemperatureAutomotiveEndpointonFailure287895e028e311ea8db34fd5c8a135ab",
@@ -77,8 +60,6 @@
     "- ",
     "# AdjustTemperatureAutomotiveEndpointonFailure76ee7e1028e311ea8db34fd5c8a135ab",
     "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperature4519903028e011ea83cf95b9c7d5480f",
-    "- I can only set between 68 and 80 degrees.  What temperature would you like?",
     "# AdjustTemperatureAutomotiveEndpointonSuccessfd34ee9028f311ea88cde3d2ef24c102",
     "- {AutomotiveEndpoint.Message}",
     "# AdjustTemperatureAutomotiveEndpointonFailurefd34ee9028f311ea88cde3d2ef24c102",
@@ -123,8 +104,186 @@
     "- Sorry, unable to connect to the virtual automotive at this time.",
     "# FallbackResponse",
     "- I didn't quite understand that.",
-    "- That functionality isn't supported yet."
+    "- That functionality isn't supported yet.",
+    "# AdjustTemperature-Operation",
+    "- Do you want to increase or decrease the temperature?",
+    "# AdjustTemperatureTemperature",
+    "- How much do you want to change the temperature by?",
+    "- By how many degrees?",
+    "# AdjustTemperature-Temperature-2aa47c30809411eb9852f5a1270e9d03",
+    "- Sorry, you can only adjust the temperature by a max of 15 degrees",
+    "# AdjustTemperature-AutomotiveEndpointonSuccess-54f59d70809411eb9852f5a1270e9d03",
+    "- {AutomotiveEndpoint.Message}",
+    "# AdjustTemperature-AutomotiveEndpointonFailure-54f59d70809411eb9852f5a1270e9d03",
+    "- Sorry, not able to connect to the room control service right now. ",
+    "# AdjustTemperature-AutomotiveEndpointonSuccess-922956f0809411eb9852f5a1270e9d03",
+    "- {AutomotiveEndpoint.Message}",
+    "# AdjustTemperature-AutomotiveEndpointonFailure-922956f0809411eb9852f5a1270e9d03",
+    "- Sorry, not able to connect to the room control service right now"
   ],
+  "lgTemplatesMap": {
+    "# TurnOnOffSubjectDevice": [
+      "> You can start sentences with '>' to add comments.",
+      "> Documentation for templates: https://aka.ms/sc-lg-format",
+      "> Each response variation must start with a dash, i.e.",
+      "- Which setting do you want to set?"
+    ],
+    "# TurnOnOffOnOff": [
+      "> You can start sentences with '>' to add comments.",
+      "> Documentation for templates: https://aka.ms/sc-lg-format",
+      "> Each response variation must start with a dash, i.e.",
+      "- What is the value?",
+      "- Tell me the value?"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccess6f417f9028d511ea8118bdb0a739e346": [
+      "- Type your response(s) here."
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailure6f417f9028d511ea8118bdb0a739e346": [
+      "- Type your response(s) here."
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccessa574afc028de11ea83cf95b9c7d5480f": [
+      "-"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailurea574afc028de11ea83cf95b9c7d5480f": [
+      "- Sorry, not able to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccess09d9fb0028df11ea83cf95b9c7d5480f": [
+      "- Type your response(s) here."
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailure09d9fb0028df11ea83cf95b9c7d5480f": [
+      "- Sorry, unable to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccesscaf2819028df11ea83cf95b9c7d5480f": [
+      "- Type your response(s) here."
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailurecaf2819028df11ea83cf95b9c7d5480f": [
+      "- Sorry, unable to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccess64368a3028e111eaaf158b43807e75e2": [
+      "- Type your response(s) here."
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailure64368a3028e111eaaf158b43807e75e2": [
+      "- Sorry, not able to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccess958d9ce028e111eaaf158b43807e75e2": [
+      "- Type your response(s) here."
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailure958d9ce028e111eaaf158b43807e75e2": [
+      "- Sorry, unable to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccessd002848028e111eaaf158b43807e75e2": [
+      "- Type your response(s) here."
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailured002848028e111eaaf158b43807e75e2": [
+      "- Sorry, unable to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccess287895e028e311ea8db34fd5c8a135ab": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailure287895e028e311ea8db34fd5c8a135ab": [
+      "- Sorry, not able to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccess43dd866028e311ea8db34fd5c8a135ab": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailure43dd866028e311ea8db34fd5c8a135ab": [
+      "- Sorry, not able to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccess76ee7e1028e311ea8db34fd5c8a135ab": [
+      "- "
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailure76ee7e1028e311ea8db34fd5c8a135ab": [
+      "- Sorry, unable to connect to the room control service right now"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonSuccessfd34ee9028f311ea88cde3d2ef24c102": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# AdjustTemperatureAutomotiveEndpointonFailurefd34ee9028f311ea88cde3d2ef24c102": [
+      "- Sorry, unable to connect to the room control service right now"
+    ],
+    "# Help-AutomotiveEndpointonSuccess-77e2e7a08a7411eab5f27787a0c205ba": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# Help-AutomotiveEndpointonFailure-77e2e7a08a7411eab5f27787a0c205ba": [
+      "- Unable to connect to virtual automotive",
+      "- Unable to connect to virtual car"
+    ],
+    "# TurnOnOff-SubjectDevice": [
+      "> You can start sentences with '>' to add comments.",
+      "> Documentation for templates: https://aka.ms/sc-lg-format",
+      "> Each response variation must start with a dash, i.e.",
+      "- Which setting do you want to set?"
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonSuccess-43dd866028e311ea8db34fd5c8a135ab": [
+      "- "
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonFailure-43dd866028e311ea8db34fd5c8a135ab": [
+      "- Sorry, not able to connect to the room control service right now"
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonSuccess-287895e028e311ea8db34fd5c8a135ab": [
+      "- "
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonFailure-287895e028e311ea8db34fd5c8a135ab": [
+      "- Sorry, not able to connect to the room control service right now"
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonSuccess-fd34ee9028f311ea88cde3d2ef24c102": [
+      "- "
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonFailure-fd34ee9028f311ea88cde3d2ef24c102": [
+      "- Sorry, unable to connect to the room control service right now"
+    ],
+    "# ControlDefroster-DefrosterOnOff": [
+      "- Turn the defroster on or off?"
+    ],
+    "# ControlSeatWarmer-AutomotiveEndpointonSuccess-----8d295000962611eab32ec9b90e43d4b9": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# ControlSeatWarmer-AutomotiveEndpointonFailure-----8d295000962611eab32ec9b90e43d4b9": [
+      "- Sorry, not able to connect to the room control service right now"
+    ],
+    "# ControlSeatWarmer-SeatWarmerOnOff": [
+      "- Turn the seat warmer on or off?"
+    ],
+    "# ControlDefroster-AutomotiveEndpointonSuccess---d0f56c10962611eab32ec9b90e43d4b9": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# ControlDefroster-AutomotiveEndpointonFailure---d0f56c10962611eab32ec9b90e43d4b9": [
+      "- Sorry, not able to connect to the room control service right now"
+    ],
+    "# Reset-AutomotiveEndpointonSuccess-84949550963311ea912b91373fe5483a": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# Reset-AutomotiveEndpointonFailure-84949550963311ea912b91373fe5483a": [
+      "- Sorry, unable to connect to the virtual automotive at this time."
+    ],
+    "# FallbackResponse": [
+      "- I didn't quite understand that.",
+      "- That functionality isn't supported yet."
+    ],
+    "# AdjustTemperature-Operation": [
+      "- Do you want to increase or decrease the temperature?"
+    ],
+    "# AdjustTemperatureTemperature": [
+      "- How much do you want to change the temperature by?",
+      "- By how many degrees?"
+    ],
+    "# AdjustTemperature-Temperature-2aa47c30809411eb9852f5a1270e9d03": [
+      "- Sorry, you can only adjust the temperature by a max of 15 degrees"
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonSuccess-54f59d70809411eb9852f5a1270e9d03": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonFailure-54f59d70809411eb9852f5a1270e9d03": [
+      "- Sorry, not able to connect to the room control service right now. "
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonSuccess-922956f0809411eb9852f5a1270e9d03": [
+      "- {AutomotiveEndpoint.Message}"
+    ],
+    "# AdjustTemperature-AutomotiveEndpointonFailure-922956f0809411eb9852f5a1270e9d03": [
+      "- Sorry, not able to connect to the room control service right now"
+    ]
+  },
+  "type": "BaseLanguage",
   "registeredKeywords": [
     "abigail",
     "assistant",
@@ -133,6 +292,21 @@
     "hey front desk",
     "jayden",
     "ok speaker"
+  ],
+  "webEndpoints": [
+    {
+      "name": "AutomotiveEndpoint",
+      "method": "GET",
+      "url": "https://automotivedemowidget.azurewebsites.net/api/AutomotiveDemo",
+      "headers": {
+        "room": "test1",
+        "culture": "en-us"
+      },
+      "parameters": {},
+      "sendFrame": false,
+      "updateFrame": false,
+      "remoteUpdate": false
+    }
   ],
   "globalParameters": [],
   "commands": [
@@ -200,6 +374,10 @@
                 ]
               }
             }
+          },
+          "elicitResponse": {
+            "type": "Template",
+            "templateName": "# AdjustTemperature-Operation"
           }
         },
         {
@@ -207,35 +385,38 @@
           "type": {
             "name": "Number"
           },
+          "validations": [
+            {
+              "type": "NumberInRange",
+              "min": 0,
+              "max": 15,
+              "failureResponse": {
+                "type": "Template",
+                "templateName": "# AdjustTemperature-Temperature-2aa47c30809411eb9852f5a1270e9d03"
+              }
+            }
+          ],
           "elicitResponse": {
             "type": "Template",
             "templateName": "# AdjustTemperatureTemperature"
           }
         }
       ],
-      "rules": [
+      "rules": [],
+      "completionRules": [
         {
-          "name": "FinishAdjustRaise",
+          "name": "IncreaseTemperature",
           "conditions": [
             {
               "type": "True"
             },
             {
+              "type": "AllRequiredParameters"
+            },
+            {
               "type": "ParameterValue",
               "name": "Operation",
               "value": "raise"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Operation",
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value > 0 && Value <= 15"
             }
           ],
           "actions": [
@@ -248,14 +429,14 @@
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# AdjustTemperatureAutomotiveEndpointonSuccess43dd866028e311ea8db34fd5c8a135ab"
+                  "templateName": "# AdjustTemperature-AutomotiveEndpointonSuccess-54f59d70809411eb9852f5a1270e9d03"
                 }
               },
               "onFailure": {
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# AdjustTemperatureAutomotiveEndpointonFailure43dd866028e311ea8db34fd5c8a135ab"
+                  "templateName": "# AdjustTemperature-AutomotiveEndpointonFailure-54f59d70809411eb9852f5a1270e9d03"
                 }
               }
             }
@@ -264,27 +445,18 @@
           "postExecutionState": "CompleteCommand"
         },
         {
-          "name": "FinishAdjustLower",
+          "name": "DecreaseTemperature",
           "conditions": [
             {
               "type": "True"
             },
             {
+              "type": "AllRequiredParameters"
+            },
+            {
               "type": "ParameterValue",
               "name": "Operation",
               "value": "lower"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Operation",
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value > 0 && Value <= 15"
             }
           ],
           "actions": [
@@ -297,253 +469,22 @@
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# AdjustTemperatureAutomotiveEndpointonSuccess287895e028e311ea8db34fd5c8a135ab"
+                  "templateName": "# AdjustTemperature-AutomotiveEndpointonSuccess-922956f0809411eb9852f5a1270e9d03"
                 }
               },
               "onFailure": {
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# AdjustTemperatureAutomotiveEndpointonFailure287895e028e311ea8db34fd5c8a135ab"
+                  "templateName": "# AdjustTemperature-AutomotiveEndpointonFailure-922956f0809411eb9852f5a1270e9d03"
                 }
               }
             }
           ],
           "nextTurnExpectations": [],
           "postExecutionState": "CompleteCommand"
-        },
-        {
-          "name": "CorrectAdjustTemp",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Operation",
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value > 15"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature5fef7c9028df11ea83cf95b9c7d5480f"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Temperature"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "FinishSetTemp",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value >= 68  && Value <= 80"
-            }
-          ],
-          "actions": [
-            {
-              "type": "CallHttpEndpoint",
-              "name": "AutomotiveEndpoint",
-              "content": {},
-              "parameters": "operation=setTemperature&value={Temperature}",
-              "onSuccess": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# AdjustTemperatureAutomotiveEndpointonSuccessfd34ee9028f311ea88cde3d2ef24c102"
-                }
-              },
-              "onFailure": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# AdjustTemperatureAutomotiveEndpointonFailurefd34ee9028f311ea88cde3d2ef24c102"
-                }
-              }
-            }
-          ],
-          "nextTurnExpectations": [],
-          "postExecutionState": "CompleteCommand"
-        },
-        {
-          "name": "CorrectSetTemp",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "(Value>30 && Value<68) || Value>80 || Value<=0"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature4519903028e011ea83cf95b9c7d5480f"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Temperature"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "PromptandCorrect",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value > 15 && Value <=3"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature8a3cb0c028e011ea83cf95b9c7d5480f"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Operation",
-                "Temperature"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "PromptForOperation",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value >0 && Value <= 15"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature2c2602f028e211eaaf158b43807e75e2"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Operation"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "PromptForTemp",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Operation"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": ""
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature571bc8a028e211eaaf158b43807e75e2"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Temperature"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
         }
       ],
-      "completionRules": [],
       "triggeringExamples": [
         "{Operation} the temperature by {Temperature} degrees",
         "change the temp by {Temperature} degrees",
