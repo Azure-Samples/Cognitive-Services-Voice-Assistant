@@ -63,7 +63,7 @@ if ($defaultSubscription.state -ne "Enabled") {
 
 $output = az group exists --name $resourceName
 if ($output -eq $true) {
-    Write-Error "Resource Group already exists. Please give a new resource name."
+    Write-Error "Resource Group already exists. Please give a new resource name or delete the existing resource group at https://ms.portal.azure.com/#blade/HubsExtension/BrowseResourceGroups."
     exit
 }
 
@@ -97,15 +97,24 @@ Write-Host -ForegroundColor Yellow "Calling deployTemplate"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
 
+# some buffer time between each step
+Start-Sleep -s 60
+
 $command = ".\deployContainerFiles.ps1 -appName $appName -resourceName $resourceName -storageName $storageName -functionURL $functionURL"
 Write-Host -ForegroundColor Yellow "Calling deployContainerFiles"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
 
+# some buffer time between each step
+Start-Sleep -s 60
+
 $command = ".\deployAzureFunction.ps1 -appName $appName -resourceName $resourceName -functionName $functionName"
 Write-Host -ForegroundColor Yellow "Calling deployAzureFunction"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
+
+# some buffer time between each step
+Start-Sleep -s 60
 
 Write-Host "Getting additional Azure resouces needed to deploy a new Custom Command project"
 $speechResourceKey = az cognitiveservices account keys list -g $resourceName -n $cognitiveservice_speech_name | ConvertFrom-Json
