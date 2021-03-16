@@ -97,24 +97,19 @@ Write-Host -ForegroundColor Yellow "Calling deployTemplate"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
 
-# some buffer time between each step
-Start-Sleep -s 60
-
 $command = ".\deployContainerFiles.ps1 -appName $appName -resourceName $resourceName -storageName $storageName -functionURL $functionURL"
 Write-Host -ForegroundColor Yellow "Calling deployContainerFiles"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
 
 # some buffer time between each step
-Start-Sleep -s 60
+Write-Host -ForegroundColor Yellow "Waiting for backend propagate"
+Start-Sleep -s 30
 
 $command = ".\deployAzureFunction.ps1 -appName $appName -resourceName $resourceName -functionName $functionName"
 Write-Host -ForegroundColor Yellow "Calling deployAzureFunction"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
-
-# some buffer time between each step
-Start-Sleep -s 60
 
 Write-Host "Getting additional Azure resouces needed to deploy a new Custom Command project"
 $speechResourceKey = az cognitiveservices account keys list -g $resourceName -n $cognitiveservice_speech_name | ConvertFrom-Json
