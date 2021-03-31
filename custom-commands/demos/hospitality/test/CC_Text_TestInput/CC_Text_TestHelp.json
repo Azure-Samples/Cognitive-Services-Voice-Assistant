@@ -1,0 +1,41 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing several needing help sentences",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "What can I do",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Hi, I am your friendly room assistant. I can control the lights, tv and blinds and set the room temperature. Try saying \"computer turn on the bath room light\".",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "I want assistance",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Hi, I am your friendly room assistant. I can control the lights, tv and blinds and set the room temperature. Try saying \"computer turn on the bath room light\".",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "What do i say",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Hi, I am your friendly room assistant. I can control the lights, tv and blinds and set the room temperature. Try saying \"computer turn on the bath room light\".",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]

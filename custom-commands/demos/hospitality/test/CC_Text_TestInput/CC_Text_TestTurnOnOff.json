@@ -1,0 +1,277 @@
+[
+  {
+    "DialogID": "0",
+    "Skip": false,
+    "Description": "Testing 'turn it {OnOff}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn it on",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Which device would you like to turn on",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "air conditioning",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning on the AC || AC is already on.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Skip": false,
+    "Description": "Testing 'turn it {OnOff}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn it off",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Which device would you like to turn off",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "air conditioning",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning off the AC|| AC is already off.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "2",
+    "Skip": false,
+    "Description": "Testing 'turn the {SubjectDevice} {OnOff}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn the television Off",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning the TV off || TV is already off.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "3",
+    "Skip": false,
+    "Description": "Testing 'turn the {SubjectContext} {SubjectDevice} {OnOff}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn the bathroom light on",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning on the bathroom lights||Bathroom lights are already on.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "4",
+    "Skip": false,
+    "Description": "Testing 'turn {OnOff} the {SubjectDevice}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn on air conditioning",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning on the AC||AC is already on.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "5",
+    "Skip": false,
+    "Description": "Testing 'turn {OnOff} the {SubjectContext} {SubjectDevice}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn off the bathroom lights",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning off the bathroom lights||Bathroom lights are already off.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "6",
+    "Skip": false,
+    "Description": "Testing '{SubjectDevice} {OnOff}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "lights on",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning on all the lights||All lights are already on.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "7",
+    "Skip": false,
+    "Description": "Testing 'I want the {SubjectDevice} {OnOff}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "I want the television On",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning on the TV||TV is already on.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "8",
+    "Skip": false,
+    "Description": "Testing 'control a device'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "control a device",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Which device do you want to control?",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "television",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to turn the TV on or off?",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "off",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning off the TV||TV is already on.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "9",
+    "Skip": false,
+    "Description": "Testing 'I want to control a device'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "I want to control a device",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Which device do you want to control?",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "air conditioning",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to turn the AC on or off?",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "on",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning on the AC || AC is already on.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  },
+  {
+    "DialogID": "10",
+    "Skip": false,
+    "Description": "Testing 'turn {OnOff}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn off",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Which device would you like to turn off",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "lights",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning off all the lights||All lights are already off.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
+  }
+]
