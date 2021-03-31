@@ -1,0 +1,20 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing 'turn it'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "turn it",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Sorry. I didn't quite catch that || I'm not sure what you meant by that",
+            "speak": "<speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, AriaRUS)\">Sorry. I didn't quite catch that</voice></speak> || <speak version=\"1.0\" xml:lang=\"EN-US\"><voice name=\"Microsoft Server Speech Text to Speech Voice (en-US, AriaRUS)\">I'm not sure what you meant by that</voice></speak>",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]

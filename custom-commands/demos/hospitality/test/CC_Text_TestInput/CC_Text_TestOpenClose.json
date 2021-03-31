@@ -1,0 +1,70 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing '{OpenCloseOperation} the {OpenCloseSubject}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Raise the shades",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Alright, opening the blinds||The blinds have already been opened",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing 'i want to {OpenCloseOperation} the {OpenCloseSubject}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "I want to down the blind",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Alright, closing the blinds||The blinds have already been closed",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "2",
+    "Description": "Testing '{OpenCloseOperation} {OpenCloseSubject}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Lower curtains",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "The blinds have already been closed",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "3",
+    "Description": "Testing '{OpenCloseSubject} {OpenCloseOperation}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "Shades up",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Alright, opening the blinds",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]

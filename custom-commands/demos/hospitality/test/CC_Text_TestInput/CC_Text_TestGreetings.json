@@ -1,0 +1,41 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing several greeting sentences",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "What's up",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Hello!",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "Hello how are you",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Hello!",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "Hi there",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Hello!",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]
