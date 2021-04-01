@@ -1,0 +1,39 @@
+{
+  "Tests": [
+    {
+      "FileName": "CC_Text_TestInput\\CC_Text_TestFallbackCommand.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false,
+    },
+    {
+      "FileName": "CC_Text_TestInput\\CC_Text_TestReset.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false,
+    },
+    {
+      "FileName": "CC_Text_TestInput\\CC_Text_TestHelp.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false,
+    },
+    {
+      "FileName": "CC_Text_TestInput\\CC_Text_TestAdjustTemperature.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false,
+    },
+    {
+      "FileName": "CC_Text_TestInput\\CC_Text_TestControlSeatWarmer.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false,
+    },
+    {
+      "FileName": "CC_Text_TestInput\\CC_Text_TestControlDefroster.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false,
+    }
+  ],
+  "SpeechSubscriptionKey": "################################",
+  "SpeechRegion": "westus",
+  "CustomCommandsAppId": "########-####-####-####-############",
+  "RealTimeAudio": false,
+  "Timeout": 5000
+}

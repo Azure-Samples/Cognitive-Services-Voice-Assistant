@@ -1,0 +1,58 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing seat warmer 0",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "reset",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "turn seat warmer on",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Seat warmer on",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing seat warmer 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "reset",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "turn seat warmer off",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Seat warmer off",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+]

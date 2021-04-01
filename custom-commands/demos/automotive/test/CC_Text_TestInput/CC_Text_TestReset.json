@@ -1,0 +1,20 @@
+[
+  {
+    "DialogID": "0",
+    "Skip": false,
+    "Description": "Testing reset 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "reset",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing help 0",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "help",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": ""
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]
