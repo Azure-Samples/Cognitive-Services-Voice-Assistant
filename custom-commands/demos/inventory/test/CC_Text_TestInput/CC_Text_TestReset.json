@@ -1,0 +1,38 @@
+[
+  {
+    "DialogID": "0",
+    "Skip": false,
+    "Description": "Testing reset 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "reset",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Okay, resetting to default state.||Roger, restocking the warehouse to default values.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Skip": false,
+    "Description": "Testing reset 2",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "back to default",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Okay, resetting to default state.||Roger, restocking the warehouse to default values.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+    ]
+  },
+]

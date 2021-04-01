@@ -1,0 +1,80 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing ship entire inventory 0",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "reset",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Okay, resetting to default state.||Roger, restocking the warehouse to default values.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "ship all",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Shipped all items",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "query",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "There are 0 blue boxes, 0 of yellow boxes, and 0 of green boxes in the inventory.||The warehouse contains 0 blue boxes, 0 of yellow boxes, and 0 of green boxes.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing ship entire inventory 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "reset",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Okay, resetting to default state.||Roger, restocking the warehouse to default values.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "sell all greens",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Shipped all 4 large items",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "query",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "The warehouse contains 11 blue boxes, 15 of yellow boxes, and 0 of green boxes.||There are 11 blue boxes, 15 of yellow boxes, and 0 of green boxes in the inventory.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]
