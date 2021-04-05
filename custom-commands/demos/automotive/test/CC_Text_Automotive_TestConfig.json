@@ -6,7 +6,7 @@
       "Skip": false,
     },
     {
-      "FileName": "CC_Text_TestInput\\CC_Text_TestTurnOnOff.json",
+      "FileName": "CC_Text_TestInput\\CC_Text_TestReset.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false,
     },
@@ -16,17 +16,17 @@
       "Skip": false,
     },
     {
-      "FileName": "CC_Text_TestInput\\CC_Text_TestGreetings.json",
-      "IgnoreActivities": [ { "type": "event" } ],
-      "Skip": false,
-    },
-    {
       "FileName": "CC_Text_TestInput\\CC_Text_TestAdjustTemperature.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false,
     },
     {
-      "FileName": "CC_Text_TestInput\\CC_Text_TestOpenClose.json",
+      "FileName": "CC_Text_TestInput\\CC_Text_TestControlSeatWarmer.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false,
+    },
+    {
+      "FileName": "CC_Text_TestInput\\CC_Text_TestControlDefroster.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false,
     }

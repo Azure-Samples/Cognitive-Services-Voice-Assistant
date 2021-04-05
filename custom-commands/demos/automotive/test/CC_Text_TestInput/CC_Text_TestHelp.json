@@ -1,15 +1,15 @@
 [
   {
     "DialogID": "0",
-    "Description": "Testing 'turn it'",
+    "Description": "Testing help 0",
     "Turns": [
       {
         "TurnID": 0,
-        "Utterance": "turn it",
+        "Utterance": "help",
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Sorry. I didn't quite catch that || I'm not sure what you meant by that",
+            "text": ""
           }
         ],
         "ExpectedUserPerceivedLatency": 1500

@@ -1,0 +1,30 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing help 0",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "What can I do",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "This is a command and control inventory demo. You can add blue, green or yellow boxes and remove the boxes. You can also query the state of the warehouse."
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "help",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "This is a command and control inventory demo. You can add blue, green or yellow boxes and remove the boxes. You can also query the state of the warehouse.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]

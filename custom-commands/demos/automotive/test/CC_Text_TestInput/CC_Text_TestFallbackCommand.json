@@ -1,0 +1,36 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing fallback 0",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "hi",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "I didn't quite understand that.||That functionality isn't supported yet.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing fallback 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "connection",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "I didn't quite understand that.||That functionality isn't supported yet.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]

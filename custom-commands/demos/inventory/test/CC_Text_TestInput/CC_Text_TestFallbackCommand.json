@@ -1,0 +1,53 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing fallback 0",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "hi",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Command not recognized.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing fallback 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "connection",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Command not recognized.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "2",
+    "Description": "Testing fallback 2",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "raise the temp",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Command not recognized.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  }
+]

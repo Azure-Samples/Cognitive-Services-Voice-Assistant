@@ -1,0 +1,58 @@
+[
+  {
+    "DialogID": "0",
+    "Description": "Testing defroster 0",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "reset",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "turn defroster on",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "defroster on",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing defroster 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "reset",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "turn defroster off",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "defroster off",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+]

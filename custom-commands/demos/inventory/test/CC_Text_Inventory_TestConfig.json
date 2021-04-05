@@ -6,7 +6,7 @@
       "Skip": false,
     },
     {
-      "FileName": "CC_Text_TestInput\\CC_Text_TestTurnOnOff.json",
+      "FileName": "CC_Text_TestInput\\CC_Text_TestReset.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false,
     },
@@ -16,17 +16,22 @@
       "Skip": false,
     },
     {
-      "FileName": "CC_Text_TestInput\\CC_Text_TestGreetings.json",
+      "FileName": "CC_Text_TestInput\\CC_Text_TestQueryInventory.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false,
     },
     {
-      "FileName": "CC_Text_TestInput\\CC_Text_TestAdjustTemperature.json",
+      "FileName": "CC_Text_TestInput\\CC_Text_TestShipInventory.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false,
     },
     {
-      "FileName": "CC_Text_TestInput\\CC_Text_TestOpenClose.json",
+      "FileName": "CC_Text_TestInput\\CC_Text_TestReceiveInventory.json",
+      "IgnoreActivities": [ { "type": "event" } ],
+      "Skip": false,
+    },
+    {
+      "FileName": "CC_Text_TestInput\\CC_Text_TestShipEntireInventory.json",
       "IgnoreActivities": [ { "type": "event" } ],
       "Skip": false,
     }
