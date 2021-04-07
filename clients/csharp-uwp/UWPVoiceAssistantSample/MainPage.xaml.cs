@@ -451,6 +451,11 @@ namespace UWPVoiceAssistantSample
                 informationTextBlock.Foreground = new SolidColorBrush(Colors.Blue);
                 informationTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = information.Split("Information");
+                if (split.Length <= 1)
+                {
+                    return false;
+                }
+
                 if (split[1].Contains(" : ", StringComparison.OrdinalIgnoreCase))
                 {
                     string[] removeColon = split[1].Split(" : ");
@@ -482,6 +487,11 @@ namespace UWPVoiceAssistantSample
                 noiseTextBlock.Foreground = new SolidColorBrush(Colors.Gray);
                 noiseTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = noise.Split("Noise");
+                if (split.Length <= 1)
+                {
+                    return false;
+                }
+
                 noiseTextBlock.Text = split[1];
 
                 this.noiseLogs.Add(noiseTextBlock);
@@ -505,6 +515,11 @@ namespace UWPVoiceAssistantSample
                 errorTextBlock.Foreground = new SolidColorBrush(Colors.Red);
                 errorTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = error.Split("Error");
+                if (split.Length <= 1)
+                {
+                    return false;
+                }
+
                 errorTextBlock.Text = split[1];
 
                 this.errorLogs.Add(errorTextBlock);
@@ -528,6 +543,11 @@ namespace UWPVoiceAssistantSample
                 signalTextBlock.Foreground = new SolidColorBrush(Colors.DarkOrange);
                 signalTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = signal.Split("SignalDetection");
+                if (split.Length <= 1)
+                {
+                    return false;
+                }
+
                 signalTextBlock.Text = split[1];
 
                 this.signalDetectionLogs.Add(signalTextBlock);
@@ -551,6 +571,11 @@ namespace UWPVoiceAssistantSample
                 conversationalAgentSignalTextBlock.Foreground = new SolidColorBrush(Colors.DarkBlue);
                 conversationalAgentSignalTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = agentSignal.Split("ConversationalAgentSignal");
+                if (split.Length <= 1)
+                {
+                    return false;
+                }
+
                 conversationalAgentSignalTextBlock.Text = split[1];
 
                 this.conversationAgentLogs.Add(conversationalAgentSignalTextBlock);
@@ -574,6 +599,11 @@ namespace UWPVoiceAssistantSample
                 audioLogTextBlock.Foreground = new SolidColorBrush(Colors.MediumTurquoise);
                 audioLogTextBlock.TextWrapping = TextWrapping.Wrap;
                 string[] split = audioLogs.Split("AudioLogs");
+                if (split.Length <= 1)
+                {
+                    return false;
+                }
+
                 audioLogTextBlock.Text = split[1];
 
                 this.audioLogs.Add(audioLogTextBlock);
