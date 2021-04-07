@@ -103,7 +103,7 @@ Here is the full list:
 >#### KeywordRecognitionModel
 >`string | optional | null | "C:\\Test\\test.table"`. A full-path name of the keyword model file. For more info, see the section [Keyword Activation Tests](#keyword-activation-tests).
 
-<font color="red">TODO: Make the above relative path to InputFolder?</font>
+<!--<font color="red">TODO: Make the above relative path to InputFolder?</font>-->
 
 >#### KeywordVerificationEnabled
 >`bool | optional | false | true`. A boolean which indicates if your bot or custom command application is configured to use keyword verification. The default value is `true`. Note that if a [CustomSREndpointId](#customsrendpointid) is specified, this value is ignored and keyword verification is automatically disabled.
