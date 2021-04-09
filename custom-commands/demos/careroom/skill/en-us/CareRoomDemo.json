@@ -1,6 +1,10 @@
 {
   "type": "CommandsDialogModel",
   "culture": "en-us",
+  "entityResolver": {
+      "type": "nop",
+      "isGenerated": true
+    },
   "webEndpoints": [
     {
       "name": "RoomControlBackend",

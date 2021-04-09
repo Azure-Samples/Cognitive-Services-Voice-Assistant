@@ -273,5 +273,45 @@
         "ExpectedUserPerceivedLatency": 10000
       }
     ]
+  },
+  {
+    "DialogID": "11",
+    "Skip": false,
+    "Description": "Testing 'i want to control a device'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "i want to control a device",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Which device do you want to control?",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "lights",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to turn the lights on or off?",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "off",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Ok, turning off all the lights||All lights are already off.",
+              }
+        ],
+        "ExpectedUserPerceivedLatency": 10000
+      }
+    ]
   }
 ]

@@ -295,5 +295,106 @@
         "ExpectedUserPerceivedLatency": 1500
       }
     ]
+  },
+  {
+    "DialogID": "11",
+    "Description": "Testing 'set it to {Temperature}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "set it to 60",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "I can only set between 68 and 80 degrees. What temperature would you like?",
+                  }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "70",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Set the temperature to 70 degrees.",
+                  }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "12",
+    "Description": "Testing 'make it {Temperature}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "make it 71",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Set the temperature to 71 degrees.",
+                  }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "13",
+    "Description": "Testing 'change the temp to {Temperature}'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "change the temp to 77",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Set the temperature to 77 degrees.",
+                  }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "14",
+    "Description": "Testing 'change the temp'",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "change the temp",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "How much do you want to change the temperature by?||By how many degrees?",
+                  }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 1,
+        "Utterance": "5",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Do you want to make it warmer or cooler?",
+                  }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 2,
+        "Utterance": "warmer",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Raised the temperature by 5 degrees.",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
   }
 ]

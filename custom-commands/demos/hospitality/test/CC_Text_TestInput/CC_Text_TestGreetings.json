@@ -35,6 +35,17 @@
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
+      },
+      {
+        "TurnID": 3,
+        "Utterance": "the hi",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Hello!",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
       }
     ]
   }
