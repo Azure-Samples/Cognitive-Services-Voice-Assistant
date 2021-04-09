@@ -198,7 +198,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Ok, turning off the TV||TV is already on.",
+            "text": "Ok, turning off the TV||TV is already off.",
               }
         ],
         "ExpectedUserPerceivedLatency": 10000
