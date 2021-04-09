@@ -20,7 +20,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Raised the temperature by 12 degrees",
+            "text": "raised temperature by 12 degrees",
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -59,7 +59,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Decreased the temperature by 12 degrees",
+            "text": "decreased temperature by 12 degrees",
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -76,7 +76,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Raised the temperature by 11 degrees",
+            "text": "raised temperature by 11 degrees",
                   }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -93,7 +93,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Raised the temperature by 11 degrees",
+            "text": "raised temperature by 11 degrees",
                   }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -132,7 +132,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Decreased the temperature by 12 degrees",
+            "text": "decreased temperature by 12 degrees",
                   }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -160,7 +160,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Decreased the temperature by 12 degrees",
+            "text": "decreased temperature by 12 degrees",
                   }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -177,7 +177,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Raised the temperature by 10 degrees",
+            "text": "raised temperature by 10 degrees",
                   }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -205,7 +205,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Raised the temperature by 5 degrees",
+            "text": "raised temperature by 5 degrees",
                   }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -233,7 +233,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Decreased the temperature by 5 degrees",
+            "text": "decreased temperature by 5 degrees",
                   }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -261,8 +261,8 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Decreased the temperature by 11 degrees",
-                  }
+            "text": "decreased temperature by 11 degrees",
+          }
         ],
         "ExpectedUserPerceivedLatency": 1500
       }
@@ -289,7 +289,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "Raised the temperature by 15 degrees",
+            "text": "raised temperature by 15 degrees",
                   }
         ],
         "ExpectedUserPerceivedLatency": 1500
