@@ -1,11 +1,28 @@
 [
   {
     "DialogID": "0",
-    "Description": "Testing 'turn it'",
+    "Description": "Testing fallback 0",
     "Turns": [
       {
         "TurnID": 0,
         "Utterance": "turn it",
+        "ExpectedResponses": [
+          {
+            "type": "message",
+            "text": "Sorry. I didn't quite catch that || I'm not sure what you meant by that",
+          }
+        ],
+        "ExpectedUserPerceivedLatency": 1500
+      }
+    ]
+  },
+  {
+    "DialogID": "1",
+    "Description": "Testing fallback 1",
+    "Turns": [
+      {
+        "TurnID": 0,
+        "Utterance": "some other sentence",
         "ExpectedResponses": [
           {
             "type": "message",

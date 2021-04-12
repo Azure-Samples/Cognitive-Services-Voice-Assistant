@@ -1,358 +1,143 @@
 {
-  "entityResolver": {
-    "searchConfiguration": {
-      "maxEdits": 0
+  "en-us": {
+    "entityResolver": {
+      "type": "nop",
+      "isGenerated": true
     },
-    "type": "internal",
-    "isGenerated": true
-  },
-  "minIntentConfidence": 0.4,
-  "highIntentConfidence": 0.8,
-  "lgTemplates": [
-    "# TurnOnOffOnOff",
-    "- On or off?",
-    "# FallbackResponse",
-    "- Sorry. I didn't quite catch that",
-    "- I'm not sure what you meant by that",
-    "# TurnOnOff018c4f40f60611e983fdc18f91071749",
-    "- Do you want to turn the {SubjectDevice} on or off?",
-    "# TurnOnOff4ddcb360f68a11e98172955537a61383",
-    "- Which device would you like to turn {OnOff}",
-    "# Greetingd2c13e90f6c911e9bca021cff54309b1",
-    "- Hello!",
-    "# ChangeTemperature9ba967d0f6cd11e9bca021cff54309b1",
-    "- done with completion",
-    "# ChangeTemperaturee1b6e860f6cd11e9bca021cff54309b1",
-    "- Ok, making it {RelativeTemp} degrees {Operation}",
-    "# ChangeTemperature48ed06e0f6ce11e9bca021cff54309b1",
-    "- Ok, setting the temperature to {AbsoluteTemp} degrees",
-    "# ChangeTemperature40bf1ac0f6cf11e9bca021cff54309b1",
-    "- Did you want to raise, lower, or set the temperature?",
-    "# ChangeTemperature2efd22d0f6d111e99fd8b594ce7b4790",
-    "- How much {Operation}?",
-    "# ChangeTemperature90240bf0f6d111e99fd8b594ce7b4790",
-    "- What temperature would you like?",
-    "# ChangeTemperatureAbsoluteTemp64fbfa60f6cb11e9bca021cff54309b1",
-    "- I can only set between 68 and 80 degrees.  What temperature would you like?",
-    "# OpenCloseSubject",
-    "- What did you want to open or close?",
-    "# OpenCloseOperation",
-    "- Open or close?",
-    "# OpenClose09744ab0f76311e99a6fcd7a5ee28487",
-    "- IF: @{Operation == \"open\"}",
-    "    - All right, opening the {Subject}",
-    "- ELSE:",
-    "    - All right, closing the {Subject}",
-    "# OpenClose5ac70780f77811e9a646c5f4b0d53c23",
-    "- What do you want to {OpenCloseOperation}?",
-    "# SetTemperatureAbsoluteTemperature",
-    "- What temperature do you want to set it to?",
-    "# SetTemperatureAbsoluteTemperature4bb83bd0fb6311e9a23949c0df95331c",
-    "- I can only set between 68 and 80 degrees.  What temperature would you like?",
-    "# OpenCloseOpenCloseOperation",
-    "- Open or close?",
-    "# Helpeca6e6c0fcd711e99e14f1746e26f855",
-    "- Hi, I am your friendly room assistant. I can control the lights, tv and blinds and set the room temperature. Try saying \"computer turn on the bath room light\".",
-    "# TurnOnOffSubjectDevice",
-    "- Which device do you want to control?",
-    "# OpenCloseOpenCloseSubject",
-    "- What do you want to open or close?",
-    "# AdjustTemperatureRoomControlBackendonSuccess6f417f9028d511ea8118bdb0a739e346",
-    "- Type your response(s) here.",
-    "# AdjustTemperatureRoomControlBackendonFailure6f417f9028d511ea8118bdb0a739e346",
-    "- Type your response(s) here.",
-    "# AdjustTemperatureRoomControlBackendonFailurea574afc028de11ea83cf95b9c7d5480f",
-    "- Sorry, not able to connect to the room control service right now",
-    "# AdjustTemperatureRoomControlBackendonSuccess09d9fb0028df11ea83cf95b9c7d5480f",
-    "- Type your response(s) here.",
-    "# AdjustTemperatureRoomControlBackendonFailure09d9fb0028df11ea83cf95b9c7d5480f",
-    "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperature5fef7c9028df11ea83cf95b9c7d5480f",
-    "- You can only adjust the temperature by a max of 15 degrees",
-    "# AdjustTemperatureRoomControlBackendonSuccesscaf2819028df11ea83cf95b9c7d5480f",
-    "- Type your response(s) here.",
-    "# AdjustTemperatureRoomControlBackendonFailurecaf2819028df11ea83cf95b9c7d5480f",
-    "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperature8a3cb0c028e011ea83cf95b9c7d5480f",
-    "- You can only adjust the temperature by a max of 15 degrees. How much do you want to adjust it?",
-    "# AdjustTemperatureTemperature",
-    "- How much do you want to change the temperature by?",
-    "- By how many degrees?",
-    "# AdjustTemperatureRoomControlBackendonSuccess64368a3028e111eaaf158b43807e75e2",
-    "- Type your response(s) here.",
-    "# AdjustTemperatureRoomControlBackendonFailure64368a3028e111eaaf158b43807e75e2",
-    "- Sorry, not able to connect to the room control service right now",
-    "# AdjustTemperatureRoomControlBackendonSuccess958d9ce028e111eaaf158b43807e75e2",
-    "- Type your response(s) here.",
-    "# AdjustTemperatureRoomControlBackendonFailure958d9ce028e111eaaf158b43807e75e2",
-    "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperatureRoomControlBackendonSuccessd002848028e111eaaf158b43807e75e2",
-    "- Type your response(s) here.",
-    "# AdjustTemperatureRoomControlBackendonFailured002848028e111eaaf158b43807e75e2",
-    "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperature2c2602f028e211eaaf158b43807e75e2",
-    "- Do you want to make it warmer or cooler?",
-    "# AdjustTemperature571bc8a028e211eaaf158b43807e75e2",
-    "- What temperature do you want to set it to?",
-    "# AdjustTemperatureRoomControlBackendonSuccess287895e028e311ea8db34fd5c8a135ab",
-    "- {RoomControlBackend.Message}",
-    "# AdjustTemperatureRoomControlBackendonFailure287895e028e311ea8db34fd5c8a135ab",
-    "- Sorry, not able to connect to the room control service right now",
-    "# AdjustTemperatureRoomControlBackendonSuccess43dd866028e311ea8db34fd5c8a135ab",
-    "- {RoomControlBackend.Message}",
-    "# AdjustTemperatureRoomControlBackendonFailure43dd866028e311ea8db34fd5c8a135ab",
-    "- Sorry, not able to connect to the room control service right now",
-    "# AdjustTemperatureRoomControlBackendonFailure76ee7e1028e311ea8db34fd5c8a135ab",
-    "- Sorry, unable to connect to the room control service right now",
-    "# AdjustTemperature4519903028e011ea83cf95b9c7d5480f",
-    "- I can only set between 68 and 80 degrees.  What temperature would you like?",
-    "# AdjustTemperatureRoomControlBackendonSuccessfd34ee9028f311ea88cde3d2ef24c102",
-    "- {RoomControlBackend.Message}",
-    "# AdjustTemperatureRoomControlBackendonFailurefd34ee9028f311ea88cde3d2ef24c102",
-    "- Sorry, unable to connect to the room control service right now",
-    "# OnOffAsBool",
-    "- IF: ${OnOff == 'on'}",
-    "    - True",
-    "- ELSE:",
-    "    - False",
-    "# AdjustTemperature-RoomControlBackendonSuccess-43dd866028e311ea8db34fd5c8a135ab",
-    "- Raised the temperature by {Temperature} degrees.",
-    "# AdjustTemperature-RoomControlBackendonFailure-43dd866028e311ea8db34fd5c8a135ab",
-    "- Sorry, not able to connect to the room control service right now",
-    "# AdjustTemperature-RoomControlBackendonSuccess-287895e028e311ea8db34fd5c8a135ab",
-    "- Decreased the temperature by {Temperature} degrees.",
-    "# AdjustTemperature-RoomControlBackendonFailure-287895e028e311ea8db34fd5c8a135ab",
-    "- Sorry, not able to connect to the room control service right now",
-    "# AdjustTemperature-RoomControlBackendonSuccess-fd34ee9028f311ea88cde3d2ef24c102",
-    "- Set the temperature to {Temperature} degrees.",
-    "# AdjustTemperature-RoomControlBackendonFailure-fd34ee9028f311ea88cde3d2ef24c102",
-    "- Sorry, unable to connect to the room control service right now",
-    "# TurnOnOff-RoomControlBackendonSuccess-7ca4cca000e411ea97e43706794592d8",
-    "> TV",
-    "- IF: ${SubjectDevice == 'tv' && OnOff == 'on' && clientContext.Television == true}",
-    "    - TV is already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'tv' && OnOff == 'off' && clientContext.Television == false}",
-    "    - TV is already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'tv'}",
-    "    - Ok, turning {OnOff} the TV.",
-    "> AC",
-    "- ELSEIF: ${SubjectDevice == 'ac' && OnOff == 'on' && clientContext.AC == true}",
-    "    - AC is already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'ac' && OnOff == 'off' && clientContext.AC == false}",
-    "    - AC is already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'ac'}",
-    "    - Ok, turning {OnOff} the AC.",
-    "> Lights - all",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'all' && OnOff == 'on' && clientContext.Lights_room == true && clientContext.Lights_bathroom == true}",
-    "    - All lights are already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'all' && OnOff == 'off' && clientContext.Lights_room == false && clientContext.Lights_bathroom == false}",
-    "    - All lights are already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'all'}",
-    "    - Turning {OnOff} all the lights.",
-    "> Lights - room",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room' && OnOff == 'on' && clientContext.Lights_room == true}",
-    "    - Room lights are already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room' && OnOff == 'off' && clientContext.Lights_room == false}",
-    "    - Room lights are already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room'}",
-    "    - Turning {OnOff} the room lights.",
-    "> Lights - bathroom",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom' && OnOff == 'on' && clientContext.Lights_bathroom == true}",
-    "    - Bathroom lights are already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom' && OnOff == 'off' && clientContext.Lights_bathroom == false}",
-    "    - Bathroom lights are already {OnOff}.",
-    "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom'}",
-    "    - Turning {OnOff} the room lights.",
-    "# TurnOnOff-RoomControlBackendonFailure-7ca4cca000e411ea97e43706794592d8",
-    "- Sorry, unable to connect to the room control service right now.",
-    "# OpenClose-RoomControlBackendonSuccess-9bd92d20fc2d11e9bf63b974d90bef6c",
-    "> Blinds",
-    "- IF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'open' && clientContext.Blinds == true}",
-    "    - The blinds have already been opened.",
-    "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'close' && clientContext.Blinds == false}",
-    "    - The blinds have already been closed.",
-    "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'open'}",
-    "    - Alright, opening the blinds.",
-    "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'close'}",
-    "    - Alright, closing the blinds.",
-    "# OpenClose-RoomControlBackendonFailure-9bd92d20fc2d11e9bf63b974d90bef6c",
-    "- Sorry, unable to connect to the room control service right now"
-  ],
-  "lgTemplatesMap": {
-    "# TurnOnOffOnOff": [
-      "- On or off?"
-    ],
-    "# FallbackResponse": [
+    "minIntentConfidence": 0.4,
+    "highIntentConfidence": 0.8,
+    "lgTemplates": [
+      "# TurnOnOffOnOff",
+      "- On or off?",
+      "# FallbackResponse",
       "- Sorry. I didn't quite catch that",
-      "- I'm not sure what you meant by that"
-    ],
-    "# TurnOnOff018c4f40f60611e983fdc18f91071749": [
-      "- Do you want to turn the {SubjectDevice} on or off?"
-    ],
-    "# TurnOnOff4ddcb360f68a11e98172955537a61383": [
-      "- Which device would you like to turn {OnOff}"
-    ],
-    "# Greetingd2c13e90f6c911e9bca021cff54309b1": [
-      "- Hello!"
-    ],
-    "# ChangeTemperature9ba967d0f6cd11e9bca021cff54309b1": [
-      "- done with completion"
-    ],
-    "# ChangeTemperaturee1b6e860f6cd11e9bca021cff54309b1": [
-      "- Ok, making it {RelativeTemp} degrees {Operation}"
-    ],
-    "# ChangeTemperature48ed06e0f6ce11e9bca021cff54309b1": [
-      "- Ok, setting the temperature to {AbsoluteTemp} degrees"
-    ],
-    "# ChangeTemperature40bf1ac0f6cf11e9bca021cff54309b1": [
-      "- Did you want to raise, lower, or set the temperature?"
-    ],
-    "# ChangeTemperature2efd22d0f6d111e99fd8b594ce7b4790": [
-      "- How much {Operation}?"
-    ],
-    "# ChangeTemperature90240bf0f6d111e99fd8b594ce7b4790": [
-      "- What temperature would you like?"
-    ],
-    "# ChangeTemperatureAbsoluteTemp64fbfa60f6cb11e9bca021cff54309b1": [
-      "- I can only set between 68 and 80 degrees.  What temperature would you like?"
-    ],
-    "# OpenCloseSubject": [
-      "- What did you want to open or close?"
-    ],
-    "# OpenCloseOperation": [
-      "- Open or close?"
-    ],
-    "# OpenClose09744ab0f76311e99a6fcd7a5ee28487": [
+      "- I'm not sure what you meant by that",
+      "# TurnOnOff018c4f40f60611e983fdc18f91071749",
+      "- Do you want to turn the {SubjectDevice} on or off?",
+      "# TurnOnOff4ddcb360f68a11e98172955537a61383",
+      "- Which device would you like to turn {OnOff}",
+      "# Greetingd2c13e90f6c911e9bca021cff54309b1",
+      "- Hello!",
+      "# ChangeTemperature9ba967d0f6cd11e9bca021cff54309b1",
+      "- done with completion",
+      "# ChangeTemperaturee1b6e860f6cd11e9bca021cff54309b1",
+      "- Ok, making it {RelativeTemp} degrees {Operation}",
+      "# ChangeTemperature48ed06e0f6ce11e9bca021cff54309b1",
+      "- Ok, setting the temperature to {AbsoluteTemp} degrees",
+      "# ChangeTemperature40bf1ac0f6cf11e9bca021cff54309b1",
+      "- Did you want to raise, lower, or set the temperature?",
+      "# ChangeTemperature2efd22d0f6d111e99fd8b594ce7b4790",
+      "- How much {Operation}?",
+      "# ChangeTemperature90240bf0f6d111e99fd8b594ce7b4790",
+      "- What temperature would you like?",
+      "# ChangeTemperatureAbsoluteTemp64fbfa60f6cb11e9bca021cff54309b1",
+      "- I can only set between 68 and 80 degrees.  What temperature would you like?",
+      "# OpenCloseSubject",
+      "- What did you want to open or close?",
+      "# OpenCloseOperation",
+      "- Open or close?",
+      "# OpenClose09744ab0f76311e99a6fcd7a5ee28487",
       "- IF: @{Operation == \"open\"}",
       "    - All right, opening the {Subject}",
       "- ELSE:",
-      "    - All right, closing the {Subject}"
-    ],
-    "# OpenClose5ac70780f77811e9a646c5f4b0d53c23": [
-      "- What do you want to {OpenCloseOperation}?"
-    ],
-    "# SetTemperatureAbsoluteTemperature": [
-      "- What temperature do you want to set it to?"
-    ],
-    "# SetTemperatureAbsoluteTemperature4bb83bd0fb6311e9a23949c0df95331c": [
-      "- I can only set between 68 and 80 degrees.  What temperature would you like?"
-    ],
-    "# OpenCloseOpenCloseOperation": [
-      "- Open or close?"
-    ],
-    "# Helpeca6e6c0fcd711e99e14f1746e26f855": [
-      "- Hi, I am your friendly room assistant. I can control the lights, tv and blinds and set the room temperature. Try saying \"computer turn on the bath room light\"."
-    ],
-    "# TurnOnOffSubjectDevice": [
-      "- Which device do you want to control?"
-    ],
-    "# OpenCloseOpenCloseSubject": [
-      "- What do you want to open or close?"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccess6f417f9028d511ea8118bdb0a739e346": [
-      "- Type your response(s) here."
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailure6f417f9028d511ea8118bdb0a739e346": [
-      "- Type your response(s) here."
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailurea574afc028de11ea83cf95b9c7d5480f": [
-      "- Sorry, not able to connect to the room control service right now"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccess09d9fb0028df11ea83cf95b9c7d5480f": [
-      "- Type your response(s) here."
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailure09d9fb0028df11ea83cf95b9c7d5480f": [
-      "- Sorry, unable to connect to the room control service right now"
-    ],
-    "# AdjustTemperature5fef7c9028df11ea83cf95b9c7d5480f": [
-      "- You can only adjust the temperature by a max of 15 degrees"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccesscaf2819028df11ea83cf95b9c7d5480f": [
-      "- Type your response(s) here."
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailurecaf2819028df11ea83cf95b9c7d5480f": [
-      "- Sorry, unable to connect to the room control service right now"
-    ],
-    "# AdjustTemperature8a3cb0c028e011ea83cf95b9c7d5480f": [
-      "- You can only adjust the temperature by a max of 15 degrees. How much do you want to adjust it?"
-    ],
-    "# AdjustTemperatureTemperature": [
+      "    - All right, closing the {Subject}",
+      "# OpenClose5ac70780f77811e9a646c5f4b0d53c23",
+      "- What do you want to {OpenCloseOperation}?",
+      "# SetTemperatureAbsoluteTemperature",
+      "- What temperature do you want to set it to?",
+      "# SetTemperatureAbsoluteTemperature4bb83bd0fb6311e9a23949c0df95331c",
+      "- I can only set between 68 and 80 degrees.  What temperature would you like?",
+      "# OpenCloseOpenCloseOperation",
+      "- Open or close?",
+      "# Helpeca6e6c0fcd711e99e14f1746e26f855",
+      "- Hi, I am your friendly room assistant. I can control the lights, tv and blinds and set the room temperature. Try saying \"computer turn on the bath room light\".",
+      "# OpenCloseOpenCloseSubject",
+      "- What do you want to open or close?",
+      "# AdjustTemperatureRoomControlBackendonSuccess6f417f9028d511ea8118bdb0a739e346",
+      "- Type your response(s) here.",
+      "# AdjustTemperatureRoomControlBackendonFailure6f417f9028d511ea8118bdb0a739e346",
+      "- Type your response(s) here.",
+      "# AdjustTemperatureRoomControlBackendonFailurea574afc028de11ea83cf95b9c7d5480f",
+      "- Sorry, not able to connect to the room control service right now",
+      "# AdjustTemperatureRoomControlBackendonSuccess09d9fb0028df11ea83cf95b9c7d5480f",
+      "- Type your response(s) here.",
+      "# AdjustTemperatureRoomControlBackendonFailure09d9fb0028df11ea83cf95b9c7d5480f",
+      "- Sorry, unable to connect to the room control service right now",
+      "# AdjustTemperature5fef7c9028df11ea83cf95b9c7d5480f",
+      "- You can only adjust the temperature by a max of 15 degrees",
+      "# AdjustTemperatureRoomControlBackendonSuccesscaf2819028df11ea83cf95b9c7d5480f",
+      "- Type your response(s) here.",
+      "# AdjustTemperatureRoomControlBackendonFailurecaf2819028df11ea83cf95b9c7d5480f",
+      "- Sorry, unable to connect to the room control service right now",
+      "# AdjustTemperature8a3cb0c028e011ea83cf95b9c7d5480f",
+      "- You can only adjust the temperature by a max of 15 degrees. How much do you want to adjust it?",
+      "# AdjustTemperatureTemperature",
       "- How much do you want to change the temperature by?",
-      "- By how many degrees?"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccess64368a3028e111eaaf158b43807e75e2": [
-      "- Type your response(s) here."
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailure64368a3028e111eaaf158b43807e75e2": [
-      "- Sorry, not able to connect to the room control service right now"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccess958d9ce028e111eaaf158b43807e75e2": [
-      "- Type your response(s) here."
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailure958d9ce028e111eaaf158b43807e75e2": [
-      "- Sorry, unable to connect to the room control service right now"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccessd002848028e111eaaf158b43807e75e2": [
-      "- Type your response(s) here."
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailured002848028e111eaaf158b43807e75e2": [
-      "- Sorry, unable to connect to the room control service right now"
-    ],
-    "# AdjustTemperature2c2602f028e211eaaf158b43807e75e2": [
-      "- Do you want to make it warmer or cooler?"
-    ],
-    "# AdjustTemperature571bc8a028e211eaaf158b43807e75e2": [
-      "- What temperature do you want to set it to?"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccess287895e028e311ea8db34fd5c8a135ab": [
-      "- {RoomControlBackend.Message}"
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailure287895e028e311ea8db34fd5c8a135ab": [
-      "- Sorry, not able to connect to the room control service right now"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccess43dd866028e311ea8db34fd5c8a135ab": [
-      "- {RoomControlBackend.Message}"
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailure43dd866028e311ea8db34fd5c8a135ab": [
-      "- Sorry, not able to connect to the room control service right now"
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailure76ee7e1028e311ea8db34fd5c8a135ab": [
-      "- Sorry, unable to connect to the room control service right now"
-    ],
-    "# AdjustTemperature4519903028e011ea83cf95b9c7d5480f": [
-      "- I can only set between 68 and 80 degrees.  What temperature would you like?"
-    ],
-    "# AdjustTemperatureRoomControlBackendonSuccessfd34ee9028f311ea88cde3d2ef24c102": [
-      "- {RoomControlBackend.Message}"
-    ],
-    "# AdjustTemperatureRoomControlBackendonFailurefd34ee9028f311ea88cde3d2ef24c102": [
-      "- Sorry, unable to connect to the room control service right now"
-    ],
-    "# OnOffAsBool": [
+      "- By how many degrees?",
+      "# AdjustTemperatureRoomControlBackendonSuccess64368a3028e111eaaf158b43807e75e2",
+      "- Type your response(s) here.",
+      "# AdjustTemperatureRoomControlBackendonFailure64368a3028e111eaaf158b43807e75e2",
+      "- Sorry, not able to connect to the room control service right now",
+      "# AdjustTemperatureRoomControlBackendonSuccess958d9ce028e111eaaf158b43807e75e2",
+      "- Type your response(s) here.",
+      "# AdjustTemperatureRoomControlBackendonFailure958d9ce028e111eaaf158b43807e75e2",
+      "- Sorry, unable to connect to the room control service right now",
+      "# AdjustTemperatureRoomControlBackendonSuccessd002848028e111eaaf158b43807e75e2",
+      "- Type your response(s) here.",
+      "# AdjustTemperatureRoomControlBackendonFailured002848028e111eaaf158b43807e75e2",
+      "- Sorry, unable to connect to the room control service right now",
+      "# AdjustTemperature2c2602f028e211eaaf158b43807e75e2",
+      "- Do you want to make it warmer or cooler?",
+      "# AdjustTemperature571bc8a028e211eaaf158b43807e75e2",
+      "- What temperature do you want to set it to?",
+      "# AdjustTemperatureRoomControlBackendonSuccess287895e028e311ea8db34fd5c8a135ab",
+      "- {RoomControlBackend.Message}",
+      "# AdjustTemperatureRoomControlBackendonFailure287895e028e311ea8db34fd5c8a135ab",
+      "- Sorry, not able to connect to the room control service right now",
+      "# AdjustTemperatureRoomControlBackendonSuccess43dd866028e311ea8db34fd5c8a135ab",
+      "- {RoomControlBackend.Message}",
+      "# AdjustTemperatureRoomControlBackendonFailure43dd866028e311ea8db34fd5c8a135ab",
+      "- Sorry, not able to connect to the room control service right now",
+      "# AdjustTemperatureRoomControlBackendonFailure76ee7e1028e311ea8db34fd5c8a135ab",
+      "- Sorry, unable to connect to the room control service right now",
+      "# AdjustTemperature4519903028e011ea83cf95b9c7d5480f",
+      "- I can only set between 68 and 80 degrees.  What temperature would you like?",
+      "# AdjustTemperatureRoomControlBackendonSuccessfd34ee9028f311ea88cde3d2ef24c102",
+      "- {RoomControlBackend.Message}",
+      "# AdjustTemperatureRoomControlBackendonFailurefd34ee9028f311ea88cde3d2ef24c102",
+      "- Sorry, unable to connect to the room control service right now",
+      "# OnOffAsBool",
       "- IF: ${OnOff == 'on'}",
       "    - True",
       "- ELSE:",
-      "    - False"
-    ],
-    "# AdjustTemperature-RoomControlBackendonSuccess-43dd866028e311ea8db34fd5c8a135ab": [
-      "- Raised the temperature by {Temperature} degrees."
-    ],
-    "# AdjustTemperature-RoomControlBackendonFailure-43dd866028e311ea8db34fd5c8a135ab": [
-      "- Sorry, not able to connect to the room control service right now"
-    ],
-    "# AdjustTemperature-RoomControlBackendonSuccess-287895e028e311ea8db34fd5c8a135ab": [
-      "- Decreased the temperature by {Temperature} degrees."
-    ],
-    "# AdjustTemperature-RoomControlBackendonFailure-287895e028e311ea8db34fd5c8a135ab": [
-      "- Sorry, not able to connect to the room control service right now"
-    ],
-    "# AdjustTemperature-RoomControlBackendonSuccess-fd34ee9028f311ea88cde3d2ef24c102": [
-      "- Set the temperature to {Temperature} degrees."
-    ],
-    "# AdjustTemperature-RoomControlBackendonFailure-fd34ee9028f311ea88cde3d2ef24c102": [
-      "- Sorry, unable to connect to the room control service right now"
-    ],
-    "# TurnOnOff-RoomControlBackendonSuccess-7ca4cca000e411ea97e43706794592d8": [
+      "    - False",
+      "# AdjustTemperature-RoomControlBackendonSuccess-43dd866028e311ea8db34fd5c8a135ab",
+      "- Raised the temperature by {Temperature} degrees.",
+      "# AdjustTemperature-RoomControlBackendonFailure-43dd866028e311ea8db34fd5c8a135ab",
+      "- Sorry, not able to connect to the room control service right now",
+      "# AdjustTemperature-RoomControlBackendonSuccess-287895e028e311ea8db34fd5c8a135ab",
+      "- Decreased the temperature by {Temperature} degrees.",
+      "# AdjustTemperature-RoomControlBackendonFailure-287895e028e311ea8db34fd5c8a135ab",
+      "- Sorry, not able to connect to the room control service right now",
+      "# AdjustTemperature-RoomControlBackendonSuccess-fd34ee9028f311ea88cde3d2ef24c102",
+      "- Set the temperature to {Temperature} degrees.",
+      "# AdjustTemperature-RoomControlBackendonFailure-fd34ee9028f311ea88cde3d2ef24c102",
+      "- Sorry, unable to connect to the room control service right now",
+      "# OpenClose-RoomControlBackendonSuccess-9bd92d20fc2d11e9bf63b974d90bef6c",
+      "> Blinds",
+      "- IF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'open' && clientContext.Blinds == true}",
+      "    - The blinds have already been opened.",
+      "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'close' && clientContext.Blinds == false}",
+      "    - The blinds have already been closed.",
+      "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'open'}",
+      "    - Alright, opening the blinds.",
+      "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'close'}",
+      "    - Alright, closing the blinds.",
+      "# OpenClose-RoomControlBackendonFailure-9bd92d20fc2d11e9bf63b974d90bef6c",
+      "- Sorry, unable to connect to the room control service right now",
+      "# TurnOnOffSubjectDevice",
+      "- Which device do you want to control?",
+      "# TurnOnOff-RoomControlBackendonSuccess-7ca4cca000e411ea97e43706794592d8",
       "> TV",
       "- IF: ${SubjectDevice == 'tv' && OnOff == 'on' && clientContext.Television == true}",
       "    - TV is already {OnOff}.",
@@ -373,931 +158,1145 @@
       "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'all' && OnOff == 'off' && clientContext.Lights_room == false && clientContext.Lights_bathroom == false}",
       "    - All lights are already {OnOff}.",
       "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'all'}",
-      "    - Turning {OnOff} all the lights.",
+      "    - Ok, Turning {OnOff} all the lights.",
       "> Lights - room",
       "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room' && OnOff == 'on' && clientContext.Lights_room == true}",
       "    - Room lights are already {OnOff}.",
       "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room' && OnOff == 'off' && clientContext.Lights_room == false}",
       "    - Room lights are already {OnOff}.",
       "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room'}",
-      "    - Turning {OnOff} the room lights.",
+      "    - Ok, Turning {OnOff} the room lights.",
       "> Lights - bathroom",
       "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom' && OnOff == 'on' && clientContext.Lights_bathroom == true}",
       "    - Bathroom lights are already {OnOff}.",
       "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom' && OnOff == 'off' && clientContext.Lights_bathroom == false}",
       "    - Bathroom lights are already {OnOff}.",
       "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom'}",
-      "    - Turning {OnOff} the room lights."
-    ],
-    "# TurnOnOff-RoomControlBackendonFailure-7ca4cca000e411ea97e43706794592d8": [
+      "    - Ok, Turning {OnOff} the bathroom lights.",
+      "# TurnOnOff-RoomControlBackendonFailure-7ca4cca000e411ea97e43706794592d8",
       "- Sorry, unable to connect to the room control service right now."
     ],
-    "# OpenClose-RoomControlBackendonSuccess-9bd92d20fc2d11e9bf63b974d90bef6c": [
-      "> Blinds",
-      "- IF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'open' && clientContext.Blinds == true}",
-      "    - The blinds have already been opened.",
-      "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'close' && clientContext.Blinds == false}",
-      "    - The blinds have already been closed.",
-      "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'open'}",
-      "    - Alright, opening the blinds.",
-      "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'close'}",
-      "    - Alright, closing the blinds."
+    "lgTemplatesMap": {
+      "# TurnOnOffOnOff": [
+        "- On or off?"
+      ],
+      "# FallbackResponse": [
+        "- Sorry. I didn't quite catch that",
+        "- I'm not sure what you meant by that"
+      ],
+      "# TurnOnOff018c4f40f60611e983fdc18f91071749": [
+        "- Do you want to turn the {SubjectDevice} on or off?"
+      ],
+      "# TurnOnOff4ddcb360f68a11e98172955537a61383": [
+        "- Which device would you like to turn {OnOff}"
+      ],
+      "# Greetingd2c13e90f6c911e9bca021cff54309b1": [
+        "- Hello!"
+      ],
+      "# ChangeTemperature9ba967d0f6cd11e9bca021cff54309b1": [
+        "- done with completion"
+      ],
+      "# ChangeTemperaturee1b6e860f6cd11e9bca021cff54309b1": [
+        "- Ok, making it {RelativeTemp} degrees {Operation}"
+      ],
+      "# ChangeTemperature48ed06e0f6ce11e9bca021cff54309b1": [
+        "- Ok, setting the temperature to {AbsoluteTemp} degrees"
+      ],
+      "# ChangeTemperature40bf1ac0f6cf11e9bca021cff54309b1": [
+        "- Did you want to raise, lower, or set the temperature?"
+      ],
+      "# ChangeTemperature2efd22d0f6d111e99fd8b594ce7b4790": [
+        "- How much {Operation}?"
+      ],
+      "# ChangeTemperature90240bf0f6d111e99fd8b594ce7b4790": [
+        "- What temperature would you like?"
+      ],
+      "# ChangeTemperatureAbsoluteTemp64fbfa60f6cb11e9bca021cff54309b1": [
+        "- I can only set between 68 and 80 degrees.  What temperature would you like?"
+      ],
+      "# OpenCloseSubject": [
+        "- What did you want to open or close?"
+      ],
+      "# OpenCloseOperation": [
+        "- Open or close?"
+      ],
+      "# OpenClose09744ab0f76311e99a6fcd7a5ee28487": [
+        "- IF: @{Operation == \"open\"}",
+        "    - All right, opening the {Subject}",
+        "- ELSE:",
+        "    - All right, closing the {Subject}"
+      ],
+      "# OpenClose5ac70780f77811e9a646c5f4b0d53c23": [
+        "- What do you want to {OpenCloseOperation}?"
+      ],
+      "# SetTemperatureAbsoluteTemperature": [
+        "- What temperature do you want to set it to?"
+      ],
+      "# SetTemperatureAbsoluteTemperature4bb83bd0fb6311e9a23949c0df95331c": [
+        "- I can only set between 68 and 80 degrees.  What temperature would you like?"
+      ],
+      "# OpenCloseOpenCloseOperation": [
+        "- Open or close?"
+      ],
+      "# Helpeca6e6c0fcd711e99e14f1746e26f855": [
+        "- Hi, I am your friendly room assistant. I can control the lights, tv and blinds and set the room temperature. Try saying \"computer turn on the bath room light\"."
+      ],
+      "# OpenCloseOpenCloseSubject": [
+        "- What do you want to open or close?"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccess6f417f9028d511ea8118bdb0a739e346": [
+        "- Type your response(s) here."
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailure6f417f9028d511ea8118bdb0a739e346": [
+        "- Type your response(s) here."
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailurea574afc028de11ea83cf95b9c7d5480f": [
+        "- Sorry, not able to connect to the room control service right now"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccess09d9fb0028df11ea83cf95b9c7d5480f": [
+        "- Type your response(s) here."
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailure09d9fb0028df11ea83cf95b9c7d5480f": [
+        "- Sorry, unable to connect to the room control service right now"
+      ],
+      "# AdjustTemperature5fef7c9028df11ea83cf95b9c7d5480f": [
+        "- You can only adjust the temperature by a max of 15 degrees"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccesscaf2819028df11ea83cf95b9c7d5480f": [
+        "- Type your response(s) here."
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailurecaf2819028df11ea83cf95b9c7d5480f": [
+        "- Sorry, unable to connect to the room control service right now"
+      ],
+      "# AdjustTemperature8a3cb0c028e011ea83cf95b9c7d5480f": [
+        "- You can only adjust the temperature by a max of 15 degrees. How much do you want to adjust it?"
+      ],
+      "# AdjustTemperatureTemperature": [
+        "- How much do you want to change the temperature by?",
+        "- By how many degrees?"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccess64368a3028e111eaaf158b43807e75e2": [
+        "- Type your response(s) here."
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailure64368a3028e111eaaf158b43807e75e2": [
+        "- Sorry, not able to connect to the room control service right now"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccess958d9ce028e111eaaf158b43807e75e2": [
+        "- Type your response(s) here."
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailure958d9ce028e111eaaf158b43807e75e2": [
+        "- Sorry, unable to connect to the room control service right now"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccessd002848028e111eaaf158b43807e75e2": [
+        "- Type your response(s) here."
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailured002848028e111eaaf158b43807e75e2": [
+        "- Sorry, unable to connect to the room control service right now"
+      ],
+      "# AdjustTemperature2c2602f028e211eaaf158b43807e75e2": [
+        "- Do you want to make it warmer or cooler?"
+      ],
+      "# AdjustTemperature571bc8a028e211eaaf158b43807e75e2": [
+        "- What temperature do you want to set it to?"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccess287895e028e311ea8db34fd5c8a135ab": [
+        "- {RoomControlBackend.Message}"
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailure287895e028e311ea8db34fd5c8a135ab": [
+        "- Sorry, not able to connect to the room control service right now"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccess43dd866028e311ea8db34fd5c8a135ab": [
+        "- {RoomControlBackend.Message}"
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailure43dd866028e311ea8db34fd5c8a135ab": [
+        "- Sorry, not able to connect to the room control service right now"
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailure76ee7e1028e311ea8db34fd5c8a135ab": [
+        "- Sorry, unable to connect to the room control service right now"
+      ],
+      "# AdjustTemperature4519903028e011ea83cf95b9c7d5480f": [
+        "- I can only set between 68 and 80 degrees.  What temperature would you like?"
+      ],
+      "# AdjustTemperatureRoomControlBackendonSuccessfd34ee9028f311ea88cde3d2ef24c102": [
+        "- {RoomControlBackend.Message}"
+      ],
+      "# AdjustTemperatureRoomControlBackendonFailurefd34ee9028f311ea88cde3d2ef24c102": [
+        "- Sorry, unable to connect to the room control service right now"
+      ],
+      "# OnOffAsBool": [
+        "- IF: ${OnOff == 'on'}",
+        "    - True",
+        "- ELSE:",
+        "    - False"
+      ],
+      "# AdjustTemperature-RoomControlBackendonSuccess-43dd866028e311ea8db34fd5c8a135ab": [
+        "- Raised the temperature by {Temperature} degrees."
+      ],
+      "# AdjustTemperature-RoomControlBackendonFailure-43dd866028e311ea8db34fd5c8a135ab": [
+        "- Sorry, not able to connect to the room control service right now"
+      ],
+      "# AdjustTemperature-RoomControlBackendonSuccess-287895e028e311ea8db34fd5c8a135ab": [
+        "- Decreased the temperature by {Temperature} degrees."
+      ],
+      "# AdjustTemperature-RoomControlBackendonFailure-287895e028e311ea8db34fd5c8a135ab": [
+        "- Sorry, not able to connect to the room control service right now"
+      ],
+      "# AdjustTemperature-RoomControlBackendonSuccess-fd34ee9028f311ea88cde3d2ef24c102": [
+        "- Set the temperature to {Temperature} degrees."
+      ],
+      "# AdjustTemperature-RoomControlBackendonFailure-fd34ee9028f311ea88cde3d2ef24c102": [
+        "- Sorry, unable to connect to the room control service right now"
+      ],
+      "# OpenClose-RoomControlBackendonSuccess-9bd92d20fc2d11e9bf63b974d90bef6c": [
+        "> Blinds",
+        "- IF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'open' && clientContext.Blinds == true}",
+        "    - The blinds have already been opened.",
+        "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'close' && clientContext.Blinds == false}",
+        "    - The blinds have already been closed.",
+        "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'open'}",
+        "    - Alright, opening the blinds.",
+        "- ELSEIF: ${OpenCloseSubject == 'blinds' && OpenCloseOperation == 'close'}",
+        "    - Alright, closing the blinds."
+      ],
+      "# OpenClose-RoomControlBackendonFailure-9bd92d20fc2d11e9bf63b974d90bef6c": [
+        "- Sorry, unable to connect to the room control service right now"
+      ],
+      "# TurnOnOffSubjectDevice": [
+        "- Which device do you want to control?"
+      ],
+      "# TurnOnOff-RoomControlBackendonSuccess-7ca4cca000e411ea97e43706794592d8": [
+        "> TV",
+        "- IF: ${SubjectDevice == 'tv' && OnOff == 'on' && clientContext.Television == true}",
+        "    - TV is already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'tv' && OnOff == 'off' && clientContext.Television == false}",
+        "    - TV is already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'tv'}",
+        "    - Ok, turning {OnOff} the TV.",
+        "> AC",
+        "- ELSEIF: ${SubjectDevice == 'ac' && OnOff == 'on' && clientContext.AC == true}",
+        "    - AC is already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'ac' && OnOff == 'off' && clientContext.AC == false}",
+        "    - AC is already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'ac'}",
+        "    - Ok, turning {OnOff} the AC.",
+        "> Lights - all",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'all' && OnOff == 'on' && clientContext.Lights_room == true && clientContext.Lights_bathroom == true}",
+        "    - All lights are already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'all' && OnOff == 'off' && clientContext.Lights_room == false && clientContext.Lights_bathroom == false}",
+        "    - All lights are already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'all'}",
+        "    - Ok, Turning {OnOff} all the lights.",
+        "> Lights - room",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room' && OnOff == 'on' && clientContext.Lights_room == true}",
+        "    - Room lights are already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room' && OnOff == 'off' && clientContext.Lights_room == false}",
+        "    - Room lights are already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'room'}",
+        "    - Ok, Turning {OnOff} the room lights.",
+        "> Lights - bathroom",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom' && OnOff == 'on' && clientContext.Lights_bathroom == true}",
+        "    - Bathroom lights are already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom' && OnOff == 'off' && clientContext.Lights_bathroom == false}",
+        "    - Bathroom lights are already {OnOff}.",
+        "- ELSEIF: ${SubjectDevice == 'lights' && SubjectContext == 'bathroom'}",
+        "    - Ok, Turning {OnOff} the bathroom lights."
+      ],
+      "# TurnOnOff-RoomControlBackendonFailure-7ca4cca000e411ea97e43706794592d8": [
+        "- Sorry, unable to connect to the room control service right now."
+      ]
+    },
+    "type": "BaseLanguage",
+    "registeredKeywords": [
+      "abigail",
+      "assistant",
+      "computer",
+      "contohso",
+      "hey front desk",
+      "jayden",
+      "ok speaker"
     ],
-    "# OpenClose-RoomControlBackendonFailure-9bd92d20fc2d11e9bf63b974d90bef6c": [
-      "- Sorry, unable to connect to the room control service right now"
-    ]
-  },
-  "type": "BaseLanguage",
-  "registeredKeywords": [
-    "abigail",
-    "assistant",
-    "computer",
-    "contohso",
-    "hey front desk",
-    "jayden",
-    "ok speaker"
-  ],
-  "webEndpoints": [
-    {
-      "name": "RoomControlBackend",
-      "method": "GET",
-      "url": "https://HospitalityDemo-5227.azurewebsites.net/api/HospitalityDemo",
-      "headers": {
-        "room": "test1",
-        "culture": "en-us"
+    "webEndpoints": [
+      {
+        "name": "RoomControlBackend",
+        "method": "GET",
+        "url": "https://HospitalityDemo-5227.azurewebsites.net/api/HospitalityDemo",
+        "headers": {
+          "room": "test1",
+          "culture": "en-us"
+        },
+        "parameters": {},
+        "sendFrame": false,
+        "updateFrame": false,
+        "remoteUpdate": true
+      }
+    ],
+    "globalParameters": [],
+    "commands": [
+      {
+        "name": "FallbackCommand",
+        "completionStrategy": "OnRequiredParameters",
+        "parameters": [],
+        "rules": [],
+        "completionRules": [
+          {
+            "name": "DefaultResponse",
+            "conditions": [
+              {
+                "type": "True"
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# FallbackResponse"
+                }
+              }
+            ],
+            "postExecutionState": "None"
+          }
+        ],
+        "triggeringExamples": [
+          "> - You can start sentences with '>' to add comments.",
+          "> - You can also use parameters by adding the name of the parameter within curly braces, i.e.",
+          ">   Set an alarm to {YourDateParameterName}",
+          ">   Where YourDateParameterName is the name of a parameter defined in the 'Parameters' section.",
+          "are the blinds closed",
+          "some other sentence"
+        ],
+        "multiTurnExamples": []
       },
-      "parameters": {},
-      "sendFrame": false,
-      "updateFrame": false,
-      "remoteUpdate": true
-    }
-  ],
-  "globalParameters": [],
-  "commands": [
-    {
-      "name": "FallbackCommand",
-      "completionStrategy": "OnRequiredParameters",
-      "parameters": [],
-      "rules": [],
-      "completionRules": [
-        {
-          "name": "DefaultResponse",
-          "conditions": [
-            {
-              "type": "True"
+      {
+        "name": "TurnOnOff",
+        "completionStrategy": "OnRequiredParameters",
+        "parameters": [
+          {
+            "name": "SubjectDevice",
+            "type": {
+              "name": "String",
+              "configuration": {
+                "type": "StringList",
+                "values": {
+                  "tv": [
+                    "television"
+                  ],
+                  "ac": [
+                    "air conditioning"
+                  ],
+                  "lights": [
+                    "light"
+                  ]
+                }
+              }
+            },
+            "elicitResponse": {
+              "type": "Template",
+              "templateName": "# TurnOnOffSubjectDevice"
             }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# FallbackResponse"
+          },
+          {
+            "name": "OnOff",
+            "type": {
+              "name": "String",
+              "configuration": {
+                "type": "StringList",
+                "values": {
+                  "on": [],
+                  "off": []
+                }
+              }
+            },
+            "elicitResponse": {
+              "type": "Template",
+              "templateName": "# TurnOnOffOnOff"
+            }
+          },
+          {
+            "name": "SubjectContext",
+            "type": {
+              "name": "String",
+              "defaultValue": "all",
+              "configuration": {
+                "type": "StringList",
+                "values": {
+                  "room": [],
+                  "bathroom": [],
+                  "all": []
+                }
               }
             }
-          ],
-          "postExecutionState": "None"
-        }
-      ],
-      "triggeringExamples": [
-        "> - You can start sentences with '>' to add comments.",
-        "> - You can also use parameters by adding the name of the parameter within curly braces, i.e.",
-        ">   Set an alarm to {YourDateParameterName}",
-        ">   Where YourDateParameterName is the name of a parameter defined in the 'Parameters' section.",
-        "are the blinds closed",
-        "some other sentence"
-      ],
-      "multiTurnExamples": []
-    },
-    {
-      "name": "TurnOnOff",
-      "completionStrategy": "OnRequiredParameters",
-      "parameters": [
-        {
-          "name": "SubjectDevice",
-          "type": {
-            "name": "String",
-            "configuration": {
-              "type": "StringList",
-              "values": {
-                "TV": [
-                  "television"
-                ],
-                "AC": [
-                  "air conditioning"
-                ],
-                "lights": [
-                  "light"
+          }
+        ],
+        "rules": [
+          {
+            "name": "which device on off?",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "OnOff"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "SubjectDevice",
+                "value": ""
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# TurnOnOff4ddcb360f68a11e98172955537a61383"
+                }
+              }
+            ],
+            "nextTurnExpectations": [
+              {
+                "type": "ElicitParameters",
+                "names": [
+                  "SubjectDevice"
                 ]
               }
-            }
+            ],
+            "postExecutionState": "WaitForInput"
           },
-          "elicitResponse": {
-            "type": "Template",
-            "templateName": "# TurnOnOffSubjectDevice"
-          }
-        },
-        {
-          "name": "OnOff",
-          "type": {
-            "name": "String",
-            "configuration": {
-              "type": "StringList",
-              "values": {
-                "on": [],
-                "off": []
-              }
-            }
-          },
-          "elicitResponse": {
-            "type": "Template",
-            "templateName": "# TurnOnOffOnOff"
-          }
-        },
-        {
-          "name": "SubjectContext",
-          "type": {
-            "name": "String",
-            "defaultValue": "all",
-            "configuration": {
-              "type": "StringList",
-              "values": {
-                "room": [],
-                "bathroom": [],
-                "all": []
-              }
-            }
-          }
-        }
-      ],
-      "rules": [
-        {
-          "name": "which device on off?",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "OnOff"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "SubjectDevice",
-              "value": ""
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# TurnOnOff4ddcb360f68a11e98172955537a61383"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "SubjectDevice"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "device on off",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "SubjectDevice"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "OnOff",
-              "value": ""
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# TurnOnOff018c4f40f60611e983fdc18f91071749"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "OnOff"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        }
-      ],
-      "completionRules": [
-        {
-          "name": "handle completion",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "SubjectContext",
-                "SubjectDevice",
-                "OnOff"
-              ]
-            }
-          ],
-          "actions": [
-            {
-              "type": "CallHttpEndpoint",
-              "name": "RoomControlBackend",
-              "content": {},
-              "parameters": "operation=turn&item={SubjectDevice}&value={OnOff}&instance={SubjectContext}",
-              "onSuccess": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# TurnOnOff-RoomControlBackendonSuccess-7ca4cca000e411ea97e43706794592d8"
-                }
+          {
+            "name": "device on off",
+            "conditions": [
+              {
+                "type": "True"
               },
-              "onFailure": {
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "SubjectDevice"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "OnOff",
+                "value": ""
+              }
+            ],
+            "actions": [
+              {
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# TurnOnOff-RoomControlBackendonFailure-7ca4cca000e411ea97e43706794592d8"
+                  "templateName": "# TurnOnOff018c4f40f60611e983fdc18f91071749"
                 }
               }
-            }
-          ],
-          "nextTurnExpectations": [],
-          "postExecutionState": "None"
-        }
-      ],
-      "triggeringExamples": [
-        "turn it {OnOff}",
-        "turn the {SubjectDevice} {OnOff}",
-        "turn the {SubjectContext} {SubjectDevice} {OnOff}",
-        "turn {OnOff} the {SubjectDevice}",
-        "turn {OnOff} the {SubjectContext} {SubjectDevice}",
-        "turn the {SubjectDevice}",
-        "{SubjectDevice} {OnOff}",
-        "i want the {SubjectDevice} {OnOff}",
-        "{SubjectDevice} to be {OnOff}",
-        "control a device",
-        "i want to control a device",
-        "turn {OnOff}"
-      ]
-    },
-    {
-      "name": "Help",
-      "completionStrategy": "OnRequiredParameters",
-      "parameters": [],
-      "rules": [],
-      "completionRules": [
-        {
-          "name": "Done",
-          "conditions": [
-            {
-              "type": "True"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# Helpeca6e6c0fcd711e99e14f1746e26f855"
-              }
-            }
-          ],
-          "nextTurnExpectations": [],
-          "postExecutionState": "None"
-        }
-      ],
-      "triggeringExamples": [
-        "help me",
-        "what can I do",
-        "what can you do",
-        "i need help",
-        "i need assistance",
-        "help",
-        "i want help",
-        "i want assistance",
-        "can you help",
-        "what do you do",
-        "who are you",
-        "what do i do",
-        "assist me",
-        "help it",
-        "help please",
-        "please help",
-        "what can i say",
-        "what can you say",
-        "what do you say",
-        "what do i say"
-      ]
-    },
-    {
-      "name": "Greeting",
-      "completionStrategy": "OnRequiredParameters",
-      "parameters": [],
-      "rules": [],
-      "completionRules": [
-        {
-          "name": "response",
-          "conditions": [
-            {
-              "type": "True"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# Greetingd2c13e90f6c911e9bca021cff54309b1"
-              }
-            }
-          ],
-          "nextTurnExpectations": [],
-          "postExecutionState": "None"
-        }
-      ],
-      "triggeringExamples": [
-        "hi",
-        "hello",
-        "how are you",
-        "what's up",
-        "how's it going",
-        "how is it going",
-        "the hello",
-        "the hi",
-        "hi hello",
-        "hello how are you",
-        "hi there",
-        "hello there",
-        "hey",
-        "hey hello",
-        "hello man"
-      ]
-    },
-    {
-      "name": "AdjustTemperature",
-      "completionStrategy": "OnRequiredParameters",
-      "parameters": [
-        {
-          "name": "Operation",
-          "type": {
-            "name": "String",
-            "configuration": {
-              "type": "StringList",
-              "values": {
-                "lower": [
-                  "decrease",
-                  "cooler",
-                  "colder",
-                  "turn down",
-                  "lowering",
-                  "cool off",
-                  "reduce",
-                  "drop"
-                ],
-                "raise": [
-                  "increase",
-                  "warmer",
-                  "turn up",
-                  "hotter",
-                  "higher",
-                  "raising"
+            ],
+            "nextTurnExpectations": [
+              {
+                "type": "ElicitParameters",
+                "names": [
+                  "OnOff"
                 ]
               }
-            }
+            ],
+            "postExecutionState": "WaitForInput"
           }
-        },
-        {
-          "name": "Temperature",
-          "type": {
-            "name": "Number"
-          },
-          "elicitResponse": {
-            "type": "Template",
-            "templateName": "# AdjustTemperatureTemperature"
-          }
-        }
-      ],
-      "rules": [
-        {
-          "name": "FinishAdjustRaise",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Operation",
-              "value": "raise"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Operation",
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value > 0 && Value <= 15"
-            }
-          ],
-          "actions": [
-            {
-              "type": "CallHttpEndpoint",
-              "name": "RoomControlBackend",
-              "content": {},
-              "parameters": "operation=increaseTemperature&value={Temperature}",
-              "onSuccess": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# AdjustTemperature-RoomControlBackendonSuccess-43dd866028e311ea8db34fd5c8a135ab"
-                }
+        ],
+        "completionRules": [
+          {
+            "name": "handle completion",
+            "conditions": [
+              {
+                "type": "True"
               },
-              "onFailure": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# AdjustTemperature-RoomControlBackendonFailure-43dd866028e311ea8db34fd5c8a135ab"
-                }
-              }
-            }
-          ],
-          "nextTurnExpectations": [],
-          "postExecutionState": "CompleteCommand"
-        },
-        {
-          "name": "FinishAdjustLower",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Operation",
-              "value": "lower"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Operation",
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value > 0 && Value <= 15"
-            }
-          ],
-          "actions": [
-            {
-              "type": "CallHttpEndpoint",
-              "name": "RoomControlBackend",
-              "content": {},
-              "parameters": "operation=decreaseTemperature&value={Temperature}",
-              "onSuccess": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# AdjustTemperature-RoomControlBackendonSuccess-287895e028e311ea8db34fd5c8a135ab"
-                }
-              },
-              "onFailure": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# AdjustTemperature-RoomControlBackendonFailure-287895e028e311ea8db34fd5c8a135ab"
-                }
-              }
-            }
-          ],
-          "nextTurnExpectations": [],
-          "postExecutionState": "CompleteCommand"
-        },
-        {
-          "name": "CorrectAdjustTemp",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Operation",
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value > 15"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature5fef7c9028df11ea83cf95b9c7d5480f"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Temperature"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "FinishSetTemp",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value >= 68  && Value <= 80"
-            }
-          ],
-          "actions": [
-            {
-              "type": "CallHttpEndpoint",
-              "name": "RoomControlBackend",
-              "content": {},
-              "parameters": "operation=setTemperature&value={Temperature}",
-              "onSuccess": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# AdjustTemperature-RoomControlBackendonSuccess-fd34ee9028f311ea88cde3d2ef24c102"
-                }
-              },
-              "onFailure": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# AdjustTemperature-RoomControlBackendonFailure-fd34ee9028f311ea88cde3d2ef24c102"
-                }
-              }
-            }
-          ],
-          "nextTurnExpectations": [],
-          "postExecutionState": "CompleteCommand"
-        },
-        {
-          "name": "CorrectSetTemp",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "(Value>30 && Value<68) || Value>80 || Value<=0"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature4519903028e011ea83cf95b9c7d5480f"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Temperature"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "PromptandCorrect",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value > 15 && Value <=3"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature8a3cb0c028e011ea83cf95b9c7d5480f"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Operation",
-                "Temperature"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "PromptForOperation",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Temperature"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": "Value >0 && Value <= 15"
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature2c2602f028e211eaaf158b43807e75e2"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Operation"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        },
-        {
-          "name": "PromptForTemp",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "Operation"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "Temperature",
-              "value": ""
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# AdjustTemperature571bc8a028e211eaaf158b43807e75e2"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "Temperature"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        }
-      ],
-      "completionRules": [],
-      "triggeringExamples": [
-        "{Operation} the temperature by {Temperature} degrees",
-        "change the temp by {Temperature} degrees",
-        "{Operation} {Temperature} degrees",
-        "{Temperature} degree {Operation}",
-        "{Operation} by {Temperature}",
-        "i want it {Operation}",
-        "{Operation} the temperature",
-        "{Operation} the temp",
-        "make it {Temperature} degrees {Operation}",
-        "make the temperature {Operation}",
-        "{Temperature} degrees",
-        "set it to {Temperature} degrees",
-        "i want it to be {Temperature} degrees",
-        "make it {Temperature} degrees",
-        "make it {Temperature} degree",
-        "change the temperature to {Temperature} degrees",
-        "set the temperature",
-        "change the temp",
-        "set to {Temperature} degrees",
-        "set to {Temperature}",
-        "set it to {Temperature}",
-        "set the temperature to {Temperature}",
-        "set the temp to {Temperature}",
-        "change the temp to {Temperature}",
-        "make it {Temperature}",
-        "adjust the temp to {Temperature}",
-        "change it to {Temperature} degrees",
-        "{Temperature} degrees"
-      ]
-    },
-    {
-      "name": "OpenClose",
-      "completionStrategy": "OnRequiredParameters",
-      "parameters": [
-        {
-          "name": "OpenCloseOperation",
-          "type": {
-            "name": "String",
-            "configuration": {
-              "type": "StringList",
-              "values": {
-                "open": [
-                  "raise",
-                  "up"
-                ],
-                "close": [
-                  "lower",
-                  "down",
-                  "shut"
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "SubjectContext",
+                  "SubjectDevice",
+                  "OnOff"
                 ]
               }
+            ],
+            "actions": [
+              {
+                "type": "CallHttpEndpoint",
+                "name": "RoomControlBackend",
+                "content": {},
+                "parameters": "operation=turn&item={SubjectDevice}&value={OnOff}&instance={SubjectContext}",
+                "onSuccess": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# TurnOnOff-RoomControlBackendonSuccess-7ca4cca000e411ea97e43706794592d8"
+                  }
+                },
+                "onFailure": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# TurnOnOff-RoomControlBackendonFailure-7ca4cca000e411ea97e43706794592d8"
+                  }
+                }
+              }
+            ],
+            "nextTurnExpectations": [],
+            "postExecutionState": "None"
+          }
+        ],
+        "triggeringExamples": [
+          "turn it {OnOff}",
+          "turn the {SubjectDevice} {OnOff}",
+          "turn the {SubjectContext} {SubjectDevice} {OnOff}",
+          "turn {OnOff} the {SubjectDevice}",
+          "turn {OnOff} the {SubjectContext} {SubjectDevice}",
+          "turn the {SubjectDevice}",
+          "{SubjectDevice} {OnOff}",
+          "i want the {SubjectDevice} {OnOff}",
+          "{SubjectDevice} to be {OnOff}",
+          "control a device",
+          "i want to control a device",
+          "turn {OnOff}"
+        ]
+      },
+      {
+        "name": "Help",
+        "completionStrategy": "OnRequiredParameters",
+        "parameters": [],
+        "rules": [],
+        "completionRules": [
+          {
+            "name": "Done",
+            "conditions": [
+              {
+                "type": "True"
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# Helpeca6e6c0fcd711e99e14f1746e26f855"
+                }
+              }
+            ],
+            "nextTurnExpectations": [],
+            "postExecutionState": "None"
+          }
+        ],
+        "triggeringExamples": [
+          "help me",
+          "what can I do",
+          "what can you do",
+          "i need help",
+          "i need assistance",
+          "help",
+          "i want help",
+          "i want assistance",
+          "can you help",
+          "what do you do",
+          "who are you",
+          "what do i do",
+          "assist me",
+          "help it",
+          "help please",
+          "please help",
+          "what can i say",
+          "what can you say",
+          "what do you say",
+          "what do i say"
+        ]
+      },
+      {
+        "name": "Greeting",
+        "completionStrategy": "OnRequiredParameters",
+        "parameters": [],
+        "rules": [],
+        "completionRules": [
+          {
+            "name": "response",
+            "conditions": [
+              {
+                "type": "True"
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# Greetingd2c13e90f6c911e9bca021cff54309b1"
+                }
+              }
+            ],
+            "nextTurnExpectations": [],
+            "postExecutionState": "None"
+          }
+        ],
+        "triggeringExamples": [
+          "hi",
+          "hello",
+          "how are you",
+          "what's up",
+          "how's it going",
+          "how is it going",
+          "the hello",
+          "the hi",
+          "hi hello",
+          "hello how are you",
+          "hi there",
+          "hello there",
+          "hey",
+          "hey hello",
+          "hello man"
+        ]
+      },
+      {
+        "name": "AdjustTemperature",
+        "completionStrategy": "OnRequiredParameters",
+        "parameters": [
+          {
+            "name": "Operation",
+            "type": {
+              "name": "String",
+              "configuration": {
+                "type": "StringList",
+                "values": {
+                  "lower": [
+                    "decrease",
+                    "cooler",
+                    "colder",
+                    "turn down",
+                    "lowering",
+                    "cool off",
+                    "reduce",
+                    "drop"
+                  ],
+                  "raise": [
+                    "increase",
+                    "warmer",
+                    "turn up",
+                    "hotter",
+                    "higher",
+                    "raising"
+                  ]
+                }
+              }
             }
           },
-          "elicitResponse": {
-            "type": "Template",
-            "templateName": "# OpenCloseOpenCloseOperation"
+          {
+            "name": "Temperature",
+            "type": {
+              "name": "Number"
+            },
+            "elicitResponse": {
+              "type": "Template",
+              "templateName": "# AdjustTemperatureTemperature"
+            }
           }
-        },
-        {
-          "name": "OpenCloseSubject",
-          "type": {
-            "name": "String",
-            "configuration": {
-              "type": "StringList",
-              "values": {
-                "blinds": [
-                  "blind",
-                  "curtains",
-                  "curtain",
-                  "shades"
+        ],
+        "rules": [
+          {
+            "name": "FinishAdjustRaise",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Operation",
+                "value": "raise"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "Operation",
+                  "Temperature"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Temperature",
+                "value": "Value > 0 && Value <= 15"
+              }
+            ],
+            "actions": [
+              {
+                "type": "CallHttpEndpoint",
+                "name": "RoomControlBackend",
+                "content": {},
+                "parameters": "operation=increaseTemperature&value={Temperature}",
+                "onSuccess": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# AdjustTemperature-RoomControlBackendonSuccess-43dd866028e311ea8db34fd5c8a135ab"
+                  }
+                },
+                "onFailure": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# AdjustTemperature-RoomControlBackendonFailure-43dd866028e311ea8db34fd5c8a135ab"
+                  }
+                }
+              }
+            ],
+            "nextTurnExpectations": [],
+            "postExecutionState": "CompleteCommand"
+          },
+          {
+            "name": "FinishAdjustLower",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Operation",
+                "value": "lower"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "Operation",
+                  "Temperature"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Temperature",
+                "value": "Value > 0 && Value <= 15"
+              }
+            ],
+            "actions": [
+              {
+                "type": "CallHttpEndpoint",
+                "name": "RoomControlBackend",
+                "content": {},
+                "parameters": "operation=decreaseTemperature&value={Temperature}",
+                "onSuccess": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# AdjustTemperature-RoomControlBackendonSuccess-287895e028e311ea8db34fd5c8a135ab"
+                  }
+                },
+                "onFailure": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# AdjustTemperature-RoomControlBackendonFailure-287895e028e311ea8db34fd5c8a135ab"
+                  }
+                }
+              }
+            ],
+            "nextTurnExpectations": [],
+            "postExecutionState": "CompleteCommand"
+          },
+          {
+            "name": "CorrectAdjustTemp",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "Operation",
+                  "Temperature"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Temperature",
+                "value": "Value > 15"
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# AdjustTemperature5fef7c9028df11ea83cf95b9c7d5480f"
+                }
+              }
+            ],
+            "nextTurnExpectations": [
+              {
+                "type": "ElicitParameters",
+                "names": [
+                  "Temperature"
                 ]
               }
+            ],
+            "postExecutionState": "WaitForInput"
+          },
+          {
+            "name": "FinishSetTemp",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "Temperature"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Temperature",
+                "value": "Value >= 68  && Value <= 80"
+              }
+            ],
+            "actions": [
+              {
+                "type": "CallHttpEndpoint",
+                "name": "RoomControlBackend",
+                "content": {},
+                "parameters": "operation=setTemperature&value={Temperature}",
+                "onSuccess": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# AdjustTemperature-RoomControlBackendonSuccess-fd34ee9028f311ea88cde3d2ef24c102"
+                  }
+                },
+                "onFailure": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# AdjustTemperature-RoomControlBackendonFailure-fd34ee9028f311ea88cde3d2ef24c102"
+                  }
+                }
+              }
+            ],
+            "nextTurnExpectations": [],
+            "postExecutionState": "CompleteCommand"
+          },
+          {
+            "name": "CorrectSetTemp",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "Temperature"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Temperature",
+                "value": "(Value>30 && Value<68) || Value>80 || Value<=0"
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# AdjustTemperature4519903028e011ea83cf95b9c7d5480f"
+                }
+              }
+            ],
+            "nextTurnExpectations": [
+              {
+                "type": "ElicitParameters",
+                "names": [
+                  "Temperature"
+                ]
+              }
+            ],
+            "postExecutionState": "WaitForInput"
+          },
+          {
+            "name": "PromptandCorrect",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "Temperature"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Temperature",
+                "value": "Value > 15 && Value <=3"
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# AdjustTemperature8a3cb0c028e011ea83cf95b9c7d5480f"
+                }
+              }
+            ],
+            "nextTurnExpectations": [
+              {
+                "type": "ElicitParameters",
+                "names": [
+                  "Operation",
+                  "Temperature"
+                ]
+              }
+            ],
+            "postExecutionState": "WaitForInput"
+          },
+          {
+            "name": "PromptForOperation",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "Temperature"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Temperature",
+                "value": "Value >0 && Value <= 15"
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# AdjustTemperature2c2602f028e211eaaf158b43807e75e2"
+                }
+              }
+            ],
+            "nextTurnExpectations": [
+              {
+                "type": "ElicitParameters",
+                "names": [
+                  "Operation"
+                ]
+              }
+            ],
+            "postExecutionState": "WaitForInput"
+          },
+          {
+            "name": "PromptForTemp",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "Operation"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "Temperature",
+                "value": ""
+              }
+            ],
+            "actions": [
+              {
+                "type": "SpeechResponse",
+                "response": {
+                  "type": "Template",
+                  "templateName": "# AdjustTemperature571bc8a028e211eaaf158b43807e75e2"
+                }
+              }
+            ],
+            "nextTurnExpectations": [
+              {
+                "type": "ElicitParameters",
+                "names": [
+                  "Temperature"
+                ]
+              }
+            ],
+            "postExecutionState": "WaitForInput"
+          }
+        ],
+        "completionRules": [],
+        "triggeringExamples": [
+          "{Operation} the temperature by {Temperature} degrees",
+          "change the temp by {Temperature} degrees",
+          "{Operation} {Temperature} degrees",
+          "{Temperature} degree {Operation}",
+          "{Operation} by {Temperature}",
+          "i want it {Operation}",
+          "{Operation} the temperature",
+          "{Operation} the temp",
+          "make it {Temperature} degrees {Operation}",
+          "make the temperature {Operation}",
+          "{Temperature} degrees",
+          "set it to {Temperature} degrees",
+          "i want it to be {Temperature} degrees",
+          "make it {Temperature} degrees",
+          "make it {Temperature} degree",
+          "change the temperature to {Temperature} degrees",
+          "set the temperature",
+          "change the temp",
+          "set to {Temperature} degrees",
+          "set to {Temperature}",
+          "set it to {Temperature}",
+          "set the temperature to {Temperature}",
+          "set the temp to {Temperature}",
+          "change the temp to {Temperature}",
+          "make it {Temperature}",
+          "adjust the temp to {Temperature}",
+          "change it to {Temperature} degrees",
+          "{Temperature} degrees"
+        ]
+      },
+      {
+        "name": "OpenClose",
+        "completionStrategy": "OnRequiredParameters",
+        "parameters": [
+          {
+            "name": "OpenCloseOperation",
+            "type": {
+              "name": "String",
+              "configuration": {
+                "type": "StringList",
+                "values": {
+                  "open": [
+                    "raise",
+                    "up"
+                  ],
+                  "close": [
+                    "lower",
+                    "down",
+                    "shut"
+                  ]
+                }
+              }
+            },
+            "elicitResponse": {
+              "type": "Template",
+              "templateName": "# OpenCloseOpenCloseOperation"
             }
           },
-          "elicitResponse": {
-            "type": "Template",
-            "templateName": "# OpenCloseOpenCloseSubject"
+          {
+            "name": "OpenCloseSubject",
+            "type": {
+              "name": "String",
+              "configuration": {
+                "type": "StringList",
+                "values": {
+                  "blinds": [
+                    "blind",
+                    "curtains",
+                    "curtain",
+                    "shades"
+                  ]
+                }
+              }
+            },
+            "elicitResponse": {
+              "type": "Template",
+              "templateName": "# OpenCloseOpenCloseSubject"
+            }
           }
-        }
-      ],
-      "rules": [
-        {
-          "name": "ask subject with operation",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "OpenCloseOperation"
-              ]
-            },
-            {
-              "type": "ParameterValue",
-              "name": "OpenCloseSubject",
-              "value": ""
-            }
-          ],
-          "actions": [
-            {
-              "type": "SpeechResponse",
-              "response": {
-                "type": "Template",
-                "templateName": "# OpenClose5ac70780f77811e9a646c5f4b0d53c23"
-              }
-            }
-          ],
-          "nextTurnExpectations": [
-            {
-              "type": "ElicitParameters",
-              "names": [
-                "OpenCloseSubject"
-              ]
-            }
-          ],
-          "postExecutionState": "WaitForInput"
-        }
-      ],
-      "completionRules": [
-        {
-          "name": "finish open close",
-          "conditions": [
-            {
-              "type": "True"
-            },
-            {
-              "type": "RequiredParameters",
-              "names": [
-                "OpenCloseOperation",
-                "OpenCloseSubject"
-              ]
-            }
-          ],
-          "actions": [
-            {
-              "type": "CallHttpEndpoint",
-              "name": "RoomControlBackend",
-              "content": {},
-              "parameters": "operation=turn&item={OpenCloseSubject}&value={OpenCloseOperation}",
-              "onSuccess": {
-                "type": "SpeechResponse",
-                "response": {
-                  "type": "Template",
-                  "templateName": "# OpenClose-RoomControlBackendonSuccess-9bd92d20fc2d11e9bf63b974d90bef6c"
-                }
+        ],
+        "rules": [
+          {
+            "name": "ask subject with operation",
+            "conditions": [
+              {
+                "type": "True"
               },
-              "onFailure": {
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "OpenCloseOperation"
+                ]
+              },
+              {
+                "type": "ParameterValue",
+                "name": "OpenCloseSubject",
+                "value": ""
+              }
+            ],
+            "actions": [
+              {
                 "type": "SpeechResponse",
                 "response": {
                   "type": "Template",
-                  "templateName": "# OpenClose-RoomControlBackendonFailure-9bd92d20fc2d11e9bf63b974d90bef6c"
+                  "templateName": "# OpenClose5ac70780f77811e9a646c5f4b0d53c23"
                 }
               }
-            }
-          ],
-          "nextTurnExpectations": [],
-          "postExecutionState": "None"
-        }
-      ],
-      "triggeringExamples": [
-        "{OpenCloseOperation} the {OpenCloseSubject}",
-        "i want to {OpenCloseOperation} the {OpenCloseSubject}",
-        "{OpenCloseOperation} {OpenCloseSubject}",
-        "{OpenCloseSubject} {OpenCloseOperation}"
-      ]
-    }
-  ]
+            ],
+            "nextTurnExpectations": [
+              {
+                "type": "ElicitParameters",
+                "names": [
+                  "OpenCloseSubject"
+                ]
+              }
+            ],
+            "postExecutionState": "WaitForInput"
+          }
+        ],
+        "completionRules": [
+          {
+            "name": "finish open close",
+            "conditions": [
+              {
+                "type": "True"
+              },
+              {
+                "type": "RequiredParameters",
+                "names": [
+                  "OpenCloseOperation",
+                  "OpenCloseSubject"
+                ]
+              }
+            ],
+            "actions": [
+              {
+                "type": "CallHttpEndpoint",
+                "name": "RoomControlBackend",
+                "content": {},
+                "parameters": "operation=turn&item={OpenCloseSubject}&value={OpenCloseOperation}",
+                "onSuccess": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# OpenClose-RoomControlBackendonSuccess-9bd92d20fc2d11e9bf63b974d90bef6c"
+                  }
+                },
+                "onFailure": {
+                  "type": "SpeechResponse",
+                  "response": {
+                    "type": "Template",
+                    "templateName": "# OpenClose-RoomControlBackendonFailure-9bd92d20fc2d11e9bf63b974d90bef6c"
+                  }
+                }
+              }
+            ],
+            "nextTurnExpectations": [],
+            "postExecutionState": "None"
+          }
+        ],
+        "triggeringExamples": [
+          "{OpenCloseOperation} the {OpenCloseSubject}",
+          "i want to {OpenCloseOperation} the {OpenCloseSubject}",
+          "{OpenCloseOperation} {OpenCloseSubject}",
+          "{OpenCloseSubject} {OpenCloseOperation}"
+        ]
+      }
+    ]
+  }
 }
