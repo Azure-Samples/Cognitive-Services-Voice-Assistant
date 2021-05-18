@@ -9,7 +9,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "This is a command and control inventory demo. You can add blue, green or yellow boxes and remove the boxes. You can also query the state of the warehouse."
+            "text": "This is a command and control inventory demo. You can add blue, green or yellow boxes and remove the boxes. You can also query the state of the warehouse.||Try saying \"Receive 5 middle boxes\" or \"Ship 2 large boxes\" or \"What's in stock warehouse?\""
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -20,7 +20,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "This is a command and control inventory demo. You can add blue, green or yellow boxes and remove the boxes. You can also query the state of the warehouse.",
+            "text": "This is a command and control inventory demo. You can add blue, green or yellow boxes and remove the boxes. You can also query the state of the warehouse.||Try saying \"Receive 5 middle boxes\" or \"Ship 2 large boxes\" or \"What's in stock warehouse?\"",
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
