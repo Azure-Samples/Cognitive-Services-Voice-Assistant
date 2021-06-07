@@ -332,7 +332,8 @@
   <PropertyGroup>
     <PostBuildEvent>rem This is a workaround to fix the issue https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/issues/150.
 rem Since Microsoft.CognitiveServices.Speech version number is part of the source path, the source path should be updated when upgrading Microsoft.CognitiveServices.Speech.
-copy $(SolutionDir)\packages\Microsoft.CognitiveServices.Speech.1.17.0\runtimes\win-$(PlatformName)\native\Microsoft.CognitiveServices.Speech.core.dll $(TargetDir)</PostBuildEvent>
+copy $(SolutionDir)\packages\Microsoft.CognitiveServices.Speech.1.17.0\runtimes\win-$(PlatformName)\native\Microsoft.CognitiveServices.Speech.*.dll $(TargetDir)
+</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.3.2\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.targets')" />
   <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.3.3.2\build\Microsoft.CodeQuality.Analyzers.targets" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.3.3.2\build\Microsoft.CodeQuality.Analyzers.targets')" />
