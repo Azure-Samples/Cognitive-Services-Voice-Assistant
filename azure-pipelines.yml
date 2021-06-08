@@ -118,15 +118,20 @@ jobs:
       platform: '$(buildPlatformNative)'
       configuration: '$(buildConfiguration)'
 
-  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-    displayName: '$(sample1Name) - EsrpCodeSigning'
-    inputs:
-      ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing' 
-      signConfigType: inlineSignParams
-      inlineOperation: '$(signParams)'
-      FolderPath: '$(sample1PublishedArtifactPath)'
-      Pattern: 'VoiceAssistantClient.exe'
-      SessionTimeout: '60'
+  #
+  # Disable signing until we find time to set up a Key Vault. The correct certificate is about to expire.
+  # "All certificates used for integrating with ESRP are now required to be held in an Azure Key Vault (AKV)"
+  # https://microsoft.sharepoint.com/teams/prss/esrp/info/ESRP%20Onboarding%20Wiki/Generating%20the%20ESRP%20Authentication%20(Request%20Signing)%20certificate.aspx
+  #
+  #- task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  #  displayName: '$(sample1Name) - EsrpCodeSigning'
+  #  inputs:
+  #    ConnectedServiceName: 'Voice Assistant Sample Code ESRP Signing' 
+  #    signConfigType: inlineSignParams
+  #    inlineOperation: '$(signParams)'
+  #    FolderPath: '$(sample1PublishedArtifactPath)'
+  #    Pattern: 'VoiceAssistantClient.exe'
+  #    SessionTimeout: '60'
 
   - task: PublishPipelineArtifact@1
     displayName: '$(sample1Name) - PublishPipelineArtifact'
