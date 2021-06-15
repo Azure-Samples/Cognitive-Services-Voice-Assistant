@@ -9,7 +9,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": ""
+            "text": "You're in a virtual car and able to control features with your voice. Try saying \"Turn on the seat warmers\" or \"Set the temperature to 73 degrees\""
           }
         ],
         "ExpectedUserPerceivedLatency": 1500

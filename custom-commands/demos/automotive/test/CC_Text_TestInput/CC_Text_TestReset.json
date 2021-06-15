@@ -10,7 +10,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "",
+            "text": "Okay, reset to default state.",
           }
         ],
         "ExpectedUserPerceivedLatency": 1500

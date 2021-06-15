@@ -9,7 +9,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "",
+            "text": "Okay, reset to default state.",
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -20,7 +20,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "defroster on",
+            "text": "Ok, turn defroster on",
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -37,7 +37,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "",
+            "text": "Okay, reset to default state.",
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
@@ -48,7 +48,7 @@
         "ExpectedResponses": [
           {
             "type": "message",
-            "text": "defroster off",
+            "text": "Defrost already off",
           }
         ],
         "ExpectedUserPerceivedLatency": 1500
