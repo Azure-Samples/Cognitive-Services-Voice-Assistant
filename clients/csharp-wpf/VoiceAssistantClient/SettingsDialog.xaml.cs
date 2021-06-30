@@ -63,7 +63,8 @@ namespace VoiceAssistantClient
             this.ConnectionProfileComboBox.ItemsSource = this.settings.ConnectionProfileNameHistory;
             this.ConnectionProfileComboBox.Text = this.ConnectionProfileName;
             this.SubscriptionKeyTextBox.Text = this.settings.Profile.SubscriptionKey;
-            this.SubscriptionRegionTextBox.Text = this.settings.Profile.SubscriptionKeyRegion;
+            this.AuthorizationTokenTextBox.Text = this.settings.Profile.AuthorizationToken;
+            this.SubscriptionRegionTextBox.Text = this.settings.Profile.SubscriptionRegion;
             this.CustomCommandsAppIdTextBox.Text = this.settings.Profile.CustomCommandsAppId;
             this.BotIdTextBox.Text = this.settings.Profile.BotId;
             this.LanguageTextBox.Text = this.settings.Profile.ConnectionLanguage;
@@ -102,7 +103,8 @@ namespace VoiceAssistantClient
                 if (this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
                 {
                     this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey = this.SubscriptionKeyTextBox.Text;
-                    this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].AuthorizationToken = this.AuthorizationTokenTextBox.Text;
+                    this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionRegion = this.SubscriptionRegionTextBox.Text;
                     this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
                     this.connectionProfile[this.ConnectionProfileComboBox.Text].BotId = this.BotIdTextBox.Text;
                     this.connectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage = this.LanguageTextBox.Text;
@@ -125,7 +127,8 @@ namespace VoiceAssistantClient
                     this.connectionProfile.Add(this.ConnectionProfileName, new ConnectionProfile
                     {
                         SubscriptionKey = this.SubscriptionKeyTextBox.Text,
-                        SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text,
+                        AuthorizationToken = this.AuthorizationTokenTextBox.Text,
+                        SubscriptionRegion = this.SubscriptionRegionTextBox.Text,
                         CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text,
                         BotId = this.BotIdTextBox.Text,
                         ConnectionLanguage = this.LanguageTextBox.Text,
@@ -233,7 +236,8 @@ namespace VoiceAssistantClient
             if (this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
             {
                 this.SubscriptionKeyTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey;
-                this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion;
+                this.AuthorizationTokenTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].AuthorizationToken;
+                this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionRegion;
                 this.CustomCommandsAppIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId;
                 this.BotIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].BotId;
                 this.LanguageTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage;
@@ -252,7 +256,8 @@ namespace VoiceAssistantClient
             else if (!this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text) && this.settings.ConnectionProfileNameHistory.Count > 1)
             {
                 this.SubscriptionKeyTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].SubscriptionKey;
-                this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].SubscriptionKeyRegion;
+                this.AuthorizationTokenTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].AuthorizationToken;
+                this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].SubscriptionRegion;
                 this.CustomCommandsAppIdTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].CustomCommandsAppId;
                 this.BotIdTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].BotId;
                 this.LanguageTextBox.Text = this.connectionProfile[this.settings.ConnectionProfileNameHistory[1]].ConnectionLanguage;
@@ -320,6 +325,7 @@ namespace VoiceAssistantClient
             // BUGBUG: The transfer into variables does not seem to be done consistently with these events so we read straight from the controls
             var hasConnectionProfileName = !string.IsNullOrWhiteSpace(this.ConnectionProfileComboBox.Text) && this.ConnectionProfileComboBox.Text != " ";
             var hasSubscription = !string.IsNullOrWhiteSpace(this.SubscriptionKeyTextBox.Text);
+            var hasAuthToken = !string.IsNullOrWhiteSpace(this.AuthorizationTokenTextBox.Text);
             var hasRegion = !string.IsNullOrWhiteSpace(this.SubscriptionRegionTextBox.Text);
             var hasUrlOverride = !string.IsNullOrWhiteSpace(this.UrlOverrideTextBox.Text);
 
@@ -329,9 +335,9 @@ namespace VoiceAssistantClient
             {
                 this.SaveButtonInfoBlock.Text = "You must provide a profile name";
             }
-            else if (!hasSubscription)
+            else if (!(hasSubscription ^ hasAuthToken))
             {
-                this.SaveButtonInfoBlock.Text = "You must provide a speech subscription key.";
+                this.SaveButtonInfoBlock.Text = "You must provide either a speech subscription key or auth token.";
             }
             else if (!hasRegion && !hasUrlOverride)
             {
@@ -468,15 +474,21 @@ namespace VoiceAssistantClient
             }
         }
 
+        private void SubscriptionKeyTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.UpdateSaveButtonState();
+        }
+
+        private void AuthorizationTokenTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.UpdateSaveButtonState();
+        }
+
         private void SubscriptionKeyRegionTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             this.UpdateSaveButtonState();
         }
 
-        private void SubscriptionKeyTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            this.UpdateSaveButtonState();
-        }
 
         private void CustomCommandsAppIdTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -511,7 +523,8 @@ namespace VoiceAssistantClient
                 if (this.connectionProfile.ContainsKey(this.ConnectionProfileComboBox.Text))
                 {
                     this.SubscriptionKeyTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKey;
-                    this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionKeyRegion;
+                    this.AuthorizationTokenTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].AuthorizationToken;
+                    this.SubscriptionRegionTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].SubscriptionRegion;
                     this.CustomCommandsAppIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].CustomCommandsAppId;
                     this.BotIdTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].BotId;
                     this.LanguageTextBox.Text = this.connectionProfile[this.ConnectionProfileComboBox.Text].ConnectionLanguage;
@@ -539,6 +552,7 @@ namespace VoiceAssistantClient
         private void SetConnectionSettingsTextBoxesToEmpty()
         {
             this.SubscriptionKeyTextBox.Text = string.Empty;
+            this.AuthorizationTokenTextBox.Text = string.Empty;
             this.SubscriptionRegionTextBox.Text = string.Empty;
             this.CustomCommandsAppIdTextBox.Text = string.Empty;
             this.BotIdTextBox.Text = string.Empty;
@@ -559,7 +573,8 @@ namespace VoiceAssistantClient
         private void SetProfileSettingsToConnectionSettingsTextBoxes()
         {
             this.settings.Profile.SubscriptionKey = this.SubscriptionKeyTextBox.Text;
-            this.settings.Profile.SubscriptionKeyRegion = this.SubscriptionRegionTextBox.Text;
+            this.settings.Profile.AuthorizationToken = this.AuthorizationTokenTextBox.Text;
+            this.settings.Profile.SubscriptionRegion = this.SubscriptionRegionTextBox.Text;
             this.settings.Profile.CustomCommandsAppId = this.CustomCommandsAppIdTextBox.Text;
             this.settings.Profile.BotId = this.BotIdTextBox.Text;
             this.settings.Profile.ConnectionLanguage = this.LanguageTextBox.Text;

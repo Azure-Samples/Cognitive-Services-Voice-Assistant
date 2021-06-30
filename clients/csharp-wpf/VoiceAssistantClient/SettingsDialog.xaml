@@ -56,23 +56,26 @@
                 <Label Grid.Row="1" Grid.Column="0" Content="Subscription key:"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Name="SubscriptionKeyTextBox" TextBoxBase.TextChanged="SubscriptionKeyTextBox_TextChanged"  Text="{Binding SubscriptionKey}"/>
 
-                <Label  Grid.Row="2" Grid.Column="0" Content="Subscription key region:"/>
-                <TextBox  Grid.Row="2" Grid.Column="1" Name='SubscriptionRegionTextBox' TextBoxBase.TextChanged="SubscriptionKeyRegionTextBox_TextChanged" Text="{Binding SubscriptionKeyRegion}"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="Auth token:"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Name="AuthorizationTokenTextBox" TextBoxBase.TextChanged="AuthorizationTokenTextBox_TextChanged"  Text="{Binding AuthorizationToken}"/>
 
-                <Label Grid.Row="3" Grid.Column="0" Content="Custom commands app Id:"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Name="CustomCommandsAppIdTextBox" TextBoxBase.TextChanged="CustomCommandsAppIdTextBox_TextChanged"  Text="{Binding CustomCommandsAppId}"/>
+                <Label  Grid.Row="3" Grid.Column="0" Content="Subscription key region:"/>
+                <TextBox  Grid.Row="3" Grid.Column="1" Name='SubscriptionRegionTextBox' TextBoxBase.TextChanged="SubscriptionKeyRegionTextBox_TextChanged" Text="{Binding SubscriptionKeyRegion}"/>
 
-                <Label Grid.Row="4" Grid.Column="0" Content="Bot Id:"/>
-                <TextBox Grid.Row="4" Grid.Column="1" Name="BotIdTextBox" Text="{Binding BotId}"/>
+                <Label Grid.Row="4" Grid.Column="0" Content="Custom commands app Id:"/>
+                <TextBox Grid.Row="4" Grid.Column="1" Name="CustomCommandsAppIdTextBox" TextBoxBase.TextChanged="CustomCommandsAppIdTextBox_TextChanged"  Text="{Binding CustomCommandsAppId}"/>
+
+                <Label Grid.Row="5" Grid.Column="0" Content="Bot Id:"/>
+                <TextBox Grid.Row="5" Grid.Column="1" Name="BotIdTextBox" Text="{Binding BotId}"/>
                 
-                <Label Grid.Row="5" Grid.Column="0" Content="User From Id:"/>
-                <TextBox Grid.Row="5" Grid.Column="1" Name='FromIdTextBox' Text="{Binding FromId}"/>
+                <Label Grid.Row="6" Grid.Column="0" Content="User From Id:"/>
+                <TextBox Grid.Row="6" Grid.Column="1" Name='FromIdTextBox' Text="{Binding FromId}"/>
 
-                <Label  Grid.Row="6" Grid.Column="0" Content="Language:"/>
-                <TextBox Grid.Row="6" Grid.Column="1" Name='LanguageTextBox'  Text="{Binding ConnectionLanguage}" />
+                <Label  Grid.Row="7" Grid.Column="0" Content="Language:"/>
+                <TextBox Grid.Row="7" Grid.Column="1" Name='LanguageTextBox'  Text="{Binding ConnectionLanguage}" />
 
-                <Label  Grid.Row="7" Grid.Column="0" Content="Log file path:"/>
-                <TextBox Grid.Row="7" Grid.Column="1"  Name="LogFileTextBox" Text="{Binding LogFilePath}"/>
+                <Label  Grid.Row="8" Grid.Column="0" Content="Log file path:"/>
+                <TextBox Grid.Row="8" Grid.Column="1"  Name="LogFileTextBox" Text="{Binding LogFilePath}"/>
             </Grid>
 
             <Grid Margin="0,5,5,0">

@@ -7,7 +7,9 @@ namespace VoiceAssistantClient.Settings
     {
         public string SubscriptionKey { get; set; }
 
-        public string SubscriptionKeyRegion { get; set; }
+        public string AuthorizationToken { get; set; }
+
+        public string SubscriptionRegion { get; set; }
 
         public string CustomCommandsAppId { get; set; }
 
