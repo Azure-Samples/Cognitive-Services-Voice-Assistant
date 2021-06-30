@@ -80,8 +80,8 @@ Note: The Speech Key and any other resource integrations must be registered in t
 #### Generating Keyword Spotting Performance Metrics
 
 An optional key can be added to generate a performance log for your keyword activation and confirmation models. In the config.json add **EnableKwsLogging: true**. This will create a csv file with timestamps indicating if the keyword was accepted or rejected for each stage found in the LocalState Folder. 
-If your first stage keyword model is a hardware keyword, the bin file can be omitted in config.json and two optional parameters will need to be set. 
-**EnableHardwareDetector: true** and **SetModelData: false**.
+If your first stage keyword model is a hardware keyword only, the bin file can be omitted in config.json and two parameter values need to be changed from the default values to: 
+**UseHardwareDetector: true** and **SetModelData: false**. If you want to use both hardware keyword and software keyword, then only one modification is needed: **UseHardwareDetector: true**.
 <br>
 By default, EnableKwsLogging and EnableHardwareDetector are false and SetModelData is true.
 
