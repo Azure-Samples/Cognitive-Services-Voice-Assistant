@@ -33,7 +33,8 @@ namespace KeywordRegistrationTests
         public async Task LastUpdatedActivationKeywordModelVersionAsyncTest()
         {
             var lastKeywordModelVersion = this.keywordRegistration.LastUpdatedActivationKeywordModelVersion;
-            var getOrCreateConfiguration = await keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+            var configurations = await keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
+            var getOrCreateConfiguration = configurations[0];
 
             if (this.keywordRegistration.KeywordId == getOrCreateConfiguration.SignalId &&
                 lastKeywordModelVersion == this.keywordRegistration.AvailableActivationKeywordModelVersion)
@@ -43,14 +44,8 @@ namespace KeywordRegistrationTests
             }
             else
             {
-                var updateKeyword = await this.keywordRegistration.UpdateKeyword(
-                    this.keywordRegistration.KeywordDisplayName,
-                    this.keywordRegistration.KeywordId,
-                    this.keywordRegistration.KeywordModelId,
-                    this.keywordRegistration.KeywordActivationModelDataFormat,
-                    this.keywordRegistration.KeywordActivationModelFilePath,
-                    this.keywordRegistration.AvailableActivationKeywordModelVersion,
-                    this.keywordRegistration.ConfirmationKeywordModelPath);
+                var updatedConfigurations = await this.keywordRegistration.UpdateKeyword();
+                var updateKeyword = updatedConfigurations[0];
                 Assert.AreEqual(this.keywordRegistration.LastUpdatedActivationKeywordModelVersion, this.keywordRegistration.AvailableActivationKeywordModelVersion);
                 Assert.IsTrue(updateKeyword.IsActive);
                 Assert.AreEqual(this.keywordRegistration.KeywordDisplayName, updateKeyword.DisplayName);
@@ -78,14 +73,8 @@ namespace KeywordRegistrationTests
 
         public async Task UpdateKeywordAsyncTest()
         {
-            var result = await this.keywordRegistration.UpdateKeyword(
-                this.keywordRegistration.KeywordDisplayName,
-                this.keywordRegistration.KeywordId,
-                this.keywordRegistration.KeywordModelId,
-                this.keywordRegistration.KeywordActivationModelDataFormat,
-                this.keywordRegistration.KeywordActivationModelFilePath,
-                this.keywordRegistration.AvailableActivationKeywordModelVersion,
-                this.keywordRegistration.ConfirmationKeywordModelPath);
+            var results = await this.keywordRegistration.UpdateKeyword();
+            var result = results[0];
 
             Assert.IsTrue(result.AvailabilityInfo.HasPermission);
             Assert.IsTrue(result.AvailabilityInfo.HasSystemResourceAccess);
@@ -98,7 +87,8 @@ namespace KeywordRegistrationTests
 
         public async Task GetOrCreateKeywordConfigurationAsyncTest()
         {
-            var result = await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+            var results = await this.keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
+            var result = results[0];
 
             Assert.IsTrue(result.AvailabilityInfo.HasPermission);
             Assert.IsTrue(result.AvailabilityInfo.HasSystemResourceAccess);
@@ -208,14 +198,9 @@ namespace KeywordRegistrationTests
 
             var newVersion = new Version(lastVersion.Major, lastVersion.Minor, lastVersion.Build, lastVersion.Revision + 1);
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await keyword.UpdateKeyword(
-            keyword.KeywordDisplayName,
-            keyword.KeywordId,
-            keyword.KeywordModelId,
-            keyword.KeywordActivationModelDataFormat,
-            keyword.KeywordActivationModelFilePath,
-            newVersion,
-            keyword.ConfirmationKeywordModelPath), "Invalid InputValues");
+            keyword.AvailableActivationKeywordModelVersion = newVersion;
+
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await keyword.UpdateKeyword(), "Invalid InputValues");
         }
 
         private async Task<StorageFile> GetStorageFile(string path)

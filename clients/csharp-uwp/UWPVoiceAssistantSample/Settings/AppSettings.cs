@@ -88,7 +88,12 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets a value indicating whether to use 1st stage hardware keyword spotter.
         /// </summary>
-        public bool EnableHardwareDetector { get; set; }
+        public bool UseHardwareDetector { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use 1st stage software keyword spotter.
+        /// </summary>
+        public bool UseSoftwareDetector { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to set model data for a keyword configuration.

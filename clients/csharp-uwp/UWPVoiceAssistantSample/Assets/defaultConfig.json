@@ -4,8 +4,11 @@
   "CustomSREndpointId": "",
   "CustomVoiceDeploymentIds": "",
   "CustomCommandsAppId": "",
-  "SpeechSDKLogEnabled":  false,
+  "SpeechSDKLogEnabled": false,
   "BotId": "",
+  "UseHardwareDetector": false,
+  "UseSoftwareDetector": true,
+  "SetModelData": true,
   "KeywordActivationModel": {
     "DisplayName": "Contoso",
     "Path": "ms-appx:///Assets/ActivationKeywords/Contoso.bin",

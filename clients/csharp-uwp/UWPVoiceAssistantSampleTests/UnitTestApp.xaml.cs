@@ -58,7 +58,7 @@ namespace UWPVoiceAssistantSampleTests
 
         private async Task DoKeywordSetupAsync()
         {
-            await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+            await this.keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
         }
 
         /// <summary>

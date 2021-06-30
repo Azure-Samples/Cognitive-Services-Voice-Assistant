@@ -8,6 +8,7 @@ namespace UWPVoiceAssistantSampleTests
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Storage;
     using UWPVoiceAssistantSample;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Mock of KeywordRegistration
@@ -52,12 +53,27 @@ namespace UWPVoiceAssistantSampleTests
             return null;
         }
 
-        public async Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync()
+        //public async Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync()
+        //{
+        //    return null;
+        //}
+
+        //public async Task<ActivationSignalDetectionConfiguration> UpdateKeyword(string keywordDisplayName, string keywordId, string keywordModelId, string keywordActivationModelDataFormat, string keywordActivationModelFilePath, Version availableActivationKeywordModelVersion, string confirmationKeywordModelPath)
+        //{
+        //    return null;
+        //}
+
+        public async Task UpdateModelData()
+        {
+            await Task.CompletedTask;
+        }
+
+        public async Task<List<ActivationSignalDetectionConfiguration>> GetOrCreateKeywordConfigurationsAsync()
         {
             return null;
         }
 
-        public async Task<ActivationSignalDetectionConfiguration> UpdateKeyword(string keywordDisplayName, string keywordId, string keywordModelId, string keywordActivationModelDataFormat, string keywordActivationModelFilePath, Version availableActivationKeywordModelVersion, string confirmationKeywordModelPath)
+        public async Task<List<ActivationSignalDetectionConfiguration>> UpdateKeyword()
         {
             return null;
         }

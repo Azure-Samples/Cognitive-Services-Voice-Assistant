@@ -162,9 +162,13 @@ namespace UWPVoiceAssistantSample
 
         private async Task DoKeywordSetupAsync()
         {
-            var keywordConfig = await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
-            keywordConfig.AvailabilityChanged += async (s, e)
-                => await this.UpdateUIForSharedStateAsync();
+            var keywordConfigs = await this.keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
+            foreach (var keywordConfig in keywordConfigs)
+            {
+                keywordConfig.AvailabilityChanged += async (s, e)
+                    => await this.UpdateUIForSharedStateAsync();
+            }
+
             await this.UpdateUIForSharedStateAsync();
         }
 
@@ -255,14 +259,17 @@ namespace UWPVoiceAssistantSample
 
                 var agentIdle = session == null || session.AgentState == ConversationalAgentState.Inactive;
                 var micReady = micStatus == AppCapabilityAccessStatus.Allowed && audioControl.HasAudioInputAvailable;
+                List<ActivationSignalDetectionConfiguration> keywordConfigs = null;
+                if (this.keywordRegistration != null)
+                {
+                    keywordConfigs = await this.keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
+                }
 
-                var keywordConfig = await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
-
-                this.AppVoiceActivationEnabledToggle.IsEnabled = keywordConfig != null;
-                this.AppVoiceActivationEnabledToggle.OffContent = keywordConfig != null
+                this.AppVoiceActivationEnabledToggle.IsEnabled = keywordConfigs.Count > 0;
+                this.AppVoiceActivationEnabledToggle.OffContent = keywordConfigs.Count > 0
                     ? "Application has disabled voice activation."
                     : "App voice activation status unknown: configuration not yet queried";
-                this.AppVoiceActivationEnabledToggle.IsOn = keywordConfig != null && keywordConfig.AvailabilityInfo.IsEnabled;
+                this.AppVoiceActivationEnabledToggle.IsOn = this.keywordRegistration.KeywordEnabledByApp;
 
                 this.MicrophoneButton.IsEnabled = agentIdle && micReady;
                 this.MicrophoneButton.Content = micReady ? Glyphs.Microphone : Glyphs.MicrophoneOff;
@@ -741,14 +748,15 @@ namespace UWPVoiceAssistantSample
             var keywordRecognitionModelPathModified = LocalSettingsHelper.KeywordRecognitionModel != appSettings.KeywordRecognitionModel;
             var setPropertyIdModified = LocalSettingsHelper.SetProperty != appSettings.SetProperty;
             var enableKwsLogging = LocalSettingsHelper.EnableKwsLogging != appSettings.EnableKwsLogging;
-            var enabledHardwareDetector = LocalSettingsHelper.EnableHardwareDetector != appSettings.EnableHardwareDetector;
-            var enableSetModelData = LocalSettingsHelper.SetModelData != appSettings.SetModelData;
+            var useHardwareDetectorModified = LocalSettingsHelper.UseHardwareDetector != appSettings.UseHardwareDetector;
+            var useSoftwareDetectorModified = LocalSettingsHelper.UseSoftwareDetector != appSettings.UseSoftwareDetector;
+            var setModelDataModified = LocalSettingsHelper.SetModelData != appSettings.SetModelData;
 
             this.configModified = speechKeyModified || speechRegionModified || customSpeechIdModified ||
                 customVoiceIdModified || customCommandsAppIdModified || botIdModified ||
                 keywordDisplayNameModified || keywordIdModified || keywordModelIdModified ||
                 keywordActivationModelDataFormatModified || keywordActivationModelPathModified || keywordRecognitionModelPathModified ||
-                setPropertyIdModified || enableKwsLogging || enabledHardwareDetector || enableSetModelData;
+                setPropertyIdModified || enableKwsLogging || useHardwareDetectorModified || useSoftwareDetectorModified || setModelDataModified;
 
             if (this.configModified)
             {
@@ -838,26 +846,45 @@ namespace UWPVoiceAssistantSample
                     this.logger.Log(LogMessageLevel.Information, $"KwsLogging is set to: {LocalSettingsHelper.EnableKwsLogging}");
                 }
 
-                if (enabledHardwareDetector)
+                if (useHardwareDetectorModified)
                 {
-                    LocalSettingsHelper.EnableHardwareDetector = appSettings.EnableHardwareDetector;
-                    this.logger.Log(LogMessageLevel.Information, $"Enable Hardware Detector: {LocalSettingsHelper.EnableHardwareDetector}");
+                    LocalSettingsHelper.UseHardwareDetector = appSettings.UseHardwareDetector;
+                    this.logger.Log(LogMessageLevel.Information, $"Enable Hardware Detector: {LocalSettingsHelper.UseHardwareDetector}");
                 }
 
-                if (enableSetModelData)
+                if (useSoftwareDetectorModified)
+                {
+                    LocalSettingsHelper.UseSoftwareDetector = appSettings.UseSoftwareDetector;
+                    this.logger.Log(LogMessageLevel.Information, $"Enable Software Detector: {LocalSettingsHelper.UseSoftwareDetector}");
+                }
+
+                if (setModelDataModified)
                 {
                     LocalSettingsHelper.SetModelData = appSettings.SetModelData;
                     this.logger.Log(LogMessageLevel.Information, $"Set Model Data: {LocalSettingsHelper.SetModelData}");
                 }
 
-                if (keywordActivationModelDataFormatModified
-                    || keywordActivationModelPathModified
-                    || keywordRecognitionModelPathModified
-                    || keywordDisplayNameModified
-                    || keywordIdModified
-                    || keywordModelIdModified)
+                if (keywordDisplayNameModified || keywordIdModified || keywordModelIdModified || setModelDataModified)
                 {
-                    await this.keywordRegistration.CreateKeywordConfigurationAsync();
+                    var keywordConfigs = await this.keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
+                    foreach (var keywordConfig in keywordConfigs)
+                    {
+                        keywordConfig.AvailabilityChanged -= async (s, e2)
+                            => await this.UpdateUIForSharedStateAsync();
+                    }
+
+                    await this.keywordRegistration.UpdateKeyword();
+
+                    keywordConfigs = await this.keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
+                    foreach (var keywordConfig in keywordConfigs)
+                    {
+                        keywordConfig.AvailabilityChanged += async (s, e2)
+                            => await this.UpdateUIForSharedStateAsync();
+                    }
+                }
+                else if (keywordActivationModelDataFormatModified || keywordActivationModelPathModified)
+                {
+                    await this.keywordRegistration.UpdateModelData();
                 }
             }
             else

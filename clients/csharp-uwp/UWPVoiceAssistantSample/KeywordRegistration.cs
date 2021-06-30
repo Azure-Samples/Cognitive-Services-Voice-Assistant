@@ -4,6 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
     using System.Linq;
     using System.Threading;
@@ -18,7 +19,8 @@ namespace UWPVoiceAssistantSample
     public class KeywordRegistration : IKeywordRegistration, IDisposable
     {
         private readonly SemaphoreSlim creatingKeywordConfigSemaphore;
-        private ActivationSignalDetectionConfiguration keywordConfiguration;
+        private ActivationSignalDetectionConfiguration softwareKeywordConfiguration;
+        private ActivationSignalDetectionConfiguration hardwareKeywordConfiguration;
         private bool disposed;
 
         /// <summary>
@@ -31,44 +33,44 @@ namespace UWPVoiceAssistantSample
 
             this.creatingKeywordConfigSemaphore = new SemaphoreSlim(1, 1);
 
-            _ = this.GetOrCreateKeywordConfigurationAsync();
+            _ = this.InitializeConfigurations();
         }
 
         /// <summary>
-        /// Gets or sets the display name associated with the keyword.
+        /// Gets the display name associated with the keyword.
         /// </summary>
-        public string KeywordDisplayName { get => LocalSettingsHelper.KeywordDisplayName; set => this.KeywordDisplayName = value; }
+        public string KeywordDisplayName { get => LocalSettingsHelper.KeywordDisplayName; }
 
         /// <summary>
-        /// Gets or sets the signal identifier associated with a keyword. This value, together with the
+        /// Gets the signal identifier associated with a keyword. This value, together with the
         /// model identifier, uniquely identifies the configuration data for this keyword.
         /// </summary>
-        public string KeywordId { get => LocalSettingsHelper.KeywordId; set => this.KeywordId = value; }
+        public string KeywordId { get => LocalSettingsHelper.KeywordId; }
 
         /// <summary>
-        /// Gets or sets the model identifier associated with a keyword. This is typically a locale,
+        /// Gets the model identifier associated with a keyword. This is typically a locale,
         /// like "1033", and together with the keyword identifier uniquely identifies the
         /// configuration data for this keyword.
         /// </summary>
-        public string KeywordModelId { get => LocalSettingsHelper.KeywordModelId; set => this.KeywordModelId = value; }
+        public string KeywordModelId { get => LocalSettingsHelper.KeywordModelId; }
 
         /// <summary>
-        /// Gets or sets the model data format associated with the activation keyword.
+        /// Gets the model data format associated with the activation keyword.
         /// </summary>
-        public string KeywordActivationModelDataFormat { get => LocalSettingsHelper.KeywordActivationModelDataFormat; set => this.KeywordActivationModelDataFormat = value; }
+        public string KeywordActivationModelDataFormat { get => LocalSettingsHelper.KeywordActivationModelDataFormat; }
 
         /// <summary>
-        /// Gets or sets the path to the model data associated with your activation keyword. This may be a
+        /// Gets the path to the model data associated with your activation keyword. This may be a
         /// standard file path or an ms-appx:/// path pointing to a resource in the app package.
         /// When not provided, no attempt will be made to associate model data with the
         /// activation keyword.
         /// </summary>
-        public string KeywordActivationModelFilePath { get => LocalSettingsHelper.KeywordActivationModelPath; set => this.KeywordActivationModelFilePath = value; }
+        public string KeywordActivationModelFilePath { get => LocalSettingsHelper.KeywordActivationModelPath; }
 
         /// <summary>
-        /// Gets the available version of the model data associated with an activation keyword.
+        /// Gets or sets the available version of the model data associated with an activation keyword.
         /// </summary>
-        public Version AvailableActivationKeywordModelVersion { get; private set; }
+        public Version AvailableActivationKeywordModelVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the last successfully updated model data version associated with the
@@ -98,8 +100,24 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public bool KeywordEnabledByApp
         {
-            get => this.keywordConfiguration?.AvailabilityInfo?.IsEnabled ?? false;
-            set => this.keywordConfiguration?.SetEnabledAsync(value).AsTask().Wait();
+            get
+            {
+                return LocalSettingsHelper.KeywordEnabledByApp;
+            }
+
+            set
+            {
+                LocalSettingsHelper.KeywordEnabledByApp = value;
+                if (this.softwareKeywordConfiguration != null && this.softwareKeywordConfiguration.AvailabilityInfo.IsEnabled != value)
+                {
+                    this.softwareKeywordConfiguration.SetEnabledAsync(value).AsTask().Wait();
+                }
+
+                if (this.hardwareKeywordConfiguration != null && this.hardwareKeywordConfiguration.AvailabilityInfo.IsEnabled != value)
+                {
+                    this.hardwareKeywordConfiguration.SetEnabledAsync(value).AsTask().Wait();
+                }
+            }
         }
 
         /// <summary>
@@ -109,96 +127,35 @@ namespace UWPVoiceAssistantSample
         public string ConfirmationKeywordModelPath { get => LocalSettingsHelper.KeywordRecognitionModel; set => this.ConfirmationKeywordModelPath = value; }
 
         /// <summary>
-        /// Changes the registered keyword using the new inputs.
+        /// Changes the registered keyword using values in the settings.
         /// </summary>
-        /// <param name="keywordDisplayName">Display name shown for the keyword in settings.</param>
-        /// <param name="keywordId">Id of the keyword.</param>
-        /// <param name="keywordModelId">Model id of the keyword.</param>
-        /// <param name="keywordActivationModelDataFormat">Data format of the keyword activation model.</param>
-        /// <param name="keywordActivationModelFilePath">File path of the keyword activation model.</param>
-        /// <param name="availableActivationKeywordModelVersion">Version of the most recent keyword model that is available.</param>
-        /// <param name="confirmationKeywordModelPath">Path of the confirmation keyword model.</param>
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
-        public async Task<ActivationSignalDetectionConfiguration> UpdateKeyword(
-            string keywordDisplayName,
-            string keywordId,
-            string keywordModelId,
-            string keywordActivationModelDataFormat,
-            string keywordActivationModelFilePath,
-            Version availableActivationKeywordModelVersion,
-            string confirmationKeywordModelPath)
+        public async Task<List<ActivationSignalDetectionConfiguration>> GetOrCreateKeywordConfigurationsAsync()
         {
-            this.KeywordDisplayName = keywordDisplayName;
-            this.KeywordId = keywordId;
-            this.KeywordModelId = keywordModelId;
-            this.KeywordActivationModelDataFormat = keywordActivationModelDataFormat;
-            this.KeywordActivationModelFilePath = keywordActivationModelFilePath;
-            this.AvailableActivationKeywordModelVersion = availableActivationKeywordModelVersion;
-            this.ConfirmationKeywordModelPath = confirmationKeywordModelPath;
-
-            this.keywordConfiguration = null;
-            return await this.GetOrCreateKeywordConfigurationAsync();
+            return await this.ProcessConfigurations();
         }
 
         /// <summary>
-        /// Fetches and, if necessary, creates an activation keyword configuration matching the
-        /// specified keyword registration information.
+        /// Changes the registered keyword using values in the settings.
         /// </summary>
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
-        public async Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync()
+        public async Task<List<ActivationSignalDetectionConfiguration>> UpdateKeyword()
         {
-            using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
-            {
-                if (this.keywordConfiguration != null)
-                {
-                    return this.keywordConfiguration;
-                }
-
-                if (LocalSettingsHelper.EnableHardwareDetector)
-                {
-                    var hwdetector = await GetDetectorAsync(null, false);
-
-                    if (await hwdetector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
-                        is ActivationSignalDetectionConfiguration existingHardwareConfiguration)
-                    {
-                        KwsPerformanceLogger.Spotter = "HWKWS";
-                        this.keywordConfiguration = existingHardwareConfiguration;
-                        return existingHardwareConfiguration;
-                    }
-                }
-                else
-                {
-                    var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
-
-                    if (await detector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId)
-                        is ActivationSignalDetectionConfiguration existingSoftwareConfiguration)
-                    {
-                        LocalSettingsHelper.SetModelData = true;
-                        await this.SetModelDataIfNeededAsync(existingSoftwareConfiguration);
-                        if (!existingSoftwareConfiguration.AvailabilityInfo.IsEnabled)
-                        {
-                            await existingSoftwareConfiguration.SetEnabledAsync(true);
-                        }
-
-                        this.keywordConfiguration = existingSoftwareConfiguration;
-                        return existingSoftwareConfiguration;
-                    }
-                }
-
-                return await this.CreateKeywordConfigurationAsyncInternal();
-            }
+            return await this.ProcessConfigurations();
         }
 
         /// <summary>
-        /// Forces creation of an activation keyword configuration matching the
-        /// specified keyword registration information.
+        /// Changes the registered keyword using values in the settings.
         /// </summary>
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
-        public async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsync()
+        public async Task UpdateModelData()
         {
             using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
             {
-                return await this.CreateKeywordConfigurationAsyncInternal();
+                if (this.softwareKeywordConfiguration != null)
+                {
+                    await this.SetModelDataIfNeededAsync(this.softwareKeywordConfiguration, true);
+                }
             }
         }
 
@@ -250,12 +207,8 @@ namespace UWPVoiceAssistantSample
                     this.creatingKeywordConfigSemaphore?.Dispose();
                 }
 
-                this.keywordConfiguration = null;
-                this.KeywordDisplayName = string.Empty;
-                this.KeywordId = string.Empty;
-                this.KeywordModelId = string.Empty;
-                this.KeywordActivationModelDataFormat = string.Empty;
-                this.KeywordActivationModelFilePath = string.Empty;
+                this.softwareKeywordConfiguration = null;
+                this.hardwareKeywordConfiguration = null;
                 this.AvailableActivationKeywordModelVersion = null;
                 this.ConfirmationKeywordModelPath = string.Empty;
 
@@ -268,7 +221,7 @@ namespace UWPVoiceAssistantSample
         {
             var detectorManager = ConversationalAgentDetectorManager.Default;
             var allDetectors = await detectorManager.GetAllActivationSignalDetectorsAsync();
-            var detectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations
+            var detectors = allDetectors.Where(candidate => candidate.CanCreateConfigurations == canCreateConfigurations
                 && candidate.Kind == ActivationSignalDetectorKind.AudioPattern
                 && (string.IsNullOrEmpty(dataFormat) || candidate.SupportedModelDataTypes.Contains(dataFormat)));
 
@@ -296,8 +249,14 @@ namespace UWPVoiceAssistantSample
         {
             var configuration = await detector.GetConfigurationAsync(signalId, modelId);
 
-            if (configuration != null && configuration.DisplayName != displayName)
+            // Display name change requires config to be re-created, but it can only be done on detectors that support creating configurations.
+            if (configuration != null && configuration.DisplayName != displayName && detector.CanCreateConfigurations)
             {
+                if (configuration.AvailabilityInfo.IsEnabled)
+                {
+                    await configuration.SetEnabledAsync(false);
+                }
+
                 await detector.RemoveConfigurationAsync(signalId, modelId);
                 configuration = null;
             }
@@ -311,11 +270,53 @@ namespace UWPVoiceAssistantSample
             return configuration;
         }
 
-        private async Task SetModelDataIfNeededAsync(ActivationSignalDetectionConfiguration configuration)
+        private async Task<List<ActivationSignalDetectionConfiguration>> ProcessConfigurations()
         {
-            if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0 || !LocalSettingsHelper.SetModelData)
+            try
             {
-                // Keyword is already up to date according to this data; nothing to do here!
+                using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
+                {
+                    this.softwareKeywordConfiguration = await this.GetOrCreateSoftwareKeywordConfigurationAsyncInternal();
+                    this.hardwareKeywordConfiguration = await this.GetHardwareKeywordConfigurationAsyncInternal();
+                }
+            }
+            catch (Exception ex)
+            {
+                string m = ex.Message;
+            }
+
+            List<ActivationSignalDetectionConfiguration> configurations = new List<ActivationSignalDetectionConfiguration>();
+            if (this.softwareKeywordConfiguration != null)
+            {
+                configurations.Add(this.softwareKeywordConfiguration);
+            }
+
+            if (this.hardwareKeywordConfiguration != null)
+            {
+                configurations.Add(this.hardwareKeywordConfiguration);
+            }
+
+            return configurations;
+        }
+
+        private async Task InitializeConfigurations()
+        {
+            using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
+            {
+                this.softwareKeywordConfiguration = await this.GetOrCreateSoftwareKeywordConfigurationAsyncInternal();
+                this.hardwareKeywordConfiguration = await this.GetHardwareKeywordConfigurationAsyncInternal();
+            }
+        }
+
+        private async Task SetModelDataIfNeededAsync(ActivationSignalDetectionConfiguration configuration, bool isModelDataUpdate)
+        {
+            if (!LocalSettingsHelper.SetModelData)
+            {
+                return;
+            }
+
+            if (!isModelDataUpdate && this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) >= 0)
+            {
                 return;
             }
 
@@ -348,47 +349,128 @@ namespace UWPVoiceAssistantSample
                 // Update was successful. Record this so we don't repeat it needlessly!
                 this.LastUpdatedActivationKeywordModelVersion = this.AvailableActivationKeywordModelVersion;
 
-                // And now, re-enable the configuration if we previously disabled it.
-                if (!configurationWasEnabled)
+                // And now, re-enable the configuration if it was previously enabled.
+                if (configurationWasEnabled)
                 {
                     await configuration.SetEnabledAsync(true);
                 }
             }
         }
 
-        private async Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsyncInternal()
+        private async Task<bool> PrepareConfigurationUpdate(ActivationSignalDetector detector, ActivationSignalDetectionConfiguration currentConfiguration, bool detectorEnabled)
         {
-            if (this.keywordConfiguration != null || LocalSettingsHelper.EnableHardwareDetector)
+            bool updateNeeded = false;
+
+            // If we have current configuration check if anything needs to be changed regarding that.
+            if (currentConfiguration == null && detector != null)
             {
-                return this.keywordConfiguration;
+                updateNeeded = true;
+            }
+            else if (currentConfiguration != null)
+            {
+                if (!detectorEnabled)
+                {
+                    if (currentConfiguration.AvailabilityInfo.IsEnabled)
+                    {
+                        await currentConfiguration.SetEnabledAsync(false);
+                        updateNeeded = true;
+                    }
+                }
+                else
+                {
+                    if (detector != null)
+                    {
+                        // If we previoulsy already had a configuration, make sure all other configurations on the detector (except one matching current configuration) are disabled first.
+                        var configurations = await detector.GetConfigurationsAsync();
+                        foreach (var configuration in configurations)
+                        {
+                            if (((this.KeywordId != configuration.SignalId) || (this.KeywordModelId != configuration.ModelId)) && configuration.AvailabilityInfo.IsEnabled)
+                            {
+                                await configuration.SetEnabledAsync(false);
+                            }
+                        }
+                    }
+
+                    if ((this.KeywordId != currentConfiguration.SignalId) || (this.KeywordModelId != currentConfiguration.ModelId))
+                    {
+                        updateNeeded = true;
+                    }
+                    else if (detector.CanCreateConfigurations && (this.KeywordDisplayName != currentConfiguration.DisplayName))
+                    {
+                        updateNeeded = true;
+                    }
+                }
             }
 
-            var detector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
+            return updateNeeded;
+        }
 
-            // Only one configuration may be active at a time. Before creating a new one, ensure all existing ones
-            // are disabled to avoid collisions.
-            var configurations = await detector.GetConfigurationsAsync();
-            foreach (var configuration in configurations)
+        private async Task<ActivationSignalDetectionConfiguration> GetHardwareKeywordConfigurationAsyncInternal()
+        {
+            ActivationSignalDetector hardwareKeywordDetector = null;
+            try
             {
-                await this.SetModelDataIfNeededAsync(configuration);
-                await configuration.SetEnabledAsync(false);
+                hardwareKeywordDetector = await GetDetectorAsync(string.Empty, false);
+            }
+            catch (NotSupportedException)
+            {
             }
 
-            var targetConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
-                detector,
-                this.KeywordDisplayName,
-                this.KeywordId,
-                this.KeywordModelId);
-            await this.SetModelDataIfNeededAsync(targetConfiguration);
-
-            if (!targetConfiguration.IsActive)
+            bool updateNeeded = await this.PrepareConfigurationUpdate(hardwareKeywordDetector, this.hardwareKeywordConfiguration, LocalSettingsHelper.UseHardwareDetector);
+            if (updateNeeded)
             {
-                await targetConfiguration.SetEnabledAsync(true);
+                this.hardwareKeywordConfiguration = null;
+                if (LocalSettingsHelper.UseHardwareDetector)
+                {
+                    if (hardwareKeywordDetector != null)
+                    {
+                        this.hardwareKeywordConfiguration = await hardwareKeywordDetector.GetConfigurationAsync(this.KeywordId, this.KeywordModelId);
+                    }
+
+                    if (this.hardwareKeywordConfiguration != null)
+                    {
+                        if (this.hardwareKeywordConfiguration.AvailabilityInfo.IsEnabled != this.KeywordEnabledByApp)
+                        {
+                            await this.hardwareKeywordConfiguration.SetEnabledAsync(this.KeywordEnabledByApp);
+                        }
+                    }
+                }
             }
 
-            this.keywordConfiguration = targetConfiguration;
+            return this.hardwareKeywordConfiguration;
+        }
 
-            return targetConfiguration;
+        private async Task<ActivationSignalDetectionConfiguration> GetOrCreateSoftwareKeywordConfigurationAsyncInternal()
+        {
+            ActivationSignalDetector softwareKeywordDetector = null;
+            try
+            {
+                softwareKeywordDetector = await GetDetectorAsync(this.KeywordActivationModelDataFormat);
+            }
+            catch (NotSupportedException)
+            {
+            }
+
+            bool updateNeeded = await this.PrepareConfigurationUpdate(softwareKeywordDetector, this.softwareKeywordConfiguration, LocalSettingsHelper.UseSoftwareDetector);
+            if (updateNeeded)
+            {
+                this.softwareKeywordConfiguration = null;
+                if (LocalSettingsHelper.UseSoftwareDetector && softwareKeywordDetector != null)
+                {
+                    this.softwareKeywordConfiguration = await GetOrCreateConfigurationOnDetectorAsync(
+                        softwareKeywordDetector,
+                        this.KeywordDisplayName,
+                        this.KeywordId,
+                        this.KeywordModelId);
+                    await this.SetModelDataIfNeededAsync(this.softwareKeywordConfiguration, false);
+                    if (this.softwareKeywordConfiguration.AvailabilityInfo.IsEnabled != this.KeywordEnabledByApp)
+                    {
+                        await this.softwareKeywordConfiguration.SetEnabledAsync(this.KeywordEnabledByApp);
+                    }
+                }
+            }
+
+            return this.softwareKeywordConfiguration;
         }
 
         private async Task<StorageFile> GetFileFromPathAsync(string path)

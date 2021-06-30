@@ -62,6 +62,15 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether keyword detectors should be enabled.
+        /// </summary>
+        public static bool KeywordEnabledByApp
+        {
+            get => ReadValueWithDefault<bool>("keywordEnabledByApp", false);
+            set => WriteValue("keywordEnabledByApp", value);
+        }
+
+        /// <summary>
         /// Gets or sets the subscription key used by Direct Line Speech for dialog.
         /// </summary>
         public static string SpeechSubscriptionKey
@@ -201,7 +210,12 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets a value indicating whether to use 1st stage hardware keyword spotter.
         /// </summary>
-        public static bool EnableHardwareDetector { get; set; }
+        public static bool UseHardwareDetector { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use 1st stage sotware keyword spotter.
+        /// </summary>
+        public static bool UseSoftwareDetector { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to set model data for a keyword configuration.
@@ -284,10 +298,11 @@ namespace UWPVoiceAssistantSample
                 KeywordId = appSettings.KeywordActivationModel.KeywordId;
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
+                UseHardwareDetector = appSettings.UseHardwareDetector;
+                UseSoftwareDetector = appSettings.UseSoftwareDetector;
                 KeywordRecognitionModel = appSettings.KeywordRecognitionModel;
                 SetProperty = appSettings.SetProperty;
                 EnableKwsLogging = appSettings.EnableKwsLogging;
-                EnableHardwareDetector = appSettings.EnableHardwareDetector;
                 SetModelData = appSettings.SetModelData;
             }
         }
