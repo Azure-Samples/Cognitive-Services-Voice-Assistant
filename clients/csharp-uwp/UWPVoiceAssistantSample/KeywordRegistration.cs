@@ -399,6 +399,10 @@ namespace UWPVoiceAssistantSample
                     {
                         updateNeeded = true;
                     }
+                    else if (this.LastUpdatedActivationKeywordModelVersion.CompareTo(this.AvailableActivationKeywordModelVersion) < 0)
+                    {
+                        updateNeeded = true;
+                    }
                 }
             }
 

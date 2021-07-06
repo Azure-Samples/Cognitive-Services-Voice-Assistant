@@ -27,7 +27,6 @@ namespace KeywordRegistrationTests
             await GetConfirmationFileAsyncTest();
             await VerifyActiviationKeywordFilePresentAsyncTest();
             await VerifyActivationAndConfirmationPathsAsyncTest();
-            await VerifyAppropriateValuesAsyncTest();
         }
 
         public async Task LastUpdatedActivationKeywordModelVersionAsyncTest()
@@ -103,7 +102,7 @@ namespace KeywordRegistrationTests
         {
             var result = await this.keywordRegistration.GetActivationKeywordFileAsync();
 
-            var MVAKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "MVAKeywords\\Contoso.bin");
+            var MVAKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets\\ActivationKeywords\\Contoso.bin");
 
             Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".bin", result.DisplayName);
             Assert.AreEqual("BIN File", result.DisplayType);
@@ -122,19 +121,21 @@ namespace KeywordRegistrationTests
         {
             var result = await this.keywordRegistration.GetConfirmationKeywordFileAsync();
 
-            var ConfirmationKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "SDKKeywords\\Contoso.table");
+            var ConfirmationKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets\\ConfirmationKeywords\\contoso.table");
 
-            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".table", result.DisplayName);
+            string displayName = char.ToUpper(result.DisplayName[0]) + result.DisplayName.Substring(1, result.DisplayName.Length - 1);
+            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".table", displayName);
             Assert.AreEqual("TABLE File", result.DisplayType);
             Assert.AreEqual(".table", result.FileType);
             Assert.IsTrue(result.IsAvailable);
-            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".table", result.Name);
+            string name = char.ToUpper(result.Name[0]) + result.Name.Substring(1, result.Name.Length - 1);
+            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".table", name);
             Assert.AreEqual(ConfirmationKeywordPath, result.Path);
         }
 
         public async Task VerifyActiviationKeywordFilePresentAsyncTest()
         {
-            var MVAKeywordFile = Path.Combine(Directory.GetCurrentDirectory(), "MVAKeywords\\Contoso.bin");
+            var MVAKeywordFile = Path.Combine(Directory.GetCurrentDirectory(), "Assets\\ActivationKeywords\\Contoso.bin");
 
             var result = await GetStorageFile(this.keywordRegistration.KeywordActivationModelFilePath);
 
@@ -187,20 +188,6 @@ namespace KeywordRegistrationTests
             {
                 throw new ArgumentException("Confirmation Model File Path is null");
             }
-        }
-
-        public async Task VerifyAppropriateValuesAsyncTest()
-        {
-            KeywordRegistration keyword = new KeywordRegistration(
-                            new Version(1, 0, 0, 0));
-
-            var lastVersion = keyword.LastUpdatedActivationKeywordModelVersion;
-
-            var newVersion = new Version(lastVersion.Major, lastVersion.Minor, lastVersion.Build, lastVersion.Revision + 1);
-
-            keyword.AvailableActivationKeywordModelVersion = newVersion;
-
-            await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await keyword.UpdateKeyword(), "Invalid InputValues");
         }
 
         private async Task<StorageFile> GetStorageFile(string path)

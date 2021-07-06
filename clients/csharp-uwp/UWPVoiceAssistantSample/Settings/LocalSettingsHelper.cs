@@ -66,7 +66,7 @@ namespace UWPVoiceAssistantSample
         /// </summary>
         public static bool KeywordEnabledByApp
         {
-            get => ReadValueWithDefault<bool>("keywordEnabledByApp", false);
+            get => ReadValueWithDefault<bool>("keywordEnabledByApp", true);
             set => WriteValue("keywordEnabledByApp", value);
         }
 
