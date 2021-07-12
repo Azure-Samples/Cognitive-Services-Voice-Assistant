@@ -215,11 +215,7 @@ namespace UWPVoiceAssistantSample
         /// <summary>
         /// Gets or sets a value indicating whether to use 1st stage sotware keyword spotter.
         /// </summary>
-        public static bool UseSoftwareDetector
-        {
-            get => ReadValueWithDefault<bool>("UseSoftwareDetector", true);
-            set => WriteValue("UseSoftwareDetector", value);
-        }
+        public static bool UseSoftwareDetector { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to set model data for a keyword configuration.
@@ -303,6 +299,7 @@ namespace UWPVoiceAssistantSample
                 KeywordModelId = appSettings.KeywordActivationModel.ModelId;
                 KeywordActivationModelDataFormat = appSettings.KeywordActivationModel.ModelDataFormat;
                 UseHardwareDetector = appSettings.UseHardwareDetector;
+                UseSoftwareDetector = appSettings.UseSoftwareDetector;
                 KeywordRecognitionModel = appSettings.KeywordRecognitionModel;
                 SetProperty = appSettings.SetProperty;
                 EnableKwsLogging = appSettings.EnableKwsLogging;
