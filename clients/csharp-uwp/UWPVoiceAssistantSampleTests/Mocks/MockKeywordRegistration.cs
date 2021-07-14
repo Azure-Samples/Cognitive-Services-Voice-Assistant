@@ -53,16 +53,6 @@ namespace UWPVoiceAssistantSampleTests
             return null;
         }
 
-        //public async Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync()
-        //{
-        //    return null;
-        //}
-
-        //public async Task<ActivationSignalDetectionConfiguration> UpdateKeyword(string keywordDisplayName, string keywordId, string keywordModelId, string keywordActivationModelDataFormat, string keywordActivationModelFilePath, Version availableActivationKeywordModelVersion, string confirmationKeywordModelPath)
-        //{
-        //    return null;
-        //}
-
         public async Task UpdateModelData()
         {
             await Task.CompletedTask;

@@ -33,7 +33,7 @@ namespace UWPVoiceAssistantSample
 
             this.creatingKeywordConfigSemaphore = new SemaphoreSlim(1, 1);
 
-            _ = this.InitializeConfigurations();
+            _ = this.InitializeConfigurationsAsync();
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace UWPVoiceAssistantSample
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
         public async Task<List<ActivationSignalDetectionConfiguration>> GetOrCreateKeywordConfigurationsAsync()
         {
-            return await this.ProcessConfigurations();
+            return await this.ProcessConfigurationsAsync();
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace UWPVoiceAssistantSample
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
         public async Task<List<ActivationSignalDetectionConfiguration>> UpdateKeyword()
         {
-            return await this.ProcessConfigurations();
+            return await this.ProcessConfigurationsAsync();
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace UWPVoiceAssistantSample
             return configuration;
         }
 
-        private async Task<List<ActivationSignalDetectionConfiguration>> ProcessConfigurations()
+        private async Task<List<ActivationSignalDetectionConfiguration>> ProcessConfigurationsAsync()
         {
             try
             {
@@ -299,7 +299,7 @@ namespace UWPVoiceAssistantSample
             return configurations;
         }
 
-        private async Task InitializeConfigurations()
+        private async Task InitializeConfigurationsAsync()
         {
             using (await this.creatingKeywordConfigSemaphore.AutoReleaseWaitAsync())
             {
