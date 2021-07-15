@@ -27,13 +27,13 @@ namespace KeywordRegistrationTests
             await GetConfirmationFileAsyncTest();
             await VerifyActiviationKeywordFilePresentAsyncTest();
             await VerifyActivationAndConfirmationPathsAsyncTest();
-            await VerifyAppropriateValuesAsyncTest();
         }
 
         public async Task LastUpdatedActivationKeywordModelVersionAsyncTest()
         {
             var lastKeywordModelVersion = this.keywordRegistration.LastUpdatedActivationKeywordModelVersion;
-            var getOrCreateConfiguration = await keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+            var configurations = await keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
+            var getOrCreateConfiguration = configurations[0];
 
             if (this.keywordRegistration.KeywordId == getOrCreateConfiguration.SignalId &&
                 lastKeywordModelVersion == this.keywordRegistration.AvailableActivationKeywordModelVersion)
@@ -43,14 +43,8 @@ namespace KeywordRegistrationTests
             }
             else
             {
-                var updateKeyword = await this.keywordRegistration.UpdateKeyword(
-                    this.keywordRegistration.KeywordDisplayName,
-                    this.keywordRegistration.KeywordId,
-                    this.keywordRegistration.KeywordModelId,
-                    this.keywordRegistration.KeywordActivationModelDataFormat,
-                    this.keywordRegistration.KeywordActivationModelFilePath,
-                    this.keywordRegistration.AvailableActivationKeywordModelVersion,
-                    this.keywordRegistration.ConfirmationKeywordModelPath);
+                var updatedConfigurations = await this.keywordRegistration.UpdateKeyword();
+                var updateKeyword = updatedConfigurations[0];
                 Assert.AreEqual(this.keywordRegistration.LastUpdatedActivationKeywordModelVersion, this.keywordRegistration.AvailableActivationKeywordModelVersion);
                 Assert.IsTrue(updateKeyword.IsActive);
                 Assert.AreEqual(this.keywordRegistration.KeywordDisplayName, updateKeyword.DisplayName);
@@ -78,14 +72,8 @@ namespace KeywordRegistrationTests
 
         public async Task UpdateKeywordAsyncTest()
         {
-            var result = await this.keywordRegistration.UpdateKeyword(
-                this.keywordRegistration.KeywordDisplayName,
-                this.keywordRegistration.KeywordId,
-                this.keywordRegistration.KeywordModelId,
-                this.keywordRegistration.KeywordActivationModelDataFormat,
-                this.keywordRegistration.KeywordActivationModelFilePath,
-                this.keywordRegistration.AvailableActivationKeywordModelVersion,
-                this.keywordRegistration.ConfirmationKeywordModelPath);
+            var results = await this.keywordRegistration.UpdateKeyword();
+            var result = results[0];
 
             Assert.IsTrue(result.AvailabilityInfo.HasPermission);
             Assert.IsTrue(result.AvailabilityInfo.HasSystemResourceAccess);
@@ -98,7 +86,8 @@ namespace KeywordRegistrationTests
 
         public async Task GetOrCreateKeywordConfigurationAsyncTest()
         {
-            var result = await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+            var results = await this.keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
+            var result = results[0];
 
             Assert.IsTrue(result.AvailabilityInfo.HasPermission);
             Assert.IsTrue(result.AvailabilityInfo.HasSystemResourceAccess);
@@ -113,7 +102,7 @@ namespace KeywordRegistrationTests
         {
             var result = await this.keywordRegistration.GetActivationKeywordFileAsync();
 
-            var MVAKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "MVAKeywords\\Contoso.bin");
+            var MVAKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets\\ActivationKeywords\\Contoso.bin");
 
             Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".bin", result.DisplayName);
             Assert.AreEqual("BIN File", result.DisplayType);
@@ -132,19 +121,21 @@ namespace KeywordRegistrationTests
         {
             var result = await this.keywordRegistration.GetConfirmationKeywordFileAsync();
 
-            var ConfirmationKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "SDKKeywords\\Contoso.table");
+            var ConfirmationKeywordPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets\\ConfirmationKeywords\\contoso.table");
 
-            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".table", result.DisplayName);
+            string displayName = char.ToUpper(result.DisplayName[0]) + result.DisplayName.Substring(1, result.DisplayName.Length - 1);
+            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".table", displayName);
             Assert.AreEqual("TABLE File", result.DisplayType);
             Assert.AreEqual(".table", result.FileType);
             Assert.IsTrue(result.IsAvailable);
-            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".table", result.Name);
+            string name = char.ToUpper(result.Name[0]) + result.Name.Substring(1, result.Name.Length - 1);
+            Assert.AreEqual(this.keywordRegistration.KeywordDisplayName + ".table", name);
             Assert.AreEqual(ConfirmationKeywordPath, result.Path);
         }
 
         public async Task VerifyActiviationKeywordFilePresentAsyncTest()
         {
-            var MVAKeywordFile = Path.Combine(Directory.GetCurrentDirectory(), "MVAKeywords\\Contoso.bin");
+            var MVAKeywordFile = Path.Combine(Directory.GetCurrentDirectory(), "Assets\\ActivationKeywords\\Contoso.bin");
 
             var result = await GetStorageFile(this.keywordRegistration.KeywordActivationModelFilePath);
 
@@ -197,25 +188,6 @@ namespace KeywordRegistrationTests
             {
                 throw new ArgumentException("Confirmation Model File Path is null");
             }
-        }
-
-        public async Task VerifyAppropriateValuesAsyncTest()
-        {
-            KeywordRegistration keyword = new KeywordRegistration(
-                            new Version(1, 0, 0, 0));
-
-            var lastVersion = keyword.LastUpdatedActivationKeywordModelVersion;
-
-            var newVersion = new Version(lastVersion.Major, lastVersion.Minor, lastVersion.Build, lastVersion.Revision + 1);
-
-            await Assert.ThrowsExceptionAsync<ArgumentException>(async () => await keyword.UpdateKeyword(
-            keyword.KeywordDisplayName,
-            keyword.KeywordId,
-            keyword.KeywordModelId,
-            keyword.KeywordActivationModelDataFormat,
-            keyword.KeywordActivationModelFilePath,
-            newVersion,
-            keyword.ConfirmationKeywordModelPath), "Invalid InputValues");
         }
 
         private async Task<StorageFile> GetStorageFile(string path)

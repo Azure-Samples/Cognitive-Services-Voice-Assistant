@@ -3,10 +3,14 @@
 
 namespace UWPVoiceAssistantSample
 {
+    using System;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
     using UWPVoiceAssistantSample.AudioInput;
+    using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Security.Authorization.AppCapabilityAccess;
     using Windows.System.Power;
     using Windows.UI;
@@ -126,36 +130,52 @@ namespace UWPVoiceAssistantSample
             var agentSessionManager = services.GetRequiredService<IAgentSessionManager>();
 
             var session = await agentSessionManager.GetSessionAsync();
-            var config = await keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+            var configs = await keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
             var audioControl = await AudioCaptureControl.GetInstanceAsync();
 
             string glyph = Glyphs.Cancel;
             Color color = Colors.Red;
             List<string> status = new List<string>();
+            ActivationSignalDetectionConfiguration swKeywordConfiguration = null;
+            ActivationSignalDetectionConfiguration hwKeywordConfiguration = null;
+            ActivationSignalDetectionConfiguration defaultKeywordConfiguration = null;
+            foreach (var configuration in configs)
+            {
+                string modelDataType = await configuration.GetModelDataTypeAsync();
+                if (string.IsNullOrEmpty(modelDataType))
+                {
+                    hwKeywordConfiguration = configuration;
+                }
+                else
+                {
+                    swKeywordConfiguration = configuration;
+                }
+            }
+
+            if (swKeywordConfiguration != null)
+            {
+                defaultKeywordConfiguration = swKeywordConfiguration;
+            }
+            else if (hwKeywordConfiguration != null)
+            {
+                defaultKeywordConfiguration = hwKeywordConfiguration;
+            }
 
             if (session == null)
             {
                 status.Add("Unable to obtain agent session. Please verify registration.");
             }
-            else if (config == null)
+            else if (configs.Count == 0)
             {
                 status.Add("No valid keyword configuration. Please check your source code configuration.");
             }
-            else if (!config.AvailabilityInfo.HasPermission)
+            else if (swKeywordConfiguration != null && !swKeywordConfiguration.AvailabilityInfo.HasPermission)
             {
                 status.Add("Voice activation permissions are currently denied.");
             }
-            else if (!config.AvailabilityInfo.HasSystemResourceAccess)
+            else if (hwKeywordConfiguration != null && !hwKeywordConfiguration.AvailabilityInfo.HasPermission)
             {
-                status.Add("Voice activation is unavailable. Please verify against keyword conflicts.");
-            }
-            else if (!config.AvailabilityInfo.IsEnabled)
-            {
-                status.Add("Voice activation is programmatically disabled by the app.");
-            }
-            else if (!config.IsActive)
-            {
-                status.Add("Voice activation is unavailable for an unknown reason.");
+                status.Add("Voice activation permissions are currently denied.");
             }
             else if (audioControl.CaptureMuted || audioControl.CaptureVolumeLevel < 5f)
             {
@@ -175,7 +195,13 @@ namespace UWPVoiceAssistantSample
                 color = Colors.DarkOrange;
                 status.Add("The system is currently power restricted and voice activation may not be available.");
             }
-            else if (config.AvailabilityInfo.IsEnabled && MVARegistrationHelpers.IsBackgroundTaskRegistered)
+            else if (swKeywordConfiguration != null && swKeywordConfiguration.AvailabilityInfo.IsEnabled && MVARegistrationHelpers.IsBackgroundTaskRegistered)
+            {
+                glyph = Glyphs.FeedbackApp;
+                color = Colors.Green;
+                status.Add(VoiceActivationEnabledMessage);
+            }
+            else if (hwKeywordConfiguration != null && hwKeywordConfiguration.AvailabilityInfo.IsEnabled && MVARegistrationHelpers.IsBackgroundTaskRegistered)
             {
                 glyph = Glyphs.FeedbackApp;
                 color = Colors.Green;
@@ -187,7 +213,48 @@ namespace UWPVoiceAssistantSample
                 color = Colors.DarkOrange;
             }
 
+            if (swKeywordConfiguration != null)
+            {
+                string configStatus = GetKeywordConfigurationStatusDescription(swKeywordConfiguration, "swKeywordConfig");
+                if (!string.IsNullOrEmpty(configStatus))
+                {
+                    status.Add(configStatus);
+                }
+            }
+
+            if (hwKeywordConfiguration != null)
+            {
+                string configStatus = GetKeywordConfigurationStatusDescription(hwKeywordConfiguration, "hwKeywordConfig");
+                if (!string.IsNullOrEmpty(configStatus))
+                {
+                    status.Add(configStatus);
+                }
+            }
+
             return new UIAudioStatus(glyph, color, status);
+        }
+
+        private static string GetKeywordConfigurationStatusDescription(ActivationSignalDetectionConfiguration config, string configName)
+        {
+            string status = string.Empty;
+            if (!config.AvailabilityInfo.HasSystemResourceAccess)
+            {
+                status = $"Voice activation is unavailable for {configName}. Please verify against keyword conflicts.";
+            }
+            else if (!config.AvailabilityInfo.IsEnabled)
+            {
+                status = $"{configName} is programmatically disabled by the app.";
+            }
+            else if (!config.AvailabilityInfo.HasPermission)
+            {
+                // Lack of permission is not config specific and is already accounted for, so do not add that here.
+            }
+            else if (!config.IsActive)
+            {
+                status = $"{configName} is unavailable for an unknown reason.";
+            }
+
+            return status;
         }
 
         private static bool VoiceActivationIsPowerRestricted()

@@ -36,11 +36,11 @@ namespace UWPVoiceAssistantSampleTests
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            LogRouter.Initialize();
 
             Task.Run(async () => await LocalSettingsHelper.InitializeAsync()).Wait();
 
             MVARegistrationHelpers.UnlockLimitedAccessFeature();
-            LogRouter.Initialize();
 
             this.keywordRegistration = new KeywordRegistration(new Version(1, 0, 0, 0));
 
@@ -58,7 +58,7 @@ namespace UWPVoiceAssistantSampleTests
 
         private async Task DoKeywordSetupAsync()
         {
-            await this.keywordRegistration.GetOrCreateKeywordConfigurationAsync();
+            await this.keywordRegistration.GetOrCreateKeywordConfigurationsAsync();
         }
 
         /// <summary>

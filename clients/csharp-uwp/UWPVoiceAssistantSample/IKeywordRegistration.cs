@@ -4,6 +4,7 @@
 namespace UWPVoiceAssistantSample
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Windows.ApplicationModel.ConversationalAgent;
     using Windows.Storage;
@@ -75,38 +76,23 @@ namespace UWPVoiceAssistantSample
         string ConfirmationKeywordModelPath { get; }
 
         /// <summary>
-        /// Changes the registered keyword using the new inputs.
+        /// Changes the registered keyword using values from settings.
         /// </summary>
-        /// <param name="keywordDisplayName">Display name shown for the keyword in settings.</param>
-        /// <param name="keywordId">Id of the keyword.</param>
-        /// <param name="keywordModelId">Model id of the keyword.</param>
-        /// <param name="keywordActivationModelDataFormat">Data format of the keyword activation model.</param>
-        /// <param name="keywordActivationModelFilePath">File path of the keyword activation model.</param>
-        /// <param name="availableActivationKeywordModelVersion">Version of the most recent keyword model that is available.</param>
-        /// <param name="confirmationKeywordModelPath">Path of the confirmation keyword model.</param>
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
-        Task<ActivationSignalDetectionConfiguration> UpdateKeyword(
-            string keywordDisplayName,
-            string keywordId,
-            string keywordModelId,
-            string keywordActivationModelDataFormat,
-            string keywordActivationModelFilePath,
-            Version availableActivationKeywordModelVersion,
-            string confirmationKeywordModelPath);
+        Task<List<ActivationSignalDetectionConfiguration>> UpdateKeyword();
+
+        /// <summary>
+        /// Updates the model data for current keyword.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
+        Task UpdateModelData();
 
         /// <summary>
         /// Fetches and, if necessary, creates an activation keyword configuration matching the
         /// specified keyword registration information.
         /// </summary>
         /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
-        Task<ActivationSignalDetectionConfiguration> GetOrCreateKeywordConfigurationAsync();
-
-        /// <summary>
-        /// Forces creation of an activation keyword configuration matching the
-        /// specified keyword registration information.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that returns on successful keyword setup.</returns>
-        Task<ActivationSignalDetectionConfiguration> CreateKeywordConfigurationAsync();
+        Task<List<ActivationSignalDetectionConfiguration>> GetOrCreateKeywordConfigurationsAsync();
 
         /// <summary>
         /// Creates a keyword registration data collection from an input file, such as a

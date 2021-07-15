@@ -109,8 +109,7 @@ namespace UWPVoiceAssistantSample
         }
 
         /// <summary>
-        /// Gets or sets the name of the ConversationalAgentSignal (for example, "Cortana"
-        /// or "Alexa").
+        /// Gets or sets the name of the ConversationalAgentSignal (for example, "Cortana").
         /// </summary>
         public string SignalName
         {
