@@ -45,7 +45,7 @@ $body = @{
                         predictionResourceId = $luisPredictionResourceId
                         predictionRegion = $region
                     }
-                    dialogModel = $dialogModel
+                    dialogModel = $dialogModel.$language
                 }
             }
         }
