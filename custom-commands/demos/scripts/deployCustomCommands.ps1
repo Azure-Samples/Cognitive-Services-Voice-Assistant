@@ -25,6 +25,7 @@ $skillJson = "../$appName/skill/$language/$((Get-Culture).TextInfo.ToTitleCase($
 # Load the CC JSON model file
 write-host "patching the $customCommandsAppName $appName commands model"
 $dialogModel = Get-Content $skillJson | Out-String | ConvertFrom-Json
+$dialogModel = $dialogModel.$language
 $dialogModel.webEndpoints[0].url = $customCommandsWebEndpoint
 
 # Define the body of the web API call
@@ -45,7 +46,7 @@ $body = @{
                         predictionResourceId = $luisPredictionResourceId
                         predictionRegion = $region
                     }
-                    dialogModel = $dialogModel.$language
+                    dialogModel = $dialogModel
                 }
             }
         }
