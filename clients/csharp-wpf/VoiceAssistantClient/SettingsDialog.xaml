@@ -53,10 +53,10 @@
 
                 <Label  Grid.Row="0" Grid.Column="0" Content="General settings:" FontWeight="Bold" />
 
-                <Label Grid.Row="1" Grid.Column="0" Content="Subscription key:"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="Speech service key:"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Name="SubscriptionKeyTextBox" TextBoxBase.TextChanged="SubscriptionKeyTextBox_TextChanged"  Text="{Binding SubscriptionKey}"/>
 
-                <Label  Grid.Row="2" Grid.Column="0" Content="Subscription key region:"/>
+                <Label  Grid.Row="2" Grid.Column="0" Content="Speech service location:"/>
                 <TextBox  Grid.Row="2" Grid.Column="1" Name='SubscriptionRegionTextBox' TextBoxBase.TextChanged="SubscriptionKeyRegionTextBox_TextChanged" Text="{Binding SubscriptionKeyRegion}"/>
 
                 <Label Grid.Row="3" Grid.Column="0" Content="Custom commands app Id:"/>
