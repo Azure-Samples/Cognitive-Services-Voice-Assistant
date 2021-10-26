@@ -56,7 +56,7 @@
                 <Label Grid.Row="1" Grid.Column="0" Content="Speech service key:"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Name="SubscriptionKeyTextBox" TextBoxBase.TextChanged="SubscriptionKeyTextBox_TextChanged"  Text="{Binding SubscriptionKey}"/>
 
-                <Label  Grid.Row="2" Grid.Column="0" Content="Speech service location:"/>
+                <Label  Grid.Row="2" Grid.Column="0" Content="Speech service region:"/>
                 <TextBox  Grid.Row="2" Grid.Column="1" Name='SubscriptionRegionTextBox' TextBoxBase.TextChanged="SubscriptionKeyRegionTextBox_TextChanged" Text="{Binding SubscriptionKeyRegion}"/>
 
                 <Label Grid.Row="3" Grid.Column="0" Content="Custom commands app Id:"/>
