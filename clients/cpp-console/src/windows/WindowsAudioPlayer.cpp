@@ -66,6 +66,7 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
     CComPtr<IMMDeviceEnumerator> pEnumerator;
     CComPtr<IMMDevice> pDevice;
     REFERENCE_TIME hnsRequestedDuration = REFTIMES_PER_MILLISEC * ENGINE_LATENCY_IN_MSEC;
+    bool getFormatFromWindows = false;
 
     switch (format)
     {
@@ -79,6 +80,9 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
         m_pwf.nAvgBytesPerSec = m_pwf.nSamplesPerSec * m_pwf.nBlockAlign;
         m_pwf.cbSize = 0;
         m_pwf.wFormatTag = WAVE_FORMAT_PCM;
+        break;
+    case AudioPlayerFormat::GetFromWindows:
+        getFormatFromWindows = true;
         break;
     default:
         hr = E_FAIL;
@@ -118,6 +122,13 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
     {
         goto exit;
     }
+    
+    if (getFormatFromWindows)
+    {
+        WAVEFORMATEX* formatEx;
+        m_pAudioClient->GetMixFormat(&formatEx);
+        m_pwf = *formatEx;
+    }
 
     hr = m_pAudioClient->Initialize(
         AUDCLNT_SHAREMODE_SHARED,
@@ -129,6 +140,58 @@ int WindowsAudioPlayer::Initialize(const std::string& device, AudioPlayerFormat 
     // Note: AUDCLNT_SHAREMODE_EXCLUSIVE is not supported in Durango
     if (hr != S_OK)
     {
+        switch (hr)
+        {
+        case AUDCLNT_E_ALREADY_INITIALIZED:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Audio client already initialized. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_WRONG_ENDPOINT_TYPE:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Wrong endpoint type. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_BUFFER_SIZE_NOT_ALIGNED:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Buffer size not aligned. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_BUFFER_SIZE_ERROR:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Buffer size error. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_CPUUSAGE_EXCEEDED:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. CPU usage exceeded. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_DEVICE_INVALIDATED:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Device invalidated. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_DEVICE_IN_USE:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Device in use. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_ENDPOINT_CREATE_FAILED:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Endpoint create failed. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_INVALID_DEVICE_PERIOD:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Invalid device period. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_UNSUPPORTED_FORMAT:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Unsupported format. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_EXCLUSIVE_MODE_NOT_ALLOWED:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Exclusive mode not allowed. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_BUFDURATION_PERIOD_NOT_EQUAL:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Buffer duration and period not equal. Error: 0x%08x\n", hr);
+            break;
+        case AUDCLNT_E_SERVICE_NOT_RUNNING:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Service not running. Error: 0x%08x\n", hr);
+            break;
+        case E_POINTER:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Format is NULL. Error: 0x%08x\n", hr);
+            break;
+        case E_INVALIDARG:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Format is invalid. Error: 0x%08x\n", hr);
+            break;
+        case E_OUTOFMEMORY:
+            fprintf(stderr, "Error. Failed to Initialize AudioClient. Out of memory. Error: 0x%08x\n", hr);
+            break;
+        }
+
         goto exit;
     }
 
@@ -205,6 +268,21 @@ void WindowsAudioPlayer::PlayAudioPlayerStream(std::shared_ptr<AudioPlayerEntry>
     hr = m_pAudioClient->GetBufferSize(&maxBufferSizeInFrames);
     if (FAILED(hr))
     {
+        switch(hr)
+        {
+        case  AUDCLNT_E_NOT_INITIALIZED:
+            fprintf(stderr, "Error. Failed to GetBufferSize. Audio client not initialized. Error: 0x%08x\n", hr);
+            return;
+        case AUDCLNT_E_DEVICE_INVALIDATED:
+            fprintf(stderr, "Error. Failed to GetBufferSize. Device Invalidated. Error: 0x%08x\n", hr);
+            return;
+        case AUDCLNT_E_SERVICE_NOT_RUNNING:
+            fprintf(stderr, "Error. Failed to GetBufferSize. Windows audio service not running. Error: 0x%08x\n", hr);
+            return;
+        case E_POINTER:
+            fprintf(stderr, "Error. Failed to GetBufferSize. maxBufferSizeInFrames pointer is NULL. Error: 0x%08x\n", hr);
+            return;
+        }
         fprintf(stderr, "Error. Failed to GetBufferSize. Error: 0x%08x\n", hr);
         return;
     }

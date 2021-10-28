@@ -29,7 +29,8 @@ public:
     enum class AudioPlayerFormat
     {
         Mono16khz16bit,
-        Stereo48khz16bit
+        Stereo48khz16bit,
+        GetFromWindows
     };
 
     /// <summary>
