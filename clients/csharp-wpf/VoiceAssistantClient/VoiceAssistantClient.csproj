@@ -99,10 +99,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdaptiveCards, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\AdaptiveCards.2.7.1\lib\net452\AdaptiveCards.dll</HintPath>
+      <HintPath>..\packages\AdaptiveCards.2.7.2\lib\net452\AdaptiveCards.dll</HintPath>
     </Reference>
     <Reference Include="AdaptiveCards.Rendering.Wpf, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\AdaptiveCards.Rendering.Wpf.2.7.1\lib\net452\AdaptiveCards.Rendering.Wpf.dll</HintPath>
+      <HintPath>..\packages\AdaptiveCards.Rendering.Wpf.2.7.2\lib\net452\AdaptiveCards.Rendering.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Jot, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jot.1.4.1\lib\net45\Jot.dll</HintPath>
@@ -119,8 +119,8 @@
     <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
