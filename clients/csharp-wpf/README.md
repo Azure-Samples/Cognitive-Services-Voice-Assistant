@@ -23,7 +23,7 @@ Let's review the hardware, software, and subscriptions that you'll need to use t
 
 - Windows 10 PC
 - Visual Studio 2017 or higher
-- [.NET Framework Runtime 4.6.1](https://dotnet.microsoft.com/download) or higher if you just want to download and run the executable, or [.NET Framework Dev Pack 4.6.1](https://dotnet.microsoft.com/download) or higher if you want to clone the repo and build the executable from source code 
+- [.NET Framework Runtime 4.8](https://dotnet.microsoft.com/download) or higher if you just want to download and run the executable, or [.NET Framework Dev Pack 4.8](https://dotnet.microsoft.com/download) or higher if you want to clone the repo and build the executable from source code 
 - Microphone access
 - An Azure [Speech Services Key](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/get-started)
 - A [Bot-Framework](https://dev.botframework.com/) bot service registered with [Direct Line Speech](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-channel-connect-directlinespeech?view=azure-bot-service-4.0) channel
