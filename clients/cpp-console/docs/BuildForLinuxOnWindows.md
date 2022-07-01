@@ -10,7 +10,7 @@ For the official instructions for installing WSL 2, check [Installation Instruct
 3. In Windows features turn on Virtual Machine Platform and Windows Subsystem for Linux and reboot as required. Open Powershell with admin privileges and run 2 commands below to ensure the 2 turned on features are enabled.\
    Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform\
    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
-4. Go into the Microsoft Store and pick the Linux distribution you want. I choose Ubuntu 18.04 because Microsoft Speech SDK supports Ubuntu 16.04/18.04. Install, launch, and complete initialization of your distro with username and password as required.
+4. Go into the Microsoft Store and pick the Linux distribution you want. I choose Ubuntu 18.04. This is the lowest Ubuntu version supported by the Speech SDK. Install, launch, and complete initialization of your distro with username and password as required.
 5. To see which distros you have installed, you can run in CMD:\
    wsl -l\
    wsl -l -v\
