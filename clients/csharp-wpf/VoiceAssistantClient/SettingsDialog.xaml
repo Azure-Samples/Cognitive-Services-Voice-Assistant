@@ -71,7 +71,7 @@
                 <Label  Grid.Row="6" Grid.Column="0" Content="Language:"/>
                 <TextBox Grid.Row="6" Grid.Column="1" Name='LanguageTextBox'  Text="{Binding ConnectionLanguage}" />
 
-                <Label  Grid.Row="7" Grid.Column="0" Content="Log file path:"/>
+                <Label  Grid.Row="7" Grid.Column="0" Content="Speech SDK log file:"/>
                 <TextBox Grid.Row="7" Grid.Column="1"  Name="LogFileTextBox" Text="{Binding LogFilePath}"/>
             </Grid>
 
