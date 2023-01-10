@@ -12,7 +12,7 @@
     {
       "name": "getDevices",
       "method": "GET",
-      "url": "https://dscprodsu01sa01.blob.core.windows.net/samples/getDevices.json",
+      "url": "https://ccprodsu01sa01.blob.core.windows.net/samples/getDevices.json",
       "headers": {},
       "sendFrame": false,
       "updateFrame": false
