@@ -35,22 +35,7 @@ Taxonomies for products and languages: https://review.docs.microsoft.com/new-hop
 
 ## Overview
 
-This repository includes everything needed to build a sample [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) hosted in your own Azure subscription, with a client application of your choice. Voice Assistants use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) in the client application to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Alternatively, Speech SDK can be used to connect to your [Custom Commands](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands) voice application. Voice Assistants can be [keyword activated](https://speech.microsoft.com/customkeyword) using keyword model files in this repository or new ones you create.
-<p>&nbsp;</p>
-<!-- The image says "Click here for step-by-step instructions for building a sample Voice Assistant using Custom Commands"-->
-<p align="center">
-<a href="docs/CreateSampleVoiceAssistant.md">
-<img src="docs/images/click-here.png"/>
-</a>
-</p>
-<p>&nbsp;</p>
-You may also find the following 12-minute overview video useful:
-
-<p align="center">
-<a href="https://www.youtube.com/watch?v=1zr0umHGFyc">
-<img src="docs/images/channel9-video-link.png" width="316"/>
-</a>
-</p>
+This repository includes everything needed to build a sample [Voice Assistant](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/voice-assistants) hosted in your own Azure subscription, with a client application of your choice. Voice Assistants use Microsoft's [Speech SDK](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-sdk) in the client application to connect to [Direct Line Speech Channel](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/direct-line-speech) and your [Bot-Framework](https://dev.botframework.com/) bot. Voice Assistants can be [keyword activated](https://speech.microsoft.com/customkeyword) using keyword model files in this repository or new ones you create. 
 
 If you are writing a Bot-Framework bot, read the tutorial [Voice-enable your bot using the Speech SDK](https://docs.microsoft.com/azure/cognitive-services/speech-service/tutorial-voice-enable-your-bot-speech-sdk), and use sample clients in this repo to help you get started.
 
@@ -72,19 +57,6 @@ Sample code for building Voice Assistant clients, using Microsoft's Speech SDK a
 | [clients\csharp-wpf](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/csharp-wpf) |  Windows voice assistant client sample. Generic Windows tool to manually test your bot or Custom Commands application | C#, Windows Presentation Foundation (WPF) |
 | [clients\cpp-console](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/cpp-console) | Console client sample for Smart Speaker devices, configured via a json file to connect to your bot or Custom Commands application. It supports microphone input and audio playback. Build scripts for [Raspberry Pi](https://www.raspberrypi.org/), [GGEC Speaker](http://www.ggec.com/) and Windows are provided | C++, Windows, Linux |
 | [clients\java-android](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/clients/java-android) | An Android application (phone or tablet) configured to connect to your bot or Custom Commands application | Java Android
-
-### Sample Custom Commands and Scripts
-
-| Folder | Description |
-|-------------|-------------|
-| [custom-commands\demos](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos)| Landing page for Custom Command demos, including deployment instructions |
-| [custom-commands\demos\hospitality](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/hospitality)| Sample voice commands to control your room (lights, blinds, TV and temperature), including visualization of the results in a hotel room settings |
-| [custom-commands\demos\inventory](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/inventory) | Sample voice commands to control warehouse inventory (adding or removing different color crates), including visualization of the results |
-| [custom-commands\demos\automotive](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/automotive) | Sample voice commands to the environment in your car (temperature, .... ), including visualization of the results |
-| [custom-commands\demos\careroom](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/demos/careroom)| Sample voice commands to control your room (lights, blinds, TV and temperature), including visualization of the results in a hospital room or other healthcare facility |
-| [custom-commands\quick-start](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/quick-start) | JSON Custom Command file for the [official quick-start guide](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-commands)  |
-| [custom-commands\scripts](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant/tree/master/custom-commands/scripts) | Continuous deployment scripts for Azure DevOps pipeline |
-
 
 ### Sample Keyword Models
 
