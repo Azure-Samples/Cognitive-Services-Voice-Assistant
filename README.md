@@ -5,7 +5,7 @@ languages:
 - csharp
 - c++
 products:
-- dotnet-core
+- dotnet
 - azure-bot-service
 - azure-cognitive-services
 - azure-iot-edge
