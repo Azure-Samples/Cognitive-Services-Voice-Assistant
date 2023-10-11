@@ -63,7 +63,7 @@ if ($defaultSubscription.state -ne "Enabled") {
 
 $output = az group exists --name $resourceName
 if ($output -eq $true) {
-    Write-Error "Resource Group already exists. Please give a new resource name."
+    Write-Error "Resource Group already exists. Please give a new resource name or delete the existing resource group at https://ms.portal.azure.com/#blade/HubsExtension/BrowseResourceGroups."
     exit
 }
 
@@ -101,6 +101,10 @@ $command = ".\deployContainerFiles.ps1 -appName $appName -resourceName $resource
 Write-Host -ForegroundColor Yellow "Calling deployContainerFiles"
 Write-Host -ForegroundColor Yellow "$command"
 Invoke-Expression $command
+
+# some buffer time between each step
+Write-Host -ForegroundColor Yellow "Waiting for backend propagate"
+Start-Sleep -s 30
 
 $command = ".\deployAzureFunction.ps1 -appName $appName -resourceName $resourceName -functionName $functionName"
 Write-Host -ForegroundColor Yellow "Calling deployAzureFunction"
